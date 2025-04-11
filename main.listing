@@ -1,0 +1,3 @@
+let l: ast int ref = new(Int(1)) in
+let id_ast : ast (int -> int) = Lam(Var(x), l := Var(x); Int(1)) in
+!l

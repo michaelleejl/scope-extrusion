@@ -1,0 +1,7 @@
+\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contributions}{6}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Background}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Metaprogramming}{7}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Effect Handlers}{7}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Scope Extrusion}{7}{section.2.3}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -1,0 +1,100 @@
+\documentclass[12pt,a4paper,twoside,openany,BCOR=2cm]{scrbook} 
+\usepackage{mjll2}
+
+% \makeatletter
+% \ifcsdef{MintedExecutable}
+% {
+%   % minted v3
+%   \newminted[macocaml]{lexers/macocaml.py:MacocamlLexer}{}
+% }
+% {
+%   \ifcsdef{minted@optlistcl@quote}
+%   {
+%     \newminted[macocaml]{lexers/macocaml.py:MacocamlLexer}{customlexer}
+%   }
+%   {
+%     \newminted[macocaml]{lexers/macocaml.py:MacocamlLexer -x}{}
+
+%   }
+% }
+% \makeatother
+
+\bibliographystyle{abbrvnat}
+
+\title{MPhil Thesis}
+\author{Michael Jing Long Lee}
+
+\begin{document}
+\maketitle
+
+
+% \newenvironment{codeblock}[2][][]{
+%     \begin{tcblisting}[
+%         minted language=ocaml,
+%         minted options={mathescape, linenos, \#2},
+%         \#1
+%     ]
+% }
+% {\end{tcblisting}}
+
+% \newenvironment{ocaml}{\begin{codeblock}}{\end{codeblock}}
+
+% \newtcblisting{ocaml-box}{
+%     listing only
+% }
+
+% \newenvironment{code}[1]
+%  {\VerbatimEnvironment
+%   \begin{minted}{#1}}
+%  {\end{minted}}
+
+% \newenvironment{ocaml}{%
+%     \begin{code}{ocaml}
+% }{
+%     \end{code} 
+% }
+% \newenvironment{macocaml}{\begin{code}{macocaml.py:MacocamlLexer}}{\end{code}}
+
+\renewcommand{\theFancyVerbLine}{\ttfamily \textcolor[rgb]{0.5,0.5,0.5}{\footnotesize{\arabic{FancyVerbLine}}}}
+
+\tcbset{common/.style={
+    enhanced,
+    left=5pt,
+    listing only,
+    listing engine=minted,
+    colframe=white,
+    minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1}
+  }
+}
+
+\newtcblisting{ocaml}{
+  common,
+  minted language=ocaml,
+  colback=ocamlBackground,
+  overlay={\node[fill=ocamlHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
+%   skin=tile,
+ }
+
+ \newtcblisting{macocaml}{
+  common,
+  minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=ocamlBackground,
+  overlay={\node[fill=ocamlHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MacoCaml};}
+%   skin=tile,
+ }
+
+\tableofcontents
+
+\include{Abstract/abstract}
+\include{Chapters/Introduction/introduction}
+
+\include{Chapters/Background/background}
+
+\bibliography{library}
+
+
+
+
+\end{document}

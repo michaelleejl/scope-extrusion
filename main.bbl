@@ -1,0 +1,72 @@
+\begin{thebibliography}{9}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Abrahams and Gurtovoy(2004)]{abrahams-04}
+D.~Abrahams and A.~Gurtovoy.
+\newblock \emph{C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond (C++ in Depth Series)}.
+\newblock Addison-Wesley Professional, 2004.
+\newblock ISBN 0321227255.
+
+\bibitem[Calcagno et~al.(2000)Calcagno, Moggi, and Taha]{calcagno-00}
+C.~Calcagno, E.~Moggi, and W.~Taha.
+\newblock Closed types as a simple approach to safe imperative multi-stage programming.
+\newblock In U.~Montanari, J.~D.~P. Rolim, and E.~Welzl, editors, \emph{Automata, Languages and Programming}, pages 25--36, Berlin, Heidelberg, 2000. Springer Berlin Heidelberg.
+\newblock ISBN 978-3-540-45022-1.
+
+\bibitem[Isoda et~al.(2024)Isoda, Yokoyama, and Kameyama]{isoda-24}
+K.~Isoda, A.~Yokoyama, and Y.~Kameyama.
+\newblock Type-safe code generation with algebraic effects and handlers.
+\newblock In \emph{Proceedings of the 23rd ACM SIGPLAN International Conference on Generative Programming: Concepts and Experiences}, GPCE '24, page 53–65, New York, NY, USA, 2024. Association for Computing Machinery.
+\newblock ISBN 9798400712111.
+\newblock \doi{10.1145/3689484.3690731}.
+\newblock URL \url{https://doi.org/10.1145/3689484.3690731}.
+
+\bibitem[Kiselyov(2014)]{kiselyov-14}
+O.~Kiselyov.
+\newblock The design and implementation of ber metaocaml.
+\newblock In M.~Codish and E.~Sumii, editors, \emph{Functional and Logic Programming}, pages 86--102, Cham, 2014. Springer International Publishing.
+\newblock ISBN 978-3-319-07151-0.
+
+\bibitem[Kiselyov et~al.(2016)Kiselyov, Kameyama, and Sudo]{kiselyov-16}
+O.~Kiselyov, Y.~Kameyama, and Y.~Sudo.
+\newblock Refined environment classifiers.
+\newblock In A.~Igarashi, editor, \emph{Programming Languages and Systems}, pages 271--291, Cham, 2016. Springer International Publishing.
+\newblock ISBN 978-3-319-47958-3.
+
+\bibitem[Pretnar(2015)]{pretnar-15}
+M.~Pretnar.
+\newblock An introduction to algebraic effects and handlers. invited tutorial paper.
+\newblock \emph{Electronic Notes in Theoretical Computer Science}, 319:\penalty0 19--35, 2015.
+\newblock ISSN 1571-0661.
+\newblock \doi{https://doi.org/10.1016/j.entcs.2015.12.003}.
+\newblock URL \url{https://www.sciencedirect.com/science/article/pii/S1571066115000705}.
+\newblock The 31st Conference on the Mathematical Foundations of Programming Semantics (MFPS XXXI).
+
+\bibitem[Rice(1953)]{rice-53}
+H.~G. Rice.
+\newblock Classes of recursively enumerable sets and their decision problems.
+\newblock \emph{Transactions of the American Mathematical Society}, 74\penalty0 (2):\penalty0 358--366, 1953.
+\newblock ISSN 00029947, 10886850.
+\newblock URL \url{http://www.jstor.org/stable/1990888}.
+
+\bibitem[Robison(2001)]{robinson-01}
+A.~D. Robison.
+\newblock Impact of economics on compiler optimization.
+\newblock In \emph{Proceedings of the 2001 Joint ACM-ISCOPE Conference on Java Grande}, JGI '01, page 1–10, New York, NY, USA, 2001. Association for Computing Machinery.
+\newblock ISBN 1581133596.
+\newblock \doi{10.1145/376656.376751}.
+\newblock URL \url{https://doi.org/10.1145/376656.376751}.
+
+\bibitem[Sivaramakrishnan et~al.(2021)Sivaramakrishnan, Dolan, White, Kelly, Jaffer, and Madhavapeddy]{sivaramakrishnan-21}
+K.~Sivaramakrishnan, S.~Dolan, L.~White, T.~Kelly, S.~Jaffer, and A.~Madhavapeddy.
+\newblock Retrofitting effect handlers onto ocaml.
+\newblock In \emph{Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation}, PLDI 2021, page 206–221, New York, NY, USA, 2021. Association for Computing Machinery.
+\newblock ISBN 9781450383912.
+\newblock \doi{10.1145/3453483.3454039}.
+\newblock URL \url{https://doi.org/10.1145/3453483.3454039}.
+
+\end{thebibliography}

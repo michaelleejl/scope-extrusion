@@ -1,0 +1,141 @@
+@article{rice-53,
+  issn      = {00029947, 10886850},
+  url       = {http://www.jstor.org/stable/1990888},
+  author    = {H. G. Rice},
+  journal   = {Transactions of the American Mathematical Society},
+  number    = {2},
+  pages     = {358--366},
+  publisher = {American Mathematical Society},
+  title     = {Classes of Recursively Enumerable Sets and Their Decision Problems},
+  urldate   = {2025-04-11},
+  volume    = {74},
+  year      = {1953}
+}
+
+
+@inproceedings{robinson-01,
+  author    = {Robison, Arch D.},
+  title     = {Impact of economics on compiler optimization},
+  year      = {2001},
+  isbn      = {1581133596},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/376656.376751},
+  doi       = {10.1145/376656.376751},
+  abstract  = {Compile-time program optimizations are similar to poetry: more are written than are actually published in commercial compilers. Hard economic reality is that many interesting optimizations have too narrow an audience to justify their cost in a general-purpose compiler, and custom compilers are too expensive to write. An alternative is to allow programmers to define their own compile-time optimizations. This has already happened accidentally for C++, albeit imperfectly, in the form of template metaprogramming. This paper surveys the problems, the accidental success, and what directions future research might take to circumvent current economic limitations of monolithic compilers.},
+  booktitle = {Proceedings of the 2001 Joint ACM-ISCOPE Conference on Java Grande},
+  pages     = {1–10},
+  numpages  = {10},
+  keywords  = {optimization, economics, compilers},
+  location  = {Palo Alto, California, USA},
+  series    = {JGI '01}
+}
+
+@book{abrahams-04,
+  author    = {Abrahams, David and Gurtovoy, Aleksey},
+  title     = {C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond (C++ in Depth Series)},
+  year      = {2004},
+  isbn      = {0321227255},
+  publisher = {Addison-Wesley Professional},
+  abstract  = {C++ Template Metaprogramming sheds light on the most powerful idioms of today's C++, at long last delivering practical metaprogramming tools and techniques into the hands of the everyday programmer.A metaprogram is a program that generates or manipulates program code. Ever since generic programming was introduced to C++, programmers have discovered myriad "template tricks" for manipulating programs as they are compiled, effectively eliminating the barrier between program and metaprogram. While excitement among C++ experts about these capabilities has reached the community at large, their practical application remains out of reach for most programmers. This book explains what metaprogramming is and how it is best used. It provides the foundation you'll need to use the template metaprogramming effectively in your own work.This book is aimed at any programmer who is comfortable with idioms of the Standard Template Library (STL). C++ power-users will gain a new insight into their existing work and a new fluency in the domain of metaprogramming. Intermediate-level programmers who have learned a few advanced template techniques will see where these tricks fit in the big picture and will gain the conceptual foundation to use them with discipline. Programmers who have caught the scent of metaprogramming, but for whom it is still mysterious, will finally gain a clear understanding of how, when, and why it works. All readers will leave with a new tool of unprecedented power at their disposal-the Boost Metaprogramming Library.The companion CD-ROM contains all Boost C++ libraries, including the Boost Metaprogramming Library and its reference documentation, along with all of the book's sample code and extensive supplementary material.}
+}
+
+@article{pretnar-15,
+  title    = {An Introduction to Algebraic Effects and Handlers. Invited tutorial paper},
+  journal  = {Electronic Notes in Theoretical Computer Science},
+  volume   = {319},
+  pages    = {19-35},
+  year     = {2015},
+  note     = {The 31st Conference on the Mathematical Foundations of Programming Semantics (MFPS XXXI).},
+  issn     = {1571-0661},
+  doi      = {https://doi.org/10.1016/j.entcs.2015.12.003},
+  url      = {https://www.sciencedirect.com/science/article/pii/S1571066115000705},
+  author   = {Matija Pretnar},
+  keywords = {algebraic effects, handlers, effect system, semantics, logic, tutorial},
+  abstract = {This paper is a tutorial on algebraic effects and handlers. In it, we explain what algebraic effects are, give ample examples to explain how handlers work, define an operational semantics and a type & effect system, show how one can reason about effects, and give pointers for further reading.}
+}
+
+@inproceedings{sivaramakrishnan-21,
+  author    = {Sivaramakrishnan, KC and Dolan, Stephen and White, Leo and Kelly, Tom and Jaffer, Sadiq and Madhavapeddy, Anil},
+  title     = {Retrofitting effect handlers onto OCaml},
+  year      = {2021},
+  isbn      = {9781450383912},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3453483.3454039},
+  doi       = {10.1145/3453483.3454039},
+  abstract  = {Effect handlers have been gathering momentum as a mechanism for modular programming with user-defined effects. Effect handlers allow for non-local control flow mechanisms such as generators, async/await, lightweight threads and coroutines to be composably expressed. We present a design and evaluate a full-fledged efficient implementation of effect handlers for OCaml, an industrial-strength multi-paradigm programming language. Our implementation strives to maintain the backwards compatibility and performance profile of existing OCaml code. Retrofitting effect handlers onto OCaml is challenging since OCaml does not currently have any non-local control flow mechanisms other than exceptions. Our implementation of effect handlers for OCaml: (i)&nbsp;imposes a mean 1\% overhead on a comprehensive macro benchmark suite that does not use effect handlers; (ii)&nbsp;remains compatible with program analysis tools that inspect the stack; and (iii)&nbsp;is efficient for new code that makes use of effect handlers.},
+  booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
+  pages     = {206–221},
+  numpages  = {16},
+  keywords  = {Backtraces, Backwards compatibility, Continuations, Effect handlers, Fibers},
+  location  = {Virtual, Canada},
+  series    = {PLDI 2021}
+}
+
+@inproceedings{kiselyov-14,
+  author    = {Kiselyov, Oleg},
+  editor    = {Codish, Michael
+               and Sumii, Eijiro},
+  title     = {The Design and Implementation of BER MetaOCaml},
+  booktitle = {Functional and Logic Programming},
+  year      = {2014},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {86--102},
+  abstract  = {MetaOCaml is a superset of OCaml extending it with the data type for program code and operations for constructing and executing such typed code values. It has been used for compiling domain-specific languages and automating tedious and error-prone specializations of high-performance computational kernels. By statically ensuring that the generated code compiles and letting us quickly run it, MetaOCaml makes writing generators less daunting and more productive.},
+  isbn      = {978-3-319-07151-0}
+}
+
+@inproceedings{calcagno-00,
+  author    = {Calcagno, Cristiano
+               and Moggi, Eugenio
+               and Taha, Walid},
+  editor    = {Montanari, Ugo
+               and Rolim, Jos{\'e} D. P.
+               and Welzl, Emo},
+  title     = {Closed Types as a Simple Approach to Safe Imperative Multi-stage Programming},
+  booktitle = {Automata, Languages and Programming},
+  year      = {2000},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {25--36},
+  abstract  = {Safely adding computational effects to a multi-stage language has been an open problem. In previous work, a closed type constructor was used to provide a safe mechanism for executing dynamically generated code. This paper proposes a general notion of closed type as a simple approach to safely introducing computational effects into multi-stage languages. We demonstrate this approach formally in a core language called Mini-MLrefBN. This core language combines safely multi-stage constructs and ML-style references. In addition to incorporating state, Mini-MLrefBN also embodies a number of technical improvements over previously proposed core languages for multi-stage programming.},
+  isbn      = {978-3-540-45022-1}
+}
+
+@inproceedings{kiselyov-16,
+  author    = {Kiselyov, Oleg
+               and Kameyama, Yukiyoshi
+               and Sudo, Yuto},
+  editor    = {Igarashi, Atsushi},
+  title     = {Refined Environment Classifiers},
+  booktitle = {Programming Languages and Systems},
+  year      = {2016},
+  publisher = {Springer International Publishing},
+  address   = {Cham},
+  pages     = {271--291},
+  abstract  = {Generating high-performance code and applying typical optimizations within the bodies of loops and functions involves moving or storing open code for later use, often in a different binding environment. There are ample opportunities for variables being left unbound or accidentally captured. It has been a tough challenge to statically ensure that by construction the generated code is nevertheless well-typed and well-scoped: all free variables in manipulated and stored code fragments shall eventually be bound, by their intended binders.},
+  isbn      = {978-3-319-47958-3}
+}
+
+@inproceedings{isoda-24,
+  author    = {Isoda, Kanaru and Yokoyama, Ayato and Kameyama, Yukiyoshi},
+  title     = {Type-Safe Code Generation with Algebraic Effects and Handlers},
+  year      = {2024},
+  isbn      = {9798400712111},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/3689484.3690731},
+  doi       = {10.1145/3689484.3690731},
+  abstract  = {Staged computation is a means to achieve maintainability and high performance simultaneously, by allowing a programmer to express domain-specific optimizations in a high-level programming language. Multi-stage programming languages such as MetaOCaml provide a static safety guarantee for generated programs by sophisticated type systems provided that program generators have no computational effects. Despite several studies, it remains a challenging problem to design a type-safe multi-stage programming language with advanced features for computational effects. This paper introduces a two-stage programming language with algebraic effects and handlers. Based on two novel principles 'handlers as future-stage binders' and 'handlers are universal', we design a type system and prove its soundness. We also show that our language is sufficiently expressive to write various effectful staged computations including multi-level let-insertion, which is a key technique to avoid code duplication in staged computation.},
+  booktitle = {Proceedings of the 23rd ACM SIGPLAN International Conference on Generative Programming: Concepts and Experiences},
+  pages     = {53–65},
+  numpages  = {13},
+  keywords  = {Algebraic effects and handlers, Code generation, Scope extrusion, Type soundness},
+  location  = {Pasadena, CA, USA},
+  series    = {GPCE '24}
+}
+
+
+

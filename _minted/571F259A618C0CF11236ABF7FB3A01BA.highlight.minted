@@ -1,0 +1,9 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{c}{(*}\PYG{c}{ macro and \PYGZdl{} can be read as annotations which}
+\PYG{c}{   indicate that the code should be run at compile\PYGZhy{}time }\PYG{c}{*)}
+\PYG{k}{macro} \PYG{n}{m} \PYG{n+nb+bp}{()} \PYG{o}{=} \PYG{k}{if} \PYG{o}{(}\PYG{n}{cpu\PYGZus{}type} \PYG{o}{=}\PYG{o}{=} \PYG{n+nc}{Arm}\PYG{o}{)} \PYG{k}{then}
+               \PYG{c}{(*}\PYG{c}{ generate this program, to be run later }\PYG{c}{*)}
+             \PYG{k}{else}
+               \PYG{c}{(*}\PYG{c}{ gen this program, to be run later }\PYG{c}{*)}
+\PYG{o}{\PYGZdl{}}\PYG{o}{(}\PYG{n}{m} \PYG{n+nb+bp}{()}\PYG{o}{)}
+\end{MintedVerbatim}
