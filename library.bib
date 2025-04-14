@@ -137,5 +137,75 @@
   series    = {GPCE '24}
 }
 
+@article{tratt-2008,
+  title     = {Domain specific language implementation via compile-time meta-programming},
+  author    = {Tratt, Laurence},
+  journal   = {ACM Transactions on Programming Languages and Systems (TOPLAS)},
+  volume    = {30},
+  number    = {6},
+  pages     = {1--40},
+  year      = {2008},
+  publisher = {ACM New York, NY, USA}
+}
 
+@article{yallop-2023,
+  author     = {Yallop, Jeremy and Xie, Ningning and Krishnaswami, Neel},
+  title      = {flap: A Deterministic Parser with Fused Lexing},
+  year       = {2023},
+  issue_date = {June 2023},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {7},
+  number     = {PLDI},
+  url        = {https://doi.org/10.1145/3591269},
+  doi        = {10.1145/3591269},
+  abstract   = {Lexers and parsers are typically defined separately and connected by a token stream. This separate definition is important for modularity and reduces the potential for parsing ambiguity. However, materializing tokens as data structures and case-switching on tokens comes with a cost. We show how to fuse separately-defined lexers and parsers, drastically improving performance without compromising modularity or increasing ambiguity. We propose a deterministic variant of Greibach Normal Form that ensures deterministic parsing with a single token of lookahead and makes fusion strikingly simple, and prove that normalizing context free expressions into the deterministic normal form is semantics-preserving. Our staged parser combinator library, flap, provides a standard interface, but generates specialized token-free code that runs two to six times faster than ocamlyacc on a range of benchmarks.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = jun,
+  articleno  = {155},
+  numpages   = {24},
+  keywords   = {parsing, optimization, multi-stage programming, lexing, fusion}
+}
 
+@inproceedings{servetto-2013,
+  author    = {Servetto, Marco and Zucca, Elena},
+  title     = {A meta-circular language for active libraries},
+  year      = {2013},
+  isbn      = {9781450318426},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2426890.2426913},
+  doi       = {10.1145/2426890.2426913},
+  abstract  = {We present a new Java-like language design coupling disciplined meta-programming features with a composition language. That is, programmers can write meta expressions that combine class definitions, on top of a small set of composition operators, inspired by the seminal Bracha's Jigsaw framework. Moreover, such operators are deep, that is, they allow manipulation (e.g., renaming or duplication) of a nested class at any level of depth.This provides an effective language support for active libraries: namely, a (library) class can provide a method returning a customized version of a class, depending, e.g., on the execution platform. Since a class can contain nested classes, a whole library can be generated in this way. That is, deep operators allows the programmer to better exploit meta-programming capabilities, leading to a "meta-programming in the large" style.We adopt a mixed typechecking technique, which provides a good compromise between meta-programming systems with extreme expressiveness and no static type checking, and those with strong type system and only limited meta-programming capability. In particular, our technique ensures an important property, called meta-level soundness, stating that typing errors never originate from already compiled (meta-)code, that is, programmers can safely use (active) libraries.},
+  booktitle = {Proceedings of the ACM SIGPLAN 2013 Workshop on Partial Evaluation and Program Manipulation},
+  pages     = {117–126},
+  numpages  = {10},
+  keywords  = {active libraries, java, meta-programming, nested classes},
+  location  = {Rome, Italy},
+  series    = {PEPM '13}
+}
+
+@book{wickham-2019,
+  title     = {Advanced R},
+  author    = {Wickham, Hadley},
+  year      = {2019},
+  publisher = {Chapman and Hall/CRC}
+}
+
+@article{vandebon-2021,
+  author   = {Vandebon, Jessica and Coutinho, Jose G. F. and Luk, Wayne and Nurvitadhi, Eriko},
+  journal  = {IEEE Transactions on Computers},
+  title    = {Enhancing High-Level Synthesis Using a Meta-Programming Approach},
+  year     = {2021},
+  volume   = {70},
+  number   = {12},
+  pages    = {2043-2055},
+  keywords = {Optimization;Field programmable gate arrays;Heterogeneous networks;Programming;Task analysis;Python;Heterogeneous computing;meta-programming;FPGA;high-level synthesis},
+  doi      = {10.1109/TC.2021.3096429}
+}
+
+@misc{jax-grad-metaprogramming,
+  author = {Jax-Ml},
+  title  = {Using grad on vmap on map on function containing sinc results in error},
+  url    = {https://github.com/jax-ml/jax/issues/10750}
+}

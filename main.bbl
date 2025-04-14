@@ -1,4 +1,4 @@
-\begin{thebibliography}{9}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -24,6 +24,11 @@ K.~Isoda, A.~Yokoyama, and Y.~Kameyama.
 \newblock ISBN 9798400712111.
 \newblock \doi{10.1145/3689484.3690731}.
 \newblock URL \url{https://doi.org/10.1145/3689484.3690731}.
+
+\bibitem[Jax-Ml()]{jax-grad-metaprogramming}
+Jax-Ml.
+\newblock Using grad on vmap on map on function containing sinc results in error.
+\newblock URL \url{https://github.com/jax-ml/jax/issues/10750}.
 
 \bibitem[Kiselyov(2014)]{kiselyov-14}
 O.~Kiselyov.
@@ -61,6 +66,14 @@ A.~D. Robison.
 \newblock \doi{10.1145/376656.376751}.
 \newblock URL \url{https://doi.org/10.1145/376656.376751}.
 
+\bibitem[Servetto and Zucca(2013)]{servetto-2013}
+M.~Servetto and E.~Zucca.
+\newblock A meta-circular language for active libraries.
+\newblock In \emph{Proceedings of the ACM SIGPLAN 2013 Workshop on Partial Evaluation and Program Manipulation}, PEPM '13, page 117–126, New York, NY, USA, 2013. Association for Computing Machinery.
+\newblock ISBN 9781450318426.
+\newblock \doi{10.1145/2426890.2426913}.
+\newblock URL \url{https://doi.org/10.1145/2426890.2426913}.
+
 \bibitem[Sivaramakrishnan et~al.(2021)Sivaramakrishnan, Dolan, White, Kelly, Jaffer, and Madhavapeddy]{sivaramakrishnan-21}
 K.~Sivaramakrishnan, S.~Dolan, L.~White, T.~Kelly, S.~Jaffer, and A.~Madhavapeddy.
 \newblock Retrofitting effect handlers onto ocaml.
@@ -68,5 +81,28 @@ K.~Sivaramakrishnan, S.~Dolan, L.~White, T.~Kelly, S.~Jaffer, and A.~Madhavapedd
 \newblock ISBN 9781450383912.
 \newblock \doi{10.1145/3453483.3454039}.
 \newblock URL \url{https://doi.org/10.1145/3453483.3454039}.
+
+\bibitem[Tratt(2008)]{tratt-2008}
+L.~Tratt.
+\newblock Domain specific language implementation via compile-time meta-programming.
+\newblock \emph{ACM Transactions on Programming Languages and Systems (TOPLAS)}, 30\penalty0 (6):\penalty0 1--40, 2008.
+
+\bibitem[Vandebon et~al.(2021)Vandebon, Coutinho, Luk, and Nurvitadhi]{vandebon-2021}
+J.~Vandebon, J.~G.~F. Coutinho, W.~Luk, and E.~Nurvitadhi.
+\newblock Enhancing high-level synthesis using a meta-programming approach.
+\newblock \emph{IEEE Transactions on Computers}, 70\penalty0 (12):\penalty0 2043--2055, 2021.
+\newblock \doi{10.1109/TC.2021.3096429}.
+
+\bibitem[Wickham(2019)]{wickham-2019}
+H.~Wickham.
+\newblock \emph{Advanced R}.
+\newblock Chapman and Hall/CRC, 2019.
+
+\bibitem[Yallop et~al.(2023)Yallop, Xie, and Krishnaswami]{yallop-2023}
+J.~Yallop, N.~Xie, and N.~Krishnaswami.
+\newblock flap: A deterministic parser with fused lexing.
+\newblock \emph{Proc. ACM Program. Lang.}, 7\penalty0 (PLDI), June 2023.
+\newblock \doi{10.1145/3591269}.
+\newblock URL \url{https://doi.org/10.1145/3591269}.
 
 \end{thebibliography}

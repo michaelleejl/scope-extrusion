@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let} \PYG{k}{rec} \PYG{n}{grad} \PYG{n}{f} \PYG{n}{x} \PYG{o}{=}
+  \PYG{k}{match} \PYG{n}{f} \PYG{k}{with}
+  \PYG{o}{|} \PYG{n+nc}{Sin}
+  \PYG{o}{|} \PYG{n+nc}{Tanh}
+  \PYG{o}{|} \PYG{n+nc}{Sigmoid}
+  \PYG{o}{|} \PYG{o}{..}\PYG{o}{.}
+  \PYG{o}{|} \PYG{n+nc}{Polynomial}\PYG{o}{(}\PYG{n}{cs}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{grad\PYGZus{}of} \PYG{n}{f} \PYG{n}{x}
+  \PYG{o}{|} \PYG{n+nc}{Compose}\PYG{o}{(}\PYG{n}{f}\PYG{o}{,} \PYG{n}{g}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{(}\PYG{n}{grad} \PYG{n}{f} \PYG{n}{x}\PYG{o}{)} \PYG{o}{*} \PYG{o}{(}\PYG{n}{grad} \PYG{n}{g} \PYG{o}{(}\PYG{n}{app} \PYG{n}{f} \PYG{n}{x}\PYG{o}{)}\PYG{o}{)}
+\end{MintedVerbatim}

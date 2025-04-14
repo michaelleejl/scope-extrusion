@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  11 APR 2025 16:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  14 APR 2025 16:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1132,12 +1132,12 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250411163908 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250411163908 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
- (./_minted/default.style.minted) (./_minted/2D98728308DC6F0C1C5E2929ED6A635B.highlight.minted
+ (./_minted/default.style.minted) (./_minted/C4DEFEAE2EE5A678530ED3CC7853E435.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 (Font)              scaled to size 10.0pt on input line 1.
 LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
@@ -1152,14 +1152,14 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
 )
 \openout8 = `main.listing'.
 
- (./_minted/571F259A618C0CF11236ABF7FB3A01BA.highlight.minted)
+ (./_minted/908D451696C21B76BE2435186BE30958.highlight.minted)
 Overfull \hbox (0.44226pt too wide) in paragraph at lines 26--35
 \OT1/qpl/m/n/12 dou-bling main-te-nance costs. With metapro-gram-ming, how-ever, we may write 
  []
 
 \openout8 = `main.listing'.
 
-(./_minted/387A85F3FCCBFE44F78A46617F4AD689.highlight.minted)
+(./_minted/21D1159A50C47E3A2E222AC0C69718F9.highlight.minted)
 
 [4
 
@@ -1172,7 +1172,7 @@ LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
 ) (./_minted/E12FE2EF6E1121A33EE1AC7327216FAD.highlight.minted) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/17948D91B15FA64BADBE7102C52C2E94.highlight.minted)
+ (./_minted/6E5BFDEFD3A9358BDE9130872AAFDF45.highlight.minted)
 
 
 LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <12> not available
@@ -1199,39 +1199,140 @@ LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
 (Font)              using `OT1/cmss/bx/n' instead on input line 6.
 
 
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 10.
+Overfull \hbox (1.05405pt too wide) in paragraph at lines 7--8
+\OT1/qpl/m/n/12 Fi-nally, I will de-scribe the de-sign de-ci-sions made by Ma-co-Caml ([][]Sec-tion 2.1.3[][]). 
+ []
 
 
 LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 12.
+(Font)              using `OT1/cmss/bx/n' instead on input line 9.
 
-)
+
+Overfull \hbox (4.97588pt too wide) in paragraph at lines 11--12
+\OT1/qpl/m/n/12 Metaprogramming helps pro-gram-mers write fast and main-tain-able code. How
+ []
+
+(./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/07B91A9610C408331B0074269596D116.highlight.minted)
+\openout8 = `main.listing'.
+
+\openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
+
+runsystem(latexminted highlight  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+
+ (./_minted/924D142153D7C3665452BA1F6BBFA630.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/39D7115D3C08B7083A7C61CB8BCAB6B7.highlight.minted) (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/88D0CA80D334C4DB66FCFDD72064275D.highlight.minted) (./_minted/4D8E3BE60076C75AC41AFBC4E1028B6D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted)
 
 [7
 
 
 
 
-] (./main.bbl
+] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/41CE4D72AA95ED946D147FF98FCB6B5A.highlight.minted) (./_minted/70C0BAA042A5166E41B4A2DFFED09C43.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/D85C12F52E4EA208315013AB215FD031.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+
+[8] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 66.
+
+(./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted)
+Overfull \hbox (0.7999pt too wide) in paragraph at lines 67--68
+\OT1/qpl/m/n/12 un-der-stand-ing metapro-gram-ming. To ex-plain how metapro-gram-ming works,
+ []
+
+\openout8 = `main.listing'.
+
+(./_minted/37B78E5416E7D675BDE98E3AC1B91142.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/DDA4FB8C6D9AEC718A6AFC828B8B0E50.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/13E921351FDF4AAF80F8721F2DF53A52.highlight.minted) (./_minted/A006E8B8A3286C66FD4221B10FF1D69D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/293894698F84214260FA5F1473BD216B.highlight.minted) (./_minted/08C1C7864785805E895FF73B636D453F.highlight.minted) (./_minted/2304AB5C7D78F65BDD2101FA08421E15.highlight.minted) (./_minted/B4B035D9A55D5EDCA65C83EE4FBC7887.highlight.minted)
+
+[9] (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/2AA60137560920E3322A77AC0FA7347B.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/293894698F84214260FA5F1473BD216B.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/D5E33725C1CF71DF65C786D0ED513180.highlight.minted) (./_minted/E13DA5266E5839CB319C071A26F62EEB.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/67A060EC15C3EAC4FB85ED3CD7D0CDC3.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/86DA9252119E8FA6F957556E53CDA565.highlight.minted) (./_minted/F3964D577699084FB222F3B85B99B184.highlight.minted) (./_minted/C988D7CB139C8AE9064144EBB5676942.highlight.minted) (./_minted/71BFC42A6DB29323DE6FE0A69CF545B8.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/48356B987D89E13B5A620DA399A86329.highlight.minted)
+
+[10] (./_minted/E13DA5266E5839CB319C071A26F62EEB.highlight.minted) (./_minted/2088CF9114D69897E618826A180DBB36.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/E13DA5266E5839CB319C071A26F62EEB.highlight.minted)
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 133.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 136.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 144.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 146.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 148.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 150.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 152.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
+(Font)              using `OT1/cmss/bx/n' instead on input line 154.
+
+)
+
+[11] (./main.bbl
 
 LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
 (Font)              using `OT1/cmss/bx/n' instead on input line 1.
 
 
-Underfull \hbox (badness 1062) in paragraph at lines 41--48
-\OT1/qpl/m/n/12 12 . 003$.  URL [][]$\OT1/zi4/m/n/12 https : / / www . sciencedirect . com / science / article / pii /
+
+[12
+
+
+
+]
+Underfull \hbox (badness 1533) in paragraph at lines 78--84
+\OT1/qpl/m/n/12 havapeddy.  Retrofitting ef-fect han-dlers onto ocaml.  In \OT1/qpl/m/it/12 Pro-ceed-
  []
 
+)
 
+[13]
+\openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-[8
+runsystem(latexminted clean  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
-
-
-])
-
-[9] (./main.aux (./Abstract/abstract.aux) (./Chapters/Introduction/introduction.aux) (./Chapters/Background/background.aux))
+ (./main.aux (./Abstract/abstract.aux) (./Chapters/Introduction/introduction.aux) (./Chapters/Background/background.aux))
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2020/03/25>
@@ -1244,18 +1345,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 40088 strings out of 469626
- 851862 string characters out of 5471004
- 1479979 words of memory out of 5000000
- 66138 multiletter control sequences out of 15000+600000
- 658629 words of font info for 95 fonts, out of 8000000 for 9000
+ 40618 strings out of 469626
+ 875982 string characters out of 5471004
+ 1484979 words of memory out of 5000000
+ 66428 multiletter control sequences out of 15000+600000
+ 662690 words of font info for 101 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 122i,8n,123p,10962b,974s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
-Output written on main.pdf (9 pages, 248049 bytes).
+ 122i,8n,123p,10962b,988s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
+Output written on main.pdf (13 pages, 292155 bytes).
 PDF statistics:
- 177 PDF objects out of 1000 (max. 8388607)
- 148 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 500000)
- 61 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 256 PDF objects out of 1000 (max. 8388607)
+ 218 compressed objects within 3 object streams
+ 59 named destinations out of 1000 (max. 500000)
+ 93 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,12 +1,154 @@
 \chapter{Background}
-The aim of this dissertation is to evaluate, and propose, policies for mediating the interaction between Macocaml-style compile-time \textbf{metaprogramming} and \textbf{effect handlers}, by addressing the issue of \textbf{scope extrusion}.
+The aim of this dissertation is to evaluate, and propose, policies for mediating the interaction between Macocaml-style \textbf{metaprogramming} and \textbf{effect handlers}, by addressing the issue of \textbf{scope extrusion}.
 
 In this chapter, I lay the groundwork for the evaluation. I provide technical overviews of each of the three key concepts: metaprogramming (\Cref{section:metaprogramming-technical}), effect handlers (\Cref{section:effects-technical}), and scope extrusion (\Cref{section:scope-extrusion-technical}).
 
 \section{Metaprogramming}\label{section:metaprogramming-technical}
-How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''\footnote{Though not the worst answer -- }. 
+What is Macocaml-style metaprogramming? This section will provide an answer in three steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I will consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}). Finally, I will describe the design decisions made by MacoCaml (\Cref{subsection:metaprogramming-macocaml}).
 
+\subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
+
+Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''\footnote{Though not the worst answer -- ``use ChatGPT''}. Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
+
+Consider building a library for neural networks. As part of this library, we need to define function for calculating gradients, \mintinline{ocaml}{grad}, such that $\text{\mintinline{ocaml}{grad }}f x = f'(x)$. \mintinline{ocaml}{grad} is needed for performing backpropagation over neural networks.
+
+More precisely, \mintinline{ocaml}{f} is of type \mintinline{ocaml}{differentiable}, defined as follows
+
+\begin{ocaml}
+type differentiable = Sin | Tanh | Sigmoid | ...
+                    | Polynomial of float list
+                    | Compose of differentiable * differentiable
+\end{ocaml}
+For example, the following expression represents $\sin\circ \tanh(x)$. 
+% or $\cos \circ \tanh(x) $ depending on if the argument is \mintinline{ocaml}{true} or \mintinline{ocaml}{false}. 
+
+\begin{ocaml}
+Compose(Tanh, Sin)
+\end{ocaml}
+
+Assume further a function, \mintinline{ocaml}{grad_of}, that returns the gradient of the base constructors, for example, \mintinline{ocaml}{grad_of Sin 0} $=$ \mintinline{ocaml}{cos 0} $=$ \mintinline{ocaml}{1}.
+
+How would one write \mintinline{ocaml}{grad} \textit{maintainably}? How would one write it \textit{efficiently}?  
+
+To write this maintainably, we might write a function as such: 
+
+\begin{ocaml}
+let rec grad f x = 
+  match f with
+  | Sin
+  | Tanh
+  | Sigmoid
+  | ...
+  | Polynomial(cs) -> grad_of f x 
+  | Compose(f, g) -> (grad f x) * (grad g (app f x))
+
+\end{ocaml}
+
+This function is maintainable: it works for {any} differentiable function. However, it is not as efficient as it could be: most obviously, walking the function and performing a \mintinline{ocaml}{match} on every recursive call might result in expensive conditional branches. If we assume \mintinline{ocaml}{x} is a vector, and the weights of the polynomial are vectors, then this representation could limit opportunities for cache prefetching.
+
+If  the function is known in advance, for example, \mintinline{ocaml}{f} $=$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}, we could replace the \mintinline{ocaml}{grad} function with a cheap hardcoded equation. 
+
+\begin{ocaml}
+let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
+\end{ocaml}    
+
+The example illustrates the trade-off between maintainability and efficiency. In writing maintainable code, we sought to parameterise over the function. Abstraction is the key to maintainability. However, the aforementioned optimisations rely on specialisation, assuming \textbf{a} function. More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
+
+The tension between efficiency and maintainability has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
+
+A more informed answer might therefore be ``by letting the compiler optimise my maintainable code''. Not quite -- for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know the function at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that we were using \mintinline{ocaml}{grad} to perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
+
+How does one write maintainable and efficient code, \textbf{when one cannot trust the compiler to optimise one's code}?
+
+One answer is metaprogramming -- annotations that explicitly identify optimisation opportunities to the compiler, instructing it to apply certain arguments at compile-time. The \mintinline{ocaml}{grad} function in JAX, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
+
+
+\subsubsection{Speeding up exponentiation with Metaprogramming}
+The \mintinline{ocaml}{grad} example was useful for motivating metaprogramming, but not for understanding metaprogramming. To explain how metaprogramming works, we switch to a morally equivalent, but simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}.
+
+A maintainable exponentiation function may be written as follows
+\begin{ocaml}
+let rec pow n x = if n == 0 then 1 else x * pow (n-1) x
+\end{ocaml}
+\mintinline{ocaml}{pow}, which can be applied to any exponent \mintinline{ocaml}{n}, is analogous to the \mintinline{ocaml}{grad} function, which could be applied to \textit{any} differentiable function. 
+
+However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ = 2$, then a more efficient, but less maintainable function, is 
+\begin{ocaml}
+let square x = x * x
+\end{ocaml}
+\mintinline{ocaml}{square} is analogous to the \mintinline{ocaml}{grad_fast} expression in the machine learning example.
+
+Metaprogramming can be utilised to write a function that resembles \mintinline{ocaml}{pow}, inheriting its maintainability, but that generates \mintinline{ocaml}{square}, inheriting its efficiency. I will now present the meta-programmed \mintinline{ocaml}{pow} function, and explain how it generates \mintinline{ocaml}{square}.
+
+\begin{macocaml}
+macro rec powGen (n: int) (x: int expr) = 
+  if n == 0 then <<1>> 
+  else <<$x * $(pow (n-1) x)>>
+
+let square y = $(powGen 2 <<y>>)
+\end{macocaml}
+
+Metaprogramming allows the user to create, and manipulate, abstract syntax trees (AST). This allows the programmer to generate programs as data, by constructing the AST of the program. For example, consider the program \mintinline{ocaml}{1 * 2}. Assume every code construct (\mintinline{ocaml}{1}, \mintinline{ocaml}{2}, \mintinline{ocaml}{*}) has a corresponding AST constructor (\mintinline{ocaml}{Int(1)}, \mintinline{ocaml}{Int(2)}, \mintinline{ocaml}{Mul(x, y)}). 
+
+We can create the AST of the program by writing \mintinline{ocaml}{Mul(Int(1), Int(2))}. We may also manipulate ASTs, for example, we could write
+
+\begin{macocaml}
+let add_zero (x: int expr) = Plus(x, Int(0))
+add_zero Mul(Int(1), Int(2)) (* Plus(Mul(Int(1), Int(2)), Int(0)) *)
+\end{macocaml}
+
+With compile-time metaprogramming, programmers can write functions that, when executed at compile-time,  generate efficient functions for run-time. Take the \mintinline{ocaml}{pow} function. We assumed \mintinline{ocaml}{n} is known, but \mintinline{ocaml}{x} is not. Therefore, the aim is to build a generator, that, when applied to \mintinline{ocaml}{n} $=2$ at compile-time, builds the AST of \mintinline{ocaml}{square}. This is easily achieved by replacing \mintinline{ocaml}{1} and \mintinline{ocaml}{*} with their corresponding AST constructors. Note also that \mintinline{ocaml}{x} is an AST of an integer, rather than an integer.
+
+\begin{ocaml}
+let rec powGen (n: int) (x: int expr) = 
+  if n == 0 then Int(1) 
+  else Mul(x, pow (n-1) x)
+\end{ocaml}
+
+\mintinline{ocaml}{powGen} may now be used as follows
+\begin{ocaml}
+LetFun(Var(square), Lam(Var(y), powGen 2 Var(y)))
+\end{ocaml}
+This expression evaluates to 
+\begin{ocaml}
+LetFun(Var(square), Lam(Var(y), Mul(Var(y), Mul(Var(y), Int(1)))))
+\end{ocaml}
+Which is the abstract syntax tree of \mintinline{ocaml}{let square y = y * y * 1}.
+
+This AST-constructor style is cumbersome, requiring extensive re-writes. For ease of both writing and reading, MacoCaml introduces two language constructs, \mintinline{ocaml}{<<e>>} (quote) and \mintinline{ocaml}{$e} (splice). 
+Quote converts expressions into their AST form, for example,
+\[\text{\mintinline{ocaml}{<<1*2>>}} = \text{\mintinline{ocaml}{Mul(Int(1), Int(2))}}\]
+While splice converts ASTs into expressions, and is therefore sometimes called ``anti-quotation''
+\[\text{\mintinline{ocaml}{$(Mul(Int(1), Int(2)))}} = \text{\mintinline{ocaml}{<<1*2>>}} \]
+Additionally, since MacoCaml performs code generation at compile-time, all expressions are treated as AST constructors by default. Re-writing \mintinline{ocaml}{pow} in this style, one obtains 
+\begin{macocaml}
+$(let rec powGen n x = 
+    if n == 0 then <<1>> 
+    else <<$x * $(pow (n-1) x)>> 
+  in 
+  <<let square y = $(powGen 2 <<y>>)>>)
+\end{macocaml}
+
+To allow \mintinline{ocaml}{powGen} to be re-used globally, much the same way as a top-level \mintinline{ocaml}{let}, MacoCaml introduces the \mintinline{lexers/macocaml.py:MacocamlLexer}{macro} keyword. Rewriting in this style, we obtain the metaprogrammed \mintinline{ocaml}{powGen} function introduced at the start of the section.
+\subsection{The Design of Metalanguages}\label{subsection:metaprogramming-design}
+While all metaprogramming languages allow for the creation and manipulation of abstract syntax, the specific mechanisms for doing so can be markedly different. In this section, I taxonomise the space of metalanguages, by highlighting key design decisions. 
+
+\subsubsection{Homogenous vs Heterogenous}
+One key design decision is whether the generated language (also known as the object language), and the generating language (the meta language) coincide. If the object and meta languages are the same, this is known as \textbf{homogenous} metaprogramming. Otherwise, it is \textbf{heterogenous}.
+
+In JAX, Python (the meta language) generates MLIR (the object language), and this is thus heterogenous metaprogramming. C++ templates use C++ (the meta language) to generate C++ (the object language), and this is homogenous.
+
+% \subsubsection{Quasi-quotation vs Code combinators}
+% A second key design decision relates to how ASTs are constructed. Quasi-quotation 
+
+\subsubsection{Run-Time vs Compile-Time}
+
+\subsubsection{Two-Stage vs Multi-Stage}
+
+\subsection{MacoCaml}\label{subsection:metaprogramming-macocaml}
 
 \section{Effect Handlers}\label{section:effects-technical}
+Effect handlers 
+\subsection{Effect Handlers for Composable User-Defined Effects}
 
 \section{Scope Extrusion}\label{section:scope-extrusion-technical}
