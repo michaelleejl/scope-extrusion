@@ -38,9 +38,9 @@ Importantly, the macro \texttt{m} is executed by the compiler, \textit{at compil
 Importantly, to support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These ``suspended programs'' are best thought of as abstract syntax trees. The following code constructs the program $(\lambda x. x) 1$.
 \begin{ocaml}
 if (cpu_type == Arm) then 
-  let build_app (f: (int -> int) ast) (v: int ast) = App(f, v)
-  let id_ast: (int -> int) ast = Lam(Var(x), Var(x))
-  build_app(id_ast, Int(1)) (* int ast *)
+  let build_app (f: (int -> int) expr) (v: int expr) = App(f, v)
+  let id_ast: (int -> int) expr = Lam(Var(x), Var(x))
+  build_app(id_ast, Int(1)) (* int expr *)
 else 
   (*...*)
 \end{ocaml}
@@ -53,8 +53,8 @@ Effect handlers are a powerful language construct that can simulate many other l
 Unfortunately, metaprogramming is known to interact unexpectedly, and poorly, with effect handlers, a problem known as \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally directs the compiler to generate code with unbound variables. In the following program, we store the variable \mintinline{ocaml}{Var(x)} into a heap cell (\mintinline{ocaml}{l}), and retrieve it outside its scope. The program thus evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
 
 \begin{ocaml}
-let l: ast int ref = new(Int(1)) in 
-let id_ast : ast (int -> int) = Lam(Var(x), l := Var(x); Int(1)) in
+let l: int expr ref = new(Int(1)) in 
+let id_ast : (int -> int) expr = Lam(Var(x), l := Var(x); Int(1)) in
 !l
 \end{ocaml} 
 

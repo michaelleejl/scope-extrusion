@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{type} \PYG{n}{differentiable} \PYG{o}{=} \PYG{n+nc}{Sin} \PYG{o}{|} \PYG{n+nc}{Tanh} \PYG{o}{|} \PYG{n+nc}{Sigmoid} \PYG{o}{|} \PYG{esc}{$\ldots$}
+                    \PYG{o}{|} \PYG{n+nc}{Polynomial} \PYG{k}{of} \PYG{k+kt}{float} \PYG{k+kt}{list}
+                    \PYG{o}{|} \PYG{n+nc}{Compose} \PYG{k}{of} \PYG{n}{differentiable} \PYG{o}{*} \PYG{n}{differentiable}
+\end{MintedVerbatim}

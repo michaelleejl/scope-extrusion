@@ -1,5 +1,4 @@
-$(let rec powGen n x =
-    if n == 0 then <<1>>
-    else <<$x * $(pow (n-1) x)>>
-  in
-  <<let square y = $(powGen 2 <<y>>)>>)
+macro rec pow_gen (n:int) (x: int expr) =
+  if n == 0 then Int(1)
+  else Mul(x, (pow_gen (n-1) x))
+let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), Int(1)))*)

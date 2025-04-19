@@ -1,5 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let} \PYG{n}{l}\PYG{o}{:} \PYG{n}{ast} \PYG{k+kt}{int} \PYG{n}{ref} \PYG{o}{=} \PYG{k}{new}\PYG{o}{(}\PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{1}\PYG{o}{)}\PYG{o}{)} \PYG{k}{in}
-\PYG{k}{let} \PYG{n}{id\PYGZus{}ast} \PYG{o}{:} \PYG{n}{ast} \PYG{o}{(}\PYG{k+kt}{int} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{int}\PYG{o}{)} \PYG{o}{=} \PYG{n+nc}{Lam}\PYG{o}{(}\PYG{n+nc}{Var}\PYG{o}{(}\PYG{n}{x}\PYG{o}{)}\PYG{o}{,} \PYG{n}{l} \PYG{o}{:=} \PYG{n+nc}{Var}\PYG{o}{(}\PYG{n}{x}\PYG{o}{)}\PYG{o}{;} \PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{1}\PYG{o}{)}\PYG{o}{)} \PYG{k}{in}
-\PYG{o}{!}\PYG{n}{l}
-\end{MintedVerbatim}

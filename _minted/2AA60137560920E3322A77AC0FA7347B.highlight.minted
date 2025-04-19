@@ -1,4 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let} \PYG{n}{add\PYGZus{}zero} \PYG{o}{(}\PYG{n}{x}\PYG{o}{:} \PYG{k+kt}{int} \PYG{n}{expr}\PYG{o}{)} \PYG{o}{=} \PYG{n+nc}{Plus}\PYG{o}{(}\PYG{n}{x}\PYG{o}{,} \PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{)}\PYG{o}{)}
-\PYG{n}{add\PYGZus{}zero} \PYG{n+nc}{Mul}\PYG{o}{(}\PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{1}\PYG{o}{)}\PYG{o}{,} \PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{2}\PYG{o}{)}\PYG{o}{)} \PYG{c}{(*}\PYG{c}{ Plus}\PYG{c}{(}\PYG{c}{Mul}\PYG{c}{(}\PYG{c}{Int}\PYG{c}{(}\PYG{c}{1}\PYG{c}{)}\PYG{c}{, Int}\PYG{c}{(}\PYG{c}{2}\PYG{c}{)}\PYG{c}{)}\PYG{c}{, Int}\PYG{c}{(}\PYG{c}{0}\PYG{c}{)}\PYG{c}{)}\PYG{c}{ }\PYG{c}{*)}
-\end{MintedVerbatim}

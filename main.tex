@@ -20,6 +20,8 @@
 % \makeatother
 
 \bibliographystyle{abbrvnat}
+% \setlength\parindent{0pt}
+% \setlength{\parskip}{8pt}
 
 \title{MPhil Thesis}
 \author{Michael Jing Long Lee}
@@ -57,33 +59,91 @@
 
 \renewcommand{\theFancyVerbLine}{\ttfamily \textcolor[rgb]{0.5,0.5,0.5}{\footnotesize{\arabic{FancyVerbLine}}}}
 
+
+\makeatletter
 \tcbset{common/.style={
     enhanced,
     left=5pt,
     listing only,
-    listing engine=minted,
     colframe=white,
-    minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``}
+  },
+  after app={%
+    \ifx\tcb@drawcolorbox\tcb@drawcolorbox@breakable
+    \else
+      % add only when not breakabel
+      \@endparenv
+    \fi
   }
+  \appto\tcb@use@after@lastbox{\@endparenv\@doendpe}
 }
+\makeatother
 
 \newtcblisting{ocaml}{
   common,
   minted language=ocaml,
   colback=ocamlBackground,
-  overlay={\node[fill=ocamlHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+  listing engine=minted,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
          anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
 %   skin=tile,
  }
 
+ \newcommand{\macocamlLexer}{lexers/macocaml.py:MacocamlLexer}
  \newtcblisting{macocaml}{
   common,
   minted language=lexers/macocaml.py:MacocamlLexer,
   colback=ocamlBackground,
-  overlay={\node[fill=ocamlHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+  listing engine=minted,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
          anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MacoCaml};}
 %   skin=tile,
  }
+
+ \newcommand{\efflang}{$\lambda_{\texttt{op}}$}
+
+ \newtcolorbox{eff-desc}{
+  common,
+  % minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=white,
+  fontupper=\small,
+  borderline north={0.5mm}{0mm}{effHighlight,line width=1pt},
+borderline south={0.5mm}{0mm}{effHighlight,line width=1pt},
+  overlay={\node[fill=effHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{eff}{
+  common,
+  % minted language=ocaml,
+  colback=effBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=effHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{efflst}{
+  common,
+  % minted language=ocaml,
+  colback=effBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=effHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newenvironment{code}{\centering}{\par\vspace{0.6\baselineskip}}
 
 \tableofcontents
 

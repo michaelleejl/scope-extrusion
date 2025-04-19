@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{17}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -17,6 +17,11 @@ C.~Calcagno, E.~Moggi, and W.~Taha.
 \newblock In U.~Montanari, J.~D.~P. Rolim, and E.~Welzl, editors, \emph{Automata, Languages and Programming}, pages 25--36, Berlin, Heidelberg, 2000. Springer Berlin Heidelberg.
 \newblock ISBN 978-3-540-45022-1.
 
+\bibitem[Felleisen and Friedman(1987)]{felleisen-87}
+M.~Felleisen and D.~P. Friedman.
+\newblock Control operators, the secd-machine, and the {\(\lambda\)}-calculus.
+\newblock In M.~Wirsing, editor, \emph{Formal Description of Programming Concepts - {III:} Proceedings of the {IFIP} {TC} 2/WG 2.2 Working Conference on Formal Description of Programming Concepts - III, Ebberup, Denmark, 25-28 August 1986}, pages 193--222. North-Holland, 1987.
+
 \bibitem[Isoda et~al.(2024)Isoda, Yokoyama, and Kameyama]{isoda-24}
 K.~Isoda, A.~Yokoyama, and Y.~Kameyama.
 \newblock Type-safe code generation with algebraic effects and handlers.
@@ -29,6 +34,15 @@ K.~Isoda, A.~Yokoyama, and Y.~Kameyama.
 Jax-Ml.
 \newblock Using grad on vmap on map on function containing sinc results in error.
 \newblock URL \url{https://github.com/jax-ml/jax/issues/10750}.
+
+\bibitem[Kiselyov(2012)]{kiselyov-2012}
+O.~Kiselyov.
+\newblock Delimited control in ocaml, abstractly and concretely.
+\newblock \emph{Theoretical Computer Science}, 435:\penalty0 56--76, 2012.
+\newblock ISSN 0304-3975.
+\newblock \doi{https://doi.org/10.1016/j.tcs.2012.02.025}.
+\newblock URL \url{https://www.sciencedirect.com/science/article/pii/S0304397512001661}.
+\newblock Functional and Logic Programming.
 
 \bibitem[Kiselyov(2014)]{kiselyov-14}
 O.~Kiselyov.

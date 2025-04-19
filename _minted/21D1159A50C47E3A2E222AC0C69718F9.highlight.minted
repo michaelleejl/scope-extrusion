@@ -1,8 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{if} \PYG{o}{(}\PYG{n}{cpu\PYGZus{}type} \PYG{o}{=}\PYG{o}{=} \PYG{n+nc}{Arm}\PYG{o}{)} \PYG{k}{then}
-  \PYG{k}{let} \PYG{n}{build\PYGZus{}app} \PYG{o}{(}\PYG{n}{f}\PYG{o}{:} \PYG{o}{(}\PYG{k+kt}{int} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{int}\PYG{o}{)} \PYG{n}{ast}\PYG{o}{)} \PYG{o}{(}\PYG{n}{v}\PYG{o}{:} \PYG{k+kt}{int} \PYG{n}{ast}\PYG{o}{)} \PYG{o}{=} \PYG{n+nc}{App}\PYG{o}{(}\PYG{n}{f}\PYG{o}{,} \PYG{n}{v}\PYG{o}{)}
-  \PYG{k}{let} \PYG{n}{id\PYGZus{}ast}\PYG{o}{:} \PYG{o}{(}\PYG{k+kt}{int} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{int}\PYG{o}{)} \PYG{n}{ast} \PYG{o}{=} \PYG{n+nc}{Lam}\PYG{o}{(}\PYG{n+nc}{Var}\PYG{o}{(}\PYG{n}{x}\PYG{o}{)}\PYG{o}{,} \PYG{n+nc}{Var}\PYG{o}{(}\PYG{n}{x}\PYG{o}{)}\PYG{o}{)}
-  \PYG{n}{build\PYGZus{}app}\PYG{o}{(}\PYG{n}{id\PYGZus{}ast}\PYG{o}{,} \PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{1}\PYG{o}{)}\PYG{o}{)} \PYG{c}{(*}\PYG{c}{ int ast }\PYG{c}{*)}
-\PYG{k}{else}
-  \PYG{c}{(*}\PYG{c}{...}\PYG{c}{*)}
-\end{MintedVerbatim}

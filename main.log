@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  14 APR 2025 16:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  19 APR 2025 20:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -447,7 +447,15 @@ Package: thm-restate 2023/05/04 v0.76
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/thmtools/thm-amsthm.sty
 Package: thm-amsthm 2023/05/04 v0.76
 \thmt@style@headstyle=\toks33
-)) (/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
+)) (/usr/local/texlive/2025/texmf-dist/tex/latex/mathpartir/mathpartir.sty
+Package: mathpartir 2016/02/24 version 1.3.2 Math Paragraph for Typesetting Inference Rules
+\mpr@andskip=\skip77
+\mpr@lista=\toks34
+\mpr@listb=\toks35
+\mpr@hlist=\box60
+\mpr@vlist=\box61
+\mpr@right=\box62
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/xcolor/xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
  (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
 File: color.cfg 2016/01/02 v1.6 sample color configuration
@@ -463,19 +471,53 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/lmodern.sty
+Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
+LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
+(Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `normal'
+(Font)                  OML/cmm/m/it --> OML/lmm/m/it on input line 23.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
+(Font)                  OMS/cmsy/m/n --> OMS/lmsy/m/n on input line 24.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 25.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 26.
+LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
+(Font)                  OML/cmm/b/it --> OML/lmm/b/it on input line 27.
+LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
+(Font)                  OMS/cmsy/b/n --> OMS/lmsy/b/n on input line 28.
+LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
+(Font)                  OMX/cmex/m/n --> OMX/lmex/m/n on input line 29.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 31.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
+(Font)                  OT1/cmss/m/n --> OT1/lmss/m/n on input line 32.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
+(Font)                  OT1/cmr/m/it --> OT1/lmr/m/it on input line 33.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 34.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
+(Font)                  OT1/cmr/bx/n --> OT1/lmr/bx/n on input line 35.
+LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
+(Font)                  OT1/cmss/bx/n --> OT1/lmss/bx/n on input line 36.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
+(Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
+(Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/moresize/moresize.sty
 Package: moresize 1999/07/26 v1.9 (more font sizes)
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/anyfontsize/anyfontsize.sty
 Package: anyfontsize 2007/11/22 anyfontsize.sty by pts
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/ulem/ulem.sty
-\UL@box=\box60
-\UL@hyphenbox=\box61
-\UL@skip=\skip77
-\UL@hook=\toks34
+\UL@box=\box63
+\UL@hyphenbox=\box64
+\UL@skip=\skip78
+\UL@hook=\toks36
 \UL@height=\dimen186
 \UL@pe=\count306
 \UL@pixel=\dimen187
-\ULC@box=\box62
+\ULC@box=\box65
 Package: ulem 2019/11/18
 \ULdepth=\dimen188
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/bold-extra/bold-extra.sty
@@ -503,11 +545,11 @@ Package: suffix 2006/07/15 1.5a Variant command support
 \CPT@WriteOut=\write3
 \c@CPT@WriteCount=\count308
 \c@CPT@numB=\count309
-\CPT@commandatend@toks=\toks35
+\CPT@commandatend@toks=\toks37
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
-\bibhang=\skip78
-\bibsep=\skip79
+\bibhang=\skip79
+\bibsep=\skip80
 LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count310
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
@@ -547,21 +589,21 @@ Package cleveref Info: include cross-reference names in hyperlinks on input line
 Package cleveref Info: include cross-reference names in hyperlinks on input line 7852.
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
-\multirow@colwidth=\skip80
+\multirow@colwidth=\skip81
 \multirow@cntb=\count315
-\multirow@dima=\skip81
+\multirow@dima=\skip82
 \bigstrutjot=\dimen258
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/tabularx.sty
 Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
  (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
 \col@sep=\dimen259
-\ar@mcellbox=\box63
+\ar@mcellbox=\box66
 \extrarowheight=\dimen260
-\NC@list=\toks36
-\extratabsurround=\skip82
-\backup@length=\skip83
-\ar@cellbox=\box64
+\NC@list=\toks38
+\extratabsurround=\skip83
+\backup@length=\skip84
+\ar@cellbox=\box67
 )
 \TX@col@width=\dimen261
 \TX@old@table=\dimen262
@@ -569,13 +611,13 @@ Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
 \TX@target=\dimen264
 \TX@delta=\dimen265
 \TX@cols=\count316
-\TX@ftn=\toks37
+\TX@ftn=\toks39
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/hhline.sty
 Package: hhline 2020/01/04 v2.04 Table rule package (DPC)
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/listings.sty
 \lst@mode=\count317
-\lst@gtempboxa=\box65
-\lst@token=\toks38
+\lst@gtempboxa=\box68
+\lst@token=\toks40
 \lst@length=\count318
 \lst@currlwidth=\dimen266
 \lst@column=\count319
@@ -591,7 +633,7 @@ File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
 File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
 \c@lstnumber=\count323
 \lst@skipnumbers=\count324
-\lst@framebox=\box66
+\lst@framebox=\box69
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2024/09/23 1.10c listings configuration
 ))
@@ -601,12 +643,12 @@ Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environ
  (/usr/local/texlive/2025/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count325
-\float@exts=\toks39
-\float@box=\box67
-\@float@everytoks=\toks40
-\@floatcapt=\box68
+\float@exts=\toks41
+\float@box=\box70
+\@float@everytoks=\toks42
+\@floatcapt=\box71
 )
-\@float@every@algorithm=\toks41
+\@float@every@algorithm=\toks43
 \c@algorithm=\count326
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
@@ -617,13 +659,13 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \c@ALG@line=\count327
 \c@ALG@rem=\count328
 \c@ALG@nested=\count329
-\ALG@tlm=\skip84
-\ALG@thistlm=\skip85
+\ALG@tlm=\skip85
+\ALG@thistlm=\skip86
 \c@ALG@Lnr=\count330
 \c@ALG@blocknr=\count331
 \c@ALG@storecount=\count332
 \c@ALG@tmpcounter=\count333
-\ALG@tmplength=\skip86
+\ALG@tmplength=\skip87
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/minted/minted.sty
@@ -638,7 +680,7 @@ Package: fvextra 2025/03/04 v1.12.0 fvextra - extensions and patches for fancyvr
 Package: fancyvrb 2024/01/20 4.5c verbatim text (tvz,hv)
 \FV@CodeLineNo=\count334
 \FV@InFile=\read2
-\FV@TabBox=\box69
+\FV@TabBox=\box72
 \c@FancyVerbLine=\count335
 \FV@StepNumber=\count336
 \FV@OutFile=\write4
@@ -647,7 +689,7 @@ Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verbat
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/lineno/lineno.sty
 Package: lineno 2025/01/29 line numbers on paragraphs v5.4
 \linenopenalty=\count337
-\output=\toks42
+\output=\toks44
 \linenoprevgraf=\count338
 \linenumbersep=\dimen270
 \linenumberwidth=\dimen271
@@ -659,7 +701,7 @@ Package: lineno 2025/01/29 line numbers on paragraphs v5.4
 \quotelinenumbersep=\dimen272
 \bframerule=\dimen273
 \bframesep=\dimen274
-\bframebox=\box70
+\bframebox=\box73
 \@LN@amsmath@ams@eqpen=\count344
 LaTeX Info: Redefining \\ on input line 3187.
 )
@@ -667,13 +709,13 @@ LaTeX Info: Redefining \\ on input line 3187.
 \c@FancyVerbBufferLine=\count346
 \c@FV@TrueTabGroupLevel=\count347
 \c@FV@TrueTabCounter=\count348
-\FV@TabBox@Group=\box71
-\FV@bgcolorstructbox=\box72
-\FV@TmpLength=\skip87
+\FV@TabBox@Group=\box74
+\FV@bgcolorstructbox=\box75
+\FV@TmpLength=\skip88
 \c@FV@HighlightLinesStart=\count349
 \c@FV@HighlightLinesStop=\count350
 \FV@LoopCount=\count351
-\FV@NCharsBox=\box73
+\FV@NCharsBox=\box76
 \FV@BreakIndent=\dimen275
 \FV@BreakIndentNChars=\count352
 \FV@BreakSymbolSepLeft=\dimen276
@@ -685,36 +727,36 @@ LaTeX Info: Redefining \\ on input line 3187.
 \FV@BreakSymbolIndentRight=\dimen279
 \FV@BreakSymbolIndentRightNChars=\count356
 \c@FancyVerbLineBreakLast=\count357
-\FV@LineBox=\box74
-\FV@LineIndentBox=\box75
+\FV@LineBox=\box77
+\FV@LineIndentBox=\box78
 \c@FV@BreakBufferDepth=\count358
 \FV@LineWidth=\dimen280
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/latex2pydata/latex2pydata.sty
 Package: latex2pydata 2025/03/26 v0.6.0 latex2pydata - write data to file in Python literal format
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
-\pgfkeys@pathtoks=\toks43
-\pgfkeys@temptoks=\toks44
+\pgfkeys@pathtoks=\toks45
+\pgfkeys@temptoks=\toks46
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
-\pgfkeys@tmptoks=\toks45
+\pgfkeys@tmptoks=\toks47
 ))) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgfopts/pgfopts.sty
 Package: pgfopts 2014/07/10 v2.1a LaTeX package options with pgfkeys
-\pgfopts@list@add@a@toks=\toks46
-\pgfopts@list@add@b@toks=\toks47
+\pgfopts@list@add@a@toks=\toks48
+\pgfopts@list@add@b@toks=\toks49
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/shellesc.sty
 Package: shellesc 2023/07/08 v1.0d unified shell escape interface for LaTeX
 Package shellesc Info: Restricted shell escape enabled on input line 77.
 )
 \c@minted@FancyVerbLineTemp=\count359
-\@float@every@listing=\toks48
+\@float@every@listing=\toks50
 \c@listing=\count360
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcolorbox.sty
 Package: tcolorbox 2024/10/22 version 6.4.1 text color boxes
  (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex
-\pgfutil@everybye=\toks49
+\pgfutil@everybye=\toks51
 \pgfutil@tempdima=\dimen281
 \pgfutil@tempdimb=\dimen282
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
-\pgfutil@abb=\box76
+\pgfutil@abb=\box79
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex)
 Package: pgfrcs 2023-01-15 v3.1.10 (3.1.10)
 ))
@@ -737,9 +779,9 @@ Package: pgfsys 2023-01-15 v3.1.10 (3.1.10)
 \c@pgf@countb=\count362
 \c@pgf@countc=\count363
 \c@pgf@countd=\count364
-\t@pgf@toka=\toks50
-\t@pgf@tokb=\toks51
-\t@pgf@tokc=\toks52
+\t@pgf@toka=\toks52
+\t@pgf@tokb=\toks53
+\t@pgf@tokc=\toks54
 \pgf@sys@id@count=\count365
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2023-01-15 v3.1.10 (3.1.10)
@@ -760,10 +802,10 @@ Package: pgfcore 2023-01-15 v3.1.10 (3.1.10)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
 \pgfmath@dimen=\dimen293
 \pgfmath@count=\count368
-\pgfmath@box=\box77
-\pgfmath@toks=\toks53
-\pgfmath@stack@operand=\toks54
-\pgfmath@stack@operation=\toks55
+\pgfmath@box=\box80
+\pgfmath@toks=\toks55
+\pgfmath@stack@operand=\toks56
+\pgfmath@stack@operation=\toks57
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex
 \c@pgfmathroundto@lastzeros=\count369
 )) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
@@ -795,9 +837,9 @@ File: pgfcorepathusage.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \pgf@shorten@start@additional=\dimen311
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfpic=\box78
-\pgf@hbox=\box79
-\pgf@layerbox@main=\box80
+\pgfpic=\box81
+\pgf@hbox=\box82
+\pgf@layerbox@main=\box83
 \pgf@picture@serial@count=\count370
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2023-01-15 v3.1.10 (3.1.10)
@@ -825,7 +867,7 @@ File: pgfcoreshade.code.tex 2023-01-15 v3.1.10 (3.1.10)
 File: pgfcoreimage.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
 File: pgfcoreexternal.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfexternal@startupbox=\box81
+\pgfexternal@startupbox=\box84
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
 File: pgfcorelayers.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
@@ -836,7 +878,7 @@ File: pgfcorepatterns.code.tex 2023-01-15 v3.1.10 (3.1.10)
 File: pgfcorerdf.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
 File: pgfmoduleshapes.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodeparttextbox=\box82
+\pgfnodeparttextbox=\box85
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
 File: pgfmoduleplot.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
@@ -849,8 +891,8 @@ Package: pgfcomp-version-1-18 2023-01-15 v3.1.10 (3.1.10)
 Package: pgffor 2023-01-15 v3.1.10 (3.1.10)
 \pgffor@iter=\dimen320
 \pgffor@skip=\dimen321
-\pgffor@stack=\toks56
-\pgffor@toks=\toks57
+\pgffor@stack=\toks58
+\pgffor@toks=\toks59
 )) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
 Package: tikz 2023-01-15 v3.1.10 (3.1.10)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
@@ -866,10 +908,10 @@ File: pgflibraryplothandlers.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \tikz@lastmovetoy=\dimen328
 \tikzleveldistance=\dimen329
 \tikzsiblingdistance=\dimen330
-\tikz@figbox=\box83
-\tikz@figbox@bg=\box84
-\tikz@tempbox=\box85
-\tikz@tempbox@bg=\box86
+\tikz@figbox=\box86
+\tikz@figbox@bg=\box87
+\tikz@tempbox=\box88
+\tikz@tempbox@bg=\box89
 \tikztreelevel=\count374
 \tikznumberofchildren=\count375
 \tikznumberofcurrentchild=\count376
@@ -885,27 +927,29 @@ File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
 File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ))) (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty
 Package: verbatim 2024-01-22 v1.5x LaTeX2e package for verbatim enhancements
-\every@verbatim=\toks58
-\verbatim@line=\toks59
+\every@verbatim=\toks60
+\verbatim@line=\toks61
 \verbatim@in@stream=\read4
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/environ/environ.sty
 Package: environ 2014/05/04 v0.3 A new way to define environments
  (/usr/local/texlive/2025/texmf-dist/tex/latex/trimspaces/trimspaces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ))
-\tcb@titlebox=\box87
-\tcb@upperbox=\box88
-\tcb@lowerbox=\box89
-\tcb@phantombox=\box90
+\tcb@titlebox=\box90
+\tcb@upperbox=\box91
+\tcb@lowerbox=\box92
+\tcb@phantombox=\box93
 \c@tcbbreakpart=\count382
 \c@tcblayer=\count383
 \c@tcolorbox@number=\count384
-\l__tcobox_tmpa_box=\box91
+\l__tcobox_tmpa_box=\box94
 \l__tcobox_tmpa_dim=\dimen331
-\tcb@temp=\box92
-\tcb@temp=\box93
-\tcb@temp=\box94
 \tcb@temp=\box95
+\tcb@temp=\box96
+\tcb@temp=\box97
+\tcb@temp=\box98
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbhooks.code.tex
+Library (tcolorbox): 'tcbhooks.code.tex' version '6.4.1'
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcblistings.code.tex
 Library (tcolorbox): 'tcblistings.code.tex' version '6.4.1'
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcblistingscore.code.tex
@@ -922,9 +966,9 @@ Library (tcolorbox): 'tcbbreakable.code.tex' version '6.4.1'
 Package: pdfcol 2022-09-21 v1.7 Handle new color stacks for pdfTeX (HO)
 )
 Package pdfcol Info: New color stack `tcb@breakable' = 1 on input line 23.
-\tcb@testbox=\box96
-\tcb@totalupperbox=\box97
-\tcb@totallowerbox=\box98
+\tcb@testbox=\box99
+\tcb@totalupperbox=\box100
+\tcb@totallowerbox=\box101
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbskins.code.tex
 Library (tcolorbox): 'tcbskins.code.tex' version '6.4.1'
 (/usr/local/texlive/2025/texmf-dist/tex/latex/tikzfill/tikzfill.image.sty
@@ -933,76 +977,100 @@ Package: tikzfill.image 2023/08/08 v1.0.1 Image filling library for TikZ
 Package: tikzfill-common 2023/08/08 v1.0.1 Auxiliary code for tikzfill
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/tikzfill/tikzlibraryfill.image.code.tex
 File: tikzlibraryfill.image.code.tex 2023/08/08 v1.0.1 Image filling library
-\l__tikzfill_img_box=\box99
+\l__tikzfill_img_box=\box102
 )) (/usr/local/texlive/2025/texmf-dist/tex/latex/tcolorbox/tcbskinsjigsaw.code.tex
 Library (tcolorbox): 'tcbskinsjigsaw.code.tex' version '6.4.1'
-)) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
+)) (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen332
+\captionmargin=\dimen333
+\caption@leftmargin=\dimen334
+\caption@rightmargin=\dimen335
+\caption@width=\dimen336
+\caption@indent=\dimen337
+\caption@parindent=\dimen338
+\caption@hangindent=\dimen339
+Package caption Info: KOMA-Script document class detected.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption-koma.sto
+File: caption-koma.sto 2023/09/08 v2.0e Adaption of the caption package to the KOMA-Script document classes (AR)
+))
+\c@caption@flags=\count386
+\c@continuedfloat=\count387
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: KOMA-Script scrextend package detected.
+\caption@addmargin@hsize=\dimen340
+\caption@addmargin@linewidth=\dimen341
+) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
 File: tikzlibraryautomata.code.tex 2023-01-15 v3.1.10 (3.1.10)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
 File: tikzlibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex
 File: pgflibraryshapes.multipart.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\pgfnodepartlowerbox=\box100
-\pgfnodeparttwobox=\box101
-\pgfnodepartthreebox=\box102
-\pgfnodepartfourbox=\box103
-\pgfnodeparttwentybox=\box104
-\pgfnodepartnineteenbox=\box105
-\pgfnodeparteighteenbox=\box106
-\pgfnodepartseventeenbox=\box107
-\pgfnodepartsixteenbox=\box108
-\pgfnodepartfifteenbox=\box109
-\pgfnodepartfourteenbox=\box110
-\pgfnodepartthirteenbox=\box111
-\pgfnodeparttwelvebox=\box112
-\pgfnodepartelevenbox=\box113
-\pgfnodeparttenbox=\box114
-\pgfnodepartninebox=\box115
-\pgfnodeparteightbox=\box116
-\pgfnodepartsevenbox=\box117
-\pgfnodepartsixbox=\box118
-\pgfnodepartfivebox=\box119
+\pgfnodepartlowerbox=\box103
+\pgfnodeparttwobox=\box104
+\pgfnodepartthreebox=\box105
+\pgfnodepartfourbox=\box106
+\pgfnodeparttwentybox=\box107
+\pgfnodepartnineteenbox=\box108
+\pgfnodeparteighteenbox=\box109
+\pgfnodepartseventeenbox=\box110
+\pgfnodepartsixteenbox=\box111
+\pgfnodepartfifteenbox=\box112
+\pgfnodepartfourteenbox=\box113
+\pgfnodepartthirteenbox=\box114
+\pgfnodeparttwelvebox=\box115
+\pgfnodepartelevenbox=\box116
+\pgfnodeparttenbox=\box117
+\pgfnodepartninebox=\box118
+\pgfnodeparteightbox=\box119
+\pgfnodepartsevenbox=\box120
+\pgfnodepartsixbox=\box121
+\pgfnodepartfivebox=\box122
 ))) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 ) (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryarrows.code.tex
 File: tikzlibraryarrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
  (/usr/local/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.code.tex
 File: pgflibraryarrows.code.tex 2023-01-15 v3.1.10 (3.1.10)
-\arrowsize=\dimen332
+\arrowsize=\dimen342
 ))) (./sty/mjll2-colours.tex) (./sty/mjll2-pgs.tex
 Package hyperref Info: Option `colorlinks' set `true' on input line 10.
 ) (./sty/mjll2-macros.tex)) (./main.aux (./Abstract/abstract.aux) (./Chapters/Introduction/introduction.aux) (./Chapters/Background/background.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-Package scrbase Info: activating english \partname on input line 27.
-Package scrbase Info: activating english \chaptername on input line 27.
-Package scrbase Info: activating english \appendixname on input line 27.
-Package scrbase Info: activating english \figurename on input line 27.
-Package scrbase Info: activating english \tablename on input line 27.
-Package scrbase Info: activating english \contentsname on input line 27.
-Package scrbase Info: activating english \listfigurename on input line 27.
-Package scrbase Info: activating english \listtablename on input line 27.
-Package scrbase Info: activating english \bibname on input line 27.
-Package scrbase Info: activating english \indexname on input line 27.
-Package hyperref Info: Link coloring ON on input line 27.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 29.
+LaTeX Font Info:    ... okay on input line 29.
+Package scrbase Info: activating english \partname on input line 29.
+Package scrbase Info: activating english \chaptername on input line 29.
+Package scrbase Info: activating english \appendixname on input line 29.
+Package scrbase Info: activating english \figurename on input line 29.
+Package scrbase Info: activating english \tablename on input line 29.
+Package scrbase Info: activating english \contentsname on input line 29.
+Package scrbase Info: activating english \listfigurename on input line 29.
+Package scrbase Info: activating english \listtablename on input line 29.
+Package scrbase Info: activating english \bibname on input line 29.
+Package scrbase Info: activating english \indexname on input line 29.
+Package hyperref Info: Link coloring ON on input line 29.
  (./main.out) (./main.out)
 \@outlinefile=\write6
 \openout6 = `main.out'.
@@ -1014,77 +1082,93 @@ Class scrbook Info: loading recommended package `bookmark'.
 (scrbook)           `bookmarkpackage=false' before \begin{document} and
 (scrbook)           you can avoid this message adding:
 (scrbook)             \usepackage{bookmark}
-(scrbook)           before \begin{document} on input line 27.
+(scrbook)           before \begin{document} on input line 29.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
  (/usr/local/texlive/2025/texmf-dist/tex/latex/bookmark/bkm-pdftex.def
 File: bkm-pdftex.def 2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO)
-\BKM@id=\count386
+\BKM@id=\count388
 )) (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count387
-\scratchdimen=\dimen333
-\scratchbox=\box120
-\nofMPsegments=\count388
-\nofMParguments=\count389
-\everyMPshowfont=\toks60
-\MPscratchCnt=\count390
-\MPscratchDim=\dimen334
-\MPnumerator=\count391
-\makeMPintoPDFobject=\count392
-\everyMPtoPDFconversion=\toks61
+\scratchcounter=\count389
+\scratchdimen=\dimen343
+\scratchbox=\box123
+\nofMPsegments=\count390
+\nofMParguments=\count391
+\everyMPshowfont=\toks62
+\MPscratchCnt=\count392
+\MPscratchDim=\dimen344
+\MPnumerator=\count393
+\makeMPintoPDFobject=\count394
+\everyMPtoPDFconversion=\toks63
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-\c@lstlisting=\count393
+\c@lstlisting=\count395
 Package tocbasic Info: omitting babel extension for `lol'
-(tocbasic)             because of missing \bbl@set@language on input line 27.
-\scr@dte@lstlisting@maxnumwidth=\skip88
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 29.
-
-LaTeX Font Info:    Trying to load font information for U+msa on input line 29.
-(/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+(tocbasic)             because of missing \bbl@set@language on input line 29.
+\scr@dte@lstlisting@maxnumwidth=\skip89
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 31.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmss.fd
+File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <12> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 31.
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <24.88> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 31.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 31.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 31.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 31.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 31.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <17.28> on input line 31.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <12> on input line 31.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 31.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 31.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 29.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 31.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+stmry on input line 29.
+LaTeX Font Info:    Trying to load font information for U+stmry on input line 31.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
 
 [1
 
 
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}]
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 88.
-
-(./main.toc
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 1.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 1.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 3.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 3.
-
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}] (./main.toc
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <8> on input line 2.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 2.
+LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 14.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ot1zi4.fd
+File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
+)
+LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
+(Font)              scaled to size 12.0pt on input line 14.
 )
 \tf@toc=\write7
 \openout7 = `main.toc'.
@@ -1093,15 +1177,10 @@ LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
 
 [2
 
-]
+{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}]
 \openout2 = `Abstract/abstract.aux'.
 
- (./Abstract/abstract.tex
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 1.
-
-)
+ (./Abstract/abstract.tex)
 
 [3
 
@@ -1112,30 +1191,20 @@ LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
  (./Chapters/Introduction/introduction.tex
 chapter 1.
 
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 1.
-
-
 Overfull \hbox (2.63902pt too wide) in paragraph at lines 3--4
 \OT1/qpl/m/n/12 writ-ing main-tain-able code, en-trust-ing the re-spon-si-bil-ity of \OT1/qpl/m/it/12 op-ti-mis-ing \OT1/qpl/m/n/12 said code
  []
 
-LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 15.
-(/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ot1zi4.fd
-File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
-)
-LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 12.0pt on input line 15.
 \g__tcobox_out_iow=\write8
 \openout8 = `main.listing'.
 
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250419201453 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
- (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+(./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
+runsystem(latexminted cleanconfig  --timestamp 20250419201453 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/C4DEFEAE2EE5A678530ED3CC7853E435.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1159,30 +1228,28 @@ Overfull \hbox (0.44226pt too wide) in paragraph at lines 26--35
 
 \openout8 = `main.listing'.
 
-(./_minted/21D1159A50C47E3A2E222AC0C69718F9.highlight.minted)
+(./_minted/BA4B2F3FA007F19C9612857E70D44513.highlight.minted)
 
 [4
 
 
 
 
-{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}] (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted
+] (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
 (Font)              scaled to size 12.0pt on input line 3.
 ) (./_minted/E12FE2EF6E1121A33EE1AC7327216FAD.highlight.minted) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/6E5BFDEFD3A9358BDE9130872AAFDF45.highlight.minted)
+ (./_minted/5248D195E94933B74B85D4DC78AE94C8.highlight.minted)
 
 
 LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <12> not available
 (Font)              Font shape `OT1/qpl/m/it' tried instead on input line 66.
 
 [5]
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 69.
-
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <17.28> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 69.
 )
 
 [6]
@@ -1190,173 +1257,65 @@ LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
 
  (./Chapters/Background/background.tex
 chapter 2.
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 1.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 6.
-
-
-Overfull \hbox (1.05405pt too wide) in paragraph at lines 7--8
-\OT1/qpl/m/n/12 Fi-nally, I will de-scribe the de-sign de-ci-sions made by Ma-co-Caml ([][]Sec-tion 2.1.3[][]). 
- []
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 9.
-
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <14.4> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 9.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 11.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 11.
 
 Overfull \hbox (4.97588pt too wide) in paragraph at lines 11--12
 \OT1/qpl/m/n/12 Metaprogramming helps pro-gram-mers write fast and main-tain-able code. How
  []
 
-(./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/BD57DC7CEF2D316D11791870BEC4CD36.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/07B91A9610C408331B0074269596D116.highlight.minted)
+(./_minted/07B91A9610C408331B0074269596D116.highlight.minted)
 \openout8 = `main.listing'.
 
-\openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
-
-runsystem(latexminted highlight  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
-
- (./_minted/924D142153D7C3665452BA1F6BBFA630.highlight.minted)
+ (./_minted/176241E00EF9049246C897D0893EADD7.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/39D7115D3C08B7083A7C61CB8BCAB6B7.highlight.minted) (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/88D0CA80D334C4DB66FCFDD72064275D.highlight.minted) (./_minted/4D8E3BE60076C75AC41AFBC4E1028B6D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted)
+ (./_minted/39D7115D3C08B7083A7C61CB8BCAB6B7.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/D2B933F6BC30C8B6FDDD3B800517FB4D.highlight.minted) (./_minted/4B219D1941E8D08514181ADEE35F5F76.highlight.minted) (./_minted/556F5A46E71FBBF1A3FA9D7C0251222E.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/0B3972FF6FD5680B27E91A2836A02211.highlight.minted)
 
 [7
 
 
 
 
-] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/70C0BAA042A5166E41B4A2DFFED09C43.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/41CE4D72AA95ED946D147FF98FCB6B5A.highlight.minted) (./_minted/70C0BAA042A5166E41B4A2DFFED09C43.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+ (./_minted/D85C12F52E4EA208315013AB215FD031.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+
+[8] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/D85C12F52E4EA208315013AB215FD031.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
-
-[8] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 66.
-
-(./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted)
-Overfull \hbox (0.7999pt too wide) in paragraph at lines 67--68
-\OT1/qpl/m/n/12 un-der-stand-ing metapro-gram-ming. To ex-plain how metapro-gram-ming works,
+ (./_minted/2782FDADCF13F0B5070F5CCA715C7539.highlight.minted)
+Overfull \hbox (2.32384pt too wide) in paragraph at lines 55--60
+\OT1/qpl/m/n/12 gram-ming (\OT1/zi4/m/n/12 MacoCaml\OT1/qpl/m/n/12 ). While the [] ex-am-ple mo-ti-vated metapro-gram-ming,
  []
 
+(./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted)
 \openout8 = `main.listing'.
 
-(./_minted/37B78E5416E7D675BDE98E3AC1B91142.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted)
+ (./_minted/DDA4FB8C6D9AEC718A6AFC828B8B0E50.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/DDA4FB8C6D9AEC718A6AFC828B8B0E50.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/13E921351FDF4AAF80F8721F2DF53A52.highlight.minted) (./_minted/A006E8B8A3286C66FD4221B10FF1D69D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/293894698F84214260FA5F1473BD216B.highlight.minted) (./_minted/08C1C7864785805E895FF73B636D453F.highlight.minted) (./_minted/2304AB5C7D78F65BDD2101FA08421E15.highlight.minted) (./_minted/B4B035D9A55D5EDCA65C83EE4FBC7887.highlight.minted)
-
-[9] (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/2AA60137560920E3322A77AC0FA7347B.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/293894698F84214260FA5F1473BD216B.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/D5E33725C1CF71DF65C786D0ED513180.highlight.minted) (./_minted/E13DA5266E5839CB319C071A26F62EEB.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/67A060EC15C3EAC4FB85ED3CD7D0CDC3.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/86DA9252119E8FA6F957556E53CDA565.highlight.minted) (./_minted/F3964D577699084FB222F3B85B99B184.highlight.minted) (./_minted/C988D7CB139C8AE9064144EBB5676942.highlight.minted) (./_minted/71BFC42A6DB29323DE6FE0A69CF545B8.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/798D209C987E79374A13557FC4CAD0F2.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/ACB1A52FCF6CBE39A854B714D3DC21B1.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/7C480B47ED3D38FAFA378B07C81E13E3.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/48356B987D89E13B5A620DA399A86329.highlight.minted)
-
-[10] (./_minted/E13DA5266E5839CB319C071A26F62EEB.highlight.minted) (./_minted/2088CF9114D69897E618826A180DBB36.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/E13DA5266E5839CB319C071A26F62EEB.highlight.minted)
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 133.
+ (./_minted/07C8173E5B8019ECD18DA33C0A23E662.highlight.minted)
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 136.
 
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 144.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 146.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 148.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 150.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 152.
-
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 154.
-
+[9] (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/08C1C7864785805E895FF73B636D453F.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/BC9F84902D61B247B113DA5789EBE129.highlight.minted
+LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 3.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
+File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
 )
+LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
+(Font)              scaled to size 12.0pt on input line 3.
+) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted) (./_minted/E2BC7231C4E7C1A6DABDC298F0BB3467.highlight.minted) (./_minted/B936327D1F0159256638C48D8B058F1E.highlight.minted)
+\openout8 = `main.listing'.
 
-[11] (./main.bbl
-
-LaTeX Font Warning: Font shape `OT1/cmss/b/n' undefined
-(Font)              using `OT1/cmss/bx/n' instead on input line 1.
-
-
-
-[12
-
-
-
-]
-Underfull \hbox (badness 1533) in paragraph at lines 78--84
-\OT1/qpl/m/n/12 havapeddy.  Retrofitting ef-fect han-dlers onto ocaml.  In \OT1/qpl/m/it/12 Pro-ceed-
- []
-
-)
-
-[13]
-\openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
-
-runsystem(latexminted clean  --timestamp 20250414163200 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
-
- (./main.aux (./Abstract/abstract.aux) (./Chapters/Introduction/introduction.aux) (./Chapters/Background/background.aux))
- ***********
-LaTeX2e <2024-11-01> patch level 2
-L3 programming layer <2020/03/25>
- ***********
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
- ) 
-Here is how much of TeX's memory you used:
- 40618 strings out of 469626
- 875982 string characters out of 5471004
- 1484979 words of memory out of 5000000
- 66428 multiletter control sequences out of 15000+600000
- 662690 words of font info for 101 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 122i,8n,123p,10962b,988s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
-Output written on main.pdf (13 pages, 292155 bytes).
-PDF statistics:
- 256 PDF objects out of 1000 (max. 8388607)
- 218 compressed objects within 3 object streams
- 59 named destinations out of 1000 (max. 500000)
- 93 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+ (./_minted/616C23DF2A0181E85FAD306CE75EA519.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/7BBC273A0227D

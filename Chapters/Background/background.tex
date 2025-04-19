@@ -1,138 +1,127 @@
 \chapter{Background}
 The aim of this dissertation is to evaluate, and propose, policies for mediating the interaction between Macocaml-style \textbf{metaprogramming} and \textbf{effect handlers}, by addressing the issue of \textbf{scope extrusion}.
 
-In this chapter, I lay the groundwork for the evaluation. I provide technical overviews of each of the three key concepts: metaprogramming (\Cref{section:metaprogramming-technical}), effect handlers (\Cref{section:effects-technical}), and scope extrusion (\Cref{section:scope-extrusion-technical}).
+In this chapter, I provide technical overviews of each of the key concepts: metaprogramming (\Cref{section:metaprogramming-technical}), effect handlers (\Cref{section:effects-technical}), and scope extrusion (\Cref{section:scope-extrusion-technical}).
 
 \section{Metaprogramming}\label{section:metaprogramming-technical}
-What is Macocaml-style metaprogramming? This section will provide an answer in three steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I will consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}). Finally, I will describe the design decisions made by MacoCaml (\Cref{subsection:metaprogramming-macocaml}).
+What is Macocaml-style metaprogramming? I will provide an answer in three steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I will consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}). Finally, I will describe the design decisions made by MacoCaml (\Cref{subsection:metaprogramming-macocaml}).
 
 \subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
 
-Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''\footnote{Though not the worst answer -- ``use ChatGPT''}. Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
+Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''\footnote{Though not the worst answer: ``use ChatGPT''}. Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
 
-Consider building a library for neural networks. As part of this library, we need to define function for calculating gradients, \mintinline{ocaml}{grad}, such that $\text{\mintinline{ocaml}{grad }}f x = f'(x)$. \mintinline{ocaml}{grad} is needed for performing backpropagation over neural networks.
-
-More precisely, \mintinline{ocaml}{f} is of type \mintinline{ocaml}{differentiable}, defined as follows
+I illustrate this tension by considering a concrete problem. Consider computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume $f$ of type \mintinline{ocaml}{differentiable}
 
 \begin{ocaml}
-type differentiable = Sin | Tanh | Sigmoid | ...
+type differentiable = Sin | Tanh | Sigmoid | `$\ldots$`
                     | Polynomial of float list
                     | Compose of differentiable * differentiable
 \end{ocaml}
-For example, the following expression represents $\sin\circ \tanh(x)$. 
+For example, the following expression represents $\sin\circ \tanh$. 
 % or $\cos \circ \tanh(x) $ depending on if the argument is \mintinline{ocaml}{true} or \mintinline{ocaml}{false}. 
-
 \begin{ocaml}
 Compose(Tanh, Sin)
 \end{ocaml}
 
-Assume further a function, \mintinline{ocaml}{grad_of}, that returns the gradient of the base constructors, for example, \mintinline{ocaml}{grad_of Sin 0} $=$ \mintinline{ocaml}{cos 0} $=$ \mintinline{ocaml}{1}.
-
-How would one write \mintinline{ocaml}{grad} \textit{maintainably}? How would one write it \textit{efficiently}?  
-
-To write this maintainably, we might write a function as such: 
-
+We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}. \mintinline{ocaml}{grad_main} illustrates one way to compute gradients maintainably: 
 \begin{ocaml}
-let rec grad f x = 
-  match f with
+let rec grad_main f x = match f with
   | Sin
   | Tanh
   | Sigmoid
-  | ...
-  | Polynomial(cs) -> grad_of f x 
-  | Compose(f, g) -> (grad f x) * (grad g (app f x))
-
+  | `$\ldots$`
+  | Polynomial(_) -> grad_of f x 
+  | Compose(f, g) -> (grad_main f x) * (grad_main g (app f x))
 \end{ocaml}
+However, \mintinline{ocaml}{grad_main} may not be the most efficient implementation. Performing a \mintinline{ocaml}{match} on every recursive call might result in expensive branches. If \mintinline{ocaml}{x} is a vector, and the weights of a polynomial are vectors, then \mintinline{ocaml}{grad_main} could hide opportunities for cache prefetching.
 
-This function is maintainable: it works for {any} differentiable function. However, it is not as efficient as it could be: most obviously, walking the function and performing a \mintinline{ocaml}{match} on every recursive call might result in expensive conditional branches. If we assume \mintinline{ocaml}{x} is a vector, and the weights of the polynomial are vectors, then this representation could limit opportunities for cache prefetching.
-
-If  the function is known in advance, for example, \mintinline{ocaml}{f} $=$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}, we could replace the \mintinline{ocaml}{grad} function with a cheap hardcoded equation. 
-
+If the function \mintinline{ocaml}{f} is known in advance, for example, \mintinline{ocaml}{f} $=$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}, we could implement a more efficient \mintinline{ocaml}{grad_fast} function, whose body is simply a hardcoded equation:
 \begin{ocaml}
 let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
 \end{ocaml}    
+Although \mintinline{ocaml}{grad_fast} only works for a single function, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
 
-The example illustrates the trade-off between maintainability and efficiency. In writing maintainable code, we sought to parameterise over the function. Abstraction is the key to maintainability. However, the aforementioned optimisations rely on specialisation, assuming \textbf{a} function. More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
+The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over the function \mintinline{ocaml}{f}. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is more specialised to a specific \mintinline{ocaml}{f} (\text{\mintinline{ocaml}{Compose(Tanh, Sin)}}). More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
 
-The tension between efficiency and maintainability has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
+The tension between maintainability (abstraction) and efficiency (specialisation) has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
-A more informed answer might therefore be ``by letting the compiler optimise my maintainable code''. Not quite -- for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know the function at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that we were using \mintinline{ocaml}{grad} to perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
+A more informed answer might therefore be ``by letting the compiler generate optimised versions of my maintainable code''. Not quite: for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know \mintinline{ocaml}{f} at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that \mintinline{ocaml}{grad} would perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation \citep{rice-53}. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
 
 How does one write maintainable and efficient code, \textbf{when one cannot trust the compiler to optimise one's code}?
 
-One answer is metaprogramming -- annotations that explicitly identify optimisation opportunities to the compiler, instructing it to apply certain arguments at compile-time. The \mintinline{ocaml}{grad} function in JAX, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
-
+One answer is metaprogramming, which gives users the ability to perform code-generation. Programmers may thus take matters into their own hands: manually generating optimised code when the compiler may not automatically do so for them. The \mintinline{ocaml}{grad} function in \texttt{JAX}, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
 
 \subsubsection{Speeding up exponentiation with Metaprogramming}
-The \mintinline{ocaml}{grad} example was useful for motivating metaprogramming, but not for understanding metaprogramming. To explain how metaprogramming works, we switch to a morally equivalent, but simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}.
-
-A maintainable exponentiation function may be written as follows
+Metaprogramming allows for code-generation: specifically, the manipulation and creation of abstract syntax trees. I will now illustrate how metaprogramming works with reference to an implementation of \textit{compile-time} metaprogramming (\texttt{MacoCaml}). While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a morally equivalent, but simpler example: an exponentiation function that raises an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable exponentiation function is the \mintinline{ocaml}{pow} function:
 \begin{ocaml}
-let rec pow n x = if n == 0 then 1 else x * pow (n-1) x
+let rec pow (n: int) (x: int) = 
+  if n == 0 then 1 
+  else x * pow (n-1) x
 \end{ocaml}
-\mintinline{ocaml}{pow}, which can be applied to any exponent \mintinline{ocaml}{n}, is analogous to the \mintinline{ocaml}{grad} function, which could be applied to \textit{any} differentiable function. 
+\mintinline{ocaml}{pow}, which can be applied to any exponent \mintinline{ocaml}{n}, is analogous to \mintinline{ocaml}{grad_main}, which could be applied to \textit{any} differentiable function. 
 
 However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ = 2$, then a more efficient, but less maintainable function, is 
 \begin{ocaml}
 let square x = x * x
 \end{ocaml}
-\mintinline{ocaml}{square} is analogous to the \mintinline{ocaml}{grad_fast} expression in the machine learning example.
+\mintinline{ocaml}{square} is analogous to \mintinline{ocaml}{grad_fast}.
 
-Metaprogramming can be utilised to write a function that resembles \mintinline{ocaml}{pow}, inheriting its maintainability, but that generates \mintinline{ocaml}{square}, inheriting its efficiency. I will now present the meta-programmed \mintinline{ocaml}{pow} function, and explain how it generates \mintinline{ocaml}{square}.
+Metaprogramming can be utilised to write a function, \mintinline{ocaml}{pow_gen}, which resembles \mintinline{ocaml}{pow} (inheriting its maintainability), but that generates \mintinline{ocaml}{square} (inheriting its efficiency). I will now present the meta-programmed \mintinline{ocaml}{pow_gen} function, and explain how it generates \mintinline{ocaml}{square}.
 
 \begin{macocaml}
-macro rec powGen (n: int) (x: int expr) = 
+macro rec pow_gen (n: int) (x: int expr) = 
   if n == 0 then <<1>> 
-  else <<$x * $(pow (n-1) x)>>
-
-let square y = $(powGen 2 <<y>>)
+  else <<$x * $(pow_gen (n-1) x)>>
+let square y = $(pow_gen 2 <<y>>)
+square 3 (*9*)
 \end{macocaml}
 
-Metaprogramming allows the user to create, and manipulate, abstract syntax trees (AST). This allows the programmer to generate programs as data, by constructing the AST of the program. For example, consider the program \mintinline{ocaml}{1 * 2}. Assume every code construct (\mintinline{ocaml}{1}, \mintinline{ocaml}{2}, \mintinline{ocaml}{*}) has a corresponding AST constructor (\mintinline{ocaml}{Int(1)}, \mintinline{ocaml}{Int(2)}, \mintinline{ocaml}{Mul(x, y)}). 
+Notice that \mintinline{ocaml}{pow_gen} broadly resembles \mintinline{ocaml}{pow}, with the exception of \textit{metaprogramming annotations} like \mintinline{ocaml}{<<>>} and \mintinline{ocaml}{$}. We will now explain these annotations. 
 
-We can create the AST of the program by writing \mintinline{ocaml}{Mul(Int(1), Int(2))}. We may also manipulate ASTs, for example, we could write
+Recall that compile-time metaprogramming gives the programmer the ability to generate programs at compile-time, for use at run-time. This requires three abilities. We require the ability to:
+\begin{enumerate}
+  \item Write programs that may be run at compile-time, achieved by the \mintinline{\macocamlLexer}{macro} annotation on line 1,
+  \item Run programs at compile-time, achieved by a \mintinline{ocaml}{$} (``splice'') annotation at the ``top-level'' (not surrounded by \mintinline{ocaml}{<<>>}), for example on line 4 (but not on line 3),
+  \item Build delayed programs that can be constructed at compile-time, but used at run-time.
+\end{enumerate}
+The last ability is the most interesting. A common approach is to represent delayed programs as abstract syntax trees (ASTs). Programmers may thus generate suspended programs at compile-time, by constructing the AST of the program. These ASTs may then be executed at run-time. 
 
+We will take the view that a metalanguage allows for the creation, and manipulation, of ASTs. A simple way to add metaprogramming to a language is to add AST constructors for each language term, for example, \mintinline{ocaml}{Int(1)} might be the AST of \mintinline{ocaml}{1}. If a program has type \mintinline{ocaml}{'a}, then its AST has type \mintinline{ocaml}{'a expr}.
+
+The ability to create and manipulate ASTs, combined with the ability to construct and execute functions at compile-time, allows for compile-time code generation. In the example below, we execute \mintinline{ocaml}{add_zero} at compile-time to generate the program \mintinline{ocaml}{(1*2)+0}.
 \begin{macocaml}
-let add_zero (x: int expr) = Plus(x, Int(0))
-add_zero Mul(Int(1), Int(2)) (* Plus(Mul(Int(1), Int(2)), Int(0)) *)
+macro add_zero (x: int expr) = Plus(x, Int(0))
+$(add_zero Mul(Int(1), Int(2))) (* Plus(Mul(Int(1), Int(2)), Int(0)) *)
 \end{macocaml}
 
-With compile-time metaprogramming, programmers can write functions that, when executed at compile-time,  generate efficient functions for run-time. Take the \mintinline{ocaml}{pow} function. We assumed \mintinline{ocaml}{n} is known, but \mintinline{ocaml}{x} is not. Therefore, the aim is to build a generator, that, when applied to \mintinline{ocaml}{n} $=2$ at compile-time, builds the AST of \mintinline{ocaml}{square}. This is easily achieved by replacing \mintinline{ocaml}{1} and \mintinline{ocaml}{*} with their corresponding AST constructors. Note also that \mintinline{ocaml}{x} is an AST of an integer, rather than an integer.
+Compile-time code generation can be exploited to generate \textit{optimised} code. Returning to the \mintinline{ocaml}{pow} example, the \mintinline{ocaml}{<<>>} (``quote'') annotation converts a program into its AST representation. For example,
+\[\text{\mintinline{ocaml}{<< x + 0 >>}} = \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}\]
+Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion
+\[\text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(x, Int(0))}} \]
+Notice that \mintinline{ocaml}{$} is overloaded -- we must be careful to disambiguate between ``top-level splices'', which run programs, and splices under quotations. 
 
-\begin{ocaml}
-let rec powGen (n: int) (x: int expr) = 
+Expanding the annotations (notice that we expanded the splices on line 3 but not the top-level splice on line 4), the operation of the \mintinline{ocaml}{pow_gen} function becomes clear
+\begin{macocaml}
+macro rec pow_gen (n:int) (x: int expr) = 
   if n == 0 then Int(1) 
-  else Mul(x, pow (n-1) x)
-\end{ocaml}
-
-\mintinline{ocaml}{powGen} may now be used as follows
-\begin{ocaml}
-LetFun(Var(square), Lam(Var(y), powGen 2 Var(y)))
-\end{ocaml}
-This expression evaluates to 
-\begin{ocaml}
-LetFun(Var(square), Lam(Var(y), Mul(Var(y), Mul(Var(y), Int(1)))))
-\end{ocaml}
-Which is the abstract syntax tree of \mintinline{ocaml}{let square y = y * y * 1}.
-
-This AST-constructor style is cumbersome, requiring extensive re-writes. For ease of both writing and reading, MacoCaml introduces two language constructs, \mintinline{ocaml}{<<e>>} (quote) and \mintinline{ocaml}{$e} (splice). 
-Quote converts expressions into their AST form, for example,
-\[\text{\mintinline{ocaml}{<<1*2>>}} = \text{\mintinline{ocaml}{Mul(Int(1), Int(2))}}\]
-While splice converts ASTs into expressions, and is therefore sometimes called ``anti-quotation''
-\[\text{\mintinline{ocaml}{$(Mul(Int(1), Int(2)))}} = \text{\mintinline{ocaml}{<<1*2>>}} \]
-Additionally, since MacoCaml performs code generation at compile-time, all expressions are treated as AST constructors by default. Re-writing \mintinline{ocaml}{pow} in this style, one obtains 
-\begin{macocaml}
-$(let rec powGen n x = 
-    if n == 0 then <<1>> 
-    else <<$x * $(pow (n-1) x)>> 
-  in 
-  <<let square y = $(powGen 2 <<y>>)>>)
+  else Mul(x, (pow_gen (n-1) x))
+let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), Int(1)))*)
 \end{macocaml}
+Applying this technique to the \mintinline{ocaml}{grad} example, we obtain
+\begin{macocaml}
+macro rec grad_gen f x = match f with
+  | Sin
+  | Tanh
+  | Sigmoid
+  | ...
+  | Polynomial(_) -> grad_of f x 
+  | Compose(f, g) -> <<$(grad_gen f x) * $(grad_gen g (app f x))>>
 
-To allow \mintinline{ocaml}{powGen} to be re-used globally, much the same way as a top-level \mintinline{ocaml}{let}, MacoCaml introduces the \mintinline{lexers/macocaml.py:MacocamlLexer}{macro} keyword. Rewriting in this style, we obtain the metaprogrammed \mintinline{ocaml}{powGen} function introduced at the start of the section.
-\subsection{The Design of Metalanguages}\label{subsection:metaprogramming-design}
+let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
+\end{macocaml}
+Where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
+\subsection{The Design Space of Metalanguages}\label{subsection:metaprogramming-design}
 While all metaprogramming languages allow for the creation and manipulation of abstract syntax, the specific mechanisms for doing so can be markedly different. In this section, I taxonomise the space of metalanguages, by highlighting key design decisions. 
-
 \subsubsection{Homogenous vs Heterogenous}
 One key design decision is whether the generated language (also known as the object language), and the generating language (the meta language) coincide. If the object and meta languages are the same, this is known as \textbf{homogenous} metaprogramming. Otherwise, it is \textbf{heterogenous}.
 
@@ -148,7 +137,457 @@ In JAX, Python (the meta language) generates MLIR (the object language), and thi
 \subsection{MacoCaml}\label{subsection:metaprogramming-macocaml}
 
 \section{Effect Handlers}\label{section:effects-technical}
-Effect handlers 
-\subsection{Effect Handlers for Composable User-Defined Effects}
+What is an effect handler? I will first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I will introduce a fine-grained call-by-value calculus for studying the operational behaviour of effect handlers, à lá \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus will be useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers (once the calculus has been extended with metaprogramming facilities). Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I will consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
+
+\subsection{Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
+When a program interacts with its environment, it produces an effect. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Effects are typically defined and understood separately, meaning they are not easily composable. They are also implemented by compiler engineers rather than programmers, meaning they are not customisable. Effect handlers provide a programmable, unifying framework that may be instantiated into different effects. This allows for composable and customisable treatment of effects.
+
+To illustrate the need for effect handlers, consider the following problem, by \citet{kiselyov-2012}. Assume a binary search tree of (key, value) pairs. The following code provides two functions. The first \mintinline{ocaml}{find}s a value \mintinline{ocaml}{v} associated with key \mintinline{ocaml}{k}, raising a \mintinline{ocaml}{NotFound} exception if \mintinline{ocaml}{k} is not in the tree. The second \mintinline{ocaml}{update}s the dictionary with a fresh key value pair, overwriting old values.
+
+\begin{ocaml}
+type ('a, 'b) tree = Lf | Br of 'a * 'b * tree * tree 
+
+let rec find (t: tree) (k: 'a) = match t with 
+ | Lf -> raise NotFound()
+ | Br(k', v, l, r) -> if k == k' then v 
+                      else if k < k' then find l k
+                           else find r k
+
+let rec update (t: tree) (k: 'a) (v: 'b) = match t with 
+  | Lf -> Br(k, v, Lf, Lf)
+  | Br(k', v', l, r) -> if k == k' then Br(k, v, l, r)
+                       else if k < k' then Br(k', v', update l k v, r)
+                            else Br(k', v', l, update r k v)
+\end{ocaml}
+
+Assume the task is to build a \mintinline{ocaml}{findOrInsert} function that either finds the value associated with a key, \textit{or} inserts a default value. A naïve approach to writing this function would be
+\begin{ocaml}  
+let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
+  try find t k with NotFound -> insert t k default
+\end{ocaml}
+This function is \textbf{inefficient}. If a \mintinline{ocaml}{NotFound} exception is raised, then the \mintinline{ocaml}{find} function will have raised the exception at the point where the default value should be inserted. The function could be twice as efficient if the exception could be resumed at the point where the exception was raised, in the following style.
+\begin{ocaml}
+let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
+  try find t k with NotFound(p) -> continue p Br(k, default, Lf, Lf)
+\end{ocaml}
+\mintinline{ocaml}{p} represents the suspended program to be resumed, and is known as a \textit{delimited continuation}.
+
+The aforementioned problem motivates the need for resumable exceptions. To understand the need for effect handlers, consider how one might go about \textbf{implementing} resumable exceptions. One approach might be to fork the implementation of handlers and tweak it ever-so-slightly. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee -- and \textit{continually} guarantee -- especially as implementations evolve, and more variants of exceptions are demanded. Second, the solution is not \textbf{customisable}. To add resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
+
+Effect handlers resolve both composability and customisability issues. Much like how exception handlers allow users to create custom exceptions with custom semantics, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects -- in the earlier example, resumable exceptions, but more generally, state, I/O, greenthreading, non-determinism, and more -- as effect handlers ensures composability by design. 
+
+With effect handlers, we can re-write the previous example to obtain the behaviour of resumable exceptions, even if the \texttt{OCaml} compiler does not support it, with the guarantee that \mintinline{ocaml}{NotFound} will interact predictably with other defined effects.
+\begin{ocaml}
+type _ Effect.t += NotFound: unit -> tree t
+
+let rec find (t: tree) (k: 'a) = match t with 
+  | Lf -> NotFound()
+  | Br(k', v, l, r) -> if k == k' then v 
+                      else if k < k' then find l k
+                            else find r k
+
+let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
+  match find t k with NotFound(p) with 
+  | v -> v
+  | effect NotFound k -> continue p Br(k, default, Lf, Lf)
+\end{ocaml}
+Since effect handlers may be instantiated into a range of different effects, considering the interaction of metaprogramming with effect handlers is an exercise in killing many birds with a single stone. Additionally, effect handlers were recently added to \texttt{OCaml} \citep{sivaramakrishnan-21}, making their interaction a timely problem. 
+\subsection{\efflang{}: A Calculus for Effect Handlers}\label{subsection:effect-handler-calculus}
+\newcommand{\print}[1]{\texttt{\textbf{print}(#1)}}
+
+Having motivated effect handlers, I will now describe a calculus, which I call \efflang, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} will be useful for two reasons. First, a precise description of the operational behaviour of effects will aid reasoning about their interaction with metaprogramming. Second, my universal calculus will be described by extending \efflang. Throughout this section, I will use the \efflang{} program in \Cref{listing:efflang-running-example} as a running example. 
+
+\begin{code}
+  \begin{efflst}
+    $\begin{array}{l}
+      \textbf{\texttt{handle}} \\
+      \quad \bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \\
+      \textbf{\texttt{with}} \\
+      \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
+      \quad \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\\
+    \end{array}$
+
+    \vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{(\texttt{3}, \texttt{"1;2"})}\end{array}$}
+
+  \end{efflst}
+  \captionof{listing}{An \efflang{} program that returns $(\texttt{3}, \texttt{"1;2"})$. It will be used as a running example throughout this section.}
+  \label{listing:efflang-running-example}
+  \end{code}
+
+\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In addition to this base syntax, in this section, I will assume \efflang{} is extended with the following language extensions: a unit value $()$, pairs $(\texttt{1}, \texttt{2})$ which can be destructured $\bind{(x, y)}{\return{(\texttt{1}, \texttt{2})}}{\, x+y}$, strings \texttt{"Hello"}, format strings \texttt{f"\{1\}"}, and string concatenation \texttt{\^}. For example, the following code evaluates to \texttt{"Revolution 9"}.
+
+% \texttt{\^} \texttt{f"\{$y$\}"}}}
+\begin{eff}
+$\begin{array}{l}\bind{(x, y)}{\return{(\texttt{"Revolution"}, \texttt{f"\{9\}"})}}{\, x \text{ \^\ } y}\end{array}$
+\vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\texttt{"Revolution 9"}}\end{array}$}
+\end{eff}
+Further, I use $c_1;c_2$ as syntactic sugar for $\bind{\_}{c_1}{c_2}$. 
+I will explain key language constructs in turn.
+\begin{figure}[t]
+  \begin{eff-desc}
+
+  $\begin{array}{llll}
+  \text{Values} & v & := & x \mid n \mid \lambda x. c \mid \kappa x.c \mid h \\
+
+  \text{Computations} & c & := & v_1 v_2 \mid \return{v} \mid \bind{x}{c_1}{c_2} \mid \\
+                             &&& \op{v} \mid \handleWith{c}{h} \mid \continue{v_1}{v_2} \\ 
+  \text{Handlers} & h & := &\returnHandler{x}{c} \mid h;\opHandler{x}{k}{c}
+  \end{array}$
+  
+  \end{eff-desc}
+  \caption{The syntax of \efflang. Terms are syntactically divided into values $v$ and computations $c$ }
+  \label{fig:eff-lang-syntax}
+\end{figure}
+
+\subsubsection{Sequencing computations: \texttt{do} and \texttt{return}}
+Effects force us to carefully consider the order of evaluation. For example, consider the following \texttt{OCaml} programs
+\begin{ocaml}
+let pure      = (1+0) + (2+0)
+let effectful = let l = new 0 in (l := 1; 1) + (l := 2; 2)
+\end{ocaml}
+The result of \mintinline{ocaml}{pure}, which has no effects, is independent of the evaluation order. In contrast, the result of \mintinline{ocaml}{effectful} \textit{is} dependent on the evaluation order. If terms are evaluated left-to-right, the value of \mintinline{ocaml}{!l} is \mintinline{ocaml}{2}, otherwise, it is \mintinline{ocaml}{1}.
+
+In order to be precise about the order of evaluation, \efflang{} terms are stratified into two syntactic categories, ``inert values'' $v$ and ``potentially effectful computations'' $c$ \citep{pretnar-15}. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ sequences computations, forcing programmers to be explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
+
+For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} \texttt{1} \texttt{2}? Do we evaluate both arguments before applying them, or interleave evaluation and application? The syntax forces programmers to choose explicitly. We can either fully evaluate both arguments before applying them in turn, 
+\begin{eff}
+$\bind{x}{\return{\texttt{1}}}{(\bind{y}{\return{\texttt{2}}}{(\bind{f}{\texttt{plus} \, x}{f y})})}$
+\end{eff}
+or alternatively, evaluate \texttt{1}, apply it, then evaluate \texttt{2}
+\begin{eff}
+$\bind{x}{\return{\texttt{1}}}{(\bind{f}{\texttt{plus} \, x}{\bind{y}{\return{\texttt{2}}}{f y}})}$
+\end{eff}
+
+Both choices are valid, but the programmer must choose. For clarity, where the ordering cannot affect the result (both of the aforementioned choices evaluate to $\return{3}$), I will abuse notation and write (for instance) $1+2$. 
+
+\subsubsection{Performing effects: \texttt{op}, \texttt{handle}, and \texttt{continue}}
+Having made explicit the order of operation, we may now add effect handlers. Recall that effect handlers allow users to register custom effects with custom semantics. I will now illustrate how this is supported by \efflang{}.
+
+For simplicity, \efflang{} assumes that the effects have been registered in advanced, parameterising over them with the placeholder $\op{v}$. Assume that the user has declared the effect \texttt{\textbf{print}} in advance. This would allow the user to write programs like 
+\begin{eff}
+$\bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$
+\end{eff}
+
+Having registered \textbf{\texttt{print}}, the user may now construct a handler that defines its semantics. A handler for \textbf{\texttt{print}} has the form 
+\[\textbf{\texttt{print}}(x, k) \mapsto {c}\]
+where $c$ is a user-defined computation that specifies the semantics of \textbf{\texttt{print}}. In defining the semantics of \textbf{\texttt{print}}, the user may refer to $x$, the value supplied by the effect (in the earlier example, \texttt{1} and \texttt{2}), and $k$, a delimited continuation that can be used to resume the suspended program with a value of one's choosing. For example, the user may want \textbf{\texttt{print}}s to build up a string, to be returned alongside the result of computation: the earlier program should return $(\texttt{3}, \texttt{"1; 2"})$. This may be achieved with the following handler 
+\[\textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
+This handler resumes the (potentially effectful) computation with the value $()$. Assuming that evaluation returns a value $v$ and a partially built-up string $s$, representing future calls to \textbf{\texttt{print}}, it suffices to prepend the value to be printed. 
+
+There is a slight complication. We assumed the resumed computation returns a value and a string -- but what if there are \textit{no} future calls to \textbf{\texttt{print}}? $x+y$ will evaluate to $\return{\texttt{3}}$, which is of the wrong type. To deal with this, we need a little boilerplate, for initialising the partially built up string. Every effect handler must additionally define a \textbf{\texttt{return}} handler, which treats \textbf{\texttt{return}} as a special effect, whose semantics we may modify 
+\[\textbf{\texttt{return}}(x) \mapsto {c}\]
+In this case, we may lift $\return{\texttt{3}}$ into the right shape, as follows:
+\[\textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}\]
+Having defined the semantics for \textbf{\texttt{print}}, the user may now interpret the earlier example with their semantics, using the $\handleWith{e}{h}$ construct. Doing so results in the program in \Cref{listing:efflang-running-example}.
+
+Notice that multiple effects may be handled by the same handler, and the same effect might be handled by multiple handlers, potentially with different semantics. 
+
+\subsubsection{Operational Semantics}
+Having described informally the desired semantics of \efflang{}, we may now make our intuitions precise, by means of an operational semantics. The operational semantics is collated in \Cref{fig:efflang-opsem}. 
+
+\begin{figure}[ht]
+  \arraycolsep=3pt
+\begin{eff-desc}
+  
+  \renewcommand{\effconfiguration}[2]{{#1}; {#2}}
+  \renewcommand{\transition}[2]{#1 & \leadsto & #2}
+  \newcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
+  \newcommand{\reductionRule}[1]{\rulename{Red}{#1}}
+  \newcommand{\congruenceRule}[1]{\rulename{Cng}{#1}}
+  \newcommand{\effectRule}[1]{\rulename{Eff}{#1}}
+  \footnotesize
+  \textbf{Auxiliary Definitions}
+  {\scriptsize
+    \[\begin{array}{lrcl}
+    \text{Evaluation Frame } & F & ::= & \bind{x}{-\,}{c_2} \mid \handleWith{-}{h} \\
+    \text{Evaluation Context } & E & ::= & [] \mid E::F \\ \vspace{1mm} \\
+    \text{Domain of Handler} & \textsf{dom}(h) & \triangleq & \textsf{dom}(\returnHandler{x}{c}) = \emptyset, \\
+    &&&\textsf{dom}(h;\opHandler{x}{k}{c}) = \textsf{dom}(h) \cup \{ \textbf{\textsf{op}} \} \\  
+    \vspace{1mm} \text{Handled Effects} & \textsf{handled}(E) & \triangleq & \textsf{handled}([]) = \emptyset, \\ 
+    &&& \textsf{handled}(E::\bind{x}{-\,}{c_2}) = \textsf{handled}(E), \\
+    &&& \textsf{handled}(E::\handleWith{-}{h}) = \textsf{handled}(E) \cup \textsf{dom}(h),
+  \end{array}
+  \]}
+
+\noindent\textbf{Operational Semantics}
+  {\scriptsize
+\[
+  \begin{array}{rrcl}
+  \reductionRule{App} & \transition{\effconfiguration{(\function{x}{c})v}{E}}{\effconfiguration{c[v/x]}{E}}\\
+  \reductionRule{Seq} & \transition{\effconfiguration{\bind{x}{\return{v}}{c}}{E}}{\effconfiguration{c[v/x]}{E}}\\
+  \reductionRule{Hdl} & \transition{\effconfiguration{\handleWith{\return{v}}{h}}{E}}{\effconfiguration{c[v/x]}{E}} \quad (\text{where $\returnHandler{x}{c} \in h$)}\\
+  \vspace{1mm} \\ 
+  \congruenceRule{Psh} & \transition{\effconfiguration{F[c]}{E}}{\effconfiguration{c}{E::F}} \\
+  \congruenceRule{Pop} & \transition{\effconfiguration{\return{v}}{E::F}}{\effconfiguration{F[v]}{E}}\\
+  \vspace{1mm} \\
+  \effectRule{Op} & \transition{\effconfiguration{\op{v}}{E_1 @ [h] @ E_2}}\effconfiguration{c[v/x, \kappa x. \, \handleWith{E_2[\return{x}]}{h} / k]}{E_1}\\
+  &&& \text{(where $\opHandler{x}{k}{c} \in h$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$)}\\
+  \effectRule{Cnt} & \transition{\effconfiguration{\continue{E_2}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1 @ E_2}}
+
+\end{array}
+\]
+  }
+\end{eff-desc}
+\caption{The operational semantics of \efflang. The semantics is given on configurations of the form $\langle c, E \rangle$, with the brackets dropped for clarity. Rules are divided into three classes: reduction rules $\textsc{Red-}X$, which perform computation, congruence rules $\textsc{Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc{Eff-}Z$ that are special to \efflang}
+\label{fig:efflang-opsem}
+\end{figure}
+
+The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à lá \citet{kiselyov-2012}. For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. Most of the rules are standard. We will focus on two rules: \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
+
+To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, consider the evaluation of the running example in \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
+\[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
+\; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\end{array}\]
+After several applications of \textsc{Cng-Pop}, we obtain the configuration
+{  \arraycolsep=3pt
+\small
+\[\begin{array}{rcl}
+  \langle \, \print{1} &;& \handleWith{-}{h} :: \\
+                        && \bind{x}{-;\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \, \rangle
+\end{array}
+  \]
+}
+
+Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op}, we can suspend the program, find the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and give the \textbf{\texttt{print}} effect the desired semantics
+{  \arraycolsep=3pt
+\small
+\[\begin{array}{rcl}
+  \langle \, \bind{(v, s)}{\continue{(\continuation{u}{E})}{()}}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} &;& \handleWith{-}{h} \, \rangle
+\end{array}
+  \]
+}
+Applying \textsc{Cng-Pop},
+{  \arraycolsep=3pt
+\small
+\[\begin{array}{rcl}
+  \langle \, \continue{(\continuation{u}{E})}{()} &;& \handleWith{-}{h} :: \\
+                              && \bind{(v, s)}{-\,}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} \, \rangle
+\end{array}
+  \]
+}
+Applying \textsc{Eff-Cnt}, we can resume the program that was suspended
+{  \arraycolsep=3pt
+\small
+\[\begin{array}{rcl}
+  \langle \, \return{()} &;& \handleWith{-}{h} :: \\
+                              && \bind{(v, s)}{-\,}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} \\
+                              && \bind{x}{-;\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \, \rangle
+\end{array}
+  \]
+}
+The side-condition on \textsc{Eff-Op} is needed because the user may define multiple handlers with different semantics for the same effect. The side-condition resolves any ambiguity by using the \textit{latest} handler. For example, the following program has a \textbf{\texttt{read}} effect that is given two definitions: it could read either \texttt{1} or \texttt{2}. The ambiguity is resolved by choosing the ``newer'' definition: in this case, \texttt{1}.
+\begin{eff}
+$\begin{array}{l}
+  \textbf{\texttt{handle}} \\
+  \quad \handleWith{\textbf{\texttt{read}()}}{\returnHandler{y}{\return{y}}; \textbf{\texttt{read}}(x, k) \mapsto {\continue{k}{1}}} \\
+  \textbf{\texttt{with}} \\ 
+  \quad \{ \returnHandler{y}{\return{y}}; \textbf{\texttt{read}}(x, k) \mapsto {\continue{k}{2}} \}
+\end{array}$ 
+
+\vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\texttt{1}}\end{array}$}
+\end{eff}
+
+
+\subsubsection{Type-and-Effect System}
+We now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types, which I will now briefly describe. 
+
+\begin{figure}
+  \begin{eff-desc}
+  $\begin{array}{llllr}
+    \text{Effects row} & \Delta & ::= & \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
+    \text{Value type} & T & ::= & \mathbb{N} & \\
+                              &&& \mid \functionType{T_1}{T_2} & \text{functions}\\
+                              &&& \mid \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}} & \text{handlers} \\
+                              &&& \mid \continuationType{T_1}{T_2} & \text{continuations}\\ \\
+    \text{Computation type} & \effectType{T}
+  \end{array}$
+  \end{eff-desc}
+  \caption{\efflang{} types. Notice that, just as terms are divided into values and computations, types are divided into value types ($T$) and computation types ($\effectType{T}$)}
+  \label{fig:efflang-type-syntax}
+\end{figure}
+
+Syntactically, just as terms are divided into values and computations, types are divided into value types (for example, $\mathbb{N}$) and computation types (for example, $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$). Since computations may have effects, computation types track unhandled effects using an effects row (typically labelled $\Delta$), which in this system is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects.
+\[
+\begin{array}{lll}
+  \textbf{Term} &\hspace{8mm}& \textbf{Type} \\
+  3 && \mathbb{N} \\ 
+  \bind{x}{\return{1}}{\bind{y}{\return{2}}{x + y}} &&  \effectType[\emptyset]{\mathbb{N}} \\ 
+  \bind{x}{\texttt{\textbf{print}($1$)}; \return{1}}{\bind{y}{\return{2}}{x + y}} &&  \effectType[\{ \texttt{\textbf{print}}\}]{\mathbb{N}} \\ 
+\end{array}
+\]
+
+Functions are values, and are applied to other values, but produce computations on application. For example, the function 
+\[
+\function{x:\mathbb{N}}{\, \textbf{\texttt{print}}(x); \return{x}}
+\]
+is a value that accepts a value of type $\mathbb{N}$ and returns a computation of type $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$. We thus say functions have suspended effects, which we write $\functionType{T_1}{T_2}$. In this case, the function has type $\functionType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}{\mathbb{N}}$. For technical reasons, continuations and functions need to be distinguished, but in most cases they may be treated equivalently. 
+
+Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects row (which recall represents unhandled effects). Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}$. For example, a handler of the form  
+\[ \begin{array}{ll}
+  \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
+    \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
+  \end{array}
+\]
+may be given type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$, reflecting both the handling of the \textbf{\texttt{print}} effect and the transformation of the return type to include the collated print statements.
+
+I now consider the typing rules for terms, which are collated in \Cref{fig:efflang-type-system}. Most rules are standard, but a few are worth paying attention to. 
+
+\begin{figure}[t]
+  \begin{eff-desc}
+    \centering 
+    \begin{minipage}[t]{0.2\textwidth}
+      \centering
+      $\inferrule[(Nat)]
+      { \\ }
+      {\type{n}{\mathbb{N}}}$
+      \end{minipage}% 
+  \begin{minipage}[t]{0.2\textwidth}
+    \centering
+  $\inferrule[(Var)]
+  {\Gamma(x) = T}
+  {\type{x}{T}}$
+  \end{minipage}% 
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+  $\inferrule[(Lambda)]
+    {\type[, x:T_1]{c}{\effectType{T_2}}}
+    {\type{\function{x}{c}}{\functionType{T_1}{T_2}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.3\textwidth}
+  \centering
+$\inferrule[(Continuation)]
+  {\type[, x:T_1]{c}{\effectType{T_2}}}
+  {\type{\continuation{x}{c}}{\continuationType{T_1}{T_2}}}$
+\end{minipage}
+  
+  \vspace{5mm}
+  
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(App)]
+    {\type{v_1}{T_1 \oset{\text{\tiny{$\Delta$}}}\longrightarrow T_2} \\ \type{v_2}{T_1}}
+    {\type{v_1 \, v_2}{\effectType{T_2}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(Continue)]
+    {\type{v_1}{\continuationType{T_1}{T_2}} \\ \type{v_2}{T_1}}
+    {\type{\continue{v_1}{v_2}}{\effectType{T_2}}}$
+  \end{minipage}
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+  $\inferrule[(Return)]
+    {\type{v}{T}}
+    {\type{\return{v}}{\effectType{T}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.55\textwidth}
+    \centering
+  $\inferrule[(Do)]
+    {\type{c_1}{\effectType{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
+    {\type{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
+  \end{minipage}
+  
+  \vspace{5mm}
+  % \begin{minipage}[t]{0.5\textwidth}
+  %   \centering
+  % $\inferrule[(Do)]
+  %   {\type{c_1}{\effectType{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
+  %   {\type{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
+  % \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(Op)]
+    {\type{v}{T_1} \\ \texttt{op}: T_1 \rightarrow T_2 \in \Sigma \\ \texttt{op} \in \Delta}
+    {\type{\op{v}}{\effectType{T_2}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(Handle)]
+    {\type{c}{\effectType{T_1}} \\ \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}
+    {\type{\handleWith{c}{h}}{\effectType[\Delta']{T_2}}}$
+  \end{minipage}\\
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{\textwidth}
+    \centering
+  $\inferrule[(Ret-Handler)]
+    {\type[, x:T_1]{c}{\effectType[\Delta']{T_2}}}
+    {\type{\returnHandler{x}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}$
+  \end{minipage}
+  
+  \vspace{5mm}
+  % \[\inferrule [(Lam)]
+  % {\type[, x:T_1]{t}{\sEffect{T_2}}}
+  % {\type{\function{x}{t}}{\sFunctionType{T_1}{T_2}}}\]
+  
+  % \[\inferrule[(App)]
+  % {\type{n_1}{\sFunctionType{T_1}{T_2}} \\
+  \begin{minipage}[t]{\textwidth}
+    \centering
+  $\inferrule[(Op-Handler)]
+    { \texttt{op}: A \to B \in \Sigma \\\\ 
+      \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}\\
+      \type[, x:A, k:{\continuationType[\Delta']{B}{T_2}} ]{c}{\effectType[\Delta']{T_2}}\\
+      \Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
+             \opHandler{x'}{k'}{c'} \notin h}
+    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}$
+  \end{minipage}
+  \end{eff-desc}
+  \caption{Typing rules for \efflang{} terms}
+  \label{fig:efflang-type-system}
+  \end{figure}
+
+First, the \textsc{Return} and \textsc{Do} rules. In the \textsc{Return} rule, we are allowed to assign the term $\return{v}$ any set of effects. For example, we could write:
+\[\inferrule{ }{\type[]{\return{\texttt{0}}}{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}}\] 
+This flexibility is important, because to type $\bind{x}{c_1}{c_2}$, the \textsc{Do} rule requires both $c_1$ and $c_2$ to have the same effects. For example, without this flexibility, we would not be able to complete the following typing derivation
+\[\inferrule{\vdots}{\type[]{\bind{x}{\print{0}}{\return{\texttt{0}}}}{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}}\] 
+A valid alternative would be to forbid this flexibility and add explicit subtyping. However, such an approach would no longer be syntax directed. 
+
+Second, the \textsc{Op} rule. Previously, we assumed that the user declared their effects in advance. We also assume that they declare the types of their effects in advance, and that we we store the mapping from effects to types in $\Sigma$. For example, we might assume $\Sigma = \{ \textbf{\texttt{print}}: \mathbb{N} \to 1 \}$. In \texttt{OCaml}, this would correspond to writing:
+\begin{ocaml}
+type _ Effect.t += Print: nat -> unit
+\end{ocaml}
+Note further the $\texttt{op} \in \Delta$ restriction -- flexibility allows us to over-approximate the effects in a term, but never underapproximate them. 
+
+Third, the \textsc{Ret-Handler} and \textsc{Op-Handler} rules, which are used to type handlers, which I will explain by means of an example. Assume we are trying to type the handler 
+\[ \begin{array}{ll}
+  \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
+    \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
+  \end{array}
+\]
+with the type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. We apply the \textsc{Op-Handler} rule, which is transcribed below. Preconditions are numbered for reference. 
+\[\inferrule[(Op-Handler)]
+    { (1)\,  \texttt{op}: A \to B \in \Sigma \\\\
+     (2)\, \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}\\
+      (3)\,\type[, x:A, k:{\continuationType[\Delta']{B}{T_2}} ]{c}{\effectType[\Delta']{T_2}}\\
+      (4)\,\Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
+      (5)\, \opHandler{x'}{k'}{c'} \notin h}
+    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}\]
+The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
+\begin{enumerate}
+  \item[(1)] $\textbf{\texttt{print}}: \mathbb{N} \to 1 \in \Sigma$, which is true by assumption
+  \item[(2)] Recursively check the rest of the handler $h = \returnHandler{x}{\return{(x, \texttt{""})}}$, ensuring it has type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This follows from a trivial application of the \textsc{Ret-Handler} rule. 
+  \item[(3)] Assuming $x$ has type $\mathbb{N}$ and $k$ has type $\continuationType[\emptyset]{1}{(\mathbb{N} \times \textsf{String})}$, the body \[{\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\] has type $\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}$. This is easy to show.
+  \item[(4)] That the handler \textit{only} removes \textbf{\texttt{print}} from the effects row, and no other effects. This check passes, but would fail if we tried to type the handler with, for example, $\handlerType{\effectType[\{ \textbf{\texttt{print}}, \textbf{\texttt{get}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$
+  \item[(5)] That there are no other handlers for \textbf{\texttt{print}} in $h$.
+\end{enumerate}
+A full typing derivation may be found in the appendix.
+
+\subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
 
 \section{Scope Extrusion}\label{section:scope-extrusion-technical}
