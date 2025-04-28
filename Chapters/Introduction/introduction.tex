@@ -12,7 +12,7 @@ Entrusting optimisation to the compiler is sufficient for many cases, but not al
 % programmer to identify pure functions. In \texttt{Haskell}, annotations can 
 % be used to identify strict arguments.
 
-Metaprogramming (for example, \texttt{C++} templates) \citep{abrahams-04} is one possible solution. In languages that support metaprogramming, programmers can identify what should be executed at compile-time. Importantly, programmers may write \textbf{maintainable} code, which when executed by the compiler, generates \textbf{efficient} code. For example, assume two implementations of the same (widely-used) function, one that runs faster on Arm, and one on Intel.
+Metaprogramming (for example, \texttt{C++} templates) \citep{abrahams-04} is one possible solution. In languages that support metaprogramming, programmers can identify what should be executed at compile-time. Importantly, programmers may write \textbf{maintainable} code, which when executed by the compiler, generates \textbf{efficient} code. For example, assume two implementations of the same function, one that runs faster on Arm, and one on Intel.
 
 The maintainable way to switch between these functions is via a conditional:
 \begin{ocaml}

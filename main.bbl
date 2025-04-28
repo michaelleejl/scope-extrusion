@@ -1,4 +1,4 @@
-\begin{thebibliography}{17}
+\begin{thebibliography}{22}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -17,10 +17,23 @@ C.~Calcagno, E.~Moggi, and W.~Taha.
 \newblock In U.~Montanari, J.~D.~P. Rolim, and E.~Welzl, editors, \emph{Automata, Languages and Programming}, pages 25--36, Berlin, Heidelberg, 2000. Springer Berlin Heidelberg.
 \newblock ISBN 978-3-540-45022-1.
 
+\bibitem[Chiang et~al.(2024)Chiang, Yallop, White, and Xie]{chiang-2024}
+T.-J. Chiang, J.~Yallop, L.~White, and N.~Xie.
+\newblock Staged compilation with module functors.
+\newblock \emph{Proc. ACM Program. Lang.}, 8\penalty0 (ICFP), Aug. 2024.
+\newblock \doi{10.1145/3674649}.
+\newblock URL \url{https://doi.org/10.1145/3674649}.
+
 \bibitem[Felleisen and Friedman(1987)]{felleisen-87}
 M.~Felleisen and D.~P. Friedman.
 \newblock Control operators, the secd-machine, and the {\(\lambda\)}-calculus.
 \newblock In M.~Wirsing, editor, \emph{Formal Description of Programming Concepts - {III:} Proceedings of the {IFIP} {TC} 2/WG 2.2 Working Conference on Formal Description of Programming Concepts - III, Ebberup, Denmark, 25-28 August 1986}, pages 193--222. North-Holland, 1987.
+
+\bibitem[Inoue and Taha(2012)]{inoue-2012}
+J.~Inoue and W.~Taha.
+\newblock Reasoning about multi-stage programs.
+\newblock In H.~Seidl, editor, \emph{Programming Languages and Systems}, pages 357--376, Berlin, Heidelberg, 2012. Springer Berlin Heidelberg.
+\newblock ISBN 978-3-642-28869-2.
 
 \bibitem[Isoda et~al.(2024)Isoda, Yokoyama, and Kameyama]{isoda-24}
 K.~Isoda, A.~Yokoyama, and Y.~Kameyama.
@@ -50,11 +63,27 @@ O.~Kiselyov.
 \newblock In M.~Codish and E.~Sumii, editors, \emph{Functional and Logic Programming}, pages 86--102, Cham, 2014. Springer International Publishing.
 \newblock ISBN 978-3-319-07151-0.
 
+\bibitem[Kiselyov(2024)]{kiselyov-2024}
+O.~Kiselyov.
+\newblock Generating c: Heterogeneous metaprogramming system description.
+\newblock \emph{Science of Computer Programming}, 231:\penalty0 103015, 2024.
+\newblock ISSN 0167-6423.
+\newblock \doi{https://doi.org/10.1016/j.scico.2023.103015}.
+\newblock URL \url{https://www.sciencedirect.com/science/article/pii/S0167642323000977}.
+
 \bibitem[Kiselyov et~al.(2016)Kiselyov, Kameyama, and Sudo]{kiselyov-16}
 O.~Kiselyov, Y.~Kameyama, and Y.~Sudo.
 \newblock Refined environment classifiers.
 \newblock In A.~Igarashi, editor, \emph{Programming Languages and Systems}, pages 271--291, Cham, 2016. Springer International Publishing.
 \newblock ISBN 978-3-319-47958-3.
+
+\bibitem[Mainland(2012)]{mainland-2012}
+G.~Mainland.
+\newblock Explicitly heterogeneous metaprogramming with metahaskell.
+\newblock \emph{SIGPLAN Not.}, 47\penalty0 (9):\penalty0 311–322, Sept. 2012.
+\newblock ISSN 0362-1340.
+\newblock \doi{10.1145/2398856.2364572}.
+\newblock URL \url{https://doi.org/10.1145/2398856.2364572}.
 
 \bibitem[Pretnar(2015)]{pretnar-15}
 M.~Pretnar.
@@ -111,6 +140,13 @@ J.~Vandebon, J.~G.~F. Coutinho, W.~Luk, and E.~Nurvitadhi.
 H.~Wickham.
 \newblock \emph{Advanced R}.
 \newblock Chapman and Hall/CRC, 2019.
+
+\bibitem[Xie et~al.(2023)Xie, White, Nicole, and Yallop]{xie-2023}
+N.~Xie, L.~White, O.~Nicole, and J.~Yallop.
+\newblock Macocaml: Staging composable and compilable macros.
+\newblock \emph{Proc. ACM Program. Lang.}, 7\penalty0 (ICFP), Aug. 2023.
+\newblock \doi{10.1145/3607851}.
+\newblock URL \url{https://doi.org/10.1145/3607851}.
 
 \bibitem[Yallop et~al.(2023)Yallop, Xie, and Krishnaswami]{yallop-2023}
 J.~Yallop, N.~Xie, and N.~Krishnaswami.

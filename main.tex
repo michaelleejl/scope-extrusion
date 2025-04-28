@@ -90,16 +90,41 @@
 %   skin=tile,
  }
 
+ \newtcblisting{ocamllst}{
+  common,
+  minted language=ocaml,
+  colback=ocamlBackground,
+  listing engine=minted,
+  % before={\par\vspace{0\baselineskip}\noindent},
+  after={\par\vspace{0\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
+%   skin=tile,
+ }
+
  \newcommand{\macocamlLexer}{lexers/macocaml.py:MacocamlLexer}
  \newtcblisting{macocaml}{
   common,
-  minted language=lexers/macocaml.py:MacocamlLexer,
+  minted language=\macocamlLexer,
   colback=ocamlBackground,
   listing engine=minted,
   after={\par\vspace{0.2\baselineskip}\noindent},
   minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
   overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
          anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MacoCaml};}
+%   skin=tile,
+ }
+ \newtcblisting{macocamllst}{
+  common,
+  minted language=\macocamlLexer,
+  colback=ocamlBackground,
+  listing engine=minted,
+  % before={\par\vspace{0\baselineskip}\noindent},
+  after={\par\vspace{0\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
 %   skin=tile,
  }
 

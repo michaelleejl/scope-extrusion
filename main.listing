@@ -1,4 +1,1 @@
-macro rec pow_gen (n:int) (x: int expr) =
-  if n == 0 then Int(1)
-  else Mul(x, (pow_gen (n-1) x))
-let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), Int(1)))*)
+type _ Effect.t += Print: nat -> unit

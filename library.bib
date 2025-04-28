@@ -255,3 +255,108 @@
   biburl    = {https://dblp.org/rec/conf/ifip2/FelleisenF87.bib},
   bibsource = {dblp computer science bibliography, https://dblp.org}
 }
+
+@article{kiselyov-2024,
+  title    = {Generating C: Heterogeneous metaprogramming system description},
+  journal  = {Science of Computer Programming},
+  volume   = {231},
+  pages    = {103015},
+  year     = {2024},
+  issn     = {0167-6423},
+  doi      = {https://doi.org/10.1016/j.scico.2023.103015},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0167642323000977},
+  author   = {Oleg Kiselyov},
+  keywords = {Heterogeneous metaprogramming, Code generation, Tagless-final},
+  abstract = {Heterogeneous metaprogramming systems use a higher-level host language to generate code in a lower-level object language. Their appeal is taking advantage of the module system, higher-order functions, data types, type system and verification tools of the host language to quicker produce high-performant lower-level code with some correctness guarantees. We present two heterogeneous metaprogramming systems whose host language is OCaml and object language is C. The first relies on offshoring: treating a subset of (MetaOCaml-generated) OCaml as a different notation for (a subset of) C. The second embeds C in OCaml in tagless-final style. The systems have been used in several projects, including the generation of C supersets OpenCL and OpenMP. Generating C with some correctness guarantees is far less trivial than it may appear, with pitfalls abound: e.g., local variables may only be introduced in statement context; mutable variables are not first-class. Maintenance has challenges of its own, e.g., extensibility. On many examples, we expound the pitfalls we have come across in our experience, and describe the design and implementation to address them.}
+}
+
+@inproceedings{10.1145/2364527.2364572,
+  author    = {Mainland, Geoffrey},
+  title     = {Explicitly heterogeneous metaprogramming with MetaHaskell},
+  year      = {2012},
+  isbn      = {9781450310543},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/2364527.2364572},
+  doi       = {10.1145/2364527.2364572},
+  abstract  = {Languages with support for metaprogramming, like MetaOCaml, offer a principled approach to code generation by guaranteeing that well-typed metaprograms produce well-typed programs. However, many problem domains where metaprogramming can fruitfully be applied require generating code in languages like C, CUDA, or assembly. Rather than resorting to add-hoc code generation techniques, these applications should be directly supported by explicitly heterogeneous metaprogramming languages.We present MetaHaskell, an extension of Haskell 98 that provides modular syntactic and type system support for type safe metaprogramming with multiple object languages. Adding a new object language to MetaHaskell requires only minor modifications to the host language to support type-level quantification over object language types and propagation of type equality constraints. We demonstrate the flexibility of our approach through three object languages: a core ML language, a linear variant of the core ML language, and a subset of C. All three languages support metaprogramming with open terms and guarantee that well-typed MetaHaskell programs will only produce closed object terms that are well-typed. The essence of MetaHaskell is captured in a type system for a simplified metalanguage. MetaHaskell, as well as all three object languages, are fully implemented in the mhc bytecode compiler.},
+  booktitle = {Proceedings of the 17th ACM SIGPLAN International Conference on Functional Programming},
+  pages     = {311–322},
+  numpages  = {12},
+  keywords  = {type systems, quasiquotation, open terms, metaprogramming, linear languages},
+  location  = {Copenhagen, Denmark},
+  series    = {ICFP '12}
+}
+
+@article{mainland-2012,
+  author     = {Mainland, Geoffrey},
+  title      = {Explicitly heterogeneous metaprogramming with MetaHaskell},
+  year       = {2012},
+  issue_date = {September 2012},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {47},
+  number     = {9},
+  issn       = {0362-1340},
+  url        = {https://doi.org/10.1145/2398856.2364572},
+  doi        = {10.1145/2398856.2364572},
+  abstract   = {Languages with support for metaprogramming, like MetaOCaml, offer a principled approach to code generation by guaranteeing that well-typed metaprograms produce well-typed programs. However, many problem domains where metaprogramming can fruitfully be applied require generating code in languages like C, CUDA, or assembly. Rather than resorting to add-hoc code generation techniques, these applications should be directly supported by explicitly heterogeneous metaprogramming languages.We present MetaHaskell, an extension of Haskell 98 that provides modular syntactic and type system support for type safe metaprogramming with multiple object languages. Adding a new object language to MetaHaskell requires only minor modifications to the host language to support type-level quantification over object language types and propagation of type equality constraints. We demonstrate the flexibility of our approach through three object languages: a core ML language, a linear variant of the core ML language, and a subset of C. All three languages support metaprogramming with open terms and guarantee that well-typed MetaHaskell programs will only produce closed object terms that are well-typed. The essence of MetaHaskell is captured in a type system for a simplified metalanguage. MetaHaskell, as well as all three object languages, are fully implemented in the mhc bytecode compiler.},
+  journal    = {SIGPLAN Not.},
+  month      = sep,
+  pages      = {311–322},
+  numpages   = {12},
+  keywords   = {type systems, quasiquotation, open terms, metaprogramming, linear languages}
+}
+
+@article{xie-2023,
+  author     = {Xie, Ningning and White, Leo and Nicole, Olivier and Yallop, Jeremy},
+  title      = {MacoCaml: Staging Composable and Compilable Macros},
+  year       = {2023},
+  issue_date = {August 2023},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {7},
+  number     = {ICFP},
+  url        = {https://doi.org/10.1145/3607851},
+  doi        = {10.1145/3607851},
+  abstract   = {We introduce MacoCaml, a new design and implementation of compile-time code generation for the OCaml language. MacoCaml features a novel combination of macros with phase separation and quotation-based staging, where macros are considered as compile-time bindings, expression cross evaluation phases using staging annotations, and compile-time evaluation happens inside top-level splices. We provide a theoretical foundation for MacoCaml by formalizing a typed source calculus maco that supports interleaving typing and compile-time code generation, references with explicit compile-time heaps, and modules. We study various crucial properties including soundness and phase distinction. We have implemented MacoCaml in the OCaml compiler, and ported two substantial existing libraries to validate our implementation.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = aug,
+  articleno  = {209},
+  numpages   = {45},
+  keywords   = {Compile-time code generation, Macros, OCaml, Staging}
+}
+
+@article{chiang-2024,
+  author     = {Chiang, Tsung-Ju and Yallop, Jeremy and White, Leo and Xie, Ningning},
+  title      = {Staged Compilation with Module Functors},
+  year       = {2024},
+  issue_date = {August 2024},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {8},
+  number     = {ICFP},
+  url        = {https://doi.org/10.1145/3674649},
+  doi        = {10.1145/3674649},
+  abstract   = {Multi-stage programming has been used in a wide variety of domains to  eliminate the tension between abstraction and performance. However, the  interaction of multi-stage programming features with features for  programming-in-the-large remains understudied, hindering the full integration  of multi-stage programming support into existing languages, and limiting the  effective use of staging in large programs.    We take steps to remedy the situation by studying the extension of MacoCaml, a  recent OCaml extension that supports compile-time code generation via  macros and quotations, with module functors, the key mechanism  in OCaml for assembling program components into larger units. We discuss design  choices related to evaluation order, formalize our calculus via elaboration, and  show that the design enjoys key metatheoretical properties: syntactic type  soundness, elaboration soundness, and phase distinction. We believe that this  study lays a foundation for the continued exploration and implementation of the  OCaml macro system.},
+  journal    = {Proc. ACM Program. Lang.},
+  month      = aug,
+  articleno  = {260},
+  numpages   = {35},
+  keywords   = {Compile-time code generation, Macros, Modules, OCaml, Staging}
+}
+
+@inproceedings{inoue-2012,
+  author    = {Inoue, Jun
+               and Taha, Walid},
+  editor    = {Seidl, Helmut},
+  title     = {Reasoning about Multi-stage Programs},
+  booktitle = {Programming Languages and Systems},
+  year      = {2012},
+  publisher = {Springer Berlin Heidelberg},
+  address   = {Berlin, Heidelberg},
+  pages     = {357--376},
+  abstract  = {We settle three basic questions that naturally arise when verifying multi-stage functional programs. Firstly, does adding staging to a language compromise any equalities that hold in the base language? Unfortunately it does, and more care is needed to reason about terms with free variables. Secondly, staging annotations, as the name ``annotations'' suggests, are often thought to be orthogonal to the behavior of a program, but when is this formally guaranteed to be true? We give termination conditions that characterize when this guarantee holds. Finally, do multi-stage languages satisfy useful, standard extensional facts---for example, that functions agreeing on all arguments are equivalent? We provide a sound and complete notion of applicative bisimulation, which establishes such facts or, in principle, any valid program equivalence. These results greatly improve our understanding of staging, and allow us to prove the correctness of quite complicated multi-stage programs.},
+  isbn      = {978-3-642-28869-2}
+}
+

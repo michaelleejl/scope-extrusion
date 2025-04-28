@@ -1,0 +1,21 @@
+\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contributions}{6}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Background}{7}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Metaprogramming}{7}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Metaprogramming for Fast and Maintainable Code}{7}{subsection.2.1.1}%
+\contentsline {subsubsection}{\nonumberline Speeding up exponentiation with Metaprogramming}{9}{subsubsection*.4}%
+\contentsline {subsection}{\numberline {2.1.2}The Design Space of Metalanguages}{12}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Effect Handlers}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Composable and Customisable Effects}{13}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}$\lambda _{\texttt {op}}${}: A Calculus for Effect Handlers}{16}{subsection.2.2.2}%
+\contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt {do} and \texttt {return}}{17}{subsubsection*.7}%
+\contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{17}{subsubsection*.9}%
+\contentsline {subsubsection}{\nonumberline Operational Semantics}{19}{subsubsection*.11}%
+\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{21}{subsubsection*.14}%
+\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{24}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Scope Extrusion}{24}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{25}{subsection.2.3.1}%
+\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{25}{subsubsection*.18}%
+\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{26}{subsubsection*.20}%
+\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{27}{subsubsection*.22}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -4,7 +4,7 @@ The aim of this dissertation is to evaluate, and propose, policies for mediating
 In this chapter, I provide technical overviews of each of the key concepts: metaprogramming (\Cref{section:metaprogramming-technical}), effect handlers (\Cref{section:effects-technical}), and scope extrusion (\Cref{section:scope-extrusion-technical}).
 
 \section{Metaprogramming}\label{section:metaprogramming-technical}
-What is Macocaml-style metaprogramming? I will provide an answer in three steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I will consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}). Finally, I will describe the design decisions made by MacoCaml (\Cref{subsection:metaprogramming-macocaml}).
+What is MacoCaml-style metaprogramming? I will provide an answer in two steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I will consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}), highlighting decisions made by MacoCaml.
 
 \subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
 
@@ -23,8 +23,10 @@ For example, the following expression represents $\sin\circ \tanh$.
 Compose(Tanh, Sin)
 \end{ocaml}
 
-We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}. \mintinline{ocaml}{grad_main} illustrates one way to compute gradients maintainably: 
-\begin{ocaml}
+We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}. \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}) illustrates one way to compute gradients maintainably: 
+
+\begin{code}
+\begin{ocamllst}
 let rec grad_main f x = match f with
   | Sin
   | Tanh
@@ -32,81 +34,131 @@ let rec grad_main f x = match f with
   | `$\ldots$`
   | Polynomial(_) -> grad_of f x 
   | Compose(f, g) -> (grad_main f x) * (grad_main g (app f x))
-\end{ocaml}
+\end{ocamllst}
+\captionof{listing}{A maintainable implementation of \mintinline{ocaml}{grad}}
+\label{listing:ocaml-grad-main}
+\end{code}
+
 However, \mintinline{ocaml}{grad_main} may not be the most efficient implementation. Performing a \mintinline{ocaml}{match} on every recursive call might result in expensive branches. If \mintinline{ocaml}{x} is a vector, and the weights of a polynomial are vectors, then \mintinline{ocaml}{grad_main} could hide opportunities for cache prefetching.
 
-If the function \mintinline{ocaml}{f} is known in advance, for example, \mintinline{ocaml}{f} $=$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}, we could implement a more efficient \mintinline{ocaml}{grad_fast} function, whose body is simply a hardcoded equation:
-\begin{ocaml}
-let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
-\end{ocaml}    
-Although \mintinline{ocaml}{grad_fast} only works for a single function, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
+If $f$ is known in advance, for example, $f =$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}, we could implement a more efficient \mintinline{ocaml}{grad_fast} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
 
-The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over the function \mintinline{ocaml}{f}. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is more specialised to a specific \mintinline{ocaml}{f} (\text{\mintinline{ocaml}{Compose(Tanh, Sin)}}). More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
+\begin{code}
+\begin{ocamllst}
+let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
+\end{ocamllst}
+\captionof{listing}{A fast implementation of \mintinline{ocaml}{grad}, assuming $f =$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}}
+\label{listing:ocaml-grad-fast}
+\end{code}    
+
+Although \mintinline{ocaml}{grad_fast} only works for a single $f$, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
+
+The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over $f$. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is more specialised to a specific $f$ (\text{\mintinline{ocaml}{Compose(Tanh, Sin)}}). More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
 
 The tension between maintainability (abstraction) and efficiency (specialisation) has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
-A more informed answer might therefore be ``by letting the compiler generate optimised versions of my maintainable code''. Not quite: for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know \mintinline{ocaml}{f} at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that \mintinline{ocaml}{grad} would perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation \citep{rice-53}. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
+A more informed answer might therefore be ``by letting the compiler generate optimised versions of my maintainable code''. Not quite: for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know $f$ at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that \mintinline{ocaml}{grad} would perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation \citep{rice-53}. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
 
 How does one write maintainable and efficient code, \textbf{when one cannot trust the compiler to optimise one's code}?
 
 One answer is metaprogramming, which gives users the ability to perform code-generation. Programmers may thus take matters into their own hands: manually generating optimised code when the compiler may not automatically do so for them. The \mintinline{ocaml}{grad} function in \texttt{JAX}, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
 
 \subsubsection{Speeding up exponentiation with Metaprogramming}
-Metaprogramming allows for code-generation: specifically, the manipulation and creation of abstract syntax trees. I will now illustrate how metaprogramming works with reference to an implementation of \textit{compile-time} metaprogramming (\texttt{MacoCaml}). While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a morally equivalent, but simpler example: an exponentiation function that raises an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable exponentiation function is the \mintinline{ocaml}{pow} function:
-\begin{ocaml}
+Metaprogramming allows for code-generation via the creation and manipulation of abstract syntax trees (ASTs). I will now illustrate how metaprogramming works with reference to \texttt{MacoCaml}, which implements \textit{compile-time} metaprogramming. While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a morally equivalent, but simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable implementation is the \mintinline{ocaml}{pow} function (\Cref{listing:ocaml-pow-maintainable}):
+
+\begin{code}
+\begin{ocamllst}
 let rec pow (n: int) (x: int) = 
   if n == 0 then 1 
   else x * pow (n-1) x
-\end{ocaml}
-\mintinline{ocaml}{pow}, which can be applied to any exponent \mintinline{ocaml}{n}, is analogous to \mintinline{ocaml}{grad_main}, which could be applied to \textit{any} differentiable function. 
+\end{ocamllst}
+\captionof{listing}{A maintainable implementation of an exponentiation function}
+\label{listing:ocaml-pow-maintainable}
+\end{code}
 
-However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ = 2$, then a more efficient, but less maintainable function, is 
-\begin{ocaml}
+\mintinline{ocaml}{pow}, which can be applied to any exponent \mintinline{ocaml}{n}, is analogous to \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}), which could be applied to \textit{any} differentiable function $f$. 
+
+However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ =$ \mintinline{ocaml}{2}, then a more efficient, but less maintainable implementation, is the \mintinline{ocaml}{square} function (\Cref{listing:ocaml-pow-fast}) 
+
+\begin{code}
+\begin{ocamllst}
 let square x = x * x
-\end{ocaml}
-\mintinline{ocaml}{square} is analogous to \mintinline{ocaml}{grad_fast}.
+\end{ocamllst}
+\captionof{listing}{An efficient implementation of exponentiation, assuming \mintinline{ocaml}{n} $=$ \mintinline{ocaml}{2}}
+\label{listing:ocaml-pow-fast}
+\end{code}
 
-Metaprogramming can be utilised to write a function, \mintinline{ocaml}{pow_gen}, which resembles \mintinline{ocaml}{pow} (inheriting its maintainability), but that generates \mintinline{ocaml}{square} (inheriting its efficiency). I will now present the meta-programmed \mintinline{ocaml}{pow_gen} function, and explain how it generates \mintinline{ocaml}{square}.
+\noindent \mintinline{ocaml}{square} is analogous to \mintinline{ocaml}{grad_fast} (\Cref{listing:ocaml-grad-fast}).
 
-\begin{macocaml}
+Metaprogramming can be utilised to write a function, \mintinline{ocaml}{pow_gen}, which resembles \mintinline{ocaml}{pow} (inheriting its maintainability), but that generates a program which resembles \mintinline{ocaml}{square} (inheriting its efficiency). \Cref{listing:ocaml-pow-gen} presents the meta-programmed \mintinline{ocaml}{pow_gen} function. Compilation generates the body of \mintinline{ocaml}{square y} (line 4), \mintinline{ocaml}{y * y * 1}. I will now explain the mechanics of generation.
+
+\begin{code}
+\begin{macocamllst}
 macro rec pow_gen (n: int) (x: int expr) = 
   if n == 0 then <<1>> 
   else <<$x * $(pow_gen (n-1) x)>>
-let square y = $(pow_gen 2 <<y>>)
-square 3 (*9*)
-\end{macocaml}
+let square y = $(pow_gen 2 <<y>>) (*after compile-time: y * y * 1 *)
+square 3 (*at runtime: 9*)
+\end{macocamllst}
+\captionof{listing}{A meta-programmed \mintinline{ocaml}{pow_gen} function, which resembles \mintinline{ocaml}{pow} but generates \mintinline{ocaml}{square}}
+\label{listing:ocaml-pow-gen}
+\end{code}
 
-Notice that \mintinline{ocaml}{pow_gen} broadly resembles \mintinline{ocaml}{pow}, with the exception of \textit{metaprogramming annotations} like \mintinline{ocaml}{<<>>} and \mintinline{ocaml}{$}. We will now explain these annotations. 
-
-Recall that compile-time metaprogramming gives the programmer the ability to generate programs at compile-time, for use at run-time. This requires three abilities. We require the ability to:
+% Notice that \mintinline{ocaml}{pow_gen} broadly resembles \mintinline{ocaml}{pow}, with the exception of \textit{metaprogramming annotations} like \mintinline{ocaml}{<<>>} and \mintinline{ocaml}{$}. These . 
+Recall that (compile-time) metaprogramming gives the programmer the ability to generate programs at compile-time, for use at run-time. We may build this in two steps, by:
 \begin{enumerate}
-  \item Write programs that may be run at compile-time, achieved by the \mintinline{\macocamlLexer}{macro} annotation on line 1,
-  \item Run programs at compile-time, achieved by a \mintinline{ocaml}{$} (``splice'') annotation at the ``top-level'' (not surrounded by \mintinline{ocaml}{<<>>}), for example on line 4 (but not on line 3),
-  \item Build delayed programs that can be constructed at compile-time, but used at run-time.
+  \item Deciding on a representation for code values, such that code can be created, and manipulated by programs. Once we have a representation for code values, it is possible to write expressions that return code values. These expressions serve as program generators.
+  \item Building a mechanism for executing expressions \textit{at compile-time}. We can constrain this mechanism, using types, so only generators can be executed at compile-time. 
 \end{enumerate}
-The last ability is the most interesting. A common approach is to represent delayed programs as abstract syntax trees (ASTs). Programmers may thus generate suspended programs at compile-time, by constructing the AST of the program. These ASTs may then be executed at run-time. 
 
-We will take the view that a metalanguage allows for the creation, and manipulation, of ASTs. A simple way to add metaprogramming to a language is to add AST constructors for each language term, for example, \mintinline{ocaml}{Int(1)} might be the AST of \mintinline{ocaml}{1}. If a program has type \mintinline{ocaml}{'a}, then its AST has type \mintinline{ocaml}{'a expr}.
-
-The ability to create and manipulate ASTs, combined with the ability to construct and execute functions at compile-time, allows for compile-time code generation. In the example below, we execute \mintinline{ocaml}{add_zero} at compile-time to generate the program \mintinline{ocaml}{(1*2)+0}.
+First, we represent code values as ASTs. Generated programs are ASTs, and program generators are expressions that evaluate to ASTs. We can assume, for clarity, that the language offers, for each program construct, a corresponding AST node -- for example, the integer \mintinline{ocaml}{1} has AST node \mintinline{ocaml}{Int(1)}. If a program has type \mintinline{ocaml}{'a}, then its AST node has type \mintinline{ocaml}{'a expr}. One can now write program generators, that evaluate to ASTs, for example:  
 \begin{macocaml}
-macro add_zero (x: int expr) = Plus(x, Int(0))
-$(add_zero Mul(Int(1), Int(2))) (* Plus(Mul(Int(1), Int(2)), Int(0)) *)
-\end{macocaml}
-
-Compile-time code generation can be exploited to generate \textit{optimised} code. Returning to the \mintinline{ocaml}{pow} example, the \mintinline{ocaml}{<<>>} (``quote'') annotation converts a program into its AST representation. For example,
-\[\text{\mintinline{ocaml}{<< x + 0 >>}} = \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}\]
-Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion
-\[\text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(x, Int(0))}} \]
-Notice that \mintinline{ocaml}{$} is overloaded -- we must be careful to disambiguate between ``top-level splices'', which run programs, and splices under quotations. 
-
-Expanding the annotations (notice that we expanded the splices on line 3 but not the top-level splice on line 4), the operation of the \mintinline{ocaml}{pow_gen} function becomes clear
-\begin{macocaml}
-macro rec pow_gen (n:int) (x: int expr) = 
+let rec pow_gen (n: int) (x: int expr) = 
   if n == 0 then Int(1) 
   else Mul(x, (pow_gen (n-1) x))
-let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), Int(1)))*)
+pow_gen 2 Int(3) (*Mul(Int(3), Mul(Int(3), 1))*)
+pow_gen 2 Var(y) (*Mul(Var(y), Mul(Var(y), 1))*)
+pow_gen 3 Var(y) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
 \end{macocaml}
+
+Second, we need a mechanism to execute expressions at compile-time. In \texttt{MacoCaml}, this is the ``top-level splice'', a splice (\mintinline{ocaml}{$}) annotation not surrounded by quotes (\mintinline{ocaml}{<<>>}). For example, in \Cref{listing:ocaml-pow-gen}, there is only one top-level splice, on line 4: \mintinline{ocaml}{$(pow_gen 2 <<y>>)}. We may now shift program generators (and only program generators) under top-level splices, to perform generation at compile time. Note that to access \mintinline{ocaml}{pow_gen} at compile-time, we must also move it under the top-level splice. 
+\begin{macocaml}
+let square y = $(let rec pow_gen (n: int) (x: int expr) = ...
+                 in pow_gen 2 Var(y)) 
+               (*Mul(Var(y), Mul(Var(y), 1))*)
+let cube y   = $(let rec pow_gen (n: int) (x: int expr) = ...
+                 in pow_gen 3 Var(y)) 
+               (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
+\end{macocaml}
+
+To allow compile-time functions, like \mintinline{ocaml}{pow_gen}, to be re-used across multiple top-level splices, \texttt{MacoCaml} introduces the \mintinline{\macocamlLexer}{macro} (\Cref{listing:ocaml-macros})
+
+\begin{code}
+\begin{macocamllst}
+macro rec pow_gen (n: int) (x: int expr) = 
+  if n == 0 then Int(1) 
+  else Mul(x, (pow_gen (n-1) x))
+let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), 1))*)
+let cube y = $(pow_gen 3 Var(y)) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
+  \end{macocamllst}
+
+  \captionof{listing}{In \texttt{MacoCaml}, \mintinline{\macocamlLexer}{macro} allows for definitions to be shared across top-level splices}
+
+  \label{listing:ocaml-macros}
+\end{code}
+% To allow definitions to
+
+% The ability to create and manipulate ASTs, combined with the ability to construct and execute functions at compile-time, allows for compile-time code generation. In the example below, we execute \mintinline{ocaml}{add_zero} at compile-time to generate the program \mintinline{ocaml}{(1*2)+0}.
+Further, rather than explicit AST constructors, ASTs are created by the \mintinline{ocaml}{<<>>} (``quote'') and \mintinline{ocaml}{$} annotations. Quotation creates ASTs, by converting a program into its AST representation. For example,
+\[\text{\mintinline{ocaml}{<< x + 0 >>}} = \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}\]
+Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion, allowing for programs that \textit{manipulate} ASTs. 
+\[\text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(x, Int(0))}} \]
+In \texttt{MacoCaml}, the programmer interleaves quotes and splices to perform code generation
+\[\text{\mintinline{ocaml}{<< $(add_zero <<1>>) + 0 >>}} = \text{\mintinline{ocaml}{Plus(add_zero Int(1), Int(0))}} \]
+Notice that \mintinline{ocaml}{$} is overloaded -- we must be careful to disambiguate between ``top-level splices'', which execute programs at compile-time, and splices under quotations, which stop conversion to AST. 
+
+Re-writing \Cref{listing:ocaml-macros} in this style (being careful about non-top-level splices), we obtain exactly \Cref{listing:ocaml-pow-gen}.
+
 Applying this technique to the \mintinline{ocaml}{grad} example, we obtain
 \begin{macocaml}
 macro rec grad_gen f x = match f with
@@ -119,28 +171,59 @@ macro rec grad_gen f x = match f with
 
 let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
 \end{macocaml}
-Where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
+whathere \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
 \subsection{The Design Space of Metalanguages}\label{subsection:metaprogramming-design}
-While all metaprogramming languages allow for the creation and manipulation of abstract syntax, the specific mechanisms for doing so can be markedly different. In this section, I taxonomise the space of metalanguages, by highlighting key design decisions. 
-\subsubsection{Homogenous vs Heterogenous}
-One key design decision is whether the generated language (also known as the object language), and the generating language (the meta language) coincide. If the object and meta languages are the same, this is known as \textbf{homogenous} metaprogramming. Otherwise, it is \textbf{heterogenous}.
+Different metalanguages provide slightly different variants of metaprogramming to the user. In this section, I broadly taxonomise these languages by considering three key design decisions:
+\begin{enumerate}
+  \item \textbf{\textsf{Homogenous or Heterogenous}}\\
+         \textit{Do the generated (``object'') and generating (``meta'') languages agree or differ?}
+  
+        If the object and meta languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogenous} \citep{kiselyov-2024}.
 
-In JAX, Python (the meta language) generates MLIR (the object language), and this is thus heterogenous metaprogramming. C++ templates use C++ (the meta language) to generate C++ (the object language), and this is homogenous.
+        \texttt{MacoCaml} allows for homogenous metaprogramming, where \texttt{OCaml} code generates \texttt{OCaml} code. In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 
 
+  \item \textbf{\textsf{Run-time or Compile-Time}} \\
+        \textit{When does the generation take place?}
+
+        Code generation could take place at compile-time (as with \texttt{MacoCaml} programs or \texttt{C} macros), or at run-time (as with \texttt{MetaOCaml} \citep{kiselyov-14}). 
+
+        % Run-time code generation may still be used to write fast and maintainable code, by adding a phase after the traditional compilation pipeline where the compiled code is executed. 
+        
+        Run-time and compile-time metaprogramming differ non-trivially. Run-time metaprogramming requires a language construct (\mintinline{ocaml}{!}, or ``run'') for explicit invocation of the compiler. Further, in run-time metaprogramming, generated and generating programs may share a heap. 
+
+        \texttt{MacoCaml} supports compile-time metaprogramming, and we will pay no further attention to run-time metaprogramming.
+        
+  \item \textbf{\textsf{Two-stage or Multi-stage}} \\
+  \textit{How many stages of code generation are allowed?}
+
+  When introducing \texttt{MacoCaml}, I illustrated how one uses top-level splices to perform shift computation from run-time (``level 0'') to compile-time (``level -1''). Might it be possible to shift computation from compile-time to a pre-compile-time (``level -2'' phase), for example, via a nested splice?
+  \begin{macocaml}
+$($ pow_gen 2 Var(y))
+  \end{macocaml}
+  In a two-stage system, one is restricted to operating between two levels, so this is disallowed. In contrast, in a multi-stage system, one can operate between any number of levels. Multi-stage metaprogramming is thus strictly more general than two-stage metaprogramming.
+  
+  Although nested splices are disallowed in \texttt{MacoCaml}, it is a multi-stage system, since entire modules may be imported at a decremented level \citep{xie-2023}. 
+\end{enumerate}
+  
+\texttt{MacoCaml} offers homogenous, compile-time, multi-stage metaprogramming. The scope of this dissertation is slightly more restrictive: I focus on two-stage, not multi-stage metaprogramming. This restriction was motivated by a cost-benefit analysis:
+\begin{enumerate}
+  \item \textbf{Cost}: Since in \texttt{MacoCaml}, the module system is the only mechanism for achieving multi-stage programming, investigating multi-stage metaprogramming would require the investigation of module systems, effects, and metaprogramming. The interaction between module systems and metaprogramming is still an ongoing area of research \citep{chiang-2024}.
+  \item \textbf{Benefit}: In practice, ``almost all uses'' of multi-stage metaprogramming only use two stages \citep{inoue-2012}. Further, scope extrusion can be observed, and is often studied, in two-stage systems \citep{isoda-24,kiselyov-16}.
+\end{enumerate}
 % \subsubsection{Quasi-quotation vs Code combinators}
 % A second key design decision relates to how ASTs are constructed. Quasi-quotation 
 
-\subsubsection{Run-Time vs Compile-Time}
+% \subsubsection{Run-Time vs Compile-Time}
 
-\subsubsection{Two-Stage vs Multi-Stage}
+% \subsubsection{Two-Stage vs Multi-Stage}
 
-\subsection{MacoCaml}\label{subsection:metaprogramming-macocaml}
+% \subsection{MacoCaml}\label{subsection:metaprogramming-macocaml}
 
 \section{Effect Handlers}\label{section:effects-technical}
 What is an effect handler? I will first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I will introduce a fine-grained call-by-value calculus for studying the operational behaviour of effect handlers, à lá \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus will be useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers (once the calculus has been extended with metaprogramming facilities). Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I will consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
 
 \subsection{Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
-When a program interacts with its environment, it produces an effect. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Effects are typically defined and understood separately, meaning they are not easily composable. They are also implemented by compiler engineers rather than programmers, meaning they are not customisable. Effect handlers provide a programmable, unifying framework that may be instantiated into different effects. This allows for composable and customisable treatment of effects.
+Effects are a mechanism by which a program interacts with its environment. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Effects are typically defined and understood separately, meaning they are not easily composable. They are also implemented by compiler engineers rather than programmers, meaning they are not customisable. Effect handlers provide a programmable, unifying framework that may be instantiated into different effects. This allows for composable and customisable treatment of effects.
 
 To illustrate the need for effect handlers, consider the following problem, by \citet{kiselyov-2012}. Assume a binary search tree of (key, value) pairs. The following code provides two functions. The first \mintinline{ocaml}{find}s a value \mintinline{ocaml}{v} associated with key \mintinline{ocaml}{k}, raising a \mintinline{ocaml}{NotFound} exception if \mintinline{ocaml}{k} is not in the tree. The second \mintinline{ocaml}{update}s the dictionary with a fresh key value pair, overwriting old values.
 
@@ -194,6 +277,8 @@ let rec findOrInsert (t: tree) (k: 'a) (default: 'b) =
 Since effect handlers may be instantiated into a range of different effects, considering the interaction of metaprogramming with effect handlers is an exercise in killing many birds with a single stone. Additionally, effect handlers were recently added to \texttt{OCaml} \citep{sivaramakrishnan-21}, making their interaction a timely problem. 
 \subsection{\efflang{}: A Calculus for Effect Handlers}\label{subsection:effect-handler-calculus}
 \newcommand{\print}[1]{\texttt{\textbf{print}(#1)}}
+\newcommand{\readInt}[1]{\texttt{\textbf{read\_int}(#1)}}
+
 
 Having motivated effect handlers, I will now describe a calculus, which I call \efflang, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} will be useful for two reasons. First, a precise description of the operational behaviour of effects will aid reasoning about their interaction with metaprogramming. Second, my universal calculus will be described by extending \efflang. Throughout this section, I will use the \efflang{} program in \Cref{listing:efflang-running-example} as a running example. 
 
@@ -201,7 +286,7 @@ Having motivated effect handlers, I will now describe a calculus, which I call \
   \begin{efflst}
     $\begin{array}{l}
       \textbf{\texttt{handle}} \\
-      \quad \bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \\
+      \quad \bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{2}}{\, x + y}}} \\
       \textbf{\texttt{with}} \\
       \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
       \quad \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\\
@@ -271,21 +356,38 @@ Both choices are valid, but the programmer must choose. For clarity, where the o
 \subsubsection{Performing effects: \texttt{op}, \texttt{handle}, and \texttt{continue}}
 Having made explicit the order of operation, we may now add effect handlers. Recall that effect handlers allow users to register custom effects with custom semantics. I will now illustrate how this is supported by \efflang{}.
 
-For simplicity, \efflang{} assumes that the effects have been registered in advanced, parameterising over them with the placeholder $\op{v}$. Assume that the user has declared the effect \texttt{\textbf{print}} in advance. This would allow the user to write programs like 
+For simplicity, \efflang{} assumes that the effects have been registered in advanced, parameterising over them with the placeholder $\op{v}$. Assume that the user has declared the effects \texttt{\textbf{print}} and \texttt{\textbf{read\_int}} in advance. This would allow the user to write programs like 
 \begin{eff}
 $\bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$
 \end{eff}
 
-Having registered \textbf{\texttt{print}}, the user may now construct a handler that defines its semantics. A handler for \textbf{\texttt{print}} has the form 
-\[\textbf{\texttt{print}}(x, k) \mapsto {c}\]
-where $c$ is a user-defined computation that specifies the semantics of \textbf{\texttt{print}}. In defining the semantics of \textbf{\texttt{print}}, the user may refer to $x$, the value supplied by the effect (in the earlier example, \texttt{1} and \texttt{2}), and $k$, a delimited continuation that can be used to resume the suspended program with a value of one's choosing. For example, the user may want \textbf{\texttt{print}}s to build up a string, to be returned alongside the result of computation: the earlier program should return $(\texttt{3}, \texttt{"1; 2"})$. This may be achieved with the following handler 
-\[\textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
-This handler resumes the (potentially effectful) computation with the value $()$. Assuming that evaluation returns a value $v$ and a partially built-up string $s$, representing future calls to \textbf{\texttt{print}}, it suffices to prepend the value to be printed. 
+In the program fragment above, we know that \textbf{\texttt{print}} is an effect, but we do not know its semantics. Effect handlers, which comprise a \textbf{return handler} and zero or more \textbf{operation handlers}, specify how effects interact with their environment, and thus may be used to give effects meaning. I will define an effect handler that accumulates print statements in a string (some ``\texttt{stdout}'').  For example, the aforementioned program should return $(\texttt{3}, \texttt{"1; 2"})$.
 
-There is a slight complication. We assumed the resumed computation returns a value and a string -- but what if there are \textit{no} future calls to \textbf{\texttt{print}}? $x+y$ will evaluate to $\return{\texttt{3}}$, which is of the wrong type. To deal with this, we need a little boilerplate, for initialising the partially built up string. Every effect handler must additionally define a \textbf{\texttt{return}} handler, which treats \textbf{\texttt{return}} as a special effect, whose semantics we may modify 
+We begin by considering how to handle the case where there are no calls to \textbf{\texttt{print}}. For example, in the program $\return{\texttt{3}}$. We may wish to return both the value, and the empty string (empty \texttt{stdout}) to the environment: in this case, $(\texttt{3}, \texttt{""})$. We can achieve this by specifying a \textit{return handler}.
 \[\textbf{\texttt{return}}(x) \mapsto {c}\]
-In this case, we may lift $\return{\texttt{3}}$ into the right shape, as follows:
-\[\textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}\]
+In this case, we set $c$ to $\return{(x, \texttt{""})}$. All effect handlers must specify a return handler. In many cases, the return handler is simply the identity ($c$ is set to $\return{x}$): for brevity and clarity, if the return handler is the identity, I may drop it. 
+
+Next, we consider how to handle a call to \textbf{\texttt{print}}. We use an operation handler of the form 
+\[\textbf{\texttt{print}}(x, k) \mapsto {c}\]
+Where $c$ is the user-defined semantics for \textbf{\texttt{print}}.
+Concretely, one instance of $c$ is 
+\[\textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
+In the definition of $c$, the programmer may refer to $x$ and $k$, which I will now explain. $x$ allows programs to send values (for example, values to be printed) to their environment. $k$ is a delimited continuation representing a suspended program, awaiting a value from the environment. Effects also allow programs to receive data from their environment, as in
+\[1 + \textbf{\texttt{get\_int\_from\_user}}()\]
+Note that the program is suspended until the value is receive. We may write the suspended program as $1 + [-]$, where $[-]$ indicates an as-yet-unknown value. This suspended program is represented by the continuation $k$. The expression 
+\[\continue{k}{v}\] 
+is used to resume the suspended program with value $v$. 
+
+We are now able to interpret the concrete operation handler $c$: we resume the suspended program, supplying a unit value, since \textbf{\texttt{print}} effects do not receive values from their environment. This returns a value $v$ and some partially accumulated \texttt{stdout} $s$. We prepend the printed value, $x$, onto $s$. 
+% Second, \textit{any effect can be understood in terms of send and receive operations}. Programs interact with their environment in two fundamental ways: they either \textit{receive} values from their environment (as above), or they \textit{send} values to its environment, for example via a \texttt{print}. 
+
+% $x$, $k$, 
+
+% where $x$ is a value sent by the program to its environment, $k$ is the program that was suspended on encountering the effect (a delimited continuation), and $c$ is a user-defined computation that specifies the semantics of \textbf{\texttt{print}}. 
+% In this example, we assume that programs evaluate to tuples $(\texttt{value}, \texttt{std\_out})$. Programs may receive values from their environment: we use the syntax $\continue{k}{()}$ to give the program the unital value. Programs may also send values $x$, which are processed by the environment -- in this case, prepended to the \texttt{std\_out}. If \textbf{\texttt{print}} is given these semantics, the earlier program should return $(\texttt{3}, \texttt{"1; 2"})$.
+
+% There is a slight complication. Our assumption is wrong: the program evalues $\return{\texttt{3}}$ -- we need to \textit{initialise} \texttt{std\_out}. This is done using a little boiler plate. Every effect handler must additionally define a \textbf{\texttt{return}} handler, which treats \textbf{\texttt{return}} as a special effect, whose semantics we may modify 
+% 
 Having defined the semantics for \textbf{\texttt{print}}, the user may now interpret the earlier example with their semantics, using the $\handleWith{e}{h}$ construct. Doing so results in the program in \Cref{listing:efflang-running-example}.
 
 Notice that multiple effects may be handled by the same handler, and the same effect might be handled by multiple handlers, potentially with different semantics. 
@@ -382,7 +484,7 @@ Applying \textsc{Eff-Cnt}, we can resume the program that was suspended
 \end{array}
   \]
 }
-The side-condition on \textsc{Eff-Op} is needed because the user may define multiple handlers with different semantics for the same effect. The side-condition resolves any ambiguity by using the \textit{latest} handler. For example, the following program has a \textbf{\texttt{read}} effect that is given two definitions: it could read either \texttt{1} or \texttt{2}. The ambiguity is resolved by choosing the ``newer'' definition: in this case, \texttt{1}.
+The side-condition on \textsc{Eff-Op} is needed because the user may define multiple handlers with different semantics for the same effect. The side-condition resolves any ambiguity by using the \textit{latest} handler. For example, the following program has a \textbf{\texttt{read}} effect that is given two definitions: it could read either \texttt{1} or \texttt{2}. The ambiguity is resolved by choosing the latest handler: in this case, \texttt{1}.
 \begin{eff}
 $\begin{array}{l}
   \textbf{\texttt{handle}} \\
@@ -591,3 +693,134 @@ A full typing derivation may be found in the appendix.
 \subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
 
 \section{Scope Extrusion}\label{section:scope-extrusion-technical}
+I now turn my attention to scope extrusion, which arises from the unexpected interaction of effects and metaprogramming. To illustrate scope extrusion, I will first extend \efflang{} (\Cpageref{subsection:effect-handler-calculus}) with AST constructors $\Var{x}{T}$, $\texttt{Nat}(n)$, $\texttt{Lam}$, and $\texttt{Plus}$. For example, we may generate the AST of $\lambda x: \mathbb{N}. \, x + 0$ as follows:
+
+\begin{eff}
+$\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(0))}}$
+\end{eff}
+
+\Cref{listing:efflang-scope-extrusion} illustrates the problem of scope extrusion. The program constructs the AST of $\lambda x: \mathbb{N}. \, x$, but additionally performs an effect, \textbf{\texttt{extrude}}, with type $\mathbb{N} \,  \texttt{expr} \to \mathbb{N} \, \texttt{expr}$. The handler for \textbf{\texttt{extrude}} discards the continuation, simply returning the value it was given: $\Var{x}{\mathbb{N}}$. The entire program evaluates to $\Var{x}{\mathbb{N}}$, and the generated AST is ill-scoped. We say that the result of evaluation demonstrates scope extrusion.
+
+\begin{code}
+  \begin{efflst}
+    $\begin{array}{l}
+      \textbf{\texttt{handle}} \\
+      \quad \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}})}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
+      \textbf{\texttt{with}} \\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{\texttt{Nat}(0)}}; \\
+      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
+    \end{array}$
+
+    \vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\Var{x}{\mathbb{N}}}\end{array}$}
+
+  \end{efflst}
+  \captionof{listing}{A \efflang{} program that evaluates to the $\Var{x}{\mathbb{N}}$. The AST is ill-scoped, and thus exhibits scope extrusion. It will be used as a running example.}
+  \label{listing:efflang-scope-extrusion}
+  \end{code}
+
+It is difficult to give a precise definition to scope extrusion, because there are multiple competing definitions \citep{kiselyov-14,kiselyov-16}, and many are given informally. For example, is scope extrusion a property of the \textit{result} of evaluation \citep{kiselyov-16}, as in \Cref{listing:efflang-scope-extrusion}, or is it a property of \textit{intermediate} configurations \citep{kiselyov-14}? We can, for example, build ASTs with extruded variables, that are bound at some future point. In \Cref{listing:efflang-maybe-scope-extrusion}, we produce the intermediate AST $\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})$, which is not well scoped. However, the result of evaluation is well scoped: $\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}$. Does \Cref{listing:efflang-maybe-scope-extrusion} exhibit scope extrusion?
+
+Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scope-extrusion}. Making precise the competing definitions of scope extrusion these competing definitions, and their relation to one another, is a contribution of this dissertation. 
+%  This makes scope extrusion difficult to define precisely, and to detect statically. 
+% 
+% While the example in \Cref{listing:efflang-scope-extrusion} clearly displays scope extrusion, not every example is quite so straightforward. 
+
+% For example, consider the example in \Cref{listing:efflang-no-scope-extrusion}. The program evaluates to the well-scoped AST $\Lam{\Var{x}{\mathbb{N}}}{\Var{x}{\mathbb{N}}}$. It is thus reasonable to claim that the program does \textbf{not} display scope extrusion. However, proving this requires knowledge of the \textit{semantics} of \textbf{\texttt{extrude}}. 
+
+\begin{code}
+  \begin{efflst}
+    $\begin{array}{l}
+      \textbf{\texttt{handle}} \\
+      \quad \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}}); \return{\Var{x}{\mathbb{N}}}}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
+      \textbf{\texttt{with}} \\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \\
+      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \bind{z}{\return{\texttt{Plus}({\texttt{Nat}({0})}, y)}}{\continue{k}{z}}} \}\\
+    \end{array}$
+
+    \vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}}\end{array}$}
+
+\end{efflst}
+\captionof{listing}{A \efflang{} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion.}
+\label{listing:efflang-maybe-scope-extrusion}
+\end{code}
+
+% \Cref{listing:efflang-scope-extrusion} should also hint at why a naïve type system fails to prevent scope extrusion. Scope extrusion is a property of \textit{data}
+
+\subsection{Existing Solutions to the Scope Extrusion Problem}
+There are multiple solutions to the problem of scope extrusion. The solution space can be broadly divided into two types of approaches: static and dynamic. I will now survey two dynamic approaches, which I term the lazy and eager checks, and one static approach, the method of refined environment classifiers \citep{kiselyov-16,isoda-24}, and. 
+
+\subsubsection{Lazy Dynamic Check}
+Scope extrusion at least, of the kind in \Cref{listing:efflang-no-scope-extrusion}, may seem trivial to resolve: evaluate the program to completion, and check that the resulting AST is well-scoped \citep{kiselyov-14}. I term this the Lazy Dynamic Check. This approach, while clearly correct and maximally expressive, is not ideal for efficiency and error reporting reasons. 
+
+To illustrate the inefficiency of this approach, consider a slight variation of \Cref{listing:efflang-scope-extrusion}, \Cref{listing:efflang-lazy-scope-extrusion-inefficient}. In \Cref{listing:efflang-lazy-scope-extrusion-inefficient}, we can, in theory, report a warning as soon scope extrusion is detected. However, waiting for the result of the program can be much more inefficient. 
+
+\begin{code}
+  \begin{efflst}
+    $\begin{array}{l}
+      \textbf{\texttt{do}} \,  x \leftarrow \textbf{\texttt{handle}} \\
+      \quad \quad \quad \quad \,\, \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}})}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
+      \quad \quad \quad \,\, \textbf{\texttt{with}} \\
+      \quad \quad \quad \quad \, \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{\texttt{Nat}(0)}}; \\
+      \quad \quad \quad \quad \, \, \; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
+      \textbf{\texttt{in}} \text{ some very long program}; \return{x}
+    \end{array}$
+
+    \vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\Var{x}{\mathbb{N}}}\end{array}$}
+
+  \end{efflst}
+  \captionof{listing}{A \efflang{} program that evaluates to the $\Var{x}{\mathbb{N}}$. Executing the entire program to determine if it exhibits scope extrusion is inefficient.}
+  \label{listing:efflang-lazy-scope-extrusion-inefficient}
+  \end{code}
+
+In terms of error reporting, note that, in waiting for the result of execution, we lose information about \textit{which program fragment} was responsible for scope extrusion, reducing the informativeness of reported errors \citep{kiselyov-14}.  
+
+\subsubsection{Eager Dynamic Check}
+A second dynamic check, motivated by the problems with the Lazy Dynamic Check, adopts a stricter definition of scope extrusion. During the code generation process, one inserts checks into the running program, reporting errors when one encounters  unbound free variables in intermediate ASTs. Hence, the Eager Dynamic Check would classify the program in \Cref{listing:efflang-maybe-scope-extrusion} as exhibiting scope extrusion. The Eager Dynamic Check has been adopted by BER MetaOCaml, and offers better efficiency and error reporting guarantees over the Lazy Dynamic Check \citep{kiselyov-14}.
+
+However, the Eager Dynamic Check is not without issue. The problem relates to the 
+manner in which checks are inserted, which we will make precise later. To illustrate the problem, consider \Cref{listing:efflang-maybe-not-scope-extrusion}, a slight variation of \Cref{listing:efflang-maybe-scope-extrusion} in which we replace the program fragment $\texttt{Plus}({\texttt{Nat}({0})}, y)$ with $y$. 
+
+\begin{code}
+  \begin{efflst}
+    $\begin{array}{l}
+      \textbf{\texttt{handle}} \\
+      \quad \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}}); \return{\Var{x}{\mathbb{N}}}}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
+      \textbf{\texttt{with}} \\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \\
+      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \bind{z}{\return{y}}{\continue{k}{z}}} \}\\
+    \end{array}$
+
+    \vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}}\end{array}$}
+
+\end{efflst}
+\captionof{listing}{A \efflang{} program that is a slight variation of \Cref{listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref{listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check.}
+\label{listing:efflang-maybe-not-scope-extrusion}
+\end{code}
+While the program in \Cref{listing:efflang-maybe-not-scope-extrusion} produces an intermediate AST with extruded variables, because of the mechanism for inserting checks, it passes the Eager Dynamic Check. I assert that this behaviour is unintuitive, and exposes too much of the internals to the programmer. 
+
+\subsubsection{Refined Environment Classifiers} 
+Refined Environment Classifiers are a static check that uses the type system to prevent scope extrusion. The fundamental idea 
+% Scope extrusion is difficult to define precisely, because there are multiple reasonable definitions. Consider the example in \Cref{listing:efflang-maybe-scope-extrusion}, which returns the well-scoped AST $\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}$. If scope extrusion is a property of the \textit{final} AST, then the program does not display scope extrusion. This is the definition implied by \citet{kiselyov-16}. However, in the process of computation, the program will evaluate to the intermediate AST $\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})$, which is not well scoped. It is only via use of the continuation $k$ that the error is resolved. If scope extrusion is a property of \textit{intermediate results} \citep{kiselyov-14}, then \Cref{listing:efflang-maybe-scope-extrusion} \textit{does} result in scope extrusion.  
+% As a result, most solutions seek to detect scope extrusion more eagerly. These solutions can be significantly more efficient, and have better error reporting capabilities. To be more eager, we may need to detect approximations of scope extrusion, and thus report false positives. These solutions thus sacrifice expressiveness. The solution space may be divided broadly into two categories: static (type-based) solutions, and dynamic solutions. 
+
+% We have already seen one dynamic solution, the Lazy check. I will now briefly introduce one static solution, Refined Environment Classifiers, and one more dynamic solution, the Eager check. For each, I will illustrate how the solution safely approximates scope extrusion. 
+
+% Regardless which definition we choose, scope extrusion is difficult to prevent using a type system. Critically, scope extrusion is closely related to the dynamic semantics of the program, rather than the syntactic structure. Consider the program below, which 
+
+% Critically, it is difficult  example in \Cref{listing:efflang-scope-extrusion} additionally illustrates the subtlety 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  19 APR 2025 20:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  28 APR 2025 14:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1163,12 +1163,12 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 2.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 2.
-LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 14.
+LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 10.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ot1zi4.fd
 File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 12.0pt on input line 14.
+(Font)              scaled to size 12.0pt on input line 10.
 )
 \tf@toc=\write7
 \openout7 = `main.toc'.
@@ -1201,10 +1201,10 @@ Overfull \hbox (2.63902pt too wide) in paragraph at lines 3--4
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250419201453 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250428143307 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250419201453 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250428143307 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/C4DEFEAE2EE5A678530ED3CC7853E435.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1275,47 +1275,314 @@ Overfull \hbox (4.97588pt too wide) in paragraph at lines 11--12
 \openout8 = `main.listing'.
 
  (./_minted/39D7115D3C08B7083A7C61CB8BCAB6B7.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/D2B933F6BC30C8B6FDDD3B800517FB4D.highlight.minted) (./_minted/4B219D1941E8D08514181ADEE35F5F76.highlight.minted) (./_minted/556F5A46E71FBBF1A3FA9D7C0251222E.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/0B3972FF6FD5680B27E91A2836A02211.highlight.minted)
 
 [7
 
 
 
 
-{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/70C0BAA042A5166E41B4A2DFFED09C43.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted)
+{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
 \openout8 = `main.listing'.
 
- (./_minted/D85C12F52E4EA208315013AB215FD031.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+ (./_minted/0B3972FF6FD5680B27E91A2836A02211.highlight.minted)
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 38.
+See the caption package documentation for explanation.
+
+Package hyperref Info: bookmark level for unknown listing defaults to 0 on input line 38.
+(./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/70C0BAA042A5166E41B4A2DFFED09C43.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/D85C12F52E4EA208315013AB215FD031.highlight.minted)
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 50.
+See the caption package documentation for explanation.
+
+(./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
 
 [8] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted)
 \openout8 = `main.listing'.
 
  (./_minted/2782FDADCF13F0B5070F5CCA715C7539.highlight.minted)
-Overfull \hbox (2.32384pt too wide) in paragraph at lines 55--60
-\OT1/qpl/m/n/12 gram-ming (\OT1/zi4/m/n/12 MacoCaml\OT1/qpl/m/n/12 ). While the [] ex-am-ple mo-ti-vated metapro-gram-ming,
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 75.
+See the caption package documentation for explanation.
+
+(./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/DDA4FB8C6D9AEC718A6AFC828B8B0E50.highlight.minted)
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 87.
+See the caption package documentation for explanation.
+
+(./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/04113B61D998F6C1CD500D6D928C7F20.highlight.minted) (./_minted/4D353A8BB606E6B2A2EB598E35256FAA.highlight.minted)
+Overfull \hbox (0.93178pt too wide) in paragraph at lines 93--94
+\OT1/qpl/m/n/12 which re-sem-bles [] (in-her-it-ing its ef-fi-ciency). [][]List-ing 5[][] presents the meta-
  []
 
-(./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted)
+
+
+[9]
 \openout8 = `main.listing'.
 
- (./_minted/DDA4FB8C6D9AEC718A6AFC828B8B0E50.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
-\openout8 = `main.listing'.
+ (./_minted/3DE925E4648A32F902C234F71508C0A1.highlight.minted)
 
- (./_minted/07C8173E5B8019ECD18DA33C0A23E662.highlight.minted)
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 103.
+See the caption package documentation for explanation.
 
-
-
-[9] (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/08C1C7864785805E895FF73B636D453F.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/BC9F84902D61B247B113DA5789EBE129.highlight.minted
+(./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/08C1C7864785805E895FF73B636D453F.highlight.minted) (./_minted/BC9F84902D61B247B113DA5789EBE129.highlight.minted
 LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 3.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
 File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
 (Font)              scaled to size 12.0pt on input line 3.
-) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted) (./_minted/E2BC7231C4E7C1A6DABDC298F0BB3467.highlight.minted) (./_minted/B936327D1F0159256638C48D8B058F1E.highlight.minted)
+) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted)
 \openout8 = `main.listing'.
 
- (./_minted/616C23DF2A0181E85FAD306CE75EA519.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/7BBC273A0227D
+ (./_minted/E255775B48FED725410A274376FF89BC.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/F10C406C117F7C8983DA65E5F0831574.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/C2BA6E7804B98A7874E57B6ADA48E220.highlight.minted)
+
+[10{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}] (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/DAB3E4FA94C4DFFE2AF7670F8D90A4F9.highlight.minted)
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 145.
+See the caption package documentation for explanation.
+
+(./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/7F3389433C85E4234B8EF268587F3228.highlight.minted)
+
+[11] (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/ADC21D8A6E2349AEAF5E333329D75232.highlight.minted) (./_minted/8F48AEE7CABDFBF174DC4634B5103770.highlight.minted)
+Overfull \hbox (0.3905pt too wide) in paragraph at lines 192--193
+[]\OT1/qpl/m/n/12 Run-time and compile-time metapro-gram-ming dif-fer non-trivially. Run-
+ []
+
+\openout8 = `main.listing'.
+
+(./_minted/E2FFC8F355CAF8355FFFD6D50C54C1B4.highlight.minted)
+
+[12]
+Overfull \hbox (2.26227pt too wide) in paragraph at lines 208--209
+[]\OT1/zi4/m/n/12 MacoCaml \OT1/qpl/m/n/12 of-fers ho-moge-nous, compile-time, multi-stage metapro-gram-ming.
+ []
+
+
+
+[13] (./_minted/33C076FFDCDA5B78EBAD85ACF5E7A333.highlight.minted) (./_minted/E76FE302821A92BD9B839D014065F3F6.highlight.minted) (./_minted/59EE28C0E25435FC81152B9557102E1F.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted) (./_minted/59EE28C0E25435FC81152B9557102E1F.highlight.minted) (./_minted/6EF202E75E68D4882AAB12E7BABA0D7C.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/D4D407BBB28A09C027D0DAE982E05283.highlight.minted
+LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
+(Font)              scaled to size 10.0pt on input line 2.
+LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
+(Font)              scaled to size 10.0pt on input line 6.
+) (./_minted/231B85DD15245E1677C63C53BF49AE64.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/30402CFACDA34C35A24ECDA41804CF90.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted) (./_minted/33C076FFDCDA5B78EBAD85ACF5E7A333.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/CB6644A3290998930943EEADDA39FE9D.highlight.minted) (./_minted/5E9C175BD3C72BFA0A4E9C8CE1A84AF6.highlight.minted)
+
+[14]
+Overfull \hbox (3.05585pt too wide) in paragraph at lines 260--261
+[]\OT1/qpl/m/n/12 Effect han-dlers re-solve both com-pos-abil-ity and cus-tomis-abil-ity is-sues. Much
+ []
+
+(./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/CBD1B610128CA9B2A07BA570410B15A2.highlight.minted)
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 278.
+LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
+(Font)              scaled to size 14.4pt on input line 278.
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <10> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 278.
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <7> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 278.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 278.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\lambda' on input line 278.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 278.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 278.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[15]
+LaTeX Font Info:    Trying to load font information for OMS+zi4 on input line 292.
+LaTeX Font Info:    No file OMSzi4.fd. on input line 292.
+
+
+LaTeX Font Warning: Font shape `OMS/zi4/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 292.
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 302.
+See the caption package documentation for explanation.
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 322.
+LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
+(Font)              scaled to size 10.95pt on input line 325.
+LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
+(Font)              scaled to size 10.95pt on input line 325.
+\openout8 = `main.listing'.
+
+(./_minted/F41964BF2D58E8F2142A06EF5DFA62C0.highlight.minted)
+Underfull \vbox (badness 2418) has occurred while \output is active []
+
+
+
+[16] (./_minted/A1789BB165F04BAAB74C605B39963857.highlight.minted) (./_minted/6750158339C3D7D3ED3741ED1636192A.highlight.minted) (./_minted/CF8215434E9E26FE9A9B2F2114336788.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted)
+
+[17]
+
+[18]
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <8> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 415.
+
+
+[19{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}]
+
+[20]
+
+[21]
+
+[22]
+\openout8 = `main.listing'.
+
+ (./_minted/A9843D7E435ACE06F2E45CB8509E3428.highlight.minted)
+Overfull \hbox (3.19785pt too wide) in paragraph at lines 686--687
+[]\OT1/qpl/m/n/12 Recursively check the rest of the han-dler $\OML/lmm/m/it/12 h \OT1/lmr/m/n/12 = [](\OML/lmm/m/it/12 x\OT1/lmr/m/n/12 ) \OMS/lmsy/m/n/12 7! []  []$\OT1/qpl/m/n/12 ,
+ []
+
+
+
+[23]
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 721.
+See the caption package documentation for explanation.
+
+
+
+[24]
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 751.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `listing:efflang-no-scope-extrusion' on page 1 undefined on input line 761.
+
+
+Underfull \vbox (badness 1472) has occurred while \output is active []
+
+
+
+[25]
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 783.
+See the caption package documentation for explanation.
+
+
+Package caption Warning: The option `hypcap=true' will be ignored for this
+(caption)                particular \caption on input line 812.
+See the caption package documentation for explanation.
+
+
+
+[26])
+
+[27] (./main.bbl
+
+[28
+
+
+
+]
+Underfull \hbox (badness 5924) in paragraph at lines 67--73
+\OT1/qpl/m/n/12 tem de-scrip-tion.  \OT1/qpl/m/it/12 Sci-ence of Com-puter Pro-gram-ming\OT1/qpl/m/n/12 , 231:103015,
+ []
+
+
+Underfull \hbox (badness 1817) in paragraph at lines 67--73
+\OT1/qpl/m/n/12 2024.  ISSN 0167-6423.  doi: $https : / / doi . org / 10 . 1016 / j . scico . 2023 .
+ []
+
+
+Underfull \hbox (badness 1867) in paragraph at lines 81--87
+\OT1/qpl/m/n/12 10 . 1145 / 2398856 . 2364572$.  URL [][]$\OT1/zi4/m/n/12 https : / / doi . org / 10 . 1145 / 2398856 .
+ []
+
+
+Underfull \hbox (badness 1533) in paragraph at lines 121--127
+\OT1/qpl/m/n/12 havapeddy.  Retrofitting ef-fect han-dlers onto ocaml.  In \OT1/qpl/m/it/12 Pro-ceed-
+ []
+
+
+
+[29])
+
+[30] (./main.aux (./Abstract/abstract.aux) (./Chapters/Introduction/introduction.aux) (./Chapters/Background/background.aux))
+ ***********
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2020/03/25>
+ ***********
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+ ) 
+Here is how much of TeX's memory you used:
+ 43147 strings out of 469626
+ 935584 string characters out of 5471004
+ 1525394 words of memory out of 5000000
+ 68716 multiletter control sequences out of 15000+600000
+ 788558 words of font info for 160 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 122i,26n,134p,10962b,1073s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb>
+Output written on main.pdf (30 pages, 529052 bytes).
+PDF statistics:
+ 537 PDF objects out of 1000 (max. 8388607)
+ 449 compressed objects within 5 object streams
+ 115 named destinations out of 1000 (max. 500000)
+ 109 words of extra memory for PDF output out of 10000 (max. 10000000)
+
