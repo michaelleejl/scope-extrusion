@@ -885,15 +885,14 @@ As every variable binder creates a scope, we may refer to the classifier created
 
 With classifiers, we may be precise about ``the variables permitted to be free (within the scope)''. As illustrated by the nesting in \Cref{fig:refined-enviroment-classifiers-basic}, scopes are related to other scopes. For example, since the scope $\gamma_{fx}$ is created within scope $\gamma_{f}$, any variable tagged with $\gamma_f$ may be safely used in the scope $\gamma_{fx}$. We say $\gamma_f$ is compatible with $\gamma_{fx}$, and write 
 \[\gamma_{f} \sqsubseteq \gamma_{fx}\]
-The compatibility relation ($\sqsubseteq$) is a partial order. It is reflexive, expressing that  $\texttt{Var}(\alpha)$ may be used within the scope it creates
-\[\forall \gamma. \gamma \sqsubseteq \gamma \] 
+The compatibility relation ($\sqsubseteq$) is a partial order, meaning $\sqsubseteq$ is reflexive, anti-symmetric, and transitive, and identifies a smallest classifier. Reflexivity expresses that  $\texttt{Var}(\alpha)$ may be used within the scope it creates
+\[\forall \gamma. \, \gamma \sqsubseteq \gamma \] 
 anti-symmetric, since nesting only proceeds in one direction
-\[\forall \gamma_1, \gamma_2. \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_1 \implies \gamma_1 = \gamma_2 \] 
-and transitive 
-\[\forall \gamma_1, \gamma_2, \gamma_3. \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_3 \implies \gamma_1 \sqsubseteq \gamma_3\]
+\[\forall \gamma_1, \gamma_2. \, \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_1 \implies \gamma_1 = \gamma_2 \] 
+and transitive, since we should count nestings within nestings
+\[\forall \gamma_1, \gamma_2, \gamma_3. \, \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_3 \implies \gamma_1 \sqsubseteq \gamma_3\]
 $\gamma_{\bot}$ acts as the least element of this partial order
-\[\forall \gamma, \gamma_{\bot} \sqsubseteq \gamma \] 
-In other words, $(\{ \gamma \}, \sqsubseteq)$ form a domain. 
+\[\forall \gamma. \, \gamma_{\bot} \sqsubseteq \gamma \] 
 
 Given a classifier $\gamma$, we may now define the variables permitted to be free in $\gamma$, written $\textsf{permitted}(\gamma)$
 \[\textsf{permitted}(\gamma) \triangleq \{ \texttt{Var}(\alpha) \mid \textsf{classifier}(\texttt{Var}(\alpha)) \sqsubseteq \gamma \}\]
