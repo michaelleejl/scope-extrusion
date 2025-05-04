@@ -619,7 +619,7 @@ $\inferrule[(Continuation)]
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Handle)]
-    {\type{c}{\effectType{T_1}} \\ \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}
+    {\type{c}{\effectType{T_1}} \\ \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \textsf{op} \in \textsf{dom}(h)}
     {\type{\handleWith{c}{h}}{\effectType[\Delta']{T_2}}}$
   \end{minipage}\\
 
@@ -815,7 +815,213 @@ manner in which checks are inserted, which we will make precise later. To illust
 While the program in \Cref{listing:efflang-maybe-not-scope-extrusion} produces an intermediate AST with extruded variables, because of the mechanism for inserting checks, it passes the Eager Dynamic Check. I assert that this behaviour is unintuitive, and exposes too much of the internals to the programmer. 
 
 \subsubsection{Refined Environment Classifiers} 
-Refined Environment Classifiers are a static check that uses the type system to prevent scope extrusion. The fundamental idea 
+Refined Environment Classifiers are a static check that uses the type system to prevent scope extrusion. Recall that metaprogramming involves the \textit{creation} and \textit{manipulation} of ASTs. Refined environment classifiers prevent scope extrusion by checking:
+
+\begin{enumerate}
+  \item \textit{Created} ASTs are well-scoped
+  \item \textit{Manipulating} ASTs preserves well-scopedness 
+\end{enumerate}
+
+We shall first ignore the ability to manipulate ASTs, and consider how to ensure \textit{created} ASTs are well-scoped. What does it mean to be well-scoped? Consider \Cref{fig:refined-enviroment-classifiers-basic}, the AST of 
+\[(\lambda f. \lambda x. f x) (\lambda y. y)\]
+Informally, a scope represents a set of variables that are permitted to be free. In the example, there are four scopes: one where no variables are free, one where only $f$ is free, one where $f$ and $x$ are free, and one where $y$ is free. An AST is well-scoped \textit{at a scope} if it is well-typed, and where the only free variables are those permitted by the scope. 
+
+Refined environment classifiers make this notion precise. Each classifier represents a scope. The AST has four scopes, corresponding to four classifiers:
+\begin{itemize}
+\item[$\gamma_{\bot}$\,\,] The top-level, where no free variables are permitted 
+\item[$\gamma_{f}$\;\,] Only $\texttt{Var}(f)$ permitted to be free
+\item[$\gamma_{fx}$] Only $\texttt{Var}(f)$ and $\texttt{Var}(x)$ permitted to be free 
+\item[$\gamma_{y}$\;\,] Only $\texttt{Var}(y)$ permitted to be free
+\end{itemize}
+As every variable binder creates a scope, we may refer to the classifier created by $\texttt{Var}(\alpha)$, $\textsf{classifier}(\texttt{Var}(\alpha))$. For example, $\gamma_{fx}= \textsf{classifier}(\texttt{Var}(x))$.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[level 1/.style={sibling distance=20em},
+                    level 2/.style={sibling distance=8em},
+                    level 3/.style={sibling distance=7em},
+                    level 4/.style={sibling distance=4em}]
+
+  \begin{scope}[every node/.style={font=\ttfamily}]
+  \node (app) {App}
+  child {node (lam-1) {Lam}
+    child {node (var-1) {Var($f$)}}
+    child {node (lam-2) {Lam}
+           child {node (var-2) {Var($x$)}}
+           child {node (app-2) {App}
+                  child {node (var-1-use) {Var($f$)} }
+                  child {node (var-2-use) {Var($x$)} }
+           }
+          }
+  }
+  child {node (lam-3) {Lam}
+  child {node (var-3) {Var($y$)}}
+  child {node (var-3-use) {Var($y$)}}};
+  \end{scope}
+
+
+
+  \begin{scope}
+    \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(var-3-use.south east) + (0.4cm,-3.7cm)$) rectangle ($(var-1.north west) + (-0.3cm,3.3cm)$);
+    
+    \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(var-2-use.south east) + (0.35cm,-0.4cm)$) rectangle ($(lam-2.north west) + (-2.0cm,0.2cm)$);
+    \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(var-2-use.south east) + (0.05cm,-0.1cm)$) rectangle ($(app-2.north west) + (-1.3cm,0.1cm)$);
+    \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(var-3-use.south east) + (0.2cm,-0.2cm)$) rectangle ($(var-3-use.north west) + (-0.2cm,0.2cm)$);
+
+    % \fill[rounded corners, envclassifier1] ($(var-1.north west) + (-0.3cm,3cm)$) rectangle ($(var-1.north west) + (-0.3cm,3cm)$);
+  \end{scope}
+
+  \begin{scope}[every node/.style={rounded corners, fill=envclassifier2, font=\scriptsize}]
+    \node (gammabot) at ($(var-3.north east) + (2cm,3.3cm)$) {$\gamma_{\bot}$};
+    \node (gammaf) at ($(lam-2.north west) + (2.7cm,0.2cm)$) {$\gamma_{f}$};
+    \node (gammafx) at ($(app-2.north west) + (1.3cm,0.1cm)$) {$\gamma_{fx}$};
+    \node (gammafx) at ($(var-3-use.north west) + (1.2cm,0.2cm)$) {$\gamma_{fx}$};
+  \end{scope}
+  
+\end{tikzpicture}
+\caption{The AST of $(\lambda f. \lambda x. f x) (\lambda y.y)$, where each scope is labelled with the corresponding environment classifier.}
+\label{fig:refined-enviroment-classifiers-basic}
+\end{figure}
+
+With classifiers, we may be precise about ``the variables permitted to be free (within the scope)''. As illustrated by the nesting in \Cref{fig:refined-enviroment-classifiers-basic}, scopes are related to other scopes. For example, since the scope $\gamma_{fx}$ is created within scope $\gamma_{f}$, any variable tagged with $\gamma_f$ may be safely used in the scope $\gamma_{fx}$. We say $\gamma_f$ is compatible with $\gamma_{fx}$, and write 
+\[\gamma_{f} \sqsubseteq \gamma_{fx}\]
+The compatibility relation ($\sqsubseteq$) is a partial order. It is reflexive, expressing that  $\texttt{Var}(\alpha)$ may be used within the scope it creates
+\[\forall \gamma. \gamma \sqsubseteq \gamma \] 
+anti-symmetric, since nesting only proceeds in one direction
+\[\forall \gamma_1, \gamma_2. \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_1 \implies \gamma_1 = \gamma_2 \] 
+and transitive 
+\[\forall \gamma_1, \gamma_2, \gamma_3. \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_3 \implies \gamma_1 \sqsubseteq \gamma_3\]
+$\gamma_{\bot}$ acts as the least element of this partial order
+\[\forall \gamma, \gamma_{\bot} \sqsubseteq \gamma \] 
+In other words, $(\{ \gamma \}, \sqsubseteq)$ form a domain. 
+
+Given a classifier $\gamma$, we may now define the variables permitted to be free in $\gamma$, written $\textsf{permitted}(\gamma)$
+\[\textsf{permitted}(\gamma) \triangleq \{ \texttt{Var}(\alpha) \mid \textsf{classifier}(\texttt{Var}(\alpha)) \sqsubseteq \gamma \}\]
+For example, $\textsf{permitted}(\gamma_{fx}) = \{ \texttt{Var}(f), \texttt{Var}(x)\}$ 
+
+We now say that an AST $n$ is well-scoped at type $T$ and scope $\gamma$ if it is well-typed at $T$, and all free variables in $n$ are in $\textsf{permitted}(\gamma)$. We write 
+\[\Gamma \vdash^{\gamma} n : T \]
+% \[ \textsf{permitted}(\texttt{Var}(\alpha)) \triangleq \{ \gamma \mid \textsf{classifier}(\texttt{Var}(\alpha)) \sqsubseteq \gamma \} \]
+
+Ensuring that created ASTs are well-scoped is the responsibility of the type system. The key rule is the \textsc{C-Abs} rule, which, \textbf{assuming we know that we are creating an AST}, has roughly the following shape \footnote{I will revisit this assumption when introducing the type system for my calculus}: 
+\[\inferrule[(C-Abs)]{\, \gamma \in \Gamma \\ (2) \, \gamma' \text{fresh} \\ (3) \, \Gamma, \gamma', \gamma \sqsubseteq \gamma', (x: T_1)^{\gamma'} \vdash^{\gamma'} n: T_2}{(1) \, \Gamma \vdash^{\gamma} \lambda x. n: T_1 \longrightarrow T_2}\]
+For reference, the premises and conclusions have been numbered, and many  technical details have been simplified for clarity. \Cref{fig:cref-typing-rule} visually depicts of the typing rule. 
+
+\begin{enumerate}
+  \item[(1)] The goal of the typing rule is to ensure the function is well-scoped at type $T_1 \to T_2$ and scope $\gamma$.
+  \item[(2)] Since the function introduces a new variable binder, $\texttt{Var}(x)$, one has to create a new scope. This is achieved by picking a fresh classifier $\gamma'$.
+  \item[(3)] We record the following:
+  \begin{enumerate}
+    \item[(a)] Since $\gamma'$ is created within the scope of $\gamma$, $\gamma \sqsubseteq \gamma'$.
+    \item[(b)] $\textsf{classifier}(\texttt{Var}(x)) = \gamma'$ (as a shorthand $(x: T_1)^{\gamma'}$)
+  \end{enumerate}
+  With this added knowledge, we ensure that the function body is well-scoped at type $T_2$ and $\gamma'$.
+\end{enumerate}
+\begin{figure}
+  \centering
+  \begin{tikzpicture}[level 1/.style={sibling distance=10em}]
+  
+    \begin{scope}[every node/.style={font=\ttfamily}]
+    \node (lam) {Lam}
+    child {node (binder) {Var$(x)$}}
+    child {node (body) {n}};
+    \end{scope}
+  
+  
+  
+    \begin{scope}
+      \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(body.south east) + (1.2cm,-.5cm)$) rectangle ($(binder.north west) + (-0.9cm,1.8cm)$);
+      
+      % \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(var-2-use.south east) + (0.35cm,-0.4cm)$) rectangle ($(lam-2.north west) + (-2.0cm,0.2cm)$);
+      % \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(var-2-use.south east) + (0.05cm,-0.1cm)$) rectangle ($(app-2.north west) + (-1.3cm,0.1cm)$);
+      \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(body.south east) + (-1cm,-0.2cm)$) rectangle ($(body.north west) + (1cm,0.2cm)$);
+  
+      % \fill[rounded corners, envclassifier1] ($(var-1.north west) + (-0.3cm,3cm)$) rectangle ($(var-1.north west) + (-0.3cm,3cm)$);
+    \end{scope}
+  
+    \begin{scope}[every node/.style={rounded corners, fill=envclassifier2, font=\scriptsize}]
+      \node (gammabot) at ($(binder.north west) + (5.3cm,1.8cm)$) {$\gamma$};
+      \node (gammaf) at ($(body.north west) + (.6cm,0.2cm)$) {$\gamma'$};
+    \end{scope}
+    
+  \end{tikzpicture}
+  \caption{Visual depiction of the \textsc{(C-Abs)} typing rule.}
+  \label{fig:cref-typing-rule}
+  \end{figure}
+  
+% Having defined a notion of compatibility, we may now 
+
+The above example focused on \textbf{creating} ASTs, and had no compile-time executable code. We now consider how to maintain well-scopedness while \textbf{manipulating} ASTs. We consider the ``AST'' of the scope extrusion example, \Cref{listing:efflang-scope-extrusion} (\Cref{fig:classifier-ast-scope-extrusion}). Notice that in place of AST nodes, we may now have compile-time executable code that \textit{evaluate} to AST nodes. Thus, both code and AST nodes reside within scopes. We have two classifiers: $\gamma_{\bot}$ and $\gamma_{\alpha}$, with $\textsf{classifier}(\texttt{Var}(\alpha)) = \gamma_{\alpha}$.
+
+\begin{figure}
+\centering
+
+\begin{tikzpicture}[level 1/.style={sibling distance=15em}]
+
+  \begin{scope}[every node/.style={font=\ttfamily}]
+  \node (handler) {Lam}
+  child {node (var) {Var($\alpha$)}}
+  child {node (body) {\textbf{extrude}(\texttt{Var}($\alpha$)); $\return(\texttt{Var}(\alpha))$}};
+  \end{scope}
+
+  \begin{scope}
+    \node[anchor=east] (lam-left) at ($(handler.west) + (-0.1cm, 0cm)$) {\textbf{\texttt{handle}}};
+    \node[anchor=west] (lam-right) at ($(handler.east) + (0.1cm, 0cm)$) {\texttt{\textbf{with} \{$\ldots$,\textbf{extrude}($y, k$)$\mapsto\ldots$\} }};
+  \end{scope}
+
+
+  \begin{scope}[on background layer]
+    \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(body.south east) + (0.5cm,-0.4cm)$) rectangle ($(lam-left.north west) + (-2.1cm,0.4cm)$);
+
+    \draw[line width=0.5mm, rounded corners,envclassifier1, dashed] ($(body.south east) + (0.1cm,-0.1cm)$) rectangle ($(body.north west) + (-0.2cm,0.2cm)$);
+
+    \begin{scope}[every node/.style={rounded corners, fill=envclassifier2, font=\scriptsize}]
+      \node (gammabottom) at ($(lam-left.north west) + (7.6cm,0.4cm)$) {$\gamma_{\bot}$};
+      \node (gammaalpha) at ($(body.north west) + (5.8cm,0.2cm)$) {$\gamma_{\alpha}$};
+    \end{scope}
+    % \draw[line width=0.5mm, rounded corners,envclassifier2a] ($(var-2-use.south east) + (0.05cm,-0.1cm)$) rectangle ($(app-2.north west) + (-1.3cm,0.1cm)$);
+    % \draw[line width=0.5mm, rounded corners,envclassifier1] ($(var-3-use.south east) + (0.1cm,-0.1cm)$) rectangle ($(var-3-use.north west) + (-0.1cm,0.1cm)$);
+
+    % \fill[rounded corners, envclassifier1] ($(var-1.north west) + (-0.3cm,3cm)$) rectangle ($(var-1.north west) + (-0.3cm,3cm)$);
+  \end{scope}
+  
+\end{tikzpicture}
+
+\caption{The ``AST'' of the scope extrusion example, \Cref{listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable code that \textit{evaluate} to AST nodes.}
+\label{fig:classifier-ast-scope-extrusion}
+\end{figure}
+
+Key to the prevention of scope extrusion is the typing of handlers and operations, like \textbf{\texttt{extrude}}, that manipulate ASTs. Since these rules are complex, we describe them informally. The handle expression
+\[\handleWith{e}{h}\]
+is in scope $\gamma_{\bot}$. Therefore, for each operation handled by $h$, such as \textbf{\texttt{extrude}}, the argument to the operation must either not be an AST, or be an AST that is well-scoped at some $\gamma \sqsubseteq \gamma_{\bot}$. 
+% We 
+% \[\textbf{\texttt{extrude}}: \texttt{AST}(\mathbb{N})^{\gamma_{\bot}} \to 1^{\gamma_{\bot}}\]
+However, $\texttt{Var}(\alpha)$ is typed at $\gamma_{\alpha}$, and clearly, $\gamma_{\alpha} \not\sqsubseteq \gamma_{\bot}$. There is thus no way to type the scope extrusion example in \Cref{listing:efflang-scope-extrusion}.
+
+Note that the analysis was independent of the \textit{body} of the handler. Therefore, the examples in \Cref{listing:efflang-maybe-not-scope-extrusion,listing:efflang-maybe-scope-extrusion} are \textit{also} not well-typed. Perhaps somewhat surprisingly, so too is \Cref{listing:efflang-no-scope-extrusion} (which would pass both the Eager and Lazy Dynamic Checks). Refined environment classifiers statically prevent variables ($\texttt{Var}(\alpha)$) from becoming \textit{available} in program fragments ($\texttt{\textbf{op}}(y, k) \mapsto \ldots$) where, \textit{if misused}, \textit{might} result in scope extrusion. This is, of course, an over-approximation. It means that the refined environment classifiers check prevents not only both types of scope extrusion, but even more benign examples, such as that in \Cref{listing:efflang-no-scope-extrusion}.
+
+\begin{code}
+  \begin{efflst}
+    $\begin{array}{l}
+      \textbf{\texttt{handle}} \\
+      \quad \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}}); \return{\Var{x}{\mathbb{N}}}}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
+      \textbf{\texttt{with}} \\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \\
+      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \return{\texttt{Nat}(0)}} \}\\
+    \end{array}$
+
+    \vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}}\end{array}$}
+
+\end{efflst}
+\captionof{listing}{A \efflang{} program that passes the Eager and Lazy Dynamic Checks, but is not well-typed under the Refined Environment Classifiers type system.}
+\label{listing:efflang-no-scope-extrusion}
+\end{code}
+
+\Cref{listing:efflang-no-scope-extrusion} thus illustrates one of the key drawbacks of Refined Environment Classifiers: the check is too stringent, and restricts expressiveness. 
 % Scope extrusion is difficult to define precisely, because there are multiple reasonable definitions. Consider the example in \Cref{listing:efflang-maybe-scope-extrusion}, which returns the well-scoped AST $\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}$. If scope extrusion is a property of the \textit{final} AST, then the program does not display scope extrusion. This is the definition implied by \citet{kiselyov-16}. However, in the process of computation, the program will evaluate to the intermediate AST $\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})$, which is not well scoped. It is only via use of the continuation $k$ that the error is resolved. If scope extrusion is a property of \textit{intermediate results} \citep{kiselyov-14}, then \Cref{listing:efflang-maybe-scope-extrusion} \textit{does} result in scope extrusion.  
 % As a result, most solutions seek to detect scope extrusion more eagerly. These solutions can be significantly more efficient, and have better error reporting capabilities. To be more eager, we may need to detect approximations of scope extrusion, and thus report false positives. These solutions thus sacrifice expressiveness. The solution space may be divided broadly into two categories: static (type-based) solutions, and dynamic solutions. 
 
