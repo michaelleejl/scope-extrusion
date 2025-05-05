@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let} \PYG{n}{square} \PYG{n}{y} \PYG{o}{=} \PYG{o}{\PYGZdl{}}\PYG{o}{(}\PYG{k}{let} \PYG{k}{rec} \PYG{n}{pow\PYGZus{}gen} \PYG{o}{(}\PYG{n}{n}\PYG{o}{:} \PYG{k+kt}{int}\PYG{o}{)} \PYG{o}{(}\PYG{n}{x}\PYG{o}{:} \PYG{k+kt}{int} \PYG{n}{expr}\PYG{o}{)} \PYG{o}{=} \PYG{o}{..}\PYG{o}{.}
+                 \PYG{k}{in} \PYG{n}{pow\PYGZus{}gen} \PYG{l+m+mi}{2} \PYG{n+nc}{Var}\PYG{o}{(}\PYG{n}{y}\PYG{o}{)}\PYG{o}{)}
+               \PYG{c}{(*}\PYG{c}{Mul}\PYG{c}{(}\PYG{c}{Var}\PYG{c}{(}\PYG{c}{y}\PYG{c}{)}\PYG{c}{, Mul}\PYG{c}{(}\PYG{c}{Var}\PYG{c}{(}\PYG{c}{y}\PYG{c}{)}\PYG{c}{, 1}\PYG{c}{)}\PYG{c}{)}\PYG{c}{*)}
+\PYG{k}{let} \PYG{n}{cube} \PYG{n}{y}   \PYG{o}{=} \PYG{o}{\PYGZdl{}}\PYG{o}{(}\PYG{k}{let} \PYG{k}{rec} \PYG{n}{pow\PYGZus{}gen} \PYG{o}{(}\PYG{n}{n}\PYG{o}{:} \PYG{k+kt}{int}\PYG{o}{)} \PYG{o}{(}\PYG{n}{x}\PYG{o}{:} \PYG{k+kt}{int} \PYG{n}{expr}\PYG{o}{)} \PYG{o}{=} \PYG{o}{..}\PYG{o}{.}
+                 \PYG{k}{in} \PYG{n}{pow\PYGZus{}gen} \PYG{l+m+mi}{3} \PYG{n+nc}{Var}\PYG{o}{(}\PYG{n}{y}\PYG{o}{)}\PYG{o}{)}
+               \PYG{c}{(*}\PYG{c}{Mul}\PYG{c}{(}\PYG{c}{Var}\PYG{c}{(}\PYG{c}{y}\PYG{c}{)}\PYG{c}{, Mul}\PYG{c}{(}\PYG{c}{Var}\PYG{c}{(}\PYG{c}{y}\PYG{c}{)}\PYG{c}{, Mul}\PYG{c}{(}\PYG{c}{Var}\PYG{c}{(}\PYG{c}{y}\PYG{c}{)}\PYG{c}{, 1}\PYG{c}{)}\PYG{c}{)}\PYG{c}{)}\PYG{c}{*)}
+\end{MintedVerbatim}
