@@ -34,9 +34,9 @@ let rec findOrInsert (t: tree) (k: 'a) (default: 'b) =
 \end{ocaml}
 \mintinline{ocaml}{p} represents the suspended program to be resumed, and is known as a \textit{delimited continuation}.
 
-The aforementioned problem motivates the need for resumable exceptions. To understand the need for effect handlers, consider how one might go about \textbf{implementing} resumable exceptions. One approach might be to fork the implementation of handlers and tweak it ever-so-slightly. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee -- and \textit{continually} guarantee -- especially as implementations evolve, and more variants of exceptions are demanded. Second, the solution is not \textbf{customisable}. To add resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
+The aforementioned problem motivates the need for resumable exceptions. To understand the need for effect handlers, consider how one might go about \textbf{implementing} resumable exceptions. One approach might be to fork the implementation of handlers and tweak it ever-so-slightly. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee, and \textit{continually} guarantee, especially as implementations evolve, and more variants of exceptions are demanded. Second, the solution is not \textbf{customisable}. To add resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
 
-Effect handlers resolve both composability and customisability issues. Much like how exception handlers allow users to create custom exceptions with custom semantics, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects -- in the earlier example, resumable exceptions, but more generally, state, I/O, greenthreading, non-determinism, and more -- as effect handlers ensures composability by design. 
+Effect handlers resolve both composability and customisability issues. Much like how exception handlers allow users to create custom exceptions with custom semantics, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects (in the earlier example, resumable exceptions, but more generally, state, I/O, greenthreading, non-determinism, and more) as effect handlers ensures composability by design. 
 
 With effect handlers, we can re-write the previous example to obtain the behaviour of resumable exceptions, even if the \texttt{OCaml} compiler does not support it, with the guarantee that \mintinline{ocaml}{NotFound} will interact predictably with other defined effects.
 \begin{ocaml}
@@ -54,7 +54,7 @@ let rec findOrInsert (t: tree) (k: 'a) (default: 'b) =
   | effect NotFound k -> continue p Br(k, default, Lf, Lf)
 \end{ocaml}
 Since effect handlers may be instantiated into a range of different effects, considering the interaction of metaprogramming with effect handlers is an exercise in killing many birds with a single stone. Additionally, effect handlers were recently added to \texttt{OCaml} \citep{sivaramakrishnan-21}, making their interaction a timely problem. 
-\subsection{\efflang{}: A Calculus for Effect Handlers}\label{subsection:effect-handler-calculus}
+\subsection{\texorpdfstring{\efflang{}}{Lambda-Op}: A Calculus for Effect Handlers}\label{subsection:effect-handler-calculus}
 \newcommand{\print}[1]{\texttt{\textbf{print}(#1)}}
 \newcommand{\readInt}[1]{\texttt{\textbf{read\_int}(#1)}}
 
@@ -470,3 +470,73 @@ The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
 A full typing derivation may be found in the appendix.
 
 \subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
+The design space of effect handlers is large. I consider three key design decisions made by different systems.
+
+\renewcommand{\effconfiguration}[2]{{#1}; {#2}}
+\renewcommand{\transition}[2]{#1 & \leadsto & #2}
+\newcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
+\newcommand{\reductionRule}[1]{\rulename{Red}{#1}}
+\newcommand{\congruenceRule}[1]{\rulename{Cng}{#1}}
+\newcommand{\effectRule}[1]{\rulename{Eff}{#1}}
+
+\begin{enumerate}
+  \item \textbf{\textsf{Deep, Shallow, or Sheep}}\\
+         \textit{Are multiple instances of the same effect handled by the same handler?}
+         In \efflang{}, continuations reinstate handlers $\effectRule{Cnt}$ and thus multiple instances of the same effect are handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. We say these handlers are \textbf{deep}.
+
+         \begin{efflst}
+          $\begin{array}{l}
+            \textbf{\texttt{handle}} \\
+            \quad \textbf{\textsf{addn}}(1) + \textbf{\textsf{addn}}(2) \\
+            \textbf{\texttt{with}} \\
+            \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{x}}; \\
+            \quad \; \, \textbf{\texttt{addn}}(y, k) \mapsto \continue{k}{(y+1)} \}\\
+          \end{array}$
+          \vspace{2mm} 
+          \textcolor{effComment}{\hrule height 0.2mm \relax}
+          \vspace{2mm} 
+          
+          \textcolor{effComment}{$\begin{array}{l}\return{5}\end{array}$}
+        \end{efflst}
+
+        We may also choose \textit{not} to reinstate the handler, in an approach known as \textbf{shallow} handlers \citep{hillestrom-2018}. The example above would be stuck, since the second \textbf{\texttt{addn}} would not be handled.
+
+        Finally, we could choose to modify the interface for \textbf{\texttt{continue}} such that it accepts a handler
+        \[\textbf{\texttt{continue}} \, k \,  \, v \, h\]
+        This would allow multiple effects to be handled by different handlers. That is, we could add one the first time \textbf{\texttt{addn}} is performed, and two the second time. These handlers behave as a hybrid of shallow and deep handlers, and are thus termed \textbf{sheep} handlers \citep{phipps-costin-2023}. 
+         
+        \texttt{OCaml} allows the programmer to choose between shallow and deep handlers. Since most prior work on scope extrusion focuses on deep handlers \citep{isoda-24}, we focus on those. 
+
+  \item \textbf{\textsf{One-Shot or Multi-Shot}}\\
+        \textit{How many times can one resume the same continuation?}
+ 
+        In \efflang{}, continuations may be resumed multiple times. For example, we can write 
+        
+        \begin{efflst}
+          $\begin{array}{l}
+            \textbf{\texttt{handle}} \\
+            \quad \textbf{\textsf{performTwice}}(1) \\
+            \textbf{\texttt{with}} \\
+            \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{x}}; \\
+            \quad \; \, \textbf{\texttt{performTwice}}(y, k) \mapsto (\continue{k}{y}) + (\continue{k}{y}) \}\\
+          \end{array}$
+          \vspace{2mm} 
+          \textcolor{effComment}{\hrule height 0.2mm \relax}
+          \vspace{2mm} 
+          
+          \textcolor{effComment}{$\begin{array}{l}\return{2}\end{array}$}
+        \end{efflst}
+        
+        We say the effect system permits \textbf{multi-shot continuations}. Multi-shot continuations are useful for simulating certain effects, like non-determinism \citep{phipps-costin-2023}. 
+
+        In other systems, like \texttt{OCaml} and \texttt{WasmFX} \citep{phipps-costin-2023}, this is not allowed: continuations are only allowed to be resumed once. These systems permit \textbf{one-shot continuations}. 
+
+        Although continuations in \texttt{OCaml} are one-shot, due to the utility of multi-shot continuations, I believe it is worthwhile to study effect systems with multi-shot continuations. 
+
+  \item \textbf{\textsf{Named or Unnamed Handlers}}\\
+        \textit{Can I invoke a specific handler for an operation?}
+        
+        In \efflang{}, when there are multiple handlers for the same effect, we invoke the ``nearest'' or ``most recent'' handler for that effect. An alternative approach is \textbf{named handlers} \citep{xie-2022}, where, by associating each handler with a \textit{name}, we can more easily specify which handler should be invoked. 
+
+        While named handlers can be more ergonomic, they do not provide greater expressiveness than using distinct effects \citep{xie-2022}. I do not consider named handlers in this thesis.
+\end{enumerate}

@@ -1,4 +1,4 @@
-\begin{thebibliography}{22}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -28,6 +28,12 @@ T.-J. Chiang, J.~Yallop, L.~White, and N.~Xie.
 M.~Felleisen and D.~P. Friedman.
 \newblock Control operators, the secd-machine, and the {\(\lambda\)}-calculus.
 \newblock In M.~Wirsing, editor, \emph{Formal Description of Programming Concepts - {III:} Proceedings of the {IFIP} {TC} 2/WG 2.2 Working Conference on Formal Description of Programming Concepts - III, Ebberup, Denmark, 25-28 August 1986}, pages 193--222. North-Holland, 1987.
+
+\bibitem[Hillerstr{\"o}m and Lindley(2018)]{hillestrom-2018}
+D.~Hillerstr{\"o}m and S.~Lindley.
+\newblock Shallow effect handlers.
+\newblock In S.~Ryu, editor, \emph{Programming Languages and Systems}, pages 415--435, Cham, 2018. Springer International Publishing.
+\newblock ISBN 978-3-030-02768-1.
 
 \bibitem[Inoue and Taha(2012)]{inoue-2012}
 J.~Inoue and W.~Taha.
@@ -85,6 +91,13 @@ G.~Mainland.
 \newblock \doi{10.1145/2398856.2364572}.
 \newblock URL \url{https://doi.org/10.1145/2398856.2364572}.
 
+\bibitem[Phipps-Costin et~al.(2023)Phipps-Costin, Rossberg, Guha, Leijen, Hillerstr\"{o}m, Sivaramakrishnan, Pretnar, and Lindley]{phipps-costin-2023}
+L.~Phipps-Costin, A.~Rossberg, A.~Guha, D.~Leijen, D.~Hillerstr\"{o}m, K.~Sivaramakrishnan, M.~Pretnar, and S.~Lindley.
+\newblock Continuing webassembly with effect handlers.
+\newblock \emph{Proc. ACM Program. Lang.}, 7\penalty0 (OOPSLA2), Oct. 2023.
+\newblock \doi{10.1145/3622814}.
+\newblock URL \url{https://doi.org/10.1145/3622814}.
+
 \bibitem[Pretnar(2015)]{pretnar-15}
 M.~Pretnar.
 \newblock An introduction to algebraic effects and handlers. invited tutorial paper.
@@ -140,6 +153,13 @@ J.~Vandebon, J.~G.~F. Coutinho, W.~Luk, and E.~Nurvitadhi.
 H.~Wickham.
 \newblock \emph{Advanced R}.
 \newblock Chapman and Hall/CRC, 2019.
+
+\bibitem[Xie et~al.(2022)Xie, Cong, Ikemori, and Leijen]{xie-2022}
+N.~Xie, Y.~Cong, K.~Ikemori, and D.~Leijen.
+\newblock First-class names for effect handlers.
+\newblock \emph{Proc. ACM Program. Lang.}, 6\penalty0 (OOPSLA2), Oct. 2022.
+\newblock \doi{10.1145/3563289}.
+\newblock URL \url{https://doi.org/10.1145/3563289}.
 
 \bibitem[Xie et~al.(2023)Xie, White, Nicole, and Yallop]{xie-2023}
 N.~Xie, L.~White, O.~Nicole, and J.~Yallop.

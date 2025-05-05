@@ -84,104 +84,114 @@
 \newlabel{subsection:effect-handler-motivation@cref}{{[subsection][1][2,2]2.2.1}{[1][13][]13}{}{}{}}
 \citation{kiselyov-2012}
 \citation{sivaramakrishnan-21}
-\BKM@entry{id=9,dest={73756273656374696F6E2E322E322E32},srcline={57}}{5C3337365C3337375C3030306F5C303030705C3030303A5C3030305C3034305C303030415C3030305C3034305C303030435C303030615C3030306C5C303030635C303030755C3030306C5C303030755C303030735C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030665C303030665C303030655C303030635C303030745C3030305C3034305C303030485C303030615C3030306E5C303030645C3030306C5C303030655C303030725C30303073}
+\BKM@entry{id=9,dest={73756273656374696F6E2E322E322E32},srcline={57}}{5C3337365C3337375C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030303A5C3030305C3034305C303030415C3030305C3034305C303030435C303030615C3030306C5C303030635C303030755C3030306C5C303030755C303030735C3030305C3034305C303030665C3030306F5C303030725C3030305C3034305C303030455C303030665C303030665C303030655C303030635C303030745C3030305C3034305C303030485C303030615C3030306E5C303030645C3030306C5C303030655C303030725C30303073}
 \citation{pretnar-15}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The syntax of $\lambda _{\texttt  {op}}$. Terms are syntactically divided into values $v$ and computations $c$ }}{16}{figure.caption.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The syntax of $\lambda _{\texttt  {op}}$. Terms are syntactically divided into values $v$ and computations $c$ }}{16}{figure.2.1}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:eff-lang-syntax}{{2.1}{16}{The syntax of \efflang . Terms are syntactically divided into values $v$ and computations $c$}{figure.caption.5}{}}
+\newlabel{fig:eff-lang-syntax}{{2.1}{16}{The syntax of \efflang . Terms are syntactically divided into values $v$ and computations $c$}{figure.2.1}{}}
 \newlabel{fig:eff-lang-syntax@cref}{{[figure][1][2]2.1}{[1][16][]16}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}$\lambda _{\texttt  {op}}${}: A Calculus for Effect Handlers}{16}{subsection.2.2.2}\protected@file@percent }
-\newlabel{subsection:effect-handler-calculus}{{2.2.2}{16}{\efflang {}: A Calculus for Effect Handlers}{subsection.2.2.2}{}}
+\newlabel{subsection:effect-handler-calculus}{{2.2.2}{16}{\texorpdfstring {\efflang {}}{Lambda-Op}: A Calculus for Effect Handlers}{subsection.2.2.2}{}}
 \newlabel{subsection:effect-handler-calculus@cref}{{[subsection][2][2,2]2.2.2}{[1][15][]16}{}{}{}}
 \@writefile{lol}{\contentsline {listing}{\numberline {7}{\ignorespaces An $\lambda _{\texttt  {op}}${} program that returns $(\texttt  {3}, \texttt  {"1;2"})$. It will be used as a running example throughout this section.}}{16}{listing.7}\protected@file@percent }
 \newlabel{listing:efflang-running-example}{{7}{16}{An \efflang {} program that returns $(\texttt {3}, \texttt {"1;2"})$. It will be used as a running example throughout this section}{listing.7}{}}
 \newlabel{listing:efflang-running-example@cref}{{[listing][7][]7}{[1][16][]16}{}{}{}}
 \citation{pretnar-15}
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt  {do} and \texttt  {return}}{17}{subsubsection*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Performing effects: \texttt  {op}, \texttt  {handle}, and \texttt  {continue}}{17}{subsubsection*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt  {do} and \texttt  {return}}{17}{subsubsection*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Performing effects: \texttt  {op}, \texttt  {handle}, and \texttt  {continue}}{17}{subsubsection*.8}\protected@file@percent }
 \citation{felleisen-87}
 \citation{kiselyov-2012}
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Operational Semantics}{19}{subsubsection*.11}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces The operational semantics of $\lambda _{\texttt  {op}}$. The semantics is given on configurations of the form $\langle c, E \rangle $, with the brackets dropped for clarity. Rules are divided into three classes: reduction rules $\textsc  {Red-}X$, which perform computation, congruence rules $\textsc  {Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc  {Eff-}Z$ that are special to $\lambda _{\texttt  {op}}$}}{19}{figure.caption.12}\protected@file@percent }
-\newlabel{fig:efflang-opsem}{{2.2}{19}{The operational semantics of \efflang . The semantics is given on configurations of the form $\langle c, E \rangle $, with the brackets dropped for clarity. Rules are divided into three classes: reduction rules $\textsc {Red-}X$, which perform computation, congruence rules $\textsc {Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc {Eff-}Z$ that are special to \efflang }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Operational Semantics}{19}{subsubsection*.10}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces The operational semantics of $\lambda _{\texttt  {op}}$. The semantics is given on configurations of the form $\langle c, E \rangle $, with the brackets dropped for clarity. Rules are divided into three classes: reduction rules $\textsc  {Red-}X$, which perform computation, congruence rules $\textsc  {Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc  {Eff-}Z$ that are special to $\lambda _{\texttt  {op}}$}}{19}{figure.2.2}\protected@file@percent }
+\newlabel{fig:efflang-opsem}{{2.2}{19}{The operational semantics of \efflang . The semantics is given on configurations of the form $\langle c, E \rangle $, with the brackets dropped for clarity. Rules are divided into three classes: reduction rules $\textsc {Red-}X$, which perform computation, congruence rules $\textsc {Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc {Eff-}Z$ that are special to \efflang }{figure.2.2}{}}
 \newlabel{fig:efflang-opsem@cref}{{[figure][2][2]2.2}{[1][19][]19}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces $\lambda _{\texttt  {op}}${} types. Notice that, just as terms are divided into values and computations, types are divided into value types ($T$) and computation types ($\effectType {T}$)}}{21}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:efflang-type-syntax}{{2.3}{21}{\efflang {} types. Notice that, just as terms are divided into values and computations, types are divided into value types ($T$) and computation types ($\effectType {T}$)}{figure.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces $\lambda _{\texttt  {op}}${} types. Notice that, just as terms are divided into values and computations, types are divided into value types ($T$) and computation types ($\effectType {T}$)}}{21}{figure.2.3}\protected@file@percent }
+\newlabel{fig:efflang-type-syntax}{{2.3}{21}{\efflang {} types. Notice that, just as terms are divided into values and computations, types are divided into value types ($T$) and computation types ($\effectType {T}$)}{figure.2.3}{}}
 \newlabel{fig:efflang-type-syntax@cref}{{[figure][3][2]2.3}{[1][20][]21}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{21}{subsubsection*.14}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Typing rules for $\lambda _{\texttt  {op}}${} terms}}{22}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:efflang-type-system}{{2.4}{22}{Typing rules for \efflang {} terms}{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{21}{subsubsection*.12}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Typing rules for $\lambda _{\texttt  {op}}${} terms}}{22}{figure.2.4}\protected@file@percent }
+\newlabel{fig:efflang-type-system}{{2.4}{22}{Typing rules for \efflang {} terms}{figure.2.4}{}}
 \newlabel{fig:efflang-type-system@cref}{{[figure][4][2]2.4}{[1][22][]22}{}{}{}}
 \BKM@entry{id=10,dest={73756273656374696F6E2E322E322E33},srcline={472}}{5C3337365C3337375C303030545C303030685C303030655C3030305C3034305C303030445C303030655C303030735C303030695C303030675C3030306E5C3030305C3034305C303030535C303030705C303030615C303030635C303030655C3030305C3034305C3030306F5C303030665C3030305C3034305C303030455C303030665C303030665C303030655C303030635C303030745C3030305C3034305C303030485C303030615C3030306E5C303030645C3030306C5C303030655C303030725C30303073}
-\BKM@entry{id=11,dest={73656374696F6E2E322E33},srcline={1}}{5C3337365C3337375C303030535C303030635C3030306F5C303030705C303030655C3030305C3034305C303030455C303030785C303030745C303030725C303030755C303030735C303030695C3030306F5C3030306E}
-\citation{kiselyov-14,kiselyov-16}
-\citation{kiselyov-16}
-\citation{kiselyov-14}
+\citation{hillestrom-2018}
+\citation{phipps-costin-2023}
+\citation{isoda-24}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{24}{subsection.2.2.3}\protected@file@percent }
 \newlabel{subsection:effect-handler-design}{{2.2.3}{24}{The Design Space of Effect Handlers}{subsection.2.2.3}{}}
 \newlabel{subsection:effect-handler-design@cref}{{[subsection][3][2,2]2.2.3}{[1][24][]24}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Scope Extrusion}{24}{section.2.3}\protected@file@percent }
-\newlabel{section:scope-extrusion-technical}{{2.3}{24}{Scope Extrusion}{section.2.3}{}}
-\newlabel{section:scope-extrusion-technical@cref}{{[section][3][2]2.3}{[1][24][]24}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {8}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that evaluates to the $\texttt  {Var}(x_{\mathbb  {N}})$. The AST is ill-scoped, and thus exhibits scope extrusion. It will be used as a running example.}}{24}{listing.8}\protected@file@percent }
-\newlabel{listing:efflang-scope-extrusion}{{8}{24}{A \efflang {} program that evaluates to the $\Var {x}{\mathbb {N}}$. The AST is ill-scoped, and thus exhibits scope extrusion. It will be used as a running example}{listing.8}{}}
-\newlabel{listing:efflang-scope-extrusion@cref}{{[listing][8][]8}{[1][24][]24}{}{}{}}
-\BKM@entry{id=12,dest={73756273656374696F6E2E322E332E31},srcline={63}}{5C3337365C3337375C303030455C303030785C303030695C303030735C303030745C303030695C3030306E5C303030675C3030305C3034305C303030535C3030306F5C3030306C5C303030755C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C303030745C3030306F5C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030535C303030635C3030306F5C303030705C303030655C3030305C3034305C303030455C303030785C303030745C303030725C303030755C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030505C303030725C3030306F5C303030625C3030306C5C303030655C3030306D}
+\citation{phipps-costin-2023}
+\citation{phipps-costin-2023}
+\citation{xie-2022}
+\citation{xie-2022}
+\BKM@entry{id=11,dest={73656374696F6E2E322E33},srcline={1}}{5C3337365C3337375C303030535C303030635C3030306F5C303030705C303030655C3030305C3034305C303030455C303030785C303030745C303030725C303030755C303030735C303030695C3030306F5C3030306E}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Scope Extrusion}{25}{section.2.3}\protected@file@percent }
+\newlabel{section:scope-extrusion-technical}{{2.3}{25}{Scope Extrusion}{section.2.3}{}}
+\newlabel{section:scope-extrusion-technical@cref}{{[section][3][2]2.3}{[1][25][]25}{}{}{}}
+\citation{kiselyov-14,kiselyov-16}
+\citation{kiselyov-16}
+\citation{kiselyov-14}
+\@writefile{lol}{\contentsline {listing}{\numberline {8}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that evaluates to the $\texttt  {Var}(x_{\mathbb  {N}})$. The AST is ill-scoped, and thus exhibits scope extrusion. It will be used as a running example.}}{26}{listing.8}\protected@file@percent }
+\newlabel{listing:efflang-scope-extrusion}{{8}{26}{A \efflang {} program that evaluates to the $\Var {x}{\mathbb {N}}$. The AST is ill-scoped, and thus exhibits scope extrusion. It will be used as a running example}{listing.8}{}}
+\newlabel{listing:efflang-scope-extrusion@cref}{{[listing][8][]8}{[1][26][]26}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {9}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that is a slight variation of \Cref  {listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref  {listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check.}}{26}{listing.9}\protected@file@percent }
+\BKM@entry{id=12,dest={73756273656374696F6E2E322E332E31},srcline={56}}{5C3337365C3337375C303030455C303030785C303030695C303030735C303030745C303030695C3030306E5C303030675C3030305C3034305C303030535C3030306F5C3030306C5C303030755C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C303030745C3030306F5C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030535C303030635C3030306F5C303030705C303030655C3030305C3034305C303030455C303030785C303030745C303030725C303030755C303030735C303030695C3030306F5C3030306E5C3030305C3034305C303030505C303030725C3030306F5C303030625C3030306C5C303030655C3030306D}
 \citation{kiselyov-16,isoda-24}
 \citation{kiselyov-14}
-\@writefile{lol}{\contentsline {listing}{\numberline {9}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion.}}{25}{listing.9}\protected@file@percent }
-\newlabel{listing:efflang-maybe-scope-extrusion}{{9}{25}{A \efflang {} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion}{listing.9}{}}
-\newlabel{listing:efflang-maybe-scope-extrusion@cref}{{[listing][9][]9}{[1][25][]25}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{25}{subsection.2.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{25}{subsubsection*.18}\protected@file@percent }
 \citation{kiselyov-14}
 \citation{kiselyov-14}
-\@writefile{lol}{\contentsline {listing}{\numberline {10}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that evaluates to the $\texttt  {Var}(x_{\mathbb  {N}})$. Executing the entire program to determine if it exhibits scope extrusion is inefficient.}}{26}{listing.10}\protected@file@percent }
-\newlabel{listing:efflang-lazy-scope-extrusion-inefficient}{{10}{26}{A \efflang {} program that evaluates to the $\Var {x}{\mathbb {N}}$. Executing the entire program to determine if it exhibits scope extrusion is inefficient}{listing.10}{}}
-\newlabel{listing:efflang-lazy-scope-extrusion-inefficient@cref}{{[listing][10][]10}{[1][26][]26}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{26}{subsubsection*.20}\protected@file@percent }
-\@writefile{lol}{\contentsline {listing}{\numberline {11}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that is a slight variation of \Cref  {listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref  {listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check.}}{26}{listing.11}\protected@file@percent }
-\newlabel{listing:efflang-maybe-not-scope-extrusion}{{11}{26}{A \efflang {} program that is a slight variation of \Cref {listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref {listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check}{listing.11}{}}
-\newlabel{listing:efflang-maybe-not-scope-extrusion@cref}{{[listing][11][]11}{[1][26][]26}{}{}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{27}{subsubsection*.22}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces The AST of $(\lambda f. \lambda x. f x) (\lambda y.y)$, where each scope is labelled with the corresponding environment classifier.}}{28}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:refined-enviroment-classifiers-basic}{{2.5}{28}{The AST of $(\lambda f. \lambda x. f x) (\lambda y.y)$, where each scope is labelled with the corresponding environment classifier}{figure.caption.23}{}}
-\newlabel{fig:refined-enviroment-classifiers-basic@cref}{{[figure][5][2]2.5}{[1][27][]28}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Visual depiction of the \textsc  {(C-Abs)} typing rule.}}{29}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:cref-typing-rule}{{2.6}{29}{Visual depiction of the \textsc {(C-Abs)} typing rule}{figure.caption.24}{}}
-\newlabel{fig:cref-typing-rule@cref}{{[figure][6][2]2.6}{[1][29][]29}{}{}{}}
+\newlabel{listing:efflang-maybe-not-scope-extrusion}{{9}{27}{A \efflang {} program that is a slight variation of \Cref {listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref {listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check}{listing.9}{}}
+\newlabel{listing:efflang-maybe-not-scope-extrusion@cref}{{[listing][9][]9}{[1][27][]27}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{27}{subsection.2.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{27}{subsubsection*.14}\protected@file@percent }
+\@writefile{lol}{\contentsline {listing}{\numberline {10}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that evaluates to the $\texttt  {Var}(x_{\mathbb  {N}})$. Executing the entire program to determine if it exhibits scope extrusion is inefficient.}}{27}{listing.10}\protected@file@percent }
+\newlabel{listing:efflang-lazy-scope-extrusion-inefficient}{{10}{27}{A \efflang {} program that evaluates to the $\Var {x}{\mathbb {N}}$. Executing the entire program to determine if it exhibits scope extrusion is inefficient}{listing.10}{}}
+\newlabel{listing:efflang-lazy-scope-extrusion-inefficient@cref}{{[listing][10][]10}{[1][27][]27}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{27}{subsubsection*.16}\protected@file@percent }
+\@writefile{lol}{\contentsline {listing}{\numberline {11}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion.}}{28}{listing.11}\protected@file@percent }
+\newlabel{listing:efflang-maybe-scope-extrusion}{{11}{28}{A \efflang {} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion}{listing.11}{}}
+\newlabel{listing:efflang-maybe-scope-extrusion@cref}{{[listing][11][]11}{[1][28][]28}{}{}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{28}{subsubsection*.18}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces The AST of $(\lambda f. \lambda x. f x) (\lambda y.y)$, where each scope is labelled with the corresponding environment classifier.}}{29}{figure.2.5}\protected@file@percent }
+\newlabel{fig:refined-enviroment-classifiers-basic}{{2.5}{29}{The AST of $(\lambda f. \lambda x. f x) (\lambda y.y)$, where each scope is labelled with the corresponding environment classifier}{figure.2.5}{}}
+\newlabel{fig:refined-enviroment-classifiers-basic@cref}{{[figure][5][2]2.5}{[1][29][]29}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces Visual depiction of the \textsc  {(C-Abs)} typing rule.}}{31}{figure.2.6}\protected@file@percent }
+\newlabel{fig:cref-typing-rule}{{2.6}{31}{Visual depiction of the \textsc {(C-Abs)} typing rule}{figure.2.6}{}}
+\newlabel{fig:cref-typing-rule@cref}{{[figure][6][2]2.6}{[1][30][]31}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces The ``AST'' of the scope extrusion example, \Cref  {listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable code that \textit  {evaluate} to AST nodes.}}{31}{figure.2.7}\protected@file@percent }
+\newlabel{fig:classifier-ast-scope-extrusion}{{2.7}{31}{The ``AST'' of the scope extrusion example, \Cref {listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable code that \textit {evaluate} to AST nodes}{figure.2.7}{}}
+\newlabel{fig:classifier-ast-scope-extrusion@cref}{{[figure][7][2]2.7}{[1][31][]31}{}{}{}}
 \bibdata{library}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces The ``AST'' of the scope extrusion example, \Cref  {listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable code that \textit  {evaluate} to AST nodes.}}{30}{figure.caption.25}\protected@file@percent }
-\newlabel{fig:classifier-ast-scope-extrusion}{{2.7}{30}{The ``AST'' of the scope extrusion example, \Cref {listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable code that \textit {evaluate} to AST nodes}{figure.caption.25}{}}
-\newlabel{fig:classifier-ast-scope-extrusion@cref}{{[figure][7][2]2.7}{[1][29][]30}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {12}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that passes the Eager and Lazy Dynamic Checks, but is not well-typed under the Refined Environment Classifiers type system.}}{30}{listing.12}\protected@file@percent }
-\newlabel{listing:efflang-no-scope-extrusion}{{12}{30}{A \efflang {} program that passes the Eager and Lazy Dynamic Checks, but is not well-typed under the Refined Environment Classifiers type system}{listing.12}{}}
-\newlabel{listing:efflang-no-scope-extrusion@cref}{{[listing][12][]12}{[1][30][]30}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {12}{\ignorespaces A $\lambda _{\texttt  {op}}${} program that passes the Eager and Lazy Dynamic Checks, but is not well-typed under the Refined Environment Classifiers type system.}}{32}{listing.12}\protected@file@percent }
+\newlabel{listing:efflang-no-scope-extrusion}{{12}{32}{A \efflang {} program that passes the Eager and Lazy Dynamic Checks, but is not well-typed under the Refined Environment Classifiers type system}{listing.12}{}}
+\newlabel{listing:efflang-no-scope-extrusion@cref}{{[listing][12][]12}{[1][32][]32}{}{}{}}
 \bibcite{abrahams-04}{{1}{2004}{{Abrahams and Gurtovoy}}{{}}}
 \bibcite{calcagno-00}{{2}{2000}{{Calcagno et~al.}}{{Calcagno, Moggi, and Taha}}}
 \bibcite{chiang-2024}{{3}{2024}{{Chiang et~al.}}{{Chiang, Yallop, White, and Xie}}}
 \bibcite{felleisen-87}{{4}{1987}{{Felleisen and Friedman}}{{}}}
-\bibcite{inoue-2012}{{5}{2012}{{Inoue and Taha}}{{}}}
-\bibcite{isoda-24}{{6}{2024}{{Isoda et~al.}}{{Isoda, Yokoyama, and Kameyama}}}
-\bibcite{jax-grad-metaprogramming}{{7}{}{{Jax-Ml}}{{}}}
-\bibcite{kiselyov-2012}{{8}{2012}{{Kiselyov}}{{}}}
-\bibcite{kiselyov-14}{{9}{2014}{{Kiselyov}}{{}}}
-\bibcite{kiselyov-2024}{{10}{2024}{{Kiselyov}}{{}}}
-\bibcite{kiselyov-16}{{11}{2016}{{Kiselyov et~al.}}{{Kiselyov, Kameyama, and Sudo}}}
-\bibcite{mainland-2012}{{12}{2012}{{Mainland}}{{}}}
-\bibcite{pretnar-15}{{13}{2015}{{Pretnar}}{{}}}
-\bibcite{rice-53}{{14}{1953}{{Rice}}{{}}}
-\bibcite{robinson-01}{{15}{2001}{{Robison}}{{}}}
-\bibcite{servetto-2013}{{16}{2013}{{Servetto and Zucca}}{{}}}
-\bibcite{sivaramakrishnan-21}{{17}{2021}{{Sivaramakrishnan et~al.}}{{Sivaramakrishnan, Dolan, White, Kelly, Jaffer, and Madhavapeddy}}}
-\bibcite{tratt-2008}{{18}{2008}{{Tratt}}{{}}}
-\bibcite{vandebon-2021}{{19}{2021}{{Vandebon et~al.}}{{Vandebon, Coutinho, Luk, and Nurvitadhi}}}
-\bibcite{wickham-2019}{{20}{2019}{{Wickham}}{{}}}
-\bibcite{xie-2023}{{21}{2023}{{Xie et~al.}}{{Xie, White, Nicole, and Yallop}}}
-\bibcite{yallop-2023}{{22}{2023}{{Yallop et~al.}}{{Yallop, Xie, and Krishnaswami}}}
+\bibcite{hillestrom-2018}{{5}{2018}{{Hillerstr{\"o}m and Lindley}}{{}}}
+\bibcite{inoue-2012}{{6}{2012}{{Inoue and Taha}}{{}}}
+\bibcite{isoda-24}{{7}{2024}{{Isoda et~al.}}{{Isoda, Yokoyama, and Kameyama}}}
+\bibcite{jax-grad-metaprogramming}{{8}{}{{Jax-Ml}}{{}}}
+\bibcite{kiselyov-2012}{{9}{2012}{{Kiselyov}}{{}}}
+\bibcite{kiselyov-14}{{10}{2014}{{Kiselyov}}{{}}}
+\bibcite{kiselyov-2024}{{11}{2024}{{Kiselyov}}{{}}}
+\bibcite{kiselyov-16}{{12}{2016}{{Kiselyov et~al.}}{{Kiselyov, Kameyama, and Sudo}}}
+\bibcite{mainland-2012}{{13}{2012}{{Mainland}}{{}}}
+\bibcite{phipps-costin-2023}{{14}{2023}{{Phipps-Costin et~al.}}{{Phipps-Costin, Rossberg, Guha, Leijen, Hillerstr\"{o}m, Sivaramakrishnan, Pretnar, and Lindley}}}
+\bibcite{pretnar-15}{{15}{2015}{{Pretnar}}{{}}}
+\bibcite{rice-53}{{16}{1953}{{Rice}}{{}}}
+\bibcite{robinson-01}{{17}{2001}{{Robison}}{{}}}
+\bibcite{servetto-2013}{{18}{2013}{{Servetto and Zucca}}{{}}}
+\bibcite{sivaramakrishnan-21}{{19}{2021}{{Sivaramakrishnan et~al.}}{{Sivaramakrishnan, Dolan, White, Kelly, Jaffer, and Madhavapeddy}}}
+\bibcite{tratt-2008}{{20}{2008}{{Tratt}}{{}}}
+\bibcite{vandebon-2021}{{21}{2021}{{Vandebon et~al.}}{{Vandebon, Coutinho, Luk, and Nurvitadhi}}}
+\bibcite{wickham-2019}{{22}{2019}{{Wickham}}{{}}}
+\bibcite{xie-2022}{{23}{2022}{{Xie et~al.}}{{Xie, Cong, Ikemori, and Leijen}}}
+\bibcite{xie-2023}{{24}{2023}{{Xie et~al.}}{{Xie, White, Nicole, and Yallop}}}
+\bibcite{yallop-2023}{{25}{2023}{{Yallop et~al.}}{{Yallop, Xie, and Krishnaswami}}}
 \xdef \mintedoldcachechecksum{\detokenize{E661FCFDA0374D7546F20255712325FA:146}}
 \global\@namedef{scr@dte@chapter@lastmaxnumwidth}{11.8799pt}
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{19.79993pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{28.79993pt}
 \@writefile{toc}{\providecommand\tocbasic@end@toc@file{}\tocbasic@end@toc@file}
-\gdef \@abspage@last{33}
+\gdef \@abspage@last{35}

@@ -18,7 +18,7 @@ For example, the following expression represents $\sin\circ \tanh$.
 Compose(Tanh, Sin)
 \end{ocaml}
 
-We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}. \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}) illustrates one way to compute gradients maintainably: 
+We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}.\ \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}) illustrates one way to compute gradients maintainably: 
 
 \begin{code}
 \begin{ocamllst}
@@ -30,7 +30,7 @@ let rec grad_main f x = match f with
   | Polynomial(_) -> grad_of f x 
   | Compose(f, g) -> (grad_main f x) * (grad_main g (app f x))
 \end{ocamllst}
-\captionof{listing}{A maintainable implementation of \mintinline{ocaml}{grad}}
+\captionof{listing}{A maintainable implementation of \mintinline{ocaml}{grad}}%
 \label{listing:ocaml-grad-main}
 \end{code}
 
@@ -106,7 +106,7 @@ Recall that (compile-time) metaprogramming gives the programmer the ability to g
   \item Building a mechanism for executing expressions \textit{at compile-time}. We can constrain this mechanism, using types, so only generators can be executed at compile-time. 
 \end{enumerate}
 
-First, we represent code values as ASTs. Generated programs are ASTs, and program generators are expressions that evaluate to ASTs. We can assume, for clarity, that the language offers, for each program construct, a corresponding AST node -- for example, the integer \mintinline{ocaml}{1} has AST node \mintinline{ocaml}{Int(1)}. If a program has type \mintinline{ocaml}{'a}, then its AST node has type \mintinline{ocaml}{'a expr}. One can now write program generators, that evaluate to ASTs, for example:  
+First, we represent code values as ASTs. Generated programs are ASTs, and program generators are expressions that evaluate to ASTs. We can assume, for clarity, that the language offers, for each program construct, a corresponding AST node: for example, the integer \mintinline{ocaml}{1} has AST node \mintinline{ocaml}{Int(1)}. If a program has type \mintinline{ocaml}{'a}, then its AST node has type \mintinline{ocaml}{'a expr}. One can now write program generators, that evaluate to ASTs, for example:  
 \begin{macocaml}
 let rec pow_gen (n: int) (x: int expr) = 
   if n == 0 then Int(1) 
