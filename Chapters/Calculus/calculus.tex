@@ -12,7 +12,7 @@
   \node[align=left, fill=coreBackground, draw=coreHighlight] (core-program) at ($(source-program.east) + (6.4cm, 0cm)$){\textbf{tls}(\textbf{do}$\, x \leftarrow \return{\texttt{Ret}(\texttt{Nat}(0))}$ \\ 
   \quad\quad\textbf{in} $(\lambda z. \return{z})(x)$$)$};
 
-  \node[] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Return$($Nat$(0))$};
+  \node[] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Ret$($Nat$(0))$};
   \end{scope}
 
   \begin{scope}[every node/.style={font = \scriptsize}]
@@ -36,7 +36,7 @@
   \label{fig:elaboration-then-execution}
 \end{figure}
 
-To re-iterate, I am considering the interaction between \textit{(homogenous, compile-time, two-stage)} \textbf{metaprogramming}, and an \textbf{effect system} \textit{(with deep handlers and multi-shot continuations)}. In this chapter, I describe a calculus, \calculusName{}, that combines both. There will be no attempt to mediate their interaction: specifically, it will not prevent scope extrusion. The aim will be to use \calculusName{} as a common language, on which one may layer different scope extrusion checks, evaluating them in a comparative fashion. 
+To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, that combines both. \calculusName{} will have both metaprogramming and effect handlers. One may write effectful compile-time code that generates effectful run-time code. To my knowledge, it is the first such. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to implement different scope extrusion checks as algorithms in \calculusName{}, such that the checks may be evaluated in a comparative fashion. 
 
 \calculusName{} programs cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, \coreLang{} may then be executed, to obtain the AST of a run-time program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
 
@@ -48,10 +48,12 @@ In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang
 
 \[e ::= \ldots \mid \equote \mid \splice \]
 
-Notice that we cannot quote values: we \textit{must} generate effectful programs. To my knowledge, \calculusName{} is the first such calculus. 
+Notice that we cannot quote values: we \textit{must} generate effectful programs.
 
 \subsection{Type System}
-What is the type of $0$? Perhaps surprisingly, it is not $\mathbb{N}$. Since we are working with a two-stage system, we must be careful to disambiguate between run-time naturals and compile-time naturals, since these are not interchangeable. We thus annotate each type with a level: $\mathbb{N}^0$ for run-time naturals, and $\mathbb{N}^{-1}$ for compile-time naturals. More generally, types are stratified into two levels: $T^0$ (run-time) and $T^{-1}$ (compile-time). 
+What is the type of $0$ in \sourceLang{}? Perhaps surprisingly, it is not $\mathbb{N}$. Since we are working with a two-stage system, we must be careful to disambiguate between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should not be well-typed. 
+\[1 + \equote[0]\]
+We thus annotate each type with a level: $\mathbb{N}^0$ for run-time naturals, and $\mathbb{N}^{-1}$ for compile-time naturals. More generally, types are stratified into two levels: $T^0$ (run-time) and $T^{-1}$ (compile-time). 
 
 Just as types are stratified, so too are effects, which can occur at run-time or compile-time. 
 

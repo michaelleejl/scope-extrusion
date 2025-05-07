@@ -1,5 +1,5 @@
 \section{Effect Handlers}\label{section:effects-technical}
-What is an effect handler? I will first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I will introduce a fine-grained call-by-value calculus for studying the operational behaviour of effect handlers, à lá \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus will be useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers (once the calculus has been extended with metaprogramming facilities). Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I will consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
+What is an effect handler? I will first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I will introduce a calculus for studying the operational behaviour of effect handlers, à lá \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus will be useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers (once the calculus has been extended with metaprogramming facilities). Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I will consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
 
 \subsection{Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
 Effects are a mechanism by which a program interacts with its environment. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Effects are typically defined and understood separately, meaning they are not easily composable. They are also implemented by compiler engineers rather than programmers, meaning they are not customisable. Effect handlers provide a programmable, unifying framework that may be instantiated into different effects. This allows for composable and customisable treatment of effects.
@@ -99,7 +99,7 @@ I will explain key language constructs in turn.
   \begin{eff-desc}
 
   $\begin{array}{llll}
-  \text{Values} & v & := & x \mid n \mid \lambda x. c \mid \kappa x.c \mid h \\
+  \text{Values} & v & := & x \mid n \mid \lambda x. c \mid \kappa x.c\\
 
   \text{Computations} & c & := & v_1 v_2 \mid \return{v} \mid \bind{x}{c_1}{c_2} \mid \\
                              &&& \op{v} \mid \handleWith{c}{h} \mid \continue{v_1}{v_2} \\ 
@@ -107,7 +107,7 @@ I will explain key language constructs in turn.
   \end{array}$
   
   \end{eff-desc}
-  \caption{The syntax of \efflang. Terms are syntactically divided into values $v$ and computations $c$ }
+  \caption{The syntax of \efflang. Terms are syntactically divided into values $v$, computations $c$, and handlers $h$ }
   \label{fig:eff-lang-syntax}
 \end{figure}
 
@@ -290,20 +290,20 @@ We now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-synta
 
 \begin{figure}
   \begin{eff-desc}
-  $\begin{array}{llllr}
-    \text{Effects row} & \Delta & ::= & \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
-    \text{Value type} & T & ::= & \mathbb{N} & \\
-                              &&& \mid \functionType{T_1}{T_2} & \text{functions}\\
-                              &&& \mid \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}} & \text{handlers} \\
-                              &&& \mid \continuationType{T_1}{T_2} & \text{continuations}\\ \\
-    \text{Computation type} & \effectType{T}
+  $\begin{array}{lllr}
+    \text{Effects row} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
+    \text{Value type} & T ::= \mathbb{N} & \\
+                              &\quad\quad\,\,\, \mid \functionType{T_1}{T_2} & \text{functions}\\
+                              &\quad\quad\,\,\, \mid \continuationType{T_1}{T_2} & \text{continuations}\\ \\
+    \text{Computation type} & \effectType{T} \\
+    \text{Handler type} & \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}
   \end{array}$
   \end{eff-desc}
-  \caption{\efflang{} types. Notice that, just as terms are divided into values and computations, types are divided into value types ($T$) and computation types ($\effectType{T}$)}
+  \caption{\efflang{} types. Notice that, just as terms are divided into values, computations, and handlers, types are divided into value types ($T$), computation types ($\effectType{T}$), and handler types ($\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}$)}
   \label{fig:efflang-type-syntax}
 \end{figure}
 
-Syntactically, just as terms are divided into values and computations, types are divided into value types (for example, $\mathbb{N}$) and computation types (for example, $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$). Since computations may have effects, computation types track unhandled effects using an effects row (typically labelled $\Delta$), which in this system is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects.
+Just like terms, types are divided into value types (for example, $\mathbb{N}$), computation types ($\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$), and handler types ($\handlerType{\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{\mathbb{N}}}$). Since computations may have effects, computation types track unhandled effects using an effects row ($\Delta$), which in this system is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects.
 \[
 \begin{array}{lll}
   \textbf{Term} &\hspace{8mm}& \textbf{Type} \\
