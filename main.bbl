@@ -1,4 +1,4 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{27}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,6 +10,14 @@ D.~Abrahams and A.~Gurtovoy.
 \newblock \emph{C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond (C++ in Depth Series)}.
 \newblock Addison-Wesley Professional, 2004.
 \newblock ISBN 0321227255.
+
+\bibitem[Bauer and Pretnar(2014)]{bauer-2014}
+A.~Bauer and M.~Pretnar.
+\newblock An effect system for algebraic effects and handlers.
+\newblock \emph{Logical Methods in Computer Science}, Volume 10, Issue 4, Dec. 2014.
+\newblock ISSN 1860-5974.
+\newblock \doi{10.2168/lmcs-10(4:9)2014}.
+\newblock URL \url{http://dx.doi.org/10.2168/LMCS-10(4:9)2014}.
 
 \bibitem[Calcagno et~al.(2000)Calcagno, Moggi, and Taha]{calcagno-00}
 C.~Calcagno, E.~Moggi, and W.~Taha.
@@ -82,6 +90,14 @@ O.~Kiselyov, Y.~Kameyama, and Y.~Sudo.
 \newblock Refined environment classifiers.
 \newblock In A.~Igarashi, editor, \emph{Programming Languages and Systems}, pages 271--291, Cham, 2016. Springer International Publishing.
 \newblock ISBN 978-3-319-47958-3.
+
+\bibitem[Levy et~al.(2003)Levy, Power, and Thielecke]{levy-2003}
+P.~Levy, J.~Power, and H.~Thielecke.
+\newblock Modelling environments in call-by-value programming languages.
+\newblock \emph{Information and Computation}, 185\penalty0 (2):\penalty0 182--210, 2003.
+\newblock ISSN 0890-5401.
+\newblock \doi{https://doi.org/10.1016/S0890-5401(03)00088-9}.
+\newblock URL \url{https://www.sciencedirect.com/science/article/pii/S0890540103000889}.
 
 \bibitem[Mainland(2012)]{mainland-2012}
 G.~Mainland.

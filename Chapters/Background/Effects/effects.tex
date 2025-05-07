@@ -179,7 +179,7 @@ Having described informally the desired semantics of \efflang{}, we may now make
 \begin{eff-desc}
   
   \renewcommand{\effconfiguration}[2]{{#1}; {#2}}
-  \renewcommand{\transition}[2]{#1 & \leadsto & #2}
+  \renewcommand{\transition}[2]{#1 & \rightarrow & #2}
   \newcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
   \newcommand{\reductionRule}[1]{\rulename{Red}{#1}}
   \newcommand{\congruenceRule}[1]{\rulename{Cng}{#1}}
@@ -188,13 +188,13 @@ Having described informally the desired semantics of \efflang{}, we may now make
   \textbf{Auxiliary Definitions}
   {\scriptsize
     \[\begin{array}{lrcl}
-    \text{Evaluation Frame } & F & ::= & \bind{x}{-\,}{c_2} \mid \handleWith{-}{h} \\
-    \text{Evaluation Context } & E & ::= & [] \mid E::F \\ \vspace{1mm} \\
+    \text{Evaluation Frame } & F & ::= & \bind{x}{[-]\,}{c_2} \mid \handleWith{[-]}{h} \\
+    \text{Evaluation Context } & E & ::= & [-] \mid E[F] \\ \vspace{1mm} \\
     \text{Domain of Handler} & \textsf{dom}(h) & \triangleq & \textsf{dom}(\returnHandler{x}{c}) = \emptyset, \\
     &&&\textsf{dom}(h;\opHandler{x}{k}{c}) = \textsf{dom}(h) \cup \{ \textbf{\textsf{op}} \} \\  
-    \vspace{1mm} \text{Handled Effects} & \textsf{handled}(E) & \triangleq & \textsf{handled}([]) = \emptyset, \\ 
-    &&& \textsf{handled}(E::\bind{x}{-\,}{c_2}) = \textsf{handled}(E), \\
-    &&& \textsf{handled}(E::\handleWith{-}{h}) = \textsf{handled}(E) \cup \textsf{dom}(h),
+    \vspace{1mm} \text{Handled Effects} & \textsf{handled}(E) & \triangleq & \textsf{handled}([-]) = \emptyset, \\ 
+    &&& \textsf{handled}(E[\bind{x}{[-]\,}{c_2}]) = \textsf{handled}(E), \\
+    &&& \textsf{handled}(E[\handleWith{[-]}{h}]) = \textsf{handled}(E) \cup \textsf{dom}(h),
   \end{array}
   \]}
 
@@ -206,12 +206,12 @@ Having described informally the desired semantics of \efflang{}, we may now make
   \reductionRule{Seq} & \transition{\effconfiguration{\bind{x}{\return{v}}{c}}{E}}{\effconfiguration{c[v/x]}{E}}\\
   \reductionRule{Hdl} & \transition{\effconfiguration{\handleWith{\return{v}}{h}}{E}}{\effconfiguration{c[v/x]}{E}} \quad (\text{where $\returnHandler{x}{c} \in h$)}\\
   \vspace{1mm} \\ 
-  \congruenceRule{Psh} & \transition{\effconfiguration{F[c]}{E}}{\effconfiguration{c}{E::F}} \\
-  \congruenceRule{Pop} & \transition{\effconfiguration{\return{v}}{E::F}}{\effconfiguration{F[v]}{E}}\\
+  \congruenceRule{Psh} & \transition{\effconfiguration{F[c]}{E}}{\effconfiguration{c}{E[F]}} \\
+  \congruenceRule{Pop} & \transition{\effconfiguration{\return{v}}{E[F]}}{\effconfiguration{F[\return{v}]}{E}}\\
   \vspace{1mm} \\
-  \effectRule{Op} & \transition{\effconfiguration{\op{v}}{E_1 @ [h] @ E_2}}\effconfiguration{c[v/x, \kappa x. \, \handleWith{E_2[\return{x}]}{h} / k]}{E_1}\\
+  \effectRule{Op} & \transition{\effconfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}}\effconfiguration{c[v/x, \kappa x. \, \handleWith{E_2[\return{x}]}{h} / k]}{E_1}\\
   &&& \text{(where $\opHandler{x}{k}{c} \in h$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$)}\\
-  \effectRule{Cnt} & \transition{\effconfiguration{\continue{E_2}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1 @ E_2}}
+  \effectRule{Cnt} & \transition{\effconfiguration{\continue{E_2}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1[E_2]}}
 
 \end{array}
 \]
@@ -221,7 +221,8 @@ Having described informally the desired semantics of \efflang{}, we may now make
 \label{fig:efflang-opsem}
 \end{figure}
 
-The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à lá \citet{kiselyov-2012}. For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. Most of the rules are standard. We will focus on two rules: \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
+The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à lá \citet{kiselyov-2012}. Most of the rules are standard. We will focus on two rules: \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
+% For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. 
 
 To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, consider the evaluation of the running example in \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
 \[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
@@ -230,8 +231,9 @@ After several applications of \textsc{Cng-Pop}, we obtain the configuration
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
-  \langle \, \print{1} &;& \handleWith{-}{h} :: \\
-                        && \bind{x}{-;\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \, \rangle
+  \langle \, \print{1} &;& \textbf{\texttt{handle}}\\
+                        && \quad \bind{x}{[-];\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \\
+                        && \textbf{\texttt{with}} \, \{ h \}\, \rangle
 \end{array}
   \]
 }
@@ -240,7 +242,7 @@ Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\t
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
-  \langle \, \bind{(v, s)}{\continue{(\continuation{u}{E})}{()}}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} &;& \handleWith{-}{h} \, \rangle
+  \langle \, \bind{(v, s)}{\continue{(\continuation{u}{\, \handleWith{E}{h}})}{()}}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} &;& [-] \rangle
 \end{array}
   \]
 }
@@ -248,8 +250,7 @@ Applying \textsc{Cng-Pop},
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
-  \langle \, \continue{(\continuation{u}{E})}{()} &;& \handleWith{-}{h} :: \\
-                              && \bind{(v, s)}{-\,}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} \, \rangle
+  \langle \, \continue{(\continuation{u}{\, \handleWith{E}{h}})}{()} &;& \bind{(v, s)}{[-]\,}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}}\, \rangle
 \end{array}
   \]
 }
@@ -257,9 +258,13 @@ Applying \textsc{Eff-Cnt}, we can resume the program that was suspended
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
-  \langle \, \return{()} &;& \handleWith{-}{h} :: \\
-                              && \bind{(v, s)}{-\,}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} \\
-                              && \bind{x}{-;\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \, \rangle
+  \langle \, \return{()} &;& \textbf{\texttt{do}} {(v, s)} \leftarrow \\
+  && \quad \textbf{\texttt{handle}} \\
+  && \quad \quad \textbf{\texttt{do}} \, x \leftarrow ([-];\return{\texttt{1}}) \textbf{\texttt{in}}\\
+  && \quad \quad \textbf{\texttt{do}} \, y \leftarrow (\print{2};\return{\texttt{2}})\\
+  && \quad\quad \textbf{\texttt{in}} \, {\, x + y}\\
+  && \quad \textbf{\texttt{with}} \, \{ h \}\\
+  && \textbf{\texttt{in}} \, \return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}  \, \rangle
 \end{array}
   \]
 }
@@ -469,18 +474,89 @@ The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
 \end{enumerate}
 A full typing derivation may be found in the appendix.
 
+\subsubsection{Metatheory}
+I will build not only on \efflang{}, but on metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}. We first state the standard progress and preservation properties.
+
+\renewcommand{\effconfiguration}[2]{\langle {#1}; {#2} \rangle}
+\renewcommand{\transition}[2]{#1 \rightarrow #2}
+
+\begin{theorem}[Progress]{effHighlight}\label{thm:progress}
+If $\type{E[c]}{\effectType{T}}$ and then either 
+\begin{enumerate}
+\item $c$ of the form $\return{v}$ and $E = [-]$,
+\item $c$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
+\item $\exists. E', c'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$
+\end{enumerate}
+\end{theorem}
+\vspace{-\baselineskip}
+\begin{theorem}[Preservation]{effHighlight}\label{thm:preservation}
+If $\type{E[c]}{\effectType{T}}$ and $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$, then $\type{E'[c']}{\effectType{T}}$
+\end{theorem}
+\noindent As a corollary, we obtain type safety. 
+\begin{corollary}[Type Safety]{effHighlight}\label{thm:type-safety}
+  If $\cdot \vdash {E[c]}: {\effectType{T}}$ and then either 
+\begin{enumerate}
+\item $c$ of the form $\return{v}$ and $E = [-]$ for $\cdot \vdash {v}: {T}$
+\item $c$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
+\item $\exists. E', c'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$ and $\cdot \vdash {E'[c']}: {\effectType{T}}$
+\end{enumerate}
+\end{corollary}
+
+\newcommand{\contextequiv}{\cong_{\text{\emph{ctx}}}}
+
+Finally, \efflang{} is a \textit{fine-grained call-by-value} \citep{levy-2003} approach. We first define a notion of contextual equivalence $\contextequiv$. Informally, two computations/values are contextually equivalent if they behave the same in all ``relevant'' contexts and at all ground (first-order) types (in this case, just $\mathbb{N}$). 
+
+% To define a notion of ``relevant'', we first type contexts.
+
+% \begin{figure}
+% \begin{eff-desc}
+% $\inferrule{\\}{\Gamma \vdash_{\Gamma, \effectType{T}} [-]: \effectType{T}}$
+% \end{eff-desc}
+% \end{figure}
+
+\begin{definition}[Contextual Equivalence]{effHighlight}\label{dfn:ctx-equiv}
+  $c$ and $c'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash c \contextequiv c': '\effectType{T}$ if 
+  \begin{enumerate}
+    \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
+    \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{\mathbb{N}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{\mathbb{N}}}$, 
+    \[\effconfiguration{c}{E} \, \to^{*} \, {\effconfiguration{\return{v}}{[-]}} \iff \effconfiguration{c'}{E} \, \to^{*} \, \effconfiguration{\return{v}}{[-]}\]
+  \end{enumerate}
+
+  When the context $\Gamma$ is empty, we write $c \contextequiv c': \effectType{T}$, and when the type is unimportant, we write $c \contextequiv c'$
+\end{definition}
+\vspace{-\baselineskip}
+\begin{theorem}[Fine-Grained CBV]{effHighlight}\label{thm:fine-grained-cbv}
+  \efflang{} is a fine-grained call-by-value language, meaning in particular that the following equations hold (notationally, I use $c$ for computations, $v$ for values, and $f$ for function values):
+  \begin{enumerate}
+    \item $\bind{x}{\return{v}}{c} \, \contextequiv \, c[v/x]$
+    \item $c \, \contextequiv \, \bind{x}{c \,}{\return{x}}$
+    \item $\bind{x}{c_1}{(\bind{y}{c_2}{c_3})} \, \contextequiv \bind{y}{(\bind{x}{c_1}{c_2})}{c_3}$
+    \item $(\lambda x. c) v \, \contextequiv \, c[v/x]$
+    \item $f \, \contextequiv \, \lambda x. f x$
+  \end{enumerate}
+In the third equation, we assume $x$ not free in $c_3$.
+\end{theorem}
+
 \subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
 The design space of effect handlers is large. I consider three key design decisions made by different systems.
 
 \renewcommand{\effconfiguration}[2]{{#1}; {#2}}
-\renewcommand{\transition}[2]{#1 & \leadsto & #2}
+\renewcommand{\transition}[2]{#1 & \rightarrow & #2}
 \newcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
 \newcommand{\reductionRule}[1]{\rulename{Red}{#1}}
 \newcommand{\congruenceRule}[1]{\rulename{Cng}{#1}}
 \newcommand{\effectRule}[1]{\rulename{Eff}{#1}}
 
-\begin{enumerate}
-  \item \textbf{\textsf{Deep, Shallow, or Sheep}}\\
+\begin{enumerate} 
+
+ \item \textbf{\textsf{Named or Unnamed Handlers}}\\
+        \textit{Can I invoke a specific handler for an operation?}
+        
+        In \efflang{}, when there are multiple handlers for the same effect, we invoke the ``nearest'' or ``most recent'' handler for that effect. An alternative approach is \textbf{named handlers} \citep{xie-2022}, where, by associating each handler with a \textit{name}, we can more easily specify which handler should be invoked. 
+
+        While named handlers can be more ergonomic, they do not provide greater expressiveness than using distinct effects \citep{xie-2022}. I do not consider named handlers in this thesis.
+
+  \item \textbf{\textsf{Deep, Shallow, or Sheep Handlers}}\\
          \textit{Are multiple instances of the same effect handled by the same handler?}
          In \efflang{}, continuations reinstate handlers $\effectRule{Cnt}$ and thus multiple instances of the same effect are handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. We say these handlers are \textbf{deep}.
 
@@ -507,7 +583,7 @@ The design space of effect handlers is large. I consider three key design decisi
          
         \texttt{OCaml} allows the programmer to choose between shallow and deep handlers. Since most prior work on scope extrusion focuses on deep handlers \citep{isoda-24}, we focus on those. 
 
-  \item \textbf{\textsf{One-Shot or Multi-Shot}}\\
+        \item \textbf{\textsf{One-Shot or Multi-Shot Continuations}}\\
         \textit{How many times can one resume the same continuation?}
  
         In \efflang{}, continuations may be resumed multiple times. For example, we can write 
@@ -531,12 +607,5 @@ The design space of effect handlers is large. I consider three key design decisi
 
         In other systems, like \texttt{OCaml} and \texttt{WasmFX} \citep{phipps-costin-2023}, this is not allowed: continuations are only allowed to be resumed once. These systems permit \textbf{one-shot continuations}. 
 
-        Although continuations in \texttt{OCaml} are one-shot, due to the utility of multi-shot continuations, I believe it is worthwhile to study effect systems with multi-shot continuations. 
-
-  \item \textbf{\textsf{Named or Unnamed Handlers}}\\
-        \textit{Can I invoke a specific handler for an operation?}
-        
-        In \efflang{}, when there are multiple handlers for the same effect, we invoke the ``nearest'' or ``most recent'' handler for that effect. An alternative approach is \textbf{named handlers} \citep{xie-2022}, where, by associating each handler with a \textit{name}, we can more easily specify which handler should be invoked. 
-
-        While named handlers can be more ergonomic, they do not provide greater expressiveness than using distinct effects \citep{xie-2022}. I do not consider named handlers in this thesis.
+        Although continuations in \texttt{OCaml} are one-shot, due to the utility of multi-shot continuations, I believe it is worthwhile to study effect systems with multi-shot continuations.
 \end{enumerate}

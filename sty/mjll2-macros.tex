@@ -76,3 +76,39 @@
 \newcommand{\functionType}[3][\Delta]{{#2} \oset{\text{\tiny ${#1}$}}{\longrightarrow} {#3}}
 \newcommand{\handlerType}[2]{#1 \Longrightarrow #2}
 \newcommand{\continuationType}[3][\Delta]{#2 \oset{\text{\tiny ${#1}$}}{\longtwoheadrightarrow} #3}
+
+% \newcommand\xrsquigarrow[1]{%
+% \mathrel{%
+% \begin{tikzpicture}[baseline= {( $ (current bounding box.south) + (0,-0.5ex) $ )}]
+%   \node[inner sep=.5ex] (a) {$\scriptstyle #1$};
+%   \path[draw,implies-,double distance between line centers=1.5pt,decorate,
+%     decoration={zigzag,amplitude=0.7pt,segment length=1.2mm,pre=lineto,
+%     pre   length=4pt}] 
+%     (a.south east) -- (a.south west);
+% \end{tikzpicture}}%
+% }
+\mdfsetup{%
+topline=false,
+rightline=false,
+bottomline=false,
+linewidth=3pt,
+innerleftmargin=15pt,
+innerrightmargin=0pt,
+skipabove=\baselineskip,
+skipabove=1.2\baselineskip,
+}
+
+\renewtheorem{mdtheorem}{Theorem}[section]
+\newenvironment{theorem}[2][]%
+   {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdtheorem}[#1]}
+   {\end{mdtheorem}\end{mdframed}\par\vspace{\baselineskip}}
+
+\newtheorem{mdcorollary}{Corollary}[section]
+\newenvironment{corollary}[2][]%
+  {\par\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdcorollary}[#1]}
+  {\end{mdcorollary}\end{mdframed}\par\vspace{\baselineskip}}
+
+\newtheorem{mddefinition}{Definition}[section]
+\newenvironment{definition}[2][]%
+    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mddefinition}[#1]}
+    {\end{mddefinition}\end{mdframed}\par\vspace{\baselineskip}}

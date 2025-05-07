@@ -1,0 +1,62 @@
+
+\newcommand{\sourceLang}{$\splice[\equote[\text{\efflang{}}]]$}
+\newcommand{\calculusName}{\sourceLang}
+\newcommand{\coreLang}{$\texttt{AST}(\text{\efflang{}})$}
+\chapter{Calculus}
+\begin{figure}[H]
+  \centering 
+  \begin{tikzpicture}
+    \begin{scope}[every node/.style={inner sep=0.5cm}, font=\ttfamily\scriptsize, anchor = east, rounded corners, line width = 0.4mm]
+  \node[align=left, fill=sourceBackground, draw=sourceHighlight] (source-program) {\,\$(\textbf{do}$\, x \leftarrow \equote[\return{0}]$\\
+  \,\quad \textbf{in} $(\lambda z. \return{z})(x))$};
+  \node[align=left, fill=coreBackground, draw=coreHighlight] (core-program) at ($(source-program.east) + (6.4cm, 0cm)$){\textbf{tls}(\textbf{do}$\, x \leftarrow \return{\texttt{Ret}(\texttt{Nat}(0))}$ \\ 
+  \quad\quad\textbf{in} $(\lambda z. \return{z})(x)$$)$};
+
+  \node[] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Return$($Nat$(0))$};
+  \end{scope}
+
+  \begin{scope}[every node/.style={font = \scriptsize}]
+    \node[fill=sourceHighlight] (source-lang) at ($(source-program.south) + (0cm, 0cm)$ ) {\textcolor{white}\sourceLang{}};
+    \node[fill=coreHighlight] (core-lang) at ($(core-program.south) + (0cm, 0cm)$ ) {\textcolor{white}\coreLang{}};
+  \end{scope}
+
+  \begin{scope}[scale=8]
+  \node[] (elaboration) at ($(source-program.east) + (0.095cm, -0.004cm)$) {\Huge$\leadsto$};
+  \node[] (execution) at ($(core-program.east) + (0.095cm, 0.005cm)$) {\Huge$\rightarrow^{\text{\normalsize{$*$}}}$};
+  \end{scope}
+
+  \begin{scope}[every node/.style={font = \sffamily\tiny, anchor = south}]
+  \node[] (elaboration-caption) at ($(elaboration) + (0cm, 0.3cm)$) {\textbf{Elaboration}};
+  \node[align=center] (execution-caption) at ($(execution) + (0cm, 0.3cm)$) {\textbf{Compile-Time} \\ \textbf{Execution}};
+  \end{scope}
+
+  \end{tikzpicture}
+  
+  \caption{\calculusName{} is first elaborated into \coreLang{}, which is then executed \textbf{at compile-time} to obtain the AST of a run-time program.}%
+  \label{fig:elaboration-then-execution}
+\end{figure}
+
+To re-iterate, I am considering the interaction between \textit{(homogenous, compile-time, two-stage)} \textbf{metaprogramming}, and an \textbf{effect system} \textit{(with deep handlers and multi-shot continuations)}. In this chapter, I describe a calculus, \calculusName{}, that combines both. There will be no attempt to mediate their interaction: specifically, it will not prevent scope extrusion. The aim will be to use \calculusName{} as a common language, on which one may layer different scope extrusion checks, evaluating them in a comparative fashion. 
+
+\calculusName{} programs cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, \coreLang{} may then be executed, to obtain the AST of a run-time program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
+
+In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, I will describe the elaboration from \sourceLang{} to \coreLang{} (\Cref{section:elaboration}). Finally, I will discuss the metatheoretic properties of \calculusName{} (\Cref{section:metatheory}). 
+% At a high-level, however, the names are suggestive: \sourceLang{} extends \efflang{} with quotation $\equote$ and splicing $\splice$, and \coreLang{} extends \efflang{} with AST constructors. 
+
+\section{The source language: \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}}\label{section:source-lang}
+\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{}, following a fine-grained call-by-value approach, divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$. We add quote and splice as follows:
+
+\[e ::= \ldots \mid \equote \mid \splice \]
+
+Notice that we cannot quote values: we \textit{must} generate effectful programs. To my knowledge, \calculusName{} is the first such calculus. 
+
+\subsection{Type System}
+What is the type of $0$? Perhaps surprisingly, it is not $\mathbb{N}$. Since we are working with a two-stage system, we must be careful to disambiguate between run-time naturals and compile-time naturals, since these are not interchangeable. We thus annotate each type with a level: $\mathbb{N}^0$ for run-time naturals, and $\mathbb{N}^{-1}$ for compile-time naturals. More generally, types are stratified into two levels: $T^0$ (run-time) and $T^{-1}$ (compile-time). 
+
+Just as types are stratified, so too are effects, which can occur at run-time or compile-time. 
+
+\section{The core language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
+
+\section{Elaboration from \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice} to \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:elaboration}
+
+\section{Metatheory}\label{section:metatheory}

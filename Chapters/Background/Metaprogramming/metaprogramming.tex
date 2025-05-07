@@ -165,10 +165,9 @@ macro rec grad_gen f x = match f with
   | ...
   | Polynomial(_) -> grad_of f x 
   | Compose(f, g) -> <<$(grad_gen f x) * $(grad_gen g (app f x))>>
-
 let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
 \end{macocaml}
-whathere \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
+where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
 \subsection{The Design Space of Metalanguages}\label{subsection:metaprogramming-design}
 Different metalanguages provide slightly different variants of metaprogramming to the user. In this section, I broadly taxonomise these languages by considering three key design decisions:
 \begin{enumerate}
