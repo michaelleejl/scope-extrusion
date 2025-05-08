@@ -20,9 +20,10 @@
 \contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{29}{subsubsection*.18}%
 \contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{30}{subsubsection*.20}%
 \contentsline {chapter}{\numberline {3}Calculus}{34}{chapter.3}%
-\contentsline {section}{\numberline {3.1}The source language: $\splice [\equote [\text {$\lambda _{\texttt {op}}${}}]]${}}{34}{section.3.1}%
+\contentsline {section}{\numberline {3.1}The source language: $\lambda _{\equote [\texttt {op}]}${}}{34}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}Type System}{35}{subsection.3.1.1}%
-\contentsline {section}{\numberline {3.2}The core language: $\texttt {AST}(\text {$\lambda _{\texttt {op}}${}})${}}{35}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Elaboration from $\splice [\equote [\text {$\lambda _{\texttt {op}}${}}]]${} to $\texttt {AST}(\text {$\lambda _{\texttt {op}}${}})${}}{35}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Metatheory}{35}{section.3.4}%
+\contentsline {subsubsection}{\nonumberline Typing Rules}{37}{subsubsection*.22}%
+\contentsline {section}{\numberline {3.2}The core language: $\lambda _{\texttt {AST}(\texttt {op})}${}}{39}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{39}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Metatheory}{39}{section.3.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

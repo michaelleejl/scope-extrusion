@@ -127,7 +127,9 @@
  }
 
  \newcommand{\efflang}{$\lambda_{\texttt{op}}$}
-
+ \newcommand{\sourceLang}{$\lambda_{\equote[\texttt{op}]}$}
+ \newcommand{\calculusName}{\sourceLang}
+ \newcommand{\coreLang}{$\lambda_{\texttt{AST}(\texttt{op})}$}
  \newtcolorbox{eff-desc}{
   common,
   % minted language=lexers/macocaml.py:MacocamlLexer,
@@ -163,6 +165,18 @@ borderline south={0.5mm}{0mm}{effHighlight,line width=1pt},
   % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
   overlay={\node[fill=effHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
          anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{source-desc}{
+  common,
+  % minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=white,
+  fontupper=\small,
+  borderline north={0.5mm}{0mm}{sourceHighlight,line width=1pt},
+borderline south={0.5mm}{0mm}{sourceHighlight,line width=1pt},
+  overlay={\node[fill=sourceHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\sourceLang{}};}
 %   skin=tile,
  }
 

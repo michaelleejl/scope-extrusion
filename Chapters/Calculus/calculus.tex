@@ -1,7 +1,5 @@
 
-\newcommand{\sourceLang}{$\splice[\equote[\text{\efflang{}}]]$}
-\newcommand{\calculusName}{\sourceLang}
-\newcommand{\coreLang}{$\texttt{AST}(\text{\efflang{}})$}
+
 \chapter{Calculus}
 \begin{figure}[H]
   \centering 
@@ -36,9 +34,9 @@
   \label{fig:elaboration-then-execution}
 \end{figure}
 
-To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, that combines both. \calculusName{} will have both metaprogramming and effect handlers. One may write effectful compile-time code that generates effectful run-time code. To my knowledge, it is the first such. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to implement different scope extrusion checks as algorithms in \calculusName{}, such that the checks may be evaluated in a comparative fashion. 
+To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, for studying said interaction. \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to implement different scope extrusion checks as algorithms in \calculusName{}, such that the checks may be evaluated in a comparative fashion. 
 
-\calculusName{} programs cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, \coreLang{} may then be executed, to obtain the AST of a run-time program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
+Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
 
 In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, I will describe the elaboration from \sourceLang{} to \coreLang{} (\Cref{section:elaboration}). Finally, I will discuss the metatheoretic properties of \calculusName{} (\Cref{section:metatheory}). 
 % At a high-level, however, the names are suggestive: \sourceLang{} extends \efflang{} with quotation $\equote$ and splicing $\splice$, and \coreLang{} extends \efflang{} with AST constructors. 
@@ -47,15 +45,226 @@ In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang
 \sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{}, following a fine-grained call-by-value approach, divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$. We add quote and splice as follows:
 
 \[e ::= \ldots \mid \equote \mid \splice \]
-
 Notice that we cannot quote values: we \textit{must} generate effectful programs.
 
 \subsection{Type System}
-What is the type of $0$ in \sourceLang{}? Perhaps surprisingly, it is not $\mathbb{N}$. Since we are working with a two-stage system, we must be careful to disambiguate between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should not be well-typed. 
-\[1 + \equote[0]\]
-We thus annotate each type with a level: $\mathbb{N}^0$ for run-time naturals, and $\mathbb{N}^{-1}$ for compile-time naturals. More generally, types are stratified into two levels: $T^0$ (run-time) and $T^{-1}$ (compile-time). 
 
-Just as types are stratified, so too are effects, which can occur at run-time or compile-time. 
+
+\begin{figure}
+  \begin{source-desc}
+    $\begin{array}{lllr}
+    {\textbf{\Large {Effects Row}}}\\\\
+    \textbf{Run-Time} & \xi ::= \cdot \mid \xi \cup \{ \textsf{op}_i^{0}\} \\
+    \textbf{Compile-Time} & \Delta ::= \cdot \mid \Delta \cup \{ \textsf{op}_i^{-1}\} \\\\
+    \end{array}$
+
+\vspace{5mm}
+  $\begin{array}{lllr}
+    {\textbf{\Large {Types}}}\\\\ \vspace{0.4mm}
+    \textbf{Level 0} & \text{Values} & T^0 ::= \mathbb{N}^0 & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
+    && \quad\quad\,\, \mid {(\functionType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{functions}} \\ \vspace{0.4mm}
+    && \quad\quad\,\, \mid {(\continuationType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
+    & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.8mm}
+     && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.8mm}
+    & \text{Handlers} & \handlerType{T_1^{0} \, ! \, \xi}{T_2^{0} \, ! \, \xi'}\\ \\ 
+
+    \textbf{Level $-$1} & \text{Values} & T^{-1} ::= \mathbb{N}^{-1} & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
+    && \quad\quad\quad \mid {(\functionType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
+    && \quad\quad\quad \mid {(\continuationType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
+    && \quad\quad\quad \mid {\textsf{Code}({T^{0} \, ! \, \xi})}^{-1} & \text{\footnotesize{run-time code}} \\\vspace{0.8mm}
+    & \text{Computations} & T^{-1} \, ! \, \Delta \\\vspace{0.8mm}
+    & \text{Handlers} & \handlerType{T_1^{-1} \, ! \, \Delta}{T_2^{-1} \, ! \, \Delta'}
+  \end{array}$
+  \end{source-desc}
+  \caption{\sourceLang{} types. I highlight three important elements: first, stratifying types into two levels, $0$ and $-1$. Second, stratifying effects into two levels, $\xi$ (for run-time effects) and $\Delta$ for compile-time effects. Third, the \textsf{Code} type at level $-1$ allows for compile-time programs to manipulate ASTs of run-time code.}
+  \label{fig:source-types}
+\end{figure}
+
+I will now introduce the \sourceLang{} type system, by first introducing the types, and then the typing rules. The \sourceLang{} types are summarised in \Cref{fig:source-types}. I highlight three important details: types are stratified into two levels ($-1$ for compile-time and $0$ for run-time), effect rows are similarly stratified, and run-time code is made available at compile-time via a \textsf{Code} type.
+
+First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-1}$ (compile-time).}
+
+  To motivate this stratification, consider the following question: what is the type of the number $3$ in \sourceLang{}? Perhaps surprisingly, the answer is not $\mathbb{N}$. Since we are working with a two-stage system, we must be careful to disambiguate between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should not be well-typed, since $3$ is a compile-time natural, whereas $x$ is a run-time natural. 
+  \[\lambda x: \mathbb{N}. \, \$(3 + x)\]
+  However, removing the splice makes the program well-typed
+  \[\lambda x: \mathbb{N}. \, 3 + x\]
+  To separate compile-time and run-time programs, we annotate each type with a level: $\mathbb{N}^0$ for run-time naturals, and $\mathbb{N}^{-1}$ for compile-time naturals. The ill-typed example becomes
+  \[\lambda x: \mathbb{N}^0. \, \$(\textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{-1})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})})\]
+  and the well-typed example 
+  \[\lambda x: \mathbb{N}^0. \, \textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{0})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})}\]
+  We say $0$ and $-1$ are \textit{levels}, defined as follows:
+
+  \begin{definition}[Level]{sourceHighlight}
+    The level of an expression $e$ is calculated by subtracting the number of surrounding splices from the number of surrounding quotations.
+  \end{definition}
+
+  The definition of level generalises to multi-stage languages \citep{xie-2023}, where negative levels represent compile-time and non-negative levels represent run-time, and separation is even more granular. However, since we only deal with two stages, we only ought to consider two levels, $0$ and $-1$. The definition further implies that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a program to be run at run-time. 
+  
+  Notice that the opening question was slightly devious\footnote{sorry}! We cannot assign a type to \textit{program fragments}, like $3$, since without knowledge of the wider context, we cannot know which level we are at: in the ill-typed example, $3$ occurs under a splice, but no quotes, so it has type $\mathbb{N}^{-1}$, and in the well-typed example, it has type $\mathbb{N}^0$. When giving program fragments, like $3$, I will always assume that the starting level is $0$. 
+
+  Second, \textbf{effect rows are stratified into $\xi$ (run-time) and $\Delta$ (compile-time).}\\
+  In the following example, we print $1$ at compile-time, and $2$ at run-time. Further, we read an integer at run-time.
+\[\splice[(\textbf{\texttt{print}}(1); \equote[\textbf{\texttt{print}}(2); \textbf{\texttt{readInt}}()])]\]
+Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. We may now disambiguate between different computation types:
+\begin{enumerate}[leftmargin=5.8\parindent]
+  \item[$T^0 \quad\quad\,\,$] Compile-time value, run-time value (value types) \\
+  \textit{Examples}: $1$, $\lambda x. \, \return{x}$
+  \item[$T^0 \, ! \, \xi \quad\;$] Compile-time value, run-time computation  \\
+  \textit{Examples}: $\return{1}$, $\textbf{\texttt{print}}(2)$
+  % \item[$T^0 \, ! \, \Delta \quad$] Compile-time computation, run-time value
+  \item[$T^0 \, ! \, \Delta; \xi$] Compile and run-time computation \\
+  \textit{Example}: $\$(\print{2}; \equote[\return{1}])$
+\end{enumerate}
+As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
+
+Third, \textbf{there is an level $-1$ \textsf{Code} type, representing run-time ASTs.}\\ 
+  By stratifying types to two levels, we have ensured that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable meta-programming, run-time terms, \textit{should be available} at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms. 
+% Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
+
+\subsubsection{Typing Rules}
+Having described the types, I now present the type system. The shape of the typing judgement is familiar, though with the addition of level information and compiler modes.
+\[\Gamma \vdash^{\text{Level}}_{\text{Mode}} e: T\]
+% I shall explain these in turn. 
+
+\textbf{Level}. Recall that, when describing the \efflang{} types, I argued that one cannot type a program fragment, like $3$, directly. One must also know the \textit{level} ($0$ or $-1$), which is accordingly attached to the typing judgement.
+
+
+\newcommand{\compilemode}{\textbf{\textsf{\textcolor{compile}{c}}}}
+\newcommand{\splicemode}{\textbf{\textsf{\textcolor{splice}{s}}}}
+\newcommand{\quotemode}{\textbf{\textsf{\textcolor{quote}{q}}}}
+\textbf{Mode}. For the purposes of elaboration, it can be useful to keep classify code into three categories:
+
+\begin{enumerate}
+  \item[\compilemode] Code that is \textcolor{compile}{\textbf{ambient}} and \textcolor{compile}{\textbf{inert}}.\\
+  \textit{No surrounding quotes or splices}
+  \item[\splicemode] Code that \textcolor{splice}{\textbf{manipulates ASTs}} at compile-time. \\
+  \textit{Last surrounding annotation was a splice}
+  \item[\quotemode] Code that \textcolor{quote}{\textbf{builds ASTs}} to be manipulated at compile time. \\
+  \textit{Last surrounding annotation was a quote}
+\end{enumerate}
+
+To illustrate the purpose of the modes, consider the following meta-program, which evaluates to the AST of $\lambda x. 1+2+3$, where the code has been classified into the three modes.  
+
+\begin{center}
+  \begin{tikzpicture}
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
+  \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
+  
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
+  
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
+  
+  \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
+  
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
+  
+  \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
+  
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
+  
+  \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
+  
+  \end{tikzpicture}
+  \end{center}
+
+\begin{enumerate}
+  \item[\compilemode] Identifies AST nodes that are \textcolor{compile}{\textbf{ambient}} (within which computation may take place) and \textcolor{compile}{\textbf{inert}} (cannot themselves be manipulated at compile-time). 
+  
+  \begin{center}
+    \begin{tikzpicture}
+    \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
+    \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
+    
+    \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
+    
+    \end{tikzpicture}
+    \end{center}
+
+  \item[\splicemode] Identifies code that can be executed at run-time to \textcolor{splice}{\textbf{manipulate ASTs}}. Will be fully reduced at compile-time, and will not appear at run-time. 
+  \begin{center}
+    \begin{tikzpicture}
+    \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
+    
+    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
+    
+    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
+    
+    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
+    
+    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
+    
+    \end{tikzpicture}
+    \end{center}
+
+  \item[\quotemode] Identifies code that \textcolor{quote}{\textbf{builds ASTs}} (like \compilemode-mode) that can be manipulated at compile-time (unlike \compilemode-mode), to create run-time programs. 
+  \begin{center}
+    \begin{tikzpicture}
+    \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
+    
+    \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
+    
+    \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
+    
+    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
+    
+    \end{tikzpicture}
+    \end{center}
+  \end{enumerate}
+
+We may also describe how \textit{transitions} between modes occur:
+\begin{enumerate}
+  \item Top-level splices ($\splice$) transition from \compilemode{} (outside the splice) to \splicemode{} (within).
+  \item Quotes ($\equote[e]$) transition from \splicemode{} (outside the quote) to \quotemode{} (within).
+  \item Splices ($\splice$) transition from \quotemode{} (outside the splice) to \splicemode{} (within).
+\end{enumerate}
+Transitions between modes are illustrated in \Cref{fig:compiler-mode-transitions}.
+
+\begin{figure}
+  \centering
+\begin{tikzpicture}[->,>=stealth']
+  \node (c) {\Large\textbf{\textsf{\textcolor{compile}{c}}}}; 
+  \node (s) at ($(c.east) + (2cm, 0cm)$) {\Large\textbf{\textsf{\textcolor{splice}{s}}}};
+  \node (q) at ($(s.south) + (0cm, 2cm)$) {\Large\textbf{\textsf{\textcolor{quote}{q}}}};
+  
+  \draw (c) to node[anchor=north, font=\footnotesize, align=center]{$\splice$ \\ (top-level)} (s);
+
+  \draw (s.north east) to[out=40, in=-40] node[anchor=west, font=\footnotesize]{$\equote$} (q.south east);
+  \draw (q.south west) to[out=-140, in=140] node[anchor=east, font=\footnotesize]{$\splice$} (s.north west);
+
+\end{tikzpicture}
+\caption{Transitions between modes \compilemode{}, \splicemode{}, and \quotemode{}. Top-level splices transition from \compilemode{} to \splicemode{}, quotes transition from \splicemode{} to \quotemode{}, and quotes transition from \quotemode{} to \splicemode{}.}%
+\label{fig:compiler-mode-transitions}
+\end{figure}
+
+Since \sourceLang{} has only two levels, and my type system will ban nested splices and quotations ($\splice[\splice]$ and $\equote[\equote]$ are not valid program fragments), the compiler mode will uniquely identify the level (\compilemode{} and \quotemode{} imply level $0$, and \splicemode{} level $-1$). I thus drop the level from my typing judgement, leaving it implicit.
 
 \section{The core language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
 
