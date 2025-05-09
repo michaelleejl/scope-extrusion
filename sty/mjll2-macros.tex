@@ -1,6 +1,7 @@
 \newcommand{\function}[2]{\lambda{} #1. #2}
 \newcommand{\continuation}[2]{\kappa{} #1. #2}
 
+\newcommand{\Nat}[1]{\texttt{Nat}(#1)}
 \newcommand{\Var}[2]{\texttt{Var}(#1_{#2})}
 \newcommand{\Lam}[2]{\texttt{Lam}(#1, #2)}
 \newcommand{\App}[2]{\texttt{App}(#1, #2)}
@@ -18,12 +19,14 @@
 \newcommand{\bind}[3]{\texttt{\textbf{do}} \,\, {#1} \leftarrow {#2} \, \textbf{\texttt{in}} \, {#3}}
 \newcommand{\handleWith}[2]{\textbf{\texttt{handle}} \,\, {#1} \,\, \textbf{\texttt{with}} \,\, \{{#2}\}}
 \newcommand{\continue}[2]{\textbf{\texttt{continue}} \, {#1} \, {#2}}
-\newcommand{\gensym}[1]{\texttt{mkvar} \, {#1}}
-\newcommand{\varToAST}[1]{\texttt{varToAST}({#1})}
-\newcommand{\dlet}[2]{\texttt{dlet}({#1}, {#2})}
-\newcommand{\checkfv}[1]{\texttt{check}({#1})}
-\newcommand{\checkm}[1]{\texttt{check}_{M}({#1})}
-\newcommand{\tls}[1]{\texttt{tls}({#1})}
+
+\newcommand{\gensym}[1]{\textbf{\texttt{mkvar}} \, #1}
+\newcommand{\varToAST}[1]{\textbf{\texttt{binderToASTNode}} \, #1}
+
+\newcommand{\dlet}[2]{\textbf{\texttt{dlet}}({#1}, {#2})}
+\newcommand{\checkfv}[1]{\textbf{\texttt{check}}({#1})}
+\newcommand{\checkm}[1]{\textbf{\texttt{check}}_{M}({#1})}
+\newcommand{\tls}[1]{\textbf{\texttt{tls}}({#1})}
 
 \newcommand{\returnHandler}[2]{\textbf{\texttt{return}}(#1) \mapsto #2}
 \newcommand{\opHandler}[3]{\textbf{\texttt{op}}(#1, #2) \mapsto #3}
@@ -112,3 +115,157 @@ skipabove=1.2\baselineskip,
 \newenvironment{definition}[2][]%
     {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mddefinition}[#1]}
     {\end{mddefinition}\end{mdframed}\par\vspace{\baselineskip}}
+
+  % \newenvironment{codeblock}[2][][]{
+%     \begin{tcblisting}[
+%         minted language=ocaml,
+%         minted options={mathescape, linenos, \#2},
+%         \#1
+%     ]
+% }
+% {\end{tcblisting}}
+
+% \newenvironment{ocaml}{\begin{codeblock}}{\end{codeblock}}
+
+% \newtcblisting{ocaml-box}{
+%     listing only
+% }
+
+% \newenvironment{code}[1]
+%  {\VerbatimEnvironment
+%   \begin{minted}{#1}}
+%  {\end{minted}}
+
+% \newenvironment{ocaml}{%
+%     \begin{code}{ocaml}
+% }{
+%     \end{code} 
+% }
+% \newenvironment{macocaml}{\begin{code}{macocaml.py:MacocamlLexer}}{\end{code}}
+
+\renewcommand{\theFancyVerbLine}{\ttfamily \textcolor[rgb]{0.5,0.5,0.5}{\footnotesize{\arabic{FancyVerbLine}}}}
+
+
+\makeatletter
+\tcbset{common/.style={
+    enhanced,
+    left=5pt,
+    listing only,
+    colframe=white,
+  },
+  after app={%
+    \ifx\tcb@drawcolorbox\tcb@drawcolorbox@breakable
+    \else
+      % add only when not breakabel
+      \@endparenv
+    \fi
+  }
+  \appto\tcb@use@after@lastbox{\@endparenv\@doendpe}
+}
+\makeatother
+
+\newtcblisting{ocaml}{
+  common,
+  minted language=ocaml,
+  colback=ocamlBackground,
+  listing engine=minted,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
+%   skin=tile,
+ }
+
+ \newtcblisting{ocamllst}{
+  common,
+  minted language=ocaml,
+  colback=ocamlBackground,
+  listing engine=minted,
+  % before={\par\vspace{0\baselineskip}\noindent},
+  after={\par\vspace{0\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
+%   skin=tile,
+ }
+
+ \newcommand{\macocamlLexer}{lexers/macocaml.py:MacocamlLexer}
+ \newtcblisting{macocaml}{
+  common,
+  minted language=\macocamlLexer,
+  colback=ocamlBackground,
+  listing engine=minted,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MacoCaml};}
+%   skin=tile,
+ }
+ \newtcblisting{macocamllst}{
+  common,
+  minted language=\macocamlLexer,
+  colback=ocamlBackground,
+  listing engine=minted,
+  % before={\par\vspace{0\baselineskip}\noindent},
+  after={\par\vspace{0\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){OCaml};}
+%   skin=tile,
+ }
+
+ \newcommand{\efflang}{$\lambda_{\texttt{op}}$}
+ \newcommand{\sourceLang}{$\lambda_{\equote[\texttt{op}]}$}
+ \newcommand{\calculusName}{\sourceLang}
+ \newcommand{\coreLang}{$\lambda_{\texttt{AST}(\texttt{op})}$}
+ \newtcolorbox{eff-desc}{
+  common,
+  % minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=white,
+  fontupper=\small,
+  borderline north={0.5mm}{0mm}{effHighlight,line width=1pt},
+borderline south={0.5mm}{0mm}{effHighlight,line width=1pt},
+  overlay={\node[fill=effHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{eff}{
+  common,
+  % minted language=ocaml,
+  colback=effBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=effHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{efflst}{
+  common,
+  % minted language=ocaml,
+  colback=effBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=effHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){$\mathbf{\lambda}_{\text{op}}$};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{source-desc}{
+  common,
+  % minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=white,
+  fontupper=\small,
+  borderline north={0.5mm}{0mm}{sourceHighlight,line width=1pt},
+borderline south={0.5mm}{0mm}{sourceHighlight,line width=1pt},
+  overlay={\node[fill=sourceHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\sourceLang{}};}
+%   skin=tile,
+ }
+
+ \newenvironment{code}{\centering}{\par\vspace{0.6\baselineskip}}

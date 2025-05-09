@@ -397,13 +397,13 @@ $\inferrule[(Continuation)]
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Op)]
-    {\type{v}{T_1} \\ \texttt{op}: T_1 \rightarrow T_2 \in \Sigma \\ \texttt{op} \in \Delta}
+    {  \\\\ \type{v}{T_1} \\ \texttt{op}: T_1 \rightarrow T_2 \in \Sigma \\ \texttt{op} \in \Delta}
     {\type{\op{v}}{\effectType{T_2}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Handle)]
-    {\type{c}{\effectType{T_1}} \\ \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \textsf{op} \in \textsf{dom}(h)}
+    {\type{c}{\effectType{T_1}} \\ \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \, \textsf{op} \in \textsf{dom}(h)}
     {\type{\handleWith{c}{h}}{\effectType[\Delta']{T_2}}}$
   \end{minipage}\\
 

@@ -53,20 +53,20 @@ Notice that we cannot quote values: we \textit{must} generate effectful programs
 \begin{figure}
   \begin{source-desc}
     $\begin{array}{lllr}
-    {\textbf{\Large {Effects Row}}}\\\\
+    {\textbf{\large {Effects Row}}}\\\\
     \textbf{Run-Time} & \xi ::= \cdot \mid \xi \cup \{ \textsf{op}_i^{0}\} \\
     \textbf{Compile-Time} & \Delta ::= \cdot \mid \Delta \cup \{ \textsf{op}_i^{-1}\} \\\\
     \end{array}$
 
 \vspace{5mm}
   $\begin{array}{lllr}
-    {\textbf{\Large {Types}}}\\\\ \vspace{0.4mm}
+    {\textbf{\large {Types}}}\\\\ \vspace{0.4mm}
     \textbf{Level 0} & \text{Values} & T^0 ::= \mathbb{N}^0 & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     && \quad\quad\,\, \mid {(\functionType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{functions}} \\ \vspace{0.4mm}
     && \quad\quad\,\, \mid {(\continuationType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
     & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.8mm}
      && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.8mm}
-    & \text{Handlers} & \handlerType{T_1^{0} \, ! \, \xi}{T_2^{0} \, ! \, \xi'}\\ \\ 
+    & \text{Handlers} & (\handlerType{T_1^{0} \, ! \, \xi}{T_2^{0} \, ! \, \xi'})\, !\, \Delta\\ \\ 
 
     \textbf{Level $-$1} & \text{Values} & T^{-1} ::= \mathbb{N}^{-1} & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     && \quad\quad\quad \mid {(\functionType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
@@ -88,18 +88,19 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
   \[\lambda x: \mathbb{N}. \, \$(3 + x)\]
   However, removing the splice makes the program well-typed
   \[\lambda x: \mathbb{N}. \, 3 + x\]
-  To separate compile-time and run-time programs, we annotate each type with a level: $\mathbb{N}^0$ for run-time naturals, and $\mathbb{N}^{-1}$ for compile-time naturals. The ill-typed example becomes
+  Following \citet{xie-2023}, I introduce integer levels to enforce separation between compile-time and run-time naturals. While the precise notion of level is slightly more involved (see below), for my purposes, it is sufficient to think of level $0$ as run-time (so $\mathbb{N}^0$ is a run-time natural), and $-1$ for compile-time. The ill-typed example becomes
   \[\lambda x: \mathbb{N}^0. \, \$(\textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{-1})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})})\]
   and the well-typed example 
   \[\lambda x: \mathbb{N}^0. \, \textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{0})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})}\]
-  We say $0$ and $-1$ are \textit{levels}, defined as follows:
+  More precisely, levels are defined as follows:
 
   \begin{definition}[Level]{sourceHighlight}
     The level of an expression $e$ is calculated by subtracting the number of surrounding splices from the number of surrounding quotations.
   \end{definition}
 
-  The definition of level generalises to multi-stage languages \citep{xie-2023}, where negative levels represent compile-time and non-negative levels represent run-time, and separation is even more granular. However, since we only deal with two stages, we only ought to consider two levels, $0$ and $-1$. The definition further implies that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a program to be run at run-time. 
-  
+  The definition of level generalises to multi-stage languages, where negative levels ($-1, -2, \ldots$) represent compile-time and non-negative levels ($0, 1, \ldots$) represent run-time. In a multi-staged language, separation is even more granular: for example, level $1$ and level $0$ naturals, despite both being run-time naturals, are disambiguated. However, since we only deal with two stages, we only ought to consider two levels, $0$ and $-1$. The definition further implies that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a run-time program. 
+
+
   Notice that the opening question was slightly devious\footnote{sorry}! We cannot assign a type to \textit{program fragments}, like $3$, since without knowledge of the wider context, we cannot know which level we are at: in the ill-typed example, $3$ occurs under a splice, but no quotes, so it has type $\mathbb{N}^{-1}$, and in the well-typed example, it has type $\mathbb{N}^0$. When giving program fragments, like $3$, I will always assume that the starting level is $0$. 
 
   Second, \textbf{effect rows are stratified into $\xi$ (run-time) and $\Delta$ (compile-time).}\\
@@ -108,21 +109,33 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
 Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. We may now disambiguate between different computation types:
 \begin{enumerate}[leftmargin=5.8\parindent]
   \item[$T^0 \quad\quad\,\,$] Compile-time value, run-time value (value types) \\
-  \textit{Examples}: $1$, $\lambda x. \, \return{x}$
+  \textit{Example}: The type of $x$ in $\splice[(\bind{x}{\equote[1]}{\return{x}})]$
   \item[$T^0 \, ! \, \xi \quad\;$] Compile-time value, run-time computation  \\
-  \textit{Examples}: $\return{1}$, $\textbf{\texttt{print}}(2)$
-  % \item[$T^0 \, ! \, \Delta \quad$] Compile-time computation, run-time value
+  \textit{Example}: The type of $x$ in $\splice[(\bind{x}{\equote[\return{1}]}{\return{x}})]$
+  \item[$T^0 \, ! \, \Delta \quad$] Compile-time computation, run-time value \\
+  \textit{Example}: $1$, $\lambda x. \return{x}$ 
   \item[$T^0 \, ! \, \Delta; \xi$] Compile and run-time computation \\
   \textit{Example}: $\$(\print{2}; \equote[\return{1}])$
 \end{enumerate}
-As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
+% As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
 Third, \textbf{there is an level $-1$ \textsf{Code} type, representing run-time ASTs.}\\ 
   By stratifying types to two levels, we have ensured that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable meta-programming, run-time terms, \textit{should be available} at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms. 
 % Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
 
-\subsubsection{Typing Rules}
-Having described the types, I now present the type system. The shape of the typing judgement is familiar, though with the addition of level information and compiler modes.
+Putting it all together, we can now interpret complex types, like 
+\[(\functionType[\{ \texttt{get} \}]{{(\textsf{Code}(\mathbb{N}^0 ! \{ \texttt{print} \}))}^{-1}}{(\textsf{Code}(\mathbb{N}^0 \, ! \, \{ \texttt{print}, \texttt{readInt} \}))^{-1}}\]
+Reading from the outside-in:
+\begin{enumerate}
+  \item This is a level $-1$, or compile-time function
+  \item The function has suspended compile-time effect \texttt{get} 
+  \item The function expects an AST of some run-time computation which evaluates to a run-time natural ($\mathbb{N}^0$) and has unhandled run-time effect \texttt{print}
+  \item The function returns an AST of some run-time computation which evaluates to a run-time natural and has unhandled run-time effects \texttt{print} and \texttt{readInt}
+\end{enumerate}
+\subsubsection{Typing Judgement}
+Having described the types, I now present the type system. The typing rules are collated in \Cref{fig:source-cq-typing-rules,fig:source-s-typing-rules}. I will first explain the typing judgement, then highlight some key rules, and finally present an example typing derivation. 
+
+The shape of the typing judgement is mostly familiar, though, as in \citet{xie-2023}, I add level information and compiler modes. Level information will turn out to be redundant, but we will revisit this later.
 \[\Gamma \vdash^{\text{Level}}_{\text{Mode}} e: T\]
 % I shall explain these in turn. 
 
@@ -138,12 +151,12 @@ Having described the types, I now present the type system. The shape of the typi
   \item[\compilemode] Code that is \textcolor{compile}{\textbf{ambient}} and \textcolor{compile}{\textbf{inert}}.\\
   \textit{No surrounding quotes or splices}
   \item[\splicemode] Code that \textcolor{splice}{\textbf{manipulates ASTs}} at compile-time. \\
-  \textit{Last surrounding annotation was a splice}
+  \textit{Last surrounding annotation is a splice}
   \item[\quotemode] Code that \textcolor{quote}{\textbf{builds ASTs}} to be manipulated at compile time. \\
-  \textit{Last surrounding annotation was a quote}
+  \textit{Last surrounding annotation is a quote}
 \end{enumerate}
 
-To illustrate the purpose of the modes, consider the following meta-program, which evaluates to the AST of $\lambda x. 1+2+3$, where the code has been classified into the three modes.  
+To illustrate the purpose of the modes, consider the following meta-program, which evaluates to the AST of $\lambda x. 1+2+3$. This program adopts the shorthand of \Cref{subsection:effect-handler-calculus}, where \texttt{\textbf{return}}s are implicitly inserted (for example, $\equote[1]$ should really be $\equote[\return{1}]$), and we elide the order of operation ($1+2$ should really be written out using \textbf{\texttt{do}}). The emphasis is on the three modes:
 
 \begin{center}
   \begin{tikzpicture}
@@ -192,7 +205,7 @@ To illustrate the purpose of the modes, consider the following meta-program, whi
     \end{tikzpicture}
     \end{center}
 
-  \item[\splicemode] Identifies code that can be executed at run-time to \textcolor{splice}{\textbf{manipulate ASTs}}. Will be fully reduced at compile-time, and will not appear at run-time. 
+  \item[\splicemode] Identifies code that can be executed at compile-time to \textcolor{splice}{\textbf{manipulate ASTs}}. Will be fully reduced at compile-time, and will not appear at run-time. 
   \begin{center}
     \begin{tikzpicture}
     \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
@@ -260,14 +273,280 @@ Transitions between modes are illustrated in \Cref{fig:compiler-mode-transitions
   \draw (q.south west) to[out=-140, in=140] node[anchor=east, font=\footnotesize]{$\splice$} (s.north west);
 
 \end{tikzpicture}
-\caption{Transitions between modes \compilemode{}, \splicemode{}, and \quotemode{}. Top-level splices transition from \compilemode{} to \splicemode{}, quotes transition from \splicemode{} to \quotemode{}, and quotes transition from \quotemode{} to \splicemode{}.}%
+\caption{Transitions between modes \compilemode{}, \splicemode{}, and \quotemode{}. Top-level splices transition from \compilemode{} to \splicemode{}, quotes transition from \splicemode{} to \quotemode{}, and splices (under quotes) transition from \quotemode{} to \splicemode{}.}%
 \label{fig:compiler-mode-transitions}
 \end{figure}
 
 Since \sourceLang{} has only two levels, and my type system will ban nested splices and quotations ($\splice[\splice]$ and $\equote[\equote]$ are not valid program fragments), the compiler mode will uniquely identify the level (\compilemode{} and \quotemode{} imply level $0$, and \splicemode{} level $-1$). I thus drop the level from my typing judgement, leaving it implicit.
 
-\section{The core language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
+\newcommand{\cqtypejudge}[3][\Gamma]{{#1} \vdash_{\compilemode \mid \quotemode} {#2} : {#3}}
+\newcommand{\ctypejudge}[3][\Gamma]{{#1} \vdash_{\compilemode} {#2} : {#3}}
+\newcommand{\qtypejudge}[3][\Gamma]{{#1} \vdash_{\quotemode} {#2} : {#3}}
+\newcommand{\stypejudge}[3][\Gamma]{{#1} \vdash_{\splicemode} {#2} : {#3}}
 
+\newcommand{\runtimecomptype}[2]{{#1}^0 \, ! \, {#2}}
+\newcommand{\compiletimetype}[1]{{#1}^{-1}}
+\newcommand{\compiletimecomptype}[2]{{#1}^{-1} ! {#2}}
+
+Further, the typing judgements for \compilemode{} and \quotemode{} will be identical in almost all cases. To avoid repetition, I introduce the following notation
+\[\cqtypejudge{e}{T}\]
+Where, for example, the typing rule 
+\[\inferrule{\cqtypejudge[\Gamma_1]{e_1}{T_1} \\ \cdots \\ \cqtypejudge[\Gamma_n]{e_n}{T_n} }{\cqtypejudge{e}{T}}\]
+stands for two typing rules, one in \compilemode{}-mode and one in \quotemode{}-mode.
+\begin{center}
+\begin{minipage}[t]{0.3\textwidth}
+  \centering 
+  $\inferrule{\ctypejudge[\Gamma_1]{e_1}{T_1} \\\\ \cdots \\\\ \ctypejudge[\Gamma_n]{e_n}{T_n} }{\ctypejudge{e}{T}}$
+\end{minipage}%
+\begin{minipage}[t]{0.3\textwidth}
+  \centering
+  $\inferrule{\qtypejudge[\Gamma_1]{e_1}{T_1} \\\\ \cdots \\\\ \qtypejudge[\Gamma_n]{e_n}{T_n} }{\qtypejudge{e}{T}}$
+\end{minipage}
+\end{center}
+
+The \compilemode{} and \quotemode{}-mode typing rules are summarised in \Cref{fig:source-cq-typing-rules}, and the \splicemode{}-mode typing rules are summarised in \Cref{fig:source-s-typing-rules}. The rules are extremely similar to the \efflang{} typing rules (\Cref{fig:efflang-type-system}, \Cpageref{fig:efflang-type-system}). 
+
+\begin{figure}
+\begin{source-desc}
+  {\large\textbf{\compilemode{} and \quotemode{} Typing Rules}}
+
+  \begin{center}
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    $\inferrule[(Nat)]{ \\ }{\cqtypejudge{n}{\runtimecomptype{\mathbb{N}}{\Delta}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.3\textwidth}
+    \centering
+    $\inferrule[(Var)]{\Gamma(x) = T^0}{\cqtypejudge{x}{\runtimecomptype{T}{\Delta}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.4\textwidth}
+    \centering
+$\inferrule[(Lambda)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi}}}{\cqtypejudge{\lambda x.e}{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}$
+\end{minipage}
+
+\vspace{5mm}
+
+\begin{minipage}[t]{0.5\textwidth}
+\centering
+$\inferrule[(App)]{\cqtypejudge[\Gamma]{v_1}{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}} \\ \cqtypejudge[\Gamma]{v_2}{\runtimecomptype{T_1}{\Delta}}}{\cqtypejudge{v_1 v_2}{\runtimecomptype{T_2}{\Delta;\xi}}}$
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}
+  \centering
+  $\inferrule[(Continue)]{\cqtypejudge[\Gamma]{v_1}{\runtimecomptype{(\continuationType[\xi]{T_1^0}{T_2^0})}{\Delta}} \\ \cqtypejudge[\Gamma]{v_2}{\runtimecomptype{T_1}{\Delta}}}{\cqtypejudge{\continue{v_1}{v_2}}{\runtimecomptype{T_2}{\Delta;\xi}}}$
+  \end{minipage}
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+    $\inferrule[(Return)]{  \\\\ \cqtypejudge[\Gamma]{v}{\runtimecomptype{T}{\Delta}}}{\cqtypejudge{\return{v}}{\runtimecomptype{T}{\Delta;\xi}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+    $\inferrule[(Do)]{\cqtypejudge[\Gamma]{e_1}{\runtimecomptype{T_1}{\Delta;\xi}} \\ \cqtypejudge[\Gamma, x:T_1^0]{e_2}{\runtimecomptype{T_2}{\Delta;\xi}}}{\cqtypejudge{\bind{x}{e_1}{e_2}}{\runtimecomptype{T_2}{\Delta;\xi}}}$
+  \end{minipage}
+
+\vspace{5mm}
+
+\begin{minipage}[t]{0.5\textwidth}
+  \centering
+  $\inferrule[(Op)]{  \\\\ \cqtypejudge[\Gamma]{v}{\runtimecomptype{T_1}{\Delta}} \\ \texttt{op}: T_1^0 \to T_2^0 \in \Sigma \\ \texttt{op} \in \xi}{\cqtypejudge{\op{v}}{\runtimecomptype{T_2}{\Delta;\xi}}}$
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}
+  \centering
+  $\inferrule[(Handle)]{\cqtypejudge[\Gamma]{e}{\runtimecomptype{T_1}{\Delta;\xi}} \\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta} \\ \forall \texttt{op} \in \Delta \setminus \Delta' \, . \, \texttt{op} \in \textsf{dom}(h)}{\cqtypejudge{\handleWith{e}{h}}{\runtimecomptype{T_2}{\Delta;\xi'}}}$
+\end{minipage}
+
+\vspace{5mm}
+
+\begin{minipage}[t]{\textwidth}
+  \centering
+$\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi'}}}{\cqtypejudge{\returnHandler{x}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta}}$
+\end{minipage}
+
+\vspace{5mm}
+
+\begin{minipage}[t]{1\linewidth}
+  \centering
+$\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma 
+\\\\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta}
+\\\\ \cqtypejudge[\Gamma, x: A^0, k: {(\continuationType[\xi']{B^0}{T_2^0})^0} ]{e}{\runtimecomptype{T_2}{\Delta;\xi'}} \\ \xi\ \subseteq \xi \setminus \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta}}$
+\end{minipage}
+
+\vspace{5mm}
+
+\begin{minipage}[t]{0.5\textwidth}
+  \centering
+  $\inferrule[(\compilemode{}-Splice)]{\stypejudge[\Gamma]{e}{\textsf{Code}(T^0 \, ! \, \xi)^{-1} \, ! \, \Delta}}{\ctypejudge{\splice}{\runtimecomptype{T}{\Delta ; \xi}}}$
+\end{minipage}%
+\begin{minipage}[t]{0.5\textwidth}
+  \centering
+  $\inferrule[(\quotemode{}-Splice)]{\stypejudge[\Gamma]{e}{\textsf{Code}(T^0 \, ! \, \xi)^{-1} \, ! \, \Delta}}{\ctypejudge{\splice}{\runtimecomptype{T}{\Delta ; \xi}}}$
+\end{minipage}
+
+\end{center}
+\end{source-desc}
+\caption{The \compilemode{}-mode and \quotemode{}-mode typing rules for \sourceLang{}. The rules are nearly identical to the \efflang{} typing rules, with the exception of level annotations on types, except that everything -- including values like $1$ -- are typed as compile-time computations. Further, two additional rules, \textsc{(\compilemode{}-Splice)} and \textsc{(\quotemode{}-Splice)} formalise the transition to \splicemode{}-mode. The former is top-level splice and the latter is splice.}%
+\label{fig:source-cq-typing-rules}
+\end{figure}
+
+\begin{figure}
+  \begin{source-desc}
+    {\large\textbf{\splicemode{} Typing Rules}}
+    \begin{center} 
+    \begin{minipage}[t]{0.2\textwidth}
+      \centering
+      $\inferrule[(\splicemode{}-Nat)]
+      { \\ }
+      {\stypejudge{n}{\compiletimetype{\mathbb{N}}}}$
+      \end{minipage}%
+  \begin{minipage}[t]{0.2\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Var)]
+  {\Gamma(x) = \compiletimetype{T}}
+  {\stypejudge{x}{\compiletimetype{T}}}$
+  \end{minipage}
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Function)]
+  {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{c}{\effectType{\compiletimetype{T_2}}}}
+  {\stypejudge{\continuation{x}{c}}{\compiletimetype{(\functionType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+  \centering
+$\inferrule[(\splicemode{}-Continuation)]
+  {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{c}{\effectType{\compiletimetype{T_2}}}}
+  {\stypejudge{\continuation{x}{c}}{\compiletimetype{(\continuationType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
+\end{minipage}
+  
+  \vspace{5mm}
+  
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-App)]
+    {\stypejudge{v_1}{\compiletimetype{(\functionType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}} \\ \stypejudge{v_2}{\compiletimetype{T_1}}}
+    {\stypejudge{v_1 \, v_2}{\effectType{\compiletimetype{T_2}}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Continue)]
+    {\stypejudge{v_1}{\compiletimetype{(\continuationType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}} \\ \stypejudge{v_2}{\compiletimetype{T_1}}}
+    {\stypejudge{\continue{v_1}{v_2}}{\effectType{\compiletimetype{T_2}}}}$
+  \end{minipage}
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Return)]
+    {  \\\\ \stypejudge{v}{\compiletimetype{T}}}
+    {\stypejudge{\return{v}}{\effectType{\compiletimetype{T}}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.45\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Do)]
+    {\stypejudge{c_1}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge[\Gamma, x: T_1]{c_2}{\effectType{\compiletimetype{T_2}}}}
+    {\stypejudge{\bind{x}{c_1}{c_2}}{\effectType{\compiletimetype{T_2}}}}$
+  \end{minipage}
+  
+  \vspace{5mm}
+  % \begin{minipage}[t]{0.5\textwidth}
+  %   \centering
+  % $\inferrule[(Do)]
+  %   {\stypejudge{c_1}{\effectType{T_1}} \\ \stypejudge[, x: T_1]{c_2}{\effectType{T_2}}}
+  %   {\stypejudge{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
+  % \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Op)]
+    {  \\\\ \stypejudge{v}{\compiletimetype{T_1}} \\ \texttt{op}: \compiletimetype{T_1} \rightarrow \compiletimetype{T_2} \in \Sigma \\ \texttt{op} \in \Delta}
+    {\stypejudge{\op{v}}{\effectType{\compiletimetype{T_2}}}}$
+  \end{minipage}%
+  \begin{minipage}[t]{0.5\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Handle)]
+    {\stypejudge{c}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \, \textsf{op} \in \textsf{dom}(h)}
+    {\stypejudge{\handleWith{c}{h}}{\effectType[\Delta']{\compiletimetype{T_2}}}}$
+  \end{minipage}\\
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{\textwidth}
+    \centering
+  $\inferrule[(\splicemode{}-Ret-Handler)]
+    {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{c}{\effectType[\Delta']{\compiletimetype{T_2}}}}
+    {\stypejudge{\returnHandler{x}{c}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
+  \end{minipage}
+  
+  \vspace{5mm}
+  % \[\inferrule [(Lam)]
+  % {\stypejudge[, x:T_1]{t}{\sEffect{T_2}}}
+  % {\stypejudge{\function{x}{t}}{\sFunctionType{T_1}{T_2}}}\]
+  
+  % \[\inferrule[(App)]
+  % {\stypejudge{n_1}{\sFunctionType{T_1}{T_2}} \\
+  \begin{minipage}[t]{1\linewidth}
+    \centering
+  $\inferrule[(\splicemode{}-Op-Handler)]
+    { \texttt{op}: \compiletimetype{A} \to \compiletimetype{B} \in \Sigma \\\\ 
+      \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}\\
+      \stypejudge[\Gamma, x:\compiletimetype{A}, k:{\compiletimetype{(\continuationType[\Delta']{\compiletimetype{B}}{\compiletimetype{T_2}})}} ]{c}{\effectType[\Delta']{\compiletimetype{T_2}}}\\
+      \Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
+             \opHandler{x'}{k'}{c'} \notin h}
+    {\stypejudge{h ; \opHandler{x}{k}{c}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
+  \end{minipage}
+
+  \vspace{5mm}
+
+  \begin{minipage}[t]{\linewidth}
+    \centering
+    $\inferrule[(Quote)]{\qtypejudge{e}{\runtimecomptype{T}{\Delta ; \xi}}}{\stypejudge{\equote}{\effectType{\compiletimetype{\textsf{Code}(\runtimecomptype{T}{\xi})}}}}$
+  \end{minipage}
+
+\end{center}
+  \end{source-desc}
+\caption{The \splicemode{}-mode typing rules for \sourceLang{}. The rules are exactly identical to the \efflang{} typing rules, with the exception of level annotations on types, and the additional \textsc{(Quote)} rule, which makes level $0$ code available at compile-time. }%
+\label{fig:source-s-typing-rules}
+\end{figure}
+
+\section{The core language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
+I now describe the core language, \coreLang{}, which is an extremely simple extension of \efflang{}. For clarity, I rename \efflang{} values ($v$) and compuations ($c$) to \coreLang{} normal forms $n$ and terms $t$ respectively.  
+
+To construct \coreLang{}, I extend \efflang{} in two ways. First, I add machinery for metaprogramming:
+
+
+
+\begin{enumerate}
+\item AST nodes (like \texttt{Nat})
+\item $\gensym{}$, a primitive for generating fresh binders of type $T$ (\texttt{Var} nodes)
+\item $\varToAST{}$, primitive for turning binders into \textit{usages} of binders
+\end{enumerate}
+
+Second, I extend \efflang{} with machinery for scope extrusion checking. This comprises:
+\begin{enumerate}
+\item \err{}, an error state for indicating the presence of scope extrusion,
+\item \textbf{\texttt{check}} and \textbf{\texttt{check$_M$}}, two different checks for scope extrusion (whose semantics I will later expand on),
+\item \textbf{\texttt{dlet}}, a primitive for tracking scopes when building ASTs 
+\item \textbf{\texttt{tls}}, a marker for where top-level splices would have occurred in the source program. This is for \textit{ease of reasoning only}. 
+\end{enumerate}
+\[
+\begin{array}{ll}
+  n ::= & \ldots \mid \Nat{m} \mid \Var{\alpha}{T} \mid \Lam{n_1}{n_2} \mid \App{n_1}{n_2} \mid \Continue{n_1}{n_2}\\ 
+  &\mid \Ret{n} \mid \Do{n_1}{n_2}{n_3} \mid \Op{n} \mid \Hwith{n_1}{n_2} \\ 
+  & \mid \Hret{n_1}{n_2}(n_1, n_2) \mid \Hop{n_1}{n_2}{n_3}{n_4} \\
+  &\mid \err\\
+  t ::= & \ldots \mid \checkfv{n} \mid \checkm{n} \mid \dlet{n}{t} \mid \tls{t}
+\end{array}
+ \]
+
+ \subsection{Type System}
+
+ \subsection{Operational Semantics}
+ 
+ 
 \section{Elaboration from \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice} to \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:elaboration}
 
 \section{Metatheory}\label{section:metatheory}

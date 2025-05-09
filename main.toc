@@ -1,29 +1,31 @@
-\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Contributions}{6}{section.1.1}%
-\contentsline {chapter}{\numberline {2}Background}{7}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Metaprogramming}{7}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Metaprogramming for Fast and Maintainable Code}{7}{subsection.2.1.1}%
-\contentsline {subsubsection}{\nonumberline Speeding up exponentiation with Metaprogramming}{9}{subsubsection*.4}%
-\contentsline {subsection}{\numberline {2.1.2}The Design Space of Metalanguages}{12}{subsection.2.1.2}%
-\contentsline {section}{\numberline {2.2}Effect Handlers}{13}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Composable and Customisable Effects}{13}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}$\lambda _{\texttt {op}}${}: A Calculus for Effect Handlers}{16}{subsection.2.2.2}%
-\contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt {do} and \texttt {return}}{17}{subsubsection*.6}%
-\contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{17}{subsubsection*.8}%
-\contentsline {subsubsection}{\nonumberline Operational Semantics}{19}{subsubsection*.10}%
-\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{21}{subsubsection*.12}%
-\contentsline {subsubsection}{\nonumberline Metatheory}{24}{subsubsection*.14}%
-\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{25}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3}Scope Extrusion}{27}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{28}{subsection.2.3.1}%
-\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{28}{subsubsection*.16}%
-\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{29}{subsubsection*.18}%
-\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{30}{subsubsection*.20}%
-\contentsline {chapter}{\numberline {3}Calculus}{34}{chapter.3}%
-\contentsline {section}{\numberline {3.1}The source language: $\lambda _{\equote [\texttt {op}]}${}}{34}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Type System}{35}{subsection.3.1.1}%
-\contentsline {subsubsection}{\nonumberline Typing Rules}{37}{subsubsection*.22}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contributions}{3}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Background}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Metaprogramming}{4}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Metaprogramming for Fast and Maintainable Code}{4}{subsection.2.1.1}%
+\contentsline {subsubsection}{\nonumberline Speeding up exponentiation with Metaprogramming}{6}{subsubsection*.4}%
+\contentsline {subsection}{\numberline {2.1.2}The Design Space of Metalanguages}{9}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Effect Handlers}{10}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Composable and Customisable Effects}{10}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}$\lambda _{\texttt {op}}${}: A Calculus for Effect Handlers}{13}{subsection.2.2.2}%
+\contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt {do} and \texttt {return}}{14}{subsubsection*.6}%
+\contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{14}{subsubsection*.8}%
+\contentsline {subsubsection}{\nonumberline Operational Semantics}{16}{subsubsection*.10}%
+\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{18}{subsubsection*.12}%
+\contentsline {subsubsection}{\nonumberline Metatheory}{21}{subsubsection*.14}%
+\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{22}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Scope Extrusion}{24}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{25}{subsection.2.3.1}%
+\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{25}{subsubsection*.16}%
+\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{26}{subsubsection*.18}%
+\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{27}{subsubsection*.20}%
+\contentsline {chapter}{\numberline {3}Calculus}{31}{chapter.3}%
+\contentsline {section}{\numberline {3.1}The source language: $\lambda _{\equote [\texttt {op}]}${}}{31}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Type System}{32}{subsection.3.1.1}%
+\contentsline {subsubsection}{\nonumberline Typing Judgement}{35}{subsubsection*.22}%
 \contentsline {section}{\numberline {3.2}The core language: $\lambda _{\texttt {AST}(\texttt {op})}${}}{39}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Type System}{39}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Operational Semantics}{39}{subsection.3.2.2}%
 \contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{39}{section.3.3}%
 \contentsline {section}{\numberline {3.4}Metatheory}{39}{section.3.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
