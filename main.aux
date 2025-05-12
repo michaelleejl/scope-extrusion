@@ -227,7 +227,7 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces The \textbf  {\textsf  {\textcolor {splice}{s}}}{}-mode typing rules for $\lambda _{\equote [\texttt  {op}]}${}. The rules are exactly identical to the $\lambda _{\texttt  {op}}${} typing rules, with the exception of level annotations on types, and the additional \textsc  {(Quote)} rule, which makes level $0$ code available at compile-time. }}{40}{figure.3.6}\protected@file@percent }
 \newlabel{fig:source-s-typing-rules}{{3.6}{40}{The \splicemode {}-mode typing rules for \sourceLang {}. The rules are exactly identical to the \efflang {} typing rules, with the exception of level annotations on types, and the additional \textsc {(Quote)} rule, which makes level $0$ code available at compile-time}{figure.3.6}{}}
 \newlabel{fig:source-s-typing-rules@cref}{{[figure][6][3]3.6}{[1][38][]40}{}{}{}}
-\BKM@entry{id=17,dest={73756273656374696F6E2E332E322E31},srcline={675}}{5C3337365C3337375C3030304F5C303030705C303030655C303030725C303030615C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030535C303030655C3030306D5C303030615C3030306E5C303030745C303030695C303030635C30303073}
+\BKM@entry{id=17,dest={73756273656374696F6E2E332E322E31},srcline={674}}{5C3337365C3337375C3030304F5C303030705C303030655C303030725C303030615C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030535C303030655C3030306D5C303030615C3030306E5C303030745C303030695C303030635C30303073}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Operational Semantics}{42}{subsection.3.2.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces $\lambda _{\texttt  {AST}(\texttt  {op})}${} syntax. The syntax is broadly the same as $\lambda _{\texttt  {op}}${}, except with the addition of AST constructors and scope extrusion checking machinery.}}{43}{figure.3.7}\protected@file@percent }
 \newlabel{fig:source-syntax}{{3.7}{43}{\coreLang {} syntax. The syntax is broadly the same as \efflang {}, except with the addition of AST constructors and scope extrusion checking machinery}{figure.3.7}{}}
@@ -238,21 +238,35 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Selected rules of the $\lambda _{\texttt  {AST}(\texttt  {op})}${} operational semantics. Many of the rules can be trivially adapted from the $\lambda _{\texttt  {op}}${} semantics (\Cref  {fig:efflang-opsem}), and therefore have been omitted. Rules relating to the muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf  {\textcolor {coreHighlight}{highlighted}}.}}{44}{figure.3.8}\protected@file@percent }
 \newlabel{fig:corelang-opsem}{{3.8}{44}{Selected rules of the \coreLang {} operational semantics. Many of the rules can be trivially adapted from the \efflang {} semantics (\Cref {fig:efflang-opsem}), and therefore have been omitted. Rules relating to the muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf {\textcolor {coreHighlight}{highlighted}}}{figure.3.8}{}}
 \newlabel{fig:corelang-opsem@cref}{{[figure][8][3]3.8}{[1][42][]44}{}{}{}}
-\BKM@entry{id=18,dest={73756273656374696F6E2E332E322E32},srcline={760}}{5C3337365C3337375C303030545C303030795C303030705C303030655C3030305C3034305C303030535C303030795C303030735C303030745C303030655C3030306D}
+\BKM@entry{id=18,dest={73756273656374696F6E2E332E322E32},srcline={759}}{5C3337365C3337375C303030545C303030795C303030705C303030655C3030305C3034305C303030535C303030795C303030735C303030745C303030655C3030306D}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Type System}{45}{subsection.3.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\nonumberline Typing Rules}{45}{subsubsection*.30}\protected@file@percent }
-\BKM@entry{id=19,dest={73656374696F6E2E332E33},srcline={885}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C303030725C3030306F5C3030306D5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C303030655C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030415C303030535C30303054}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces Selected $\lambda _{\texttt  {AST}(\texttt  {op})}${} typing rules}}{46}{figure.3.9}\protected@file@percent }
-\newlabel{fig:core-typing-rules}{{3.9}{46}{Selected \coreLang {} typing rules}{figure.3.9}{}}
-\newlabel{fig:core-typing-rules@cref}{{[figure][9][3]3.9}{[1][46][]46}{}{}{}}
+\BKM@entry{id=19,dest={73656374696F6E2E332E33},srcline={884}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C303030725C3030306F5C3030306D5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C303030655C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030415C303030535C30303054}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The types of $\lambda _{\texttt  {AST}(\texttt  {op})}${}. $\lambda _{\texttt  {AST}(\texttt  {op})}${} types extend $\lambda _{\texttt  {op}}${} types with an \textsf  {AST} type (for ASTs), and a \textsf  {Binder} type}}{46}{figure.3.9}\protected@file@percent }
+\newlabel{fig:core-types}{{3.9}{46}{The types of \coreLang {}. \coreLang {} types extend \efflang {} types with an \textsf {AST} type (for ASTs), and a \textsf {Binder} type}{figure.3.9}{}}
+\newlabel{fig:core-types@cref}{{[figure][9][3]3.9}{[1][45][]46}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt  {op}]}${} to $\lambda _{\texttt  {AST}(\texttt  {op})}${}}{46}{section.3.3}\protected@file@percent }
 \newlabel{section:elaboration}{{3.3}{46}{Elaboration from \texorpdfstring {\sourceLang {}}{Lambda-Op-Quote-Splice} to \texorpdfstring {\coreLang {}}{Lambda-Op-AST}}{section.3.3}{}}
 \newlabel{section:elaboration@cref}{{[section][3][3]3.3}{[1][46][]46}{}{}{}}
-\BKM@entry{id=20,dest={73656374696F6E2E332E34},srcline={895}}{5C3337365C3337375C3030304D5C303030655C303030745C303030615C303030745C303030685C303030655C3030306F5C303030725C30303079}
+\BKM@entry{id=20,dest={73756273656374696F6E2E332E332E31},srcline={902}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030795C303030705C303030655C30303073}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces Selected $\lambda _{\texttt  {AST}(\texttt  {op})}${} typing rules}}{47}{figure.3.10}\protected@file@percent }
+\newlabel{fig:core-typing-rules}{{3.10}{47}{Selected \coreLang {} typing rules}{figure.3.10}{}}
+\newlabel{fig:core-typing-rules@cref}{{[figure][10][3]3.10}{[1][46][]47}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Elaborating Types}{47}{subsection.3.3.1}\protected@file@percent }
+\BKM@entry{id=21,dest={73756273656374696F6E2E332E332E32},srcline={917}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030435C3030306F5C3030306E5C303030745C303030655C303030785C303030745C30303073}
+\BKM@entry{id=22,dest={73756273656374696F6E2E332E332E33},srcline={929}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030655C303030725C3030306D5C30303073}
+\BKM@entry{id=23,dest={73756273656374696F6E2E332E332E34},srcline={961}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030795C303030705C303030695C3030306E5C303030675C3030305C3034305C3030304A5C303030755C303030645C303030675C303030655C3030306D5C303030655C3030306E5C303030745C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Elaborating Contexts}{48}{subsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Elaborating Terms}{48}{subsection.3.3.3}\protected@file@percent }
+\BKM@entry{id=24,dest={73656374696F6E2E332E34},srcline={980}}{5C3337365C3337375C3030304D5C303030655C303030745C303030615C303030745C303030685C303030655C3030306F5C303030725C30303079}
 \bibdata{library}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Metatheory}{47}{section.3.4}\protected@file@percent }
-\newlabel{section:metatheory}{{3.4}{47}{Metatheory}{section.3.4}{}}
-\newlabel{section:metatheory@cref}{{[section][4][3]3.4}{[1][47][]47}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces Selected term elaboration rules from $\lambda _{\equote [\texttt  {op}]}${} to $\lambda _{\texttt  {AST}(\texttt  {op})}${}. Elaboration is moderated by the compiler mode. In \textbf  {\textsf  {\textcolor {compile}{c}}}{} and \textbf  {\textsf  {\textcolor {quote}{q}}}{}, elaboration builds ASTs. While mostly identical, they differ in the elaboration for $\splice $. In \textbf  {\textsf  {\textcolor {compile}{c}}}{}, one additionally inserts a marker representing the position of the top-level splice. \textbf  {\textsf  {\textcolor {compile}{c}}}{} and \textbf  {\textsf  {\textcolor {quote}{q}}}{} will be further distinguished when elaboration is extended to insert scope extrusion checks. In \textbf  {\textsf  {\textcolor {splice}{s}}}{}, elaboration is effectively the identity. }}{49}{figure.3.11}\protected@file@percent }
+\newlabel{fig:term-elaboration}{{3.11}{49}{Selected term elaboration rules from \sourceLang {} to \coreLang {}. Elaboration is moderated by the compiler mode. In \compilemode {} and \quotemode {}, elaboration builds ASTs. While mostly identical, they differ in the elaboration for $\splice $. In \compilemode {}, one additionally inserts a marker representing the position of the top-level splice. \compilemode {} and \quotemode {} will be further distinguished when elaboration is extended to insert scope extrusion checks. In \splicemode {}, elaboration is effectively the identity}{figure.3.11}{}}
+\newlabel{fig:term-elaboration@cref}{{[figure][11][3]3.11}{[1][48][]49}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Elaborating Typing Judgements}{49}{subsection.3.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Metatheory}{50}{section.3.4}\protected@file@percent }
+\newlabel{section:metatheory}{{3.4}{50}{Metatheory}{section.3.4}{}}
+\newlabel{section:metatheory@cref}{{[section][4][3]3.4}{[1][49][]50}{}{}{}}
 \bibcite{abrahams-04}{{1}{2004}{{Abrahams and Gurtovoy}}{{}}}
 \bibcite{bauer-2014}{{2}{2014}{{Bauer and Pretnar}}{{}}}
 \bibcite{calcagno-00}{{3}{2000}{{Calcagno et~al.}}{{Calcagno, Moggi, and Taha}}}
@@ -285,4 +299,4 @@
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{19.79993pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{28.79993pt}
 \@writefile{toc}{\providecommand\tocbasic@end@toc@file{}\tocbasic@end@toc@file}
-\gdef \@abspage@last{54}
+\gdef \@abspage@last{57}

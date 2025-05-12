@@ -663,8 +663,7 @@ Second, I extend \efflang{} with machinery for scope extrusion checking. This co
   &&&\mid \App{n_1}{n_2} \mid \Continue{n_1}{n_2} \mid \Ret{n}   \\ 
   &&& \mid \Do{n_1}{n_2}{n_3} \mid \Op{n} \mid \Hwith{n_1}{n_2}   \\
   &&&\mid \Hret{n_1}{n_2}(n_1, n_2) \mid \Hop{n_1}{n_2}{n_3}{n_4} \\
-  &&& \mid \varToAST{n} \\
-  \textbf{Terms} & t & ::= & \ldots \mid \checkfv{n} \mid \checkm{n} \mid \dlet{n}{t} \mid \tls{t} \mid \err
+  \textbf{Terms} & t & ::= & \ldots \mid \checkfv{n} \mid \checkm{n} \mid \dlet{n}{t} \mid \tls{t} \mid \err \\ &&& \mid \varToAST{n}
   \end{array}$
 \end{core-desc}
 \caption{\coreLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of AST constructors and scope extrusion checking machinery.}
@@ -694,7 +693,7 @@ I will now describe the operational semantics of \coreLang{}. Many rules are ide
   \begin{array}{rrcl}
   \astRule{Sym} & \transition{\coreConfiguration{\gensym{A}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Binder{\alpha}{A}}}{E}{U::\alpha}{M}{I}}\\
   &&&\text{(where $\alpha \notin U$)}\\
-  \astRule{Use} & \transition{\coreConfiguration{\varToAST{\Binder{\alpha}{A}}}{E}{U}{M}{I}}{\coreConfiguration{\Var{\alpha}{A}}{E}{U}{M}{I}}\\
+  \astRule{Use} & \transition{\coreConfiguration{\varToAST{\Binder{\alpha}{A}}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Var{\alpha}{A}}}{E}{U}{M}{I}}\\
   \vspace{1mm}
   \\ 
   \secRule{Chs} & \transition{\coreConfiguration{\checkfv{n}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{M}{I}}\\
@@ -759,42 +758,42 @@ The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, behave as normal, but
 
 \subsection{Type System}
 Extending the types is similarly straightforward. I add only two types: a \textsf{Binder} type and an \textsf{AST} type. The types are summarised in \Cref{fig:core-types}.
-% 
-% \begin{figure}[t]
-%   \begin{core-desc}
-%     {\large {\textbf{Types}}}\\
-%     \textit{Computation and Handler Types omitted}\\
 
-%     \textbf{Run-time Pre-types}\\
-%     $\begin{array}{@{}lllr}
-%     \text{Effects Row} & \xi ::= \emptyset \mid \xi \cup \{ \texttt{op}_i \} \\
-%     \\
-%     \text{Value type} & A ::= \mathbb{N} & \\
-%                               &\quad\quad\,\,\, \mid \functionType[\xi]{A_1}{A_2} & \text{functions}\\
-%                               &\quad\quad\,\,\, \mid \continuationType[\xi]{A_1}{A_2} & \text{continuations}\\ \\
-%     \text{Computation type} & \effectType[\xi]{A} \\
-%     \text{Handler type} & \handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}}
-%     \end{array}$
+\begin{figure}[t]
+  \begin{core-desc}
+    {\large {\textbf{Types}}}\\
+    \textit{Computation and Handler Types omitted}\\
+
+    \textbf{Run-time Pre-types}\\
+    $\begin{array}{@{}lllr}
+    \text{Effects Row} & \xi ::= \emptyset \mid \xi \cup \{ \texttt{op}_i \} \\
+    \\
+    \text{Value type} & A ::= \mathbb{N} & \\
+                              &\quad\quad\,\,\, \mid \functionType[\xi]{A_1}{A_2} & \text{functions}\\
+                              &\quad\quad\,\,\, \mid \continuationType[\xi]{A_1}{A_2} & \text{continuations}\\ \\
+    \text{Computation type} & \effectType[\xi]{A} \\
+    \text{Handler type} & \handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}}
+    \end{array}$
     
-%     \vspace{4mm}
+    \vspace{4mm}
 
-%     \textbf{Types}\\
-%   $\begin{array}{@{}lllr}
-%     % \text{Effects Row} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\
-%     % \\
-%     % \text{}
-%     \text{Value type} & T ::= \ldots\\
-%                               &\quad\quad\,\,\, \mid \textsf{Binder}(A) & \text{binders}\\
-%                               &\quad\quad\,\,\, \mid \textsf{AST}(A) & \text{AST (value)}\\
-%                               &\quad\quad\,\,\, \mid \textsf{AST}(\effectType[\xi]{A}) & \text{AST (computation)}\\
-%                               &\quad\quad\,\,\, \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}}) & \text{AST (handler)}\\
-%     % \text{Computation type} & \effectType{T} \\
-%     % \text{Handler type} & \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}
-%   \end{array}$
-%   \end{core-desc}
-%   \caption{The types of \coreLang{}. \coreLang{} types extend \efflang{} types with an \textsf{AST} type (for ASTs), and a \textsf{Binder} type}%
-%   \label{fig:core-types}
-% \end{figure}
+    \textbf{Types}\\
+  $\begin{array}{@{}lllr}
+    % \text{Effects Row} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\
+    % \\
+    % \text{}
+    \text{Value type} & T ::= \ldots\\
+                              &\quad\quad\,\,\, \mid \textsf{Binder}(A) & \text{binders}\\
+                              &\quad\quad\,\,\, \mid \textsf{AST}(A) & \text{AST (value)}\\
+                              &\quad\quad\,\,\, \mid \textsf{AST}(\effectType[\xi]{A}) & \text{AST (computation)}\\
+                              &\quad\quad\,\,\, \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}}) & \text{AST (handler)}\\
+    % \text{Computation type} & \effectType{T} \\
+    % \text{Handler type} & \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}
+  \end{array}$
+  \end{core-desc}
+  \caption{The types of \coreLang{}. \coreLang{} types extend \efflang{} types with an \textsf{AST} type (for ASTs), and a \textsf{Binder} type}%
+  \label{fig:core-types}
+\end{figure}
 
 % The role of the \textsf{AST} type is clear, but the role of \textsf{Binder} less so. I illustrate the purpose of the \textsf{Binder} type by example. Consider the following malformed AST:
 
@@ -839,7 +838,7 @@ The typing rules for scope extrusion checks are even more straightforward: they 
 
       \begin{minipage}[t]{0.4\textwidth}
       \centering
-     $\inferrule[(BinderToAST)]{\type{n}{\textsf{Binder}(A)}}{\type{\varToAST{n}}{\textsf{AST}(A)}}$
+     $\inferrule[(BinderToAST)]{\type{n}{\textsf{Binder}(A)}}{\type{\varToAST{n}}{\effectType{\textsf{AST}(A)}}}$
     \end{minipage}%
     \begin{minipage}[t]{0.6\textwidth}
       \centering
@@ -885,11 +884,97 @@ The typing rules for scope extrusion checks are even more straightforward: they 
 \section{Elaboration from \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice} to \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:elaboration}
 Having described both \sourceLang{} and \coreLang{}, I will now describe a simple elaboration from \sourceLang{} to \coreLang{}. This elaboration will be \textit{simple} -- it will not insert any dynamic scope extrusion checks.
 
-The elaboration is defined on typing judgements: I elaborate a \sourceLang{} judgement to a \coreLang{} judgement. To do so, I define four elaborations:
-\begin{enumerate}
-\item On types
-\item On effects 
-\item On contexts 
-\item On terms 
-\end{enumerate}
+\newcommand{\elaborate}[1]{\llbracket #1 \rrbracket}
+\newcommand{\erase}[1]{\textsf{erase}(#1)}
+\newcommand{\AST}[1]{\textsf{AST}(#1)}
+\newcommand{\Code}[1]{\textsf{Code}(#1)}
+
+
+The elaboration is defined on typing judgements: I elaborate a \sourceLang{} judgement to a \coreLang{} judgement. To do so, I define four elaborations: on effect rows, types, contexts, and terms. As it will be clear from context which elaboration is being referred to, I will abuse notation and write $\llbracket - \rrbracket$ for all four.
+
+Elaborating effect rows will just be the identity, that is 
+\[\begin{array}{rcl}
+  \elaborate{\Delta} &=& \Delta \\
+  \elaborate{\xi}&=&{\xi}
+\end{array}\]
+and I will not touch on them any further. 
+
+\subsection{Elaborating Types}
+To define elaboration of types, it will be convenient to refer to a helper function, \textsf{erase}, that \textit{erases} all of the level annotations (and elaborates effect rows). It is easy to define inductively, and I do not give a formal definition, but rather an example. 
+\[\textsf{erase}((\functionType[\xi]{T_1^0}{T_2^0})^0) = \functionType[\elaborate{\xi}]{T_1}{T_2}\]
+I can now define elaboration of types easily. In a nutshell, level $0$ types elaborate into \textsf{AST} types. Level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types.
+\[
+\begin{array}{rcl}
+  \elaborate{T^0} & = & \AST{\erase{T^0}}\\
+  \elaborate{\effectType[\xi]{T^0}} & = & \AST{\erase{\effectType[\xi]{T^0}}}\\
+  \elaborate{\effectType[\Delta]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{T^0}}}\\
+  \elaborate{\effectType[\Delta ; \xi]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{\effectType[\xi]{T^0}}}}\\
+  \elaborate{{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})}^0} & = & {\AST{\erase{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})}^0}}\\\\
+  \elaborate{T^{-1}} & = & \text{if} \, T \neq \Code{\effectType[\xi]{T^0}} \, \text{then} \, \erase{T^{-1}} \\ && \text{else}\, \AST{\erase{\effectType[\xi]{T^0}}}\\
+  \elaborate{\effectType{T^{-1}}} & = & \effectType[\elaborate{\Delta}]{\elaborate{T^{-1}}}\\
+\end{array}
+\]
+\subsection{Elaborating Contexts}
+Elaborating contexts is \textit{slightly} subtle. Rather than mapping the elaboration function over all types in the context, we treat the level $0$ types slightly differently, elaborating in \textsf{Binder}, rather than \textsf{AST} types. 
+\[
+\begin{array}{rcl}
+  \elaborate{\cdot} & = & \cdot \\
+  \elaborate{\Gamma, x:T^0} & = & \elaborate{\Gamma}, x: \textsf{Binder}(\erase{T^0})\\
+  \elaborate{\Gamma, x:T^{-1}} & = & \elaborate{\Gamma}, x: \elaborate{T^{-1}}
+\end{array}
+\]
+To see why this is the case, notice that the only cases where the context $\Gamma$ is extended with a level $0$ variable $x: T^0$ occur in \compilemode{} or \quotemode{}. In these modes, we are building ASTs, and thus $x$ must be an AST \textsf{Binder}. 
+% \subsection{Elaborating Effects}
+
+\subsection{Elaborating Terms}
+Elaborating terms is slightly more involved. To start, we will assume that we have annotated all binders with their types, for example 
+\[\lambda x: \mathbb{N}^0. \, e\]
+The elaboration for terms is moderated by the \textbf{mode}: \compilemode{}, \quotemode{}, or \splicemode{}. Selected rules are collated in \Cref{fig:term-elaboration}. 
+
+At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calling \textbf{\texttt{mkvar}} when binders are encountered (see earlier discussion on the necessity of \textbf{\texttt{mkvar}}). Elaboration in \compilemode{} and \quotemode{}-modes do not differ particularly significantly, with the exception of the rule for splice, where in \compilemode{}, I insert the marker for the top-level splice, and in \quotemode{}, I do not. Elaboration in \compilemode{} and \quotemode{}-modes will be further distinguished when I extend the elaboration to insert scope extrusion checks. Elaboration in \splicemode{} is effectively the identity. 
+
+\newcommand{\cqmode}{\compilemode{} \mid \quotemode{}}
+\begin{figure}
+  \begin{source-desc}
+    {\large\textbf{Term Elaboration}}\\
+    \textit{Selected Rules}
+
+    {\footnotesize
+    \[
+    \begin{array}{@{}lll}
+      \elaborate{x}_{\cqmode} & = & \varToAST{x}\\
+      \elaborate{\lambda x: T^0. \, e}_{\cqmode} & = & \bind{x}{\gensym{\erase{T^0}}}{\bind{\texttt{body}}{\elaborate{e}_{\cqmode}}{\return{\Lam{x}{\texttt{body}}}}}\\\\
+      \elaborate{\splice}_{\compilemode{}} & = & \tls{\elaborate{e}_{\splicemode{}}}\\
+      \elaborate{\splice}_{\quotemode{}} & = & {\elaborate{e}_{\splicemode{}}}
+      \\\\
+      \elaborate{x}_{\splicemode{}} & = & x\\
+      \elaborate{\lambda x: T^0. \, e}_{\splicemode{}} & = & \lambda x. \elaborate{e}_{\splicemode{}}\\
+      \elaborate{\equote} & = & \elaborate{e}_{\quotemode{}}
+    \end{array}
+    \]
+    }
+  \end{source-desc}
+  \caption{Selected term elaboration rules from \sourceLang{} to \coreLang{}. Elaboration is moderated by the compiler mode. In \compilemode{} and \quotemode{}, elaboration builds ASTs. While mostly identical, they differ in the elaboration for $\splice$. In \compilemode{}, one additionally inserts a marker representing the position of the top-level splice. \compilemode{} and \quotemode{} will be further distinguished when elaboration is extended to insert scope extrusion checks. In \splicemode{}, elaboration is effectively the identity. }%
+  \label{fig:term-elaboration}
+\end{figure}
+
+\subsection{Elaborating Typing Judgements}
+We may now elaborate full typing judgements, by elaborating each component in the judgement. For example, take the typing judgement for lambdas in \compilemode{}-mode. 
+\[
+{\inferrule{\ctypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi}}}{\ctypejudge{\lambda x.e}{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}}
+\]
+which we elaborate by applying the elaboration component-wise
+\newcommand{\typejudge}[3][\Gamma]{#1 \vdash #2 : #3}
+\[
+{\inferrule{\typejudge[\elaborate{\Gamma, x: T_1^0}]{\elaborate{e}_{\compilemode{}}}{\elaborate{\runtimecomptype{T_2}{\Delta;\xi}}}}{\typejudge[\elaborate{\Gamma}]{\elaborate{\lambda x.e}_{\compilemode{}}}{\elaborate{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}}}
+\]
+Letting $A_i = \erase{T_i^0}$, and $\elaborate{e}_{\compilemode{}} = t$, and applying the elaboration functions defined above, we obtain
+{\scriptsize
+\[
+{\inferrule{\typejudge[\elaborate{\Gamma}, x: \textsf{Binder}(A_1)]{t}{\effectType{\AST{\effectType[\xi]{A_2}}}}}{\typejudge[\elaborate{\Gamma}]{\bind{x}{\gensym{\erase{T^0}}}{\bind{\texttt{body}}{t}{\return{\Lam{x}{\texttt{body}}}}}}{\effectType{\AST{\functionType[\xi]{A_1}{A_2}}}}}}
+\]
+}
+which one can verify corresponds to a valid \sourceLang{} typing derivation.
+
+Is this true in general? Do \sourceLang{} typing derivations always elaborate into \coreLang{} typing derivations? More generally, what properties can we claim (and not claim) about the calculus as defined? To answer these questions, we prove certain metatheoretic results.
 \section{Metatheory}\label{section:metatheory}
