@@ -13,19 +13,23 @@
 \contentsline {subsubsection}{\nonumberline Operational Semantics}{16}{subsubsection*.10}%
 \contentsline {subsubsection}{\nonumberline Type-and-Effect System}{18}{subsubsection*.12}%
 \contentsline {subsubsection}{\nonumberline Metatheory}{21}{subsubsection*.14}%
-\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{22}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{23}{subsection.2.2.3}%
 \contentsline {section}{\numberline {2.3}Scope Extrusion}{24}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{25}{subsection.2.3.1}%
-\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{25}{subsubsection*.16}%
+\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{26}{subsubsection*.16}%
 \contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{26}{subsubsection*.18}%
 \contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{27}{subsubsection*.20}%
-\contentsline {chapter}{\numberline {3}Calculus}{31}{chapter.3}%
-\contentsline {section}{\numberline {3.1}The source language: $\lambda _{\equote [\texttt {op}]}${}}{31}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Type System}{32}{subsection.3.1.1}%
-\contentsline {subsubsection}{\nonumberline Typing Judgement}{35}{subsubsection*.22}%
-\contentsline {section}{\numberline {3.2}The core language: $\lambda _{\texttt {AST}(\texttt {op})}${}}{39}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Type System}{39}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Operational Semantics}{39}{subsection.3.2.2}%
-\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{39}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Metatheory}{39}{section.3.4}%
+\contentsline {chapter}{\numberline {3}Calculus}{32}{chapter.3}%
+\contentsline {section}{\numberline {3.1}The source language: $\lambda _{\equote [\texttt {op}]}${}}{32}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Type System}{33}{subsection.3.1.1}%
+\contentsline {subsubsection}{\nonumberline Typing Judgement}{36}{subsubsection*.22}%
+\contentsline {section}{\numberline {3.2}The core language: $\lambda _{\texttt {AST}(\texttt {op})}${}}{38}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Operational Semantics}{42}{subsection.3.2.1}%
+\contentsline {subsubsection}{\nonumberline Configurations}{43}{subsubsection*.24}%
+\contentsline {subsubsection}{\nonumberline AST Rules}{43}{subsubsection*.26}%
+\contentsline {subsubsection}{\nonumberline Scope Extrusion Checking Rules}{43}{subsubsection*.28}%
+\contentsline {subsection}{\numberline {3.2.2}Type System}{45}{subsection.3.2.2}%
+\contentsline {subsubsection}{\nonumberline Typing Rules}{45}{subsubsection*.30}%
+\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{46}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Metatheory}{47}{section.3.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

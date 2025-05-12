@@ -3,6 +3,8 @@
 
 \newcommand{\Nat}[1]{\texttt{Nat}(#1)}
 \newcommand{\Var}[2]{\texttt{Var}(#1_{#2})}
+\newcommand{\Binder}[2]{\texttt{\underline{Var}}(#1_{#2})}
+
 \newcommand{\Lam}[2]{\texttt{Lam}(#1, #2)}
 \newcommand{\App}[2]{\texttt{App}(#1, #2)}
 \newcommand{\Ret}[1]{\texttt{Ret}(#1)}
@@ -21,12 +23,15 @@
 \newcommand{\continue}[2]{\textbf{\texttt{continue}} \, {#1} \, {#2}}
 
 \newcommand{\gensym}[1]{\textbf{\texttt{mkvar}} \, #1}
-\newcommand{\varToAST}[1]{\textbf{\texttt{binderToASTNode}} \, #1}
+\newcommand{\varToAST}[1]{\textbf{\texttt{binderToAST}} \, #1}
 
 \newcommand{\dlet}[2]{\textbf{\texttt{dlet}}({#1}, {#2})}
-\newcommand{\checkfv}[1]{\textbf{\texttt{check}}({#1})}
-\newcommand{\checkm}[1]{\textbf{\texttt{check}}_{M}({#1})}
+\newcommand{\checkfv}[1]{\textbf{\texttt{check}}\, {#1}}
+\newcommand{\checkm}[1]{\textbf{\texttt{check}}_{M}\, {#1}}
 \newcommand{\tls}[1]{\textbf{\texttt{tls}}({#1})}
+
+\newcommand{\freevars}[1]{{\textsf{FV}}^0({#1})}
+\newcommand{\projfvs}[1]{\pi_{\texttt{Var}}({#1})}
 
 \newcommand{\returnHandler}[2]{\textbf{\texttt{return}}(#1) \mapsto #2}
 \newcommand{\opHandler}[3]{\textbf{\texttt{op}}(#1, #2) \mapsto #3}
@@ -256,6 +261,33 @@ borderline south={0.5mm}{0mm}{effHighlight,line width=1pt},
 %   skin=tile,
  }
 
+ \newtcolorbox{source}{
+  common,
+  % minted language=ocaml,
+  colback=sourceBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=sourceHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\sourceLang{}};}
+%   skin=tile,
+ }
+
+  \newtcolorbox{sourcelst}{
+  common,
+  % minted language=ocaml,
+  colback=sourceBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=sourceHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\sourceLang{}};}
+%   skin=tile,
+ }
+
+
  \newtcolorbox{source-desc}{
   common,
   % minted language=lexers/macocaml.py:MacocamlLexer,
@@ -265,6 +297,44 @@ borderline south={0.5mm}{0mm}{effHighlight,line width=1pt},
 borderline south={0.5mm}{0mm}{sourceHighlight,line width=1pt},
   overlay={\node[fill=sourceHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
          anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\sourceLang{}};}
+%   skin=tile,
+ }
+
+  \newtcolorbox{core-desc}{
+  common,
+  % minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=white,
+  fontupper=\small,
+  borderline north={0.5mm}{0mm}{coreHighlight,line width=1pt},
+borderline south={0.5mm}{0mm}{coreHighlight,line width=1pt},
+  overlay={\node[fill=coreHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\coreLang{}};}
+%   skin=tile,
+ }
+
+ \newtcolorbox{core}{
+  common,
+  % minted language=ocaml,
+  colback=coreBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=coreHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\coreLang{}};}
+%   skin=tile,
+ }
+
+  \newtcolorbox{corelst}{
+  common,
+  % minted language=ocaml,
+  colback=coreBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=coreHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\coreLang{}};}
 %   skin=tile,
  }
 

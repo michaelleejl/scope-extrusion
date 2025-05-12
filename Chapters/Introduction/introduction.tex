@@ -35,7 +35,7 @@ $(m ())
 \end{macocaml}
 Importantly, the macro \texttt{m} is executed by the compiler, \textit{at compile time}. The Arm and Intel variants are \textit{generated from a single specification}, not manually duplicated.
 
-Importantly, to support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These ``suspended programs'' are best thought of as abstract syntax trees. The following code constructs the program $(\lambda x. x) 1$.
+To support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These ``suspended programs'' are best thought of as abstract syntax trees. The following code constructs the program $(\lambda x. x) 1$.
 \begin{ocaml}
 if (cpu_type == Arm) then 
   let build_app (f: (int -> int) expr) (v: int expr) = App(f, v)

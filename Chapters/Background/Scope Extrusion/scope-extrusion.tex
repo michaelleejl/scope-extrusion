@@ -30,7 +30,6 @@ $\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Na
 
 It is difficult to give a precise definition to scope extrusion, because there are multiple competing definitions \citep{kiselyov-14,kiselyov-16}, and many are given informally. For example, is scope extrusion a property of the \textit{result} of evaluation \citep{kiselyov-16}, as in \Cref{listing:efflang-scope-extrusion}, or is it a property of \textit{intermediate} configurations \citep{kiselyov-14}? We can, for example, build ASTs with extruded variables, that are bound at some future point. In \Cref{listing:efflang-maybe-scope-extrusion}, we produce the intermediate AST $\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})$, which is not well scoped. However, the result of evaluation is well scoped: $\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}$. Does \Cref{listing:efflang-maybe-scope-extrusion} exhibit scope extrusion?
 
-Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scope-extrusion}. Making precise the competing definitions of scope extrusion these competing definitions, and their relation to one another, is a contribution of this dissertation. 
 
 \begin{code}
   \begin{efflst}
@@ -39,7 +38,7 @@ Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scop
       \quad \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}}); \return{\Var{x}{\mathbb{N}}}}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
       \textbf{\texttt{with}} \\
       \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \\
-      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \bind{z}{\return{y}}{\continue{k}{z}}} \}\\
+      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \bind{z}{\return{\texttt{Plus}({\texttt{Nat}({0})}, y)}}{\continue{k}{z}}} \}\\
     \end{array}$
 
     \vspace{2mm} 
@@ -49,9 +48,11 @@ Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scop
 \textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}}\end{array}$}
 
 \end{efflst}
-\captionof{listing}{A \efflang{} program that is a slight variation of \Cref{listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref{listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check.}%
-\label{listing:efflang-maybe-not-scope-extrusion}
+\captionof{listing}{A \efflang{} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion.}%
+\label{listing:efflang-maybe-scope-extrusion}
 \end{code}
+
+Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scope-extrusion}. Making precise the competing definitions of scope extrusion these competing definitions, and their relation to one another, is a contribution of this dissertation. 
 
 \subsection{Existing Solutions to the Scope Extrusion Problem}
 There are multiple solutions to the problem of scope extrusion. The solution space can be broadly divided into two types of approaches: static (type-based) and dynamic. I will now survey two dynamic approaches, which I term the lazy and eager checks, and one static approach, the method of refined environment classifiers \citep{kiselyov-16,isoda-24}. 
@@ -98,7 +99,7 @@ manner in which checks are inserted, which we will make precise later. To illust
       \quad \bind{\texttt{body}}{\textbf{\texttt{extrude}}({\Var{x}{\mathbb{N}}}); \return{\Var{x}{\mathbb{N}}}}{\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}} \\
       \textbf{\texttt{with}} \\
       \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \\
-      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \bind{z}{\return{\texttt{Plus}({\texttt{Nat}({0})}, y)}}{\continue{k}{z}}} \}\\
+      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \bind{z}{\return{y}}{\continue{k}{z}}} \}\\
     \end{array}$
 
     \vspace{2mm} 
@@ -108,9 +109,10 @@ manner in which checks are inserted, which we will make precise later. To illust
 \textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}}\end{array}$}
 
 \end{efflst}
-\captionof{listing}{A \efflang{} program that may, or may not demonstrate scope extrusion, depending on one's definition. The final result of the program is well-scoped, but not all intermediate results are well-scoped. If scope extrusion is a property of the resulting AST, then this does not display scope extrusion. If, instead, it is a property of intermediate ASTs, then this does display scope extrusion.}%
-\label{listing:efflang-maybe-scope-extrusion}
+\captionof{listing}{A \efflang{} program that is a slight variation of \Cref{listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref{listing:efflang-maybe-scope-extrusion}) passes the Eager Dynamic Check.}%
+\label{listing:efflang-maybe-not-scope-extrusion}
 \end{code}
+
 While the program in \Cref{listing:efflang-maybe-not-scope-extrusion} produces an intermediate AST with extruded variables, because of the mechanism for inserting checks, it passes the Eager Dynamic Check. I assert that this behaviour is unintuitive, and exposes too much of the internals to the programmer. 
 
 \subsubsection{Refined Environment Classifiers} 

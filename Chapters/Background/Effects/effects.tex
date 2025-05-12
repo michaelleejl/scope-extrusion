@@ -97,12 +97,13 @@ Further, I use $c_1;c_2$ as syntactic sugar for $\bind{\_}{c_1}{c_2}$.
 I will explain key language constructs in turn.
 \begin{figure}[t]
   \begin{eff-desc}
+    {\large{\textbf{Syntax}}}
 
-  $\begin{array}{llll}
+  $\begin{array}{@{}llll}
   \text{Values} & v & := & x \mid n \mid \lambda x. c \mid \kappa x.c\\
 
-  \text{Computations} & c & := & v_1 v_2 \mid \return{v} \mid \bind{x}{c_1}{c_2} \mid \\
-                             &&& \op{v} \mid \handleWith{c}{h} \mid \continue{v_1}{v_2} \\ 
+  \text{Computations} & c & := & v_1 v_2 \mid \return{v} \mid \bind{x}{c_1}{c_2} \\
+                             &&& \mid \op{v} \mid \handleWith{c}{h} \mid \continue{v_1}{v_2} \\ 
   \text{Handlers} & h & := &\returnHandler{x}{c} \mid h;\opHandler{x}{k}{c}
   \end{array}$
   
@@ -178,6 +179,8 @@ Having described informally the desired semantics of \efflang{}, we may now make
   \arraycolsep=3pt
 \begin{eff-desc}
   
+  {\large\textbf{Operational Semantics}}\\
+
   \renewcommand{\effconfiguration}[2]{{#1}; {#2}}
   \renewcommand{\transition}[2]{#1 & \rightarrow & #2}
   \newcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
@@ -198,7 +201,7 @@ Having described informally the desired semantics of \efflang{}, we may now make
   \end{array}
   \]}
 
-\noindent\textbf{Operational Semantics}
+{\noindent\textbf{Operational Semantics}}
   {\scriptsize
 \[
   \begin{array}{rrcl}
@@ -227,7 +230,7 @@ The operational semantics is given on configurations of the form $\effconfigurat
 To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, consider the evaluation of the running example in \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
 \[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
 \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\end{array}\]
-After several applications of \textsc{Cng-Pop}, we obtain the configuration
+After several applications of \textsc{Cng-Psh}, we obtain the configuration
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -246,7 +249,7 @@ Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\t
 \end{array}
   \]
 }
-Applying \textsc{Cng-Pop},
+Applying \textsc{Cng-Psh},
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -290,7 +293,9 @@ We now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-synta
 
 \begin{figure}
   \begin{eff-desc}
-  $\begin{array}{lllr}
+  {\large \textbf{Types}}\\
+
+  $\begin{array}{@{}lllr}
     \text{Effects row} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
     \text{Value type} & T ::= \mathbb{N} & \\
                               &\quad\quad\,\,\, \mid \functionType{T_1}{T_2} & \text{functions}\\
@@ -329,8 +334,11 @@ may be given type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\math
 
 I now consider the typing rules for terms, which are collated in \Cref{fig:efflang-type-system}. Most rules are standard, but a few are worth paying attention to. 
 
-\begin{figure}[t]
+\begin{figure}
   \begin{eff-desc}
+    {\large\textbf{Typing Rules}}\\
+    
+    {
     \centering 
     \begin{minipage}[t]{0.2\textwidth}
       \centering
@@ -433,6 +441,7 @@ $\inferrule[(Continuation)]
              \opHandler{x'}{k'}{c'} \notin h}
     {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}$
   \end{minipage}
+    }
   \end{eff-desc}
   \caption{Typing rules for \efflang{} terms}
   \label{fig:efflang-type-system}
@@ -558,6 +567,7 @@ The design space of effect handlers is large. I consider three key design decisi
 
   \item \textbf{\textsf{Deep, Shallow, or Sheep Handlers}}\\
          \textit{Are multiple instances of the same effect handled by the same handler?}
+
          In \efflang{}, continuations reinstate handlers $\effectRule{Cnt}$ and thus multiple instances of the same effect are handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. We say these handlers are \textbf{deep}.
 
          \begin{efflst}
