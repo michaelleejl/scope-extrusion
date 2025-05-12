@@ -143,21 +143,21 @@ Putting it all together, we can now interpret complex \sourceLang{} types, like
   \node[align=center, font=\footnotesize](effects) at (-1.1cm,0.3cm){$\{ \texttt{get} \}$};
 
   \begin{scope}[on background layer, font=\scriptsize\bfseries, text=comment, align=left]
-    \draw[draw=comment, line width = 0.3mm] ($(example.north east) + (-2.4cm, 0.6cm)$) circle[radius=1.4mm] node (annote-1) {\tiny{1}};
+    \draw[draw=comment, line width = 0.3mm] ($(example.north east) + (-3.1cm, 0.6cm)$) circle[radius=1.4mm] node (annote-1) {\tiny{1}};
     \node[anchor = east, align=right] (annote-1-text) at ($(annote-1.west) + (0.1cm, -0.15cm)$) {Compile-time \\function} ;
-    \draw[draw=comment, line width =0.3mm] ($(example.north east) + (-1.9cm, 0cm)$) |- (annote-1.east);
+    \draw[draw=comment, line width =0.3mm] ($(example.north east) + (-2.6cm, 0cm)$) |- (annote-1.east);
 
     \draw[draw=comment, line width = 0.3mm] ($(effects.north) + (-0.5cm, 0.4cm)$) circle[radius=1.4mm] node (annote-2) {\tiny{2}};
     \node[anchor = east, align=right] (annote-2-text) at ($(annote-2.west) + (0.1cm, -0.15cm)$) {Compile-time \\effects} ;
     \draw[draw=comment, line width =0.3mm] (effects.north) |- (annote-2.east);
 
-    \draw[draw=comment, line width = 0.3mm] ($(example.south west) + (2.8cm, -0.4cm)$) circle[radius=1.4mm] node (annote-3) {\tiny{3}};
+    \draw[draw=comment, line width = 0.3mm] ($(example.south west) + (3.4cm, -0.4cm)$) circle[radius=1.4mm] node (annote-3) {\tiny{3}};
     \node[anchor = north west, align=left] (annote-3-text) at ($(annote-3.east) + (-0.1cm, 0.27cm)$) {Input: AST of a run-time \\ computation of type $\mathbb{N} \, ! \, \{\texttt{print}\}$} ;
-    \draw[draw=comment, line width =0.3mm] ($(example.south west) + (2.3cm, 0cm)$) |- (annote-3.west);
+    \draw[draw=comment, line width =0.3mm] ($(example.south west) + (2.9cm, 0cm)$) |- (annote-3.west);
 
-    \draw[draw=comment, line width = 0.3mm] ($(example.south east) + (-6.7cm, -0.4cm)$) circle[radius=1.4mm] node (annote-4) {\tiny{4}};
+    \draw[draw=comment, line width = 0.3mm] ($(example.south east) + (-7.5cm, -0.4cm)$) circle[radius=1.4mm] node (annote-4) {\tiny{4}};
     \node[anchor = north west, align=left] (annote-4-text) at ($(annote-4.east) + (-0.1cm, 0.27cm)$) {Output: AST of a run-time \\ computation of type $\mathbb{N} \, ! \, \{\texttt{print},\texttt{readInt}\}$} ;
-    \draw[draw=comment, line width =0.3mm]  ($(example.south east) + (-7.2cm, 0cm)$) |- (annote-4.west);
+    \draw[draw=comment, line width =0.3mm]  ($(example.south east) + (-8cm, 0cm)$) |- (annote-4.west);
   \end{scope}
 
 \end{tikzpicture}
