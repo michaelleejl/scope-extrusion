@@ -12,16 +12,16 @@
 \contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{13}{subsubsection*.8}%
 \contentsline {subsubsection}{\nonumberline Operational Semantics}{14}{subsubsection*.10}%
 \contentsline {subsubsection}{\nonumberline Type-and-Effect System}{16}{subsubsection*.12}%
-\contentsline {subsubsection}{\nonumberline Metatheory}{18}{subsubsection*.14}%
+\contentsline {subsubsection}{\nonumberline Metatheory}{19}{subsubsection*.14}%
 \contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{20}{subsection.2.2.3}%
 \contentsline {section}{\numberline {2.3}Scope Extrusion}{21}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{22}{subsection.2.3.1}%
-\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{22}{subsubsection*.16}%
+\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{23}{subsection.2.3.1}%
+\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{23}{subsubsection*.16}%
 \contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{23}{subsubsection*.18}%
-\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{23}{subsubsection*.20}%
+\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{24}{subsubsection*.20}%
 \contentsline {chapter}{\numberline {3}Calculus}{28}{chapter.3}%
 \contentsline {section}{\numberline {3.1}The source language: $\lambda _{\equote [\texttt {op}]}${}}{28}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Type System}{28}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.1}Type System}{29}{subsection.3.1.1}%
 \contentsline {subsubsection}{\nonumberline Typing Judgement}{31}{subsubsection*.22}%
 \contentsline {section}{\numberline {3.2}The core language: $\lambda _{\texttt {AST}(\texttt {op})}${}}{33}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Operational Semantics}{37}{subsection.3.2.1}%
@@ -31,9 +31,10 @@
 \contentsline {subsection}{\numberline {3.2.2}Type System}{40}{subsection.3.2.2}%
 \contentsline {subsubsection}{\nonumberline Typing Rules}{40}{subsubsection*.30}%
 \contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{41}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Elaborating Types}{41}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.1}Elaborating Types}{42}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}Elaborating Contexts}{42}{subsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.3.3}Elaborating Terms}{42}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Elaborating Typing Judgements}{42}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.4}Elaborating Typing Judgements}{43}{subsection.3.3.4}%
 \contentsline {section}{\numberline {3.4}Metatheory}{43}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Scope Extrusion}{47}{chapter.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -308,6 +308,12 @@ We now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-synta
   \label{fig:efflang-type-syntax}
 \end{figure}
 
+I will assume a universe of pre-declared operations, $\Sigma$, where for any effect \texttt{op}, $\Sigma$ can be used to look up the type of \texttt{op}.
+\[\texttt{op}: A \to B \in \Sigma \]
+I will not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
+\[\texttt{recursive}: 1 \to (\functionType[\{ \texttt{recursive} \}]{1}{1})\]
+Thus, one may write programs which do not terminate, by ``tying the knot''. 
+
 Just like terms, types are divided into value types (for example, $\mathbb{N}$), computation types ($\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$), and handler types ($\handlerType{\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{\mathbb{N}}}$). Since computations may have effects, computation types track unhandled effects using an effects row ($\Delta$), which in this system is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects.
 \[
 \begin{array}{lll}
@@ -483,6 +489,11 @@ The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
 \end{enumerate}
 A full typing derivation may be found in the appendix.
 
+Finally, I define a notion of well-typed computation. 
+\begin{definition}[Well-typed computation]{effHighlight}
+  $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
+\end{definition}
+
 \subsubsection{Metatheory}
 I will build not only on \efflang{}, but on metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}. We first state the standard progress and preservation properties.
 
@@ -490,7 +501,7 @@ I will build not only on \efflang{}, but on metatheoretic properties of \efflang
 \renewcommand{\transition}[2]{#1 \rightarrow #2}
 
 \begin{theorem}[Progress]{effHighlight}\label{thm:progress}
-If $\type{E[c]}{\effectType{T}}$ and then either 
+If $\type{E[c]}{\effectType{T}}$ then either 
 \begin{enumerate}
 \item $c$ of the form $\return{v}$ and $E = [-]$,
 \item $c$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
@@ -503,17 +514,16 @@ If $\type{E[c]}{\effectType{T}}$ and $\transition{\effconfiguration{c}{E}}{\effc
 \end{theorem}
 \noindent As a corollary, we obtain type safety. 
 \begin{corollary}[Type Safety]{effHighlight}\label{thm:type-safety}
-  If $\cdot \vdash {E[c]}: {\effectType{T}}$ and then either 
+  If $\cdot \vdash {c}: {\effectType[\emptyset]{T}}$ then either 
 \begin{enumerate}
-\item $c$ of the form $\return{v}$ and $E = [-]$ for $\cdot \vdash {v}: {T}$
-\item $c$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
-\item $\exists. E', c'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$ and $\cdot \vdash {E'[c']}: {\effectType{T}}$
+\item $\langle c; [-] \rangle \to^{\omega}$ (non-termination)
+\item $\langle c; [-] \rangle \to^{*} \langle \return{v}; [-] \rangle$
 \end{enumerate}
 \end{corollary}
 
 \newcommand{\contextequiv}{\cong_{\text{\emph{ctx}}}}
 
-Finally, \efflang{} is a \textit{fine-grained call-by-value} \citep{levy-2003} approach. We first define a notion of contextual equivalence $\contextequiv$. Informally, two computations/values are contextually equivalent if they behave the same in all ``relevant'' contexts and at all ground (first-order) types (in this case, just $\mathbb{N}$). 
+Finally, \efflang{} is a \textit{fine-grain call-by-value} \citep{levy-2003} approach. We first define a notion of contextual equivalence $\contextequiv$. Informally, two computations/values are contextually equivalent if they behave the same in all ``relevant'' contexts and at all ground (first-order) types (in this case, just $\mathbb{N}$). 
 
 % To define a notion of ``relevant'', we first type contexts.
 
@@ -528,14 +538,14 @@ Finally, \efflang{} is a \textit{fine-grained call-by-value} \citep{levy-2003} a
   \begin{enumerate}
     \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
     \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{\mathbb{N}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{\mathbb{N}}}$, 
-    \[\effconfiguration{c}{E} \, \to^{*} \, {\effconfiguration{\return{v}}{[-]}} \iff \effconfiguration{c'}{E} \, \to^{*} \, \effconfiguration{\return{v}}{[-]}\]
+    \[ \effconfiguration{c}{E}  \, \to^{*} \, { \effconfiguration{\return{v}}{[-]}}  \iff  \effconfiguration{c'}{E} \, \to^{*} \,  \effconfiguration{\return{v}}{[-]} \]
   \end{enumerate}
 
   When the context $\Gamma$ is empty, we write $c \contextequiv c': \effectType{T}$, and when the type is unimportant, we write $c \contextequiv c'$
 \end{definition}
 \vspace{-\baselineskip}
-\begin{theorem}[Fine-Grained CBV]{effHighlight}\label{thm:fine-grained-cbv}
-  \efflang{} is a fine-grained call-by-value language, meaning in particular that the following equations hold (notationally, I use $c$ for computations, $v$ for values, and $f$ for function values):
+\begin{definition}[Fine-Grain CBV]{effHighlight}\label{dfn:fine-grain-cbv}
+  \efflang{} is a fine-grain call-by-value language, meaning in particular that the following equations hold (notationally, I use $c$ for computations, $v$ for values, and $f$ for function values):
   \begin{enumerate}
     \item $\bind{x}{\return{v}}{c} \, \contextequiv \, c[v/x]$
     \item $c \, \contextequiv \, \bind{x}{c \,}{\return{x}}$
@@ -544,7 +554,7 @@ Finally, \efflang{} is a \textit{fine-grained call-by-value} \citep{levy-2003} a
     \item $f \, \contextequiv \, \lambda x. f x$
   \end{enumerate}
 In the third equation, we assume $x$ not free in $c_3$.
-\end{theorem}
+\end{definition}
 
 \subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
 The design space of effect handlers is large. I consider three key design decisions made by different systems.

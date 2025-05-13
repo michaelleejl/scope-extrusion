@@ -10,12 +10,13 @@
   \node[align=left, fill=coreBackground, draw=coreHighlight] (core-program) at ($(source-program.east) + (6.4cm, 0cm)$){\textbf{tls}(\textbf{do}$\, x \leftarrow \return{\texttt{Ret}(\texttt{Nat}(0))}$ \\ 
   \quad\quad\textbf{in} $(\lambda z. \return{z})(x)$$)$};
 
-  \node[] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Ret$($Nat$(0))$};
+  \node[align=left, fill=effBackground, draw=effHighlight] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Ret$($Nat$(0))$\\ };
   \end{scope}
 
   \begin{scope}[every node/.style={font = \scriptsize}]
     \node[fill=sourceHighlight] (source-lang) at ($(source-program.south) + (0cm, 0cm)$ ) {\textcolor{white}\sourceLang{}};
     \node[fill=coreHighlight] (core-lang) at ($(core-program.south) + (0cm, 0cm)$ ) {\textcolor{white}\coreLang{}};
+    \node[fill=effHighlight] (eff-lang) at ($(normal-form.south) + (0cm, 0cm)$ ) {\textcolor{white}\efflang{}};
   \end{scope}
 
   \begin{scope}[scale=8]
@@ -30,20 +31,18 @@
 
   \end{tikzpicture}
   
-  \caption{\calculusName{} is first elaborated into \coreLang{}, which is then executed \textbf{at compile-time} to obtain the AST of a run-time program.}%
+  \caption{\calculusName{} is first elaborated into \coreLang{}, which is then executed \textbf{at compile-time} to obtain the AST of a run-time \efflang{} program.}%
   \label{fig:elaboration-then-execution}
 \end{figure}
 
 To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, for studying said interaction. \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to implement different scope extrusion checks as algorithms in \calculusName{}, such that the checks may be evaluated in a comparative fashion. 
 
-Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
+Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
 
 In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, I will describe the elaboration from \sourceLang{} to \coreLang{} (\Cref{section:elaboration}). Finally, I will discuss the metatheoretic properties of \calculusName{} (\Cref{section:metatheory}). 
 % At a high-level, however, the names are suggestive: \sourceLang{} extends \efflang{} with quotation $\equote$ and splicing $\splice$, and \coreLang{} extends \efflang{} with AST constructors. 
 
 \section{The source language: \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}}\label{section:source-lang}
-\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{}, following a fine-grained call-by-value approach, divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax})
-
 \begin{figure}
 \begin{source-desc}
   {\large \textbf{Syntax}} \\
@@ -56,6 +55,7 @@ In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang
 \caption{\sourceLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of quotes and splices.}
 \label{fig:source-syntax}
 \end{figure}
+\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{}, following a fine-grain call-by-value approach, divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax})
 
 Notice that we cannot quote values: we \textit{must} generate effectful programs.
 \subsection{Type System}
@@ -555,7 +555,7 @@ $\inferrule[(\splicemode{}-Continuation)]
 Recall that the \textsf{Code} type makes available at compile-time a representation of ASTs of level $0$ programs. Recall further that $\equote$ is the mechanism for \textit{creating} ASTs (elements of type \textsf{Code}) from run-time programs. This intuition is captured by the \textsc{\splicemode{}-Quote} rule, where, to verify that $\equote$ is a valid AST of type \textsf{Code}, we verify that $e$ is a run-time program of the corresponding type.
 \[\inferrule[(\splicemode{}-Quote)]{\qtypejudge{e}{\runtimecomptype{T}{\Delta ; \xi}}}{\stypejudge{\equote}{\effectType{\compiletimetype{\textsf{Code}(\runtimecomptype{T}{\xi})}}}}\]
 
-The dual to $\equote$ is splice $\splice$, which \textit{eliminates} compile-time ASTs by transforming them (back) into run-time code. This intuition is captured by the \textsc{\quotemode{}-Splice} and \textsc{\compilemode{}-Splice} rules, where, to verify that $\splice$ is a valid run-time program, we check that $e$ is a valid compile-time AST of the corresponding type. 
+The dual to $\equote$ is $\splice$, which \textit{eliminates} compile-time ASTs by transforming them (back) into run-time code. This intuition is captured by the \textsc{\quotemode{}-Splice} and \textsc{\compilemode{}-Splice} rules, where, to verify that $\splice$ is a valid run-time program, we check that $e$ is a valid compile-time AST of the corresponding type. 
 
 \begin{center}
 \begin{minipage}[t]{0.5\textwidth}
@@ -570,7 +570,12 @@ The dual to $\equote$ is splice $\splice$, which \textit{eliminates} compile-tim
 
 % Further, while the rules are syntactically identical, morally, they ought to be kept separate: \textsc{\compilemode{}-Splice} is the typing rule for top-level splices: the mechanism that turns compile-time ASTs into run-time programs, and then additionally \textit{inserts} them into an \textit{ambient} and \textit{inert} expression. \textsc{\quotemode{}-Splice} is the typing rule for non-top-level splices. While these splices similarly turn compile-time ASTs into run-time programs, the resulting run-time program could be used in a myriad of ways -- used to build larger programs, or discarded entirely. 
 
-Finally, note that since there are no \textsc{\quotemode-Quote} or \textsc{\splicemode-Splice} rules, the type system bans nested splices and quotations, and thus we can focus purely on levels $0$ and $-1$. 
+Note that since there are no \textsc{\quotemode-Quote} or \textsc{\splicemode-Splice} rules, the type system bans nested splices and quotations, and thus we can focus purely on levels $0$ and $-1$. 
+
+Finally, I define the notion of a well-typed \sourceLang{} expression. 
+\begin{definition}[Well-typed expression]{sourceHighlight}
+  $e$ is well-typed if $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$
+\end{definition}
 
 \section{The core language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
 I now describe the core language, \coreLang{}, which is a simple extension of \efflang{}. For clarity, I rename \efflang{} values ($v$) and compuations ($c$) to \coreLang{} normal forms ($n$) and terms ($t$) respectively.  
@@ -688,9 +693,12 @@ I will now describe the operational semantics of \coreLang{}. Many rules are ide
 
   {
     \scriptsize
-  
+
+{\textbf{Evaluation Contexts}}\\
+\[F ::= \ldots \mid \dlet{\Binder{\alpha}{A}}{[-]} \mid \tls{[-]} \] 
+ {\textbf{Operational Semantics}}\\
 \[
-  \begin{array}{rrcl}
+  \begin{array}{@{}rrcl}
   \astRule{Sym} & \transition{\coreConfiguration{\gensym{A}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Binder{\alpha}{A}}}{E}{U::\alpha}{M}{I}}\\
   &&&\text{(where $\alpha \notin U$)}\\
   \astRule{Use} & \transition{\coreConfiguration{\varToAST{\Binder{\alpha}{A}}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Var{\alpha}{A}}}{E}{U}{M}{I}}\\
@@ -815,7 +823,12 @@ I now describe a selection of \coreLang{} typing rules (\Cref{fig:core-typing-ru
 Notice that this type system does not guarantee that the resulting AST is \textit{well-scoped}, for example, the following is well-typed:
 \[\cdot \vdash {\Var{\alpha}{A}}: {\textsf{AST}(A)}\]
 
-The typing rules for scope extrusion checks are even more straightforward: they are effectively invisible to the type system.
+The typing rules for scope extrusion checks are even more straightforward: they are effectively invisible to the type system. The only complex case is \textbf{\texttt{err}}, which can be assigned any type in any context. \textbf{\texttt{err}} thus behaves similarly to \textbf{\texttt{absurd}} in \texttt{Haskell}, or in the $\lambda$-calculus extended with the empty type \citep{scherer-2017}.
+
+Finally, I define the notion of well-typed term. 
+\begin{definition}[Well-typed term]{coreHighlight}
+A term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
+\end{definition}
 \begin{figure}
   \begin{core-desc}
     {\large \textbf{Typing Rules}}\\
@@ -909,9 +922,10 @@ I can now define elaboration of types easily. In a nutshell, level $0$ types ela
   \elaborate{\effectType[\xi]{T^0}} & = & \AST{\erase{\effectType[\xi]{T^0}}}\\
   \elaborate{\effectType[\Delta]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{T^0}}}\\
   \elaborate{\effectType[\Delta ; \xi]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{\effectType[\xi]{T^0}}}}\\
-  \elaborate{{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})}^0} & = & {\AST{\erase{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})}^0}}\\\\
+  \elaborate{{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})}^0} & = & {\AST{\erase{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})^0}}}\\\\
   \elaborate{T^{-1}} & = & \text{if} \, T \neq \Code{\effectType[\xi]{T^0}} \, \text{then} \, \erase{T^{-1}} \\ && \text{else}\, \AST{\erase{\effectType[\xi]{T^0}}}\\
   \elaborate{\effectType{T^{-1}}} & = & \effectType[\elaborate{\Delta}]{\elaborate{T^{-1}}}\\
+  \elaborate{{(\handlerType{\effectType[\Delta]{T_1^{-1}}}{\effectType[\xi']{T_2^{-1}}})}^{-1}} & = & {\AST{\erase{(\handlerType{\effectType[\Delta]{T_1^{-1}}}{\effectType[\xi']{T_2^{-1}}})^{-1}}}}
 \end{array}
 \]
 \subsection{Elaborating Contexts}
@@ -969,12 +983,140 @@ which we elaborate by applying the elaboration component-wise
 {\inferrule{\typejudge[\elaborate{\Gamma, x: T_1^0}]{\elaborate{e}_{\compilemode{}}}{\elaborate{\runtimecomptype{T_2}{\Delta;\xi}}}}{\typejudge[\elaborate{\Gamma}]{\elaborate{\lambda x.e}_{\compilemode{}}}{\elaborate{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}}}
 \]
 Letting $A_i = \erase{T_i^0}$, and $\elaborate{e}_{\compilemode{}} = t$, and applying the elaboration functions defined above, we obtain
-{\scriptsize
+{
 \[
 {\inferrule{\typejudge[\elaborate{\Gamma}, x: \textsf{Binder}(A_1)]{t}{\effectType{\AST{\effectType[\xi]{A_2}}}}}{\typejudge[\elaborate{\Gamma}]{\bind{x}{\gensym{\erase{T^0}}}{\bind{\texttt{body}}{t}{\return{\Lam{x}{\texttt{body}}}}}}{\effectType{\AST{\functionType[\xi]{A_1}{A_2}}}}}}
 \]
 }
-which one can verify corresponds to a valid \sourceLang{} typing derivation.
+which, assuming that the premise is valid typing derivation, corresponds to a valid \sourceLang{} typing derivation.
 
-Is this true in general? Do \sourceLang{} typing derivations always elaborate into \coreLang{} typing derivations? Yes, but the question begets a larger point: what properties can we claim (and not claim) about the calculus as defined? What metatheoretic results may we establish?
+Is this true in general? Do \sourceLang{} typing derivations always elaborate into \coreLang{} typing derivations? Yes, but the question begets a larger point: what properties can we claim about the calculus as defined? What metatheoretic results may we establish?
 \section{Metatheory}\label{section:metatheory}
+I now establish several metatheoretic properties of the \sourceLang{} calculus.
+
+The first states that well-typed \sourceLang{} programs elaborate into well-typed \coreLang{} programs.
+
+\begin{theorem}[Elaboration Preservation]{sourceHighlight}
+  If $\Gamma \vdash_{\star} e: \tau$ then $\elaborate{\Gamma} \vdash \elaborate{e}_{\star}: \elaborate{\tau}$, where $\star = \compilemode{} \mid \quotemode{} \mid \splicemode{}$ and $\tau$ is a level $0$ or level $-1$ value, computation, or handler type. 
+\end{theorem}
+
+The proof is by induction on the typing rules, as in the example in the previous section.  
+
+We can also prove that the core language \coreLang{} satisfies appropriate progress and preservation properties. 
+
+\begin{theorem}[Progress]{coreHighlight} 
+If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
+\begin{enumerate}
+\item $t$ of the form $\return{n}$ and $E = [-]$,
+\item $t$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
+\item $t$ of the form $\err$
+\item $\exists. t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'$
+\end{enumerate}
+\end{theorem}
+Note that I additionally have to consider the error state \textbf{\texttt{err}}. Progress is proved by induction over the typing derivation. Since I am extending \efflang{}, I only need to consider the augmented typing rules, all of which are extremely straightforward.
+
+\begin{theorem}[Reduction Preservation]{coreHighlight}
+If 
+\begin{enumerate} 
+  \item $\Gamma \vdash E[t]: T$ and 
+  \item $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
+  \end{enumerate}
+  then $\Gamma \vdash E'[t']: T$ 
+\end{theorem}
+Proof proceeds by induction over the operational semantics. Once again, I only need to consider the augmented rules, which are very simple. 
+
+As a corollary, we get a notion of type safety.
+\begin{corollary}[Type Safety]{sourceHighlight}
+  If $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$ then either
+  \begin{enumerate}
+    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []
+    ; \emptyset; \top \rangle \to^{\omega}$,
+    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []; \emptyset; \top \rangle \to^{*} \langle \err; E; U; M; I \rangle$ for some $E$, $U$, $M$, $I$, or 
+    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; U; M; I \rangle$ for some $U$, $M$, $I$
+  \end{enumerate} 
+\end{corollary}
+
+Importantly, this notion of type safety is weak. A system which always reports a scope extrusion error (\textbf{\texttt{err}}) would have this property. Further, a system which never reports scope extrusion would have this property too. As such, we cannot additionally claim that the normal form $n$ represents a well-typed \efflang{} program. 
+
+In addition to type safety, we can formulate an equational theory for \sourceLang{}. First, I prove that, underneath a top-level splice, splice and quotation are duals. Second, I prove that \sourceLang{} is a fine-grain CBV calculus. 
+
+To formulate this equational theory, we will need a notion of contextual equivalence in \coreLang{}. In turn, this demands a notion of equality between \textsf{AST}s of values, computations, and handlers. I will abuse notation and write $n_1 =_\textsf{AST} n_2$, to represent all three. The notion of equality I choose is syntactic equality up to $\alpha$-renaming. So, for example, 
+\renewcommand{\Var}[2]{\texttt{Var}(#1_{#2})}
+
+\begin{center}
+\begin{tikzpicture}
+      \node (equals) {$=_{\textsf{AST}}$};
+
+  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.west) + (-3cm, 0.7cm)$)}]
+    \node (lam) {Lam}
+    child {node (var) {$\Binder{\alpha}{\mathbb{N}}$}}
+    child {node (var) {$\Var{\alpha}{\mathbb{N}}$}};
+    \end{scope}
+
+
+  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.east) + (3cm, 0.7cm)$)}]
+    \node (lam) {Lam}
+    child {node (var) {$\Binder{\beta}{\mathbb{N}}$}}
+    child {node (var) {$\Var{\beta}{\mathbb{N}}$}};
+    \end{scope}
+    
+\end{tikzpicture}
+\end{center}
+but, however, 
+\begin{center}
+\begin{tikzpicture}
+      \node (equals) {$\neq_{\textsf{AST}}$};
+
+  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.west) + (-3cm, 0.7cm)$)}]
+    \node (lam) {Plus}
+    child {node (var) {1}}
+    child {node (var) {2}};
+    \end{scope}
+
+
+  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.east) + (3cm, 0.7cm)$)}]
+    \node (lam) {Plus}
+    child {node (var) {2}}
+    child {node (var) {1}};
+    \end{scope}
+    
+\end{tikzpicture}
+\end{center}
+Syntactic equality is, of course, not the only sensible notion of equality. One can also choose, for example, contextual equivalence with respect to the \efflang{} semantics. Nevertheless, armed with this notion of equality on \textsf{AST} types, it is easy to define a notion of contextual equivalence in \coreLang{}. First, define ground types 
+\[T_\textsf{Ground} \triangleq \mathbb{N} \mid \textsf{AST}(A) \mid \textsf{AST}(\effectType[\xi]{A}) \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}})\]
+and a notion of equality on each ground type ($=_{\textsf{Ground}}$), which is just numerical equality for $\mathbb{N}$ and $=_{\textsf{AST}}$ for AST types. Then,
+\begin{definition}[Contextual Equivalence]{coreHighlight}\label{dfn:ctx-equiv}
+  $t$ and $t'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash t \contextequiv t': '\effectType{T}$ if 
+  \begin{enumerate}
+    \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
+    \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{T_{\textsf{Ground}}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{T_{\textsf{Ground}}}}$, we have either 
+    \begin{enumerate}
+      \item $\langle t; E; []; \emptyset; \top \rangle \to^{\omega}$ and $\langle t'; E; []; \emptyset; \top \rangle \, \to^{\omega}$,
+      \item For some $E_1$, $M_1$, $U_1$, $I_1$, $E_2$, $M_2$, $U_2$, $I_2$\\ $\langle t; E; []; \emptyset; \top \rangle \to^{*} \langle \err; E_1; M_1; U_1; I_1 \rangle$, and \\
+      $\langle t'; E; []; \emptyset; \top \rangle \to^{*} \langle \err; E_2; M_2; U_2; I_2 \rangle$
+      \item For some $M_1$, $U_1$, $I_1$, $M_2$, $U_2$, $I_2$\\ $\langle t; E; []; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; M_1; U_1; I_1 \rangle$, and \\
+      $\langle t'; E; []; \emptyset; \top \rangle \to^{*} \langle \return{m}; [-]; M_2; U_2; I_2 \rangle$, and \\ 
+      $n =_{\textsf{Ground}} m$ 
+    \end{enumerate}
+    %  \, {\effconfiguration{\return{v}}{[-]}} \iff \effconfiguration{c'}{E} \, \to^{*} \, \effconfiguration{\return{v}}{[-]}
+  \end{enumerate}
+\end{definition}
+
+We can now prove the equational theory of \sourceLang{}. 
+
+\textbf{First, I prove that underneath a top-level splice, splice and quotation are duals}. That is, 
+\[\begin{array}{rcl}
+\splice[{\equote}] & = & e \\
+\equote[{\splice}] & = & e
+\end{array}
+\]
+Where, in this context, $=$ means ``elaborates to contextually equivalent \coreLang{} programs''. Indeed, we may prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
+\[\begin{array}{rcl}  
+  \elaborate{\splice[{\equote}]}_{\quotemode{}} = t & \iff & \elaborate{e}_{\quotemode{}} = t\\
+  \elaborate{\equote[{\splice}]}_{\splicemode{}} = t & \iff & \elaborate{e}_{\splicemode{}} = t
+\end{array}
+  \]
+
+To prove that \sourceLang{} is a fine-grain CBV calculus (\Cref{dfn:fine-grain-cbv}) is only slightly more involved.  
+
+[TODO]

@@ -1,6 +1,14 @@
+\contentsline {mddefinition}{{Definition}{2.2.{1}}{Well-typed computation}}{19}{mddefinition.2.2.1}%
 \contentsline {mdtheorem}{{Theorem}{2.2.{1}}{Progress}}{19}{mdtheorem.2.2.1}%
 \contentsline {mdtheorem}{{Theorem}{2.2.{2}}{Preservation}}{19}{mdtheorem.2.2.2}%
 \contentsline {mdcorollary}{{Corollary}{2.2.{1}}{Type Safety}}{19}{mdcorollary.2.2.1}%
-\contentsline {mddefinition}{{Definition}{2.2.{1}}{Contextual Equivalence}}{19}{mddefinition.2.2.1}%
-\contentsline {mdtheorem}{{Theorem}{2.2.{3}}{Fine-Grained CBV}}{19}{mdtheorem.2.2.3}%
+\contentsline {mddefinition}{{Definition}{2.2.{2}}{Contextual Equivalence}}{19}{mddefinition.2.2.2}%
+\contentsline {mddefinition}{{Definition}{2.2.{3}}{Fine-Grain CBV}}{20}{mddefinition.2.2.3}%
 \contentsline {mddefinition}{{Definition}{3.1.{1}}{Level}}{30}{mddefinition.3.1.1}%
+\contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed expression}}{33}{mddefinition.3.1.2}%
+\contentsline {mddefinition}{{Definition}{3.2.{1}}{Well-typed term}}{41}{mddefinition.3.2.1}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{44}{mdtheorem.3.4.1}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{44}{mdtheorem.3.4.2}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{44}{mdtheorem.3.4.3}%
+\contentsline {mdcorollary}{{Corollary}{3.4.{1}}{Type Safety}}{44}{mdcorollary.3.4.1}%
+\contentsline {mddefinition}{{Definition}{3.4.{1}}{Contextual Equivalence}}{45}{mddefinition.3.4.1}%
