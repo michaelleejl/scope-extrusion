@@ -18,7 +18,7 @@ For example, the following expression represents $\sin\circ \tanh$.
 Compose(Tanh, Sin)
 \end{ocaml}
 
-We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}.\ \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}) illustrates one way to compute gradients maintainably: 
+We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}.\ The \mintinline{ocaml}{grad_main} function (\Cref{listing:ocaml-grad-main}) is one maintainable way to computes gradients: 
 
 \begin{code}
 \begin{ocamllst}
@@ -48,7 +48,7 @@ let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
 
 Although \mintinline{ocaml}{grad_fast} only works for a single $f$, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
 
-The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over $f$. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is more specialised to a specific $f$ (\text{\mintinline{ocaml}{Compose(Tanh, Sin)}}). More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
+The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over $f$. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is more specialised to a specific $f$. More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
 
 The tension between maintainability (abstraction) and efficiency (specialisation) has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
@@ -59,7 +59,9 @@ How does one write maintainable and efficient code, \textbf{when one cannot trus
 One answer is metaprogramming, which gives users the ability to perform code-generation. Programmers may thus take matters into their own hands: manually generating optimised code when the compiler may not automatically do so for them. The \mintinline{ocaml}{grad} function in \texttt{JAX}, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
 
 \subsubsection{Speeding up exponentiation with Metaprogramming}
-Metaprogramming allows for code-generation via the creation and manipulation of abstract syntax trees (ASTs). I will now illustrate how metaprogramming works with reference to \texttt{MacoCaml}, which implements \textit{compile-time} metaprogramming. While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a morally equivalent, but simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable implementation is the \mintinline{ocaml}{pow} function (\Cref{listing:ocaml-pow-maintainable}):
+Metaprogramming allows for code-generation via the creation and manipulation of abstract syntax trees (ASTs). I will now illustrate how metaprogramming works with reference to MacoCaml, which implements \textit{compile-time} metaprogramming. 
+
+While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a morally equivalent, but simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable implementation is the \mintinline{ocaml}{pow} function (\Cref{listing:ocaml-pow-maintainable}):
 
 \begin{code}
 \begin{ocamllst}
@@ -71,9 +73,9 @@ let rec pow (n: int) (x: int) =
 \label{listing:ocaml-pow-maintainable}
 \end{code}
 
-\mintinline{ocaml}{pow}, which can be applied to any exponent \mintinline{ocaml}{n}, is analogous to \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}), which could be applied to \textit{any} differentiable function $f$. 
+As it may be applied to any exponent \mintinline{ocaml}{n}, \mintinline{ocaml}{pow} is analogous to \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}), which could be applied to \textit{any} differentiable function $f$. 
 
-However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ =$ \mintinline{ocaml}{2}, then a more efficient, but less maintainable implementation, is the \mintinline{ocaml}{square} function (\Cref{listing:ocaml-pow-fast}) 
+However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ =$ \mintinline{ocaml}{2}, then a more efficient, but less maintainable implementation, is the \mintinline{ocaml}{square} function (\Cref{listing:ocaml-pow-fast}), analogous to \mintinline{ocaml}{grad_fast} (\Cref{listing:ocaml-grad-fast}).
 
 \begin{code}
 \begin{ocamllst}
@@ -83,9 +85,7 @@ let square x = x * x
 \label{listing:ocaml-pow-fast}
 \end{code}
 
-\noindent \mintinline{ocaml}{square} is analogous to \mintinline{ocaml}{grad_fast} (\Cref{listing:ocaml-grad-fast}).
-
-Metaprogramming can be utilised to write a function, \mintinline{ocaml}{pow_gen}, which resembles \mintinline{ocaml}{pow} (inheriting its maintainability), but that generates a program which resembles \mintinline{ocaml}{square} (inheriting its efficiency). \Cref{listing:ocaml-pow-gen} presents the meta-programmed \mintinline{ocaml}{pow_gen} function. Compilation generates the body of \mintinline{ocaml}{square y} (line 4), \mintinline{ocaml}{y * y * 1}. I will now explain the mechanics of generation.
+Metaprogramming can be utilised to write a function, \mintinline{ocaml}{pow_gen}, which resembles \mintinline{ocaml}{pow} (inheriting its maintainability), but that generates a program which resembles \mintinline{ocaml}{square} (inheriting its efficiency). \Cref{listing:ocaml-pow-gen} presents the meta-programmed \mintinline{ocaml}{pow_gen} function. Compilation generates \mintinline{ocaml}{y * y * 1}, which resembles the body of \mintinline{ocaml}{square}. I will now explain the mechanics of generation.
 
 \begin{code}
 \begin{macocamllst}
@@ -102,11 +102,11 @@ square 3 (*at runtime: 9*)
 % Notice that \mintinline{ocaml}{pow_gen} broadly resembles \mintinline{ocaml}{pow}, with the exception of \textit{metaprogramming annotations} like \mintinline{ocaml}{<<>>} and \mintinline{ocaml}{$}. These . 
 Recall that (compile-time) metaprogramming gives the programmer the ability to generate programs at compile-time, for use at run-time. We may build this in two steps, by:
 \begin{enumerate}
-  \item Deciding on a representation for code values, such that code can be created, and manipulated by programs. Once we have a representation for code values, it is possible to write expressions that return code values. These expressions serve as program generators.
+  \item Deciding on a representation for code values, such that code can be created and manipulated by programs. Once we have a representation for code values, it is possible to write expressions that return code values. These expressions serve as program generators.
   \item Building a mechanism for executing expressions \textit{at compile-time}. We can constrain this mechanism, using types, so only generators can be executed at compile-time. 
 \end{enumerate}
 
-First, we represent code values as ASTs. Generated programs are ASTs, and program generators are expressions that evaluate to ASTs. We can assume, for clarity, that the language offers, for each program construct, a corresponding AST node: for example, the integer \mintinline{ocaml}{1} has AST node \mintinline{ocaml}{Int(1)}. If a program has type \mintinline{ocaml}{'a}, then its AST node has type \mintinline{ocaml}{'a expr}. One can now write program generators, that evaluate to ASTs, for example:  
+First, we represent code values as ASTs. Generated programs are ASTs, and program generators are expressions that evaluate to ASTs. For clarity, assume that there exists an AST node for each language construct. For example, the integer \mintinline{ocaml}{1} has AST node \mintinline{ocaml}{Int(1)}. If a program has type \mintinline{ocaml}{'a}, then its AST node has type \mintinline{ocaml}{'a expr}. One can now write program generators, that evaluate to ASTs, for example:  
 \begin{macocaml}
 let rec pow_gen (n: int) (x: int expr) = 
   if n == 0 then Int(1) 
@@ -116,7 +116,7 @@ pow_gen 2 Var(y) (*Mul(Var(y), Mul(Var(y), 1))*)
 pow_gen 3 Var(y) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
 \end{macocaml}
 
-Second, we need a mechanism to execute expressions at compile-time. In \texttt{MacoCaml}, this is the ``top-level splice'', a splice (\mintinline{ocaml}{$}) annotation not surrounded by quotes (\mintinline{ocaml}{<<>>}). For example, in \Cref{listing:ocaml-pow-gen}, there is only one top-level splice, on line 4: \mintinline{ocaml}{$(pow_gen 2 <<y>>)}. We may now shift program generators (and only program generators) under top-level splices, to perform generation at compile time. Note that to access \mintinline{ocaml}{pow_gen} at compile-time, we must also move it under the top-level splice. 
+Second, we need a mechanism to execute expressions at compile-time. In MacoCaml, this is the ``top-level splice'', a splice (\mintinline{ocaml}{$}) annotation not surrounded by quotes (\mintinline{ocaml}{<<>>}). In \Cref{listing:ocaml-pow-gen}, there is only one top-level splice, on line 4: \mintinline{ocaml}{$(pow_gen 2 <<y>>)}. We may now shift program generators (and only program generators) under top-level splices, to perform generation at compile time. Note that to access \mintinline{ocaml}{pow_gen} at compile-time, we must also move it under the top-level splice. 
 
 \begin{macocaml}
 let square y = $(let rec pow_gen (n: int) (x: int expr) = ...
@@ -127,7 +127,7 @@ let cube y   = $(let rec pow_gen (n: int) (x: int expr) = ...
                (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
 \end{macocaml}
 
-To allow compile-time functions, like \mintinline{ocaml}{pow_gen}, to be re-used across multiple top-level splices, \texttt{MacoCaml} introduces the \mintinline{\macocamlLexer}{macro} (\Cref{listing:ocaml-macros})
+To allow compile-time functions, like \mintinline{ocaml}{pow_gen}, to be re-used across multiple top-level splices, MacoCaml introduces the \mintinline{\macocamlLexer}{macro} (\Cref{listing:ocaml-macros})
 
 \begin{code}
 \begin{macocamllst}
@@ -138,7 +138,7 @@ let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), 1))*)
 let cube y = $(pow_gen 3 Var(y)) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
   \end{macocamllst}
 
-  \captionof{listing}{In \texttt{MacoCaml}, \mintinline{\macocamlLexer}{macro} allows for definitions to be shared across top-level splices}
+  \captionof{listing}{In MacoCaml, \mintinline{\macocamlLexer}{macro} allows for definitions to be shared across top-level splices}
 
   \label{listing:ocaml-macros}
 \end{code}
@@ -150,7 +150,7 @@ Further, rather than explicit AST constructors, ASTs are created by the \mintinl
 Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion, allowing for programs that \textit{manipulate} ASTs. 
 
 \[ \text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(x, Int(0))}} \]
-In \texttt{MacoCaml}, the programmer interleaves quotes and splices to perform code generation
+In MacoCaml, the programmer interleaves quotes and splices to perform code generation
 \[\text{\mintinline{ocaml}{<< $(add_zero <<1>>) + 0 >>}} = \text{\mintinline{ocaml}{Plus(add_zero Int(1), Int(0))}} \]
 Notice that \mintinline{ocaml}{$} is overloaded. We must be careful to disambiguate between ``top-level splices'', which execute programs at compile-time, and splices under quotations, which stop conversion to AST. 
 
@@ -169,40 +169,40 @@ let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
 \end{macocaml}
 where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
 \subsection{The Design Space of Metalanguages}\label{subsection:metaprogramming-design}
-Different metalanguages provide slightly different variants of metaprogramming to the user. In this section, I broadly taxonomise these languages by considering three key design decisions:
+Different metalanguages provide slightly different variants of metaprogramming to the user. In this section, I taxonomise these languages by considering three key design decisions:
 \begin{enumerate}
   \item \textbf{\textsf{Homogenous or Heterogenous}}\\
          \textit{Do the generated (``object'') and generating (``meta'') languages agree or differ?}
   
         If the object and meta languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogenous} \citep{kiselyov-2024}.
 
-        \texttt{MacoCaml} allows for homogenous metaprogramming, where \texttt{OCaml} code generates \texttt{OCaml} code. In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 
+        MacoCaml allows for homogenous metaprogramming, where \texttt{OCaml} code generates \texttt{OCaml} code. In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 
 
   \item \textbf{\textsf{Run-time or Compile-Time}} \\
         \textit{When does the generation take place?}
 
-        Code generation could take place at compile-time (as with \texttt{MacoCaml} programs or \texttt{C} macros), or at run-time (as with \texttt{MetaOCaml} \citep{kiselyov-14}). 
+        Code generation could take place at compile-time (as with MacoCaml programs or \texttt{C} macros), or at run-time (as with \texttt{MetaOCaml} \citep{kiselyov-14}). 
 
         % Run-time code generation may still be used to write fast and maintainable code, by adding a phase after the traditional compilation pipeline where the compiled code is executed. 
         
-        Run-time and compile-time metaprogramming differ non-trivially. Run-time metaprogramming requires a language construct (\mintinline{ocaml}{!}, or ``run'') for explicit invocation of the compiler. Further, in run-time metaprogramming, generated and generating programs may share a heap. 
+        Run-time and compile-time metaprogramming differ non-trivially. The former requires a language construct (\mintinline{ocaml}{!}, or ``run'') for explicit invocation of the compiler. Further, with run-time metaprogramming, generated and generating programs may share a heap. 
 
-        \texttt{MacoCaml} supports compile-time metaprogramming, and we will pay no further attention to run-time metaprogramming.
+        MacoCaml supports compile-time metaprogramming, and we will pay no further attention to run-time metaprogramming.
         
   \item \textbf{\textsf{Two-stage or Multi-stage}} \\
   \textit{How many stages of code generation are allowed?}
 
-  When introducing \texttt{MacoCaml}, I illustrated how one uses top-level splices to perform shift computation from run-time (``level 0'') to compile-time (``level -1''). Might it be possible to shift computation from compile-time to a pre-compile-time (``level -2'' phase), for example, via a nested splice?
+  When introducing MacoCaml, I illustrated how one uses top-level splices to shift computation from run-time (``level $0$'') to compile-time (``level $-1$''). Might it be possible to shift computation from compile-time to a pre-compile-time (``level $-2$'' phase), for example, via a nested splice?
   \begin{macocaml}
 $($ pow_gen 2 Var(y))
   \end{macocaml}
   In a two-stage system, one is restricted to operating between two levels, so this is disallowed. In contrast, in a multi-stage system, one can operate between any number of levels. Multi-stage metaprogramming is thus strictly more general than two-stage metaprogramming.
   
-  Although nested splices are disallowed in \texttt{MacoCaml}, it is a multi-stage system, since entire modules may be imported at a decremented level \citep{xie-2023}. 
+  Although nested splices are disallowed in MacoCaml, it is a multi-stage system, since entire modules may be imported at a decremented level \citep{xie-2023}. 
 \end{enumerate}
   
-\texttt{MacoCaml} offers homogenous, compile-time, multi-stage metaprogramming. The scope of this dissertation is slightly more restrictive: I focus on two-stage, not multi-stage metaprogramming. This restriction was motivated by a cost-benefit analysis:
+MacoCaml offers homogenous, compile-time, multi-stage metaprogramming. The scope of this dissertation is slightly more restrictive: I focus on two-stage, not multi-stage metaprogramming. This restriction was motivated by a cost-benefit analysis:
 \begin{enumerate}
-  \item \textbf{Cost}: Since in \texttt{MacoCaml}, the module system is the only mechanism for achieving multi-stage programming, investigating multi-stage metaprogramming would require the investigation of module systems, effects, and metaprogramming. The interaction between module systems and metaprogramming is still an ongoing area of research \citep{chiang-2024}.
+  \item \textbf{Cost}: Since in MacoCaml, the module system is the only mechanism for achieving multi-stage programming, investigating multi-stage metaprogramming would require the investigation of module systems, effects, and metaprogramming. The interaction between module systems and metaprogramming is still an ongoing area of research \citep{chiang-2024}.
   \item \textbf{Benefit}: In practice, ``almost all uses'' of multi-stage metaprogramming only use two stages \citep{inoue-2012}. Further, scope extrusion can be observed, and is often studied, in two-stage systems \citep{isoda-24,kiselyov-16}.
 \end{enumerate}

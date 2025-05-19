@@ -57,7 +57,7 @@ Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scop
 \subsection{Existing Solutions to the Scope Extrusion Problem}
 There are multiple solutions to the problem of scope extrusion. The solution space can be broadly divided into two types of approaches: static (type-based) and dynamic. I will now survey two dynamic approaches, which I term the lazy and eager checks, and one static approach, the method of refined environment classifiers \citep{kiselyov-16,isoda-24}. 
 
-\subsubsection{Lazy Dynamic Check}
+\subsubsection{Lazy Dynamic Check}\label{subsubsection:lazy-dynamic-check}
 Scope extrusion, at least, of the kind in \Cref{listing:efflang-no-scope-extrusion}, may seem trivial to resolve: evaluate the program to completion, and check that the resulting AST is well-scoped \citep{kiselyov-14}. I term this the Lazy Dynamic Check. This approach, while clearly correct and maximally expressive, is not ideal for efficiency and error reporting reasons. 
 
 To illustrate the inefficiency of this approach, consider a slight variation of \Cref{listing:efflang-scope-extrusion}, \Cref{listing:efflang-lazy-scope-extrusion-inefficient}. In \Cref{listing:efflang-lazy-scope-extrusion-inefficient}, we can, in theory, report a warning as soon scope extrusion is detected. However, waiting for the result of the program can be much more inefficient. 
@@ -86,7 +86,7 @@ In terms of error reporting, note that, in waiting for the result of execution, 
 \label{listing:efflang-lazy-scope-extrusion-inefficient}
 \end{code}
 
-\subsubsection{Eager Dynamic Check}
+\subsubsection{Eager Dynamic Check}\label{subsubsection:eager-dynamic-check}
 A second dynamic check, motivated by the problems with the Lazy Dynamic Check, adopts a stricter definition of scope extrusion. During the code generation process, one inserts checks into the running program, reporting errors when one encounters  unbound free variables in intermediate ASTs. Hence, the Eager Dynamic Check would classify the program in \Cref{listing:efflang-maybe-scope-extrusion} as exhibiting scope extrusion. The Eager Dynamic Check has been adopted by BER MetaOCaml, and offers better efficiency and error reporting guarantees over the Lazy Dynamic Check \citep{kiselyov-14}.
 
 However, the Eager Dynamic Check is not without issue. The problem relates to the 

@@ -499,3 +499,20 @@
   location  = {Paris, France},
   series    = {POPL '17}
 }
+
+@inproceedings{kiselyov-24,
+  author    = {Kiselyov, Oleg},
+  title     = {MetaOCaml: Ten Years Later: System Description},
+  year      = {2024},
+  isbn      = {978-981-97-2299-0},
+  publisher = {Springer-Verlag},
+  address   = {Berlin, Heidelberg},
+  url       = {https://doi.org/10.1007/978-981-97-2300-3_12},
+  doi       = {10.1007/978-981-97-2300-3_12},
+  abstract  = {MetaOCaml is a superset of OCaml for convenient code generation with static guarantees: the generated code is well-formed, well-typed and well-scoped, by construction. Not only the completed generated code always compiles; code fragments with a variable escaping its scope are detected already during code generation. MetaOCaml has been employed for compiling domain-specific languages, generic programming, automating tedious specializations in high-performance computing, generating efficient computational kernels and embedded programming. It is used in education, and served as inspiration for several other metaprogramming systems.Most well-known in MetaOCaml are the types for values representing generated code and the template-based mechanism to produce such values, a.k.a., brackets and escapes. MetaOCaml also features cross-stage persistence, generating ordinary and mutually-recursive definitions, first-class pattern-matching and heterogeneous metaprogramming.The extant implementation of MetaOCaml, first presented at FLOPS 2014, has been continuously evolving. We describe the current design and implementation, stressing particularly notable additions. Among them is a new, efficient, the easiest to retrofit translation from typed code templates to code combinators. Scope extrusion detection unexpectedly brought let-insertion, and a conclusive solution to the 20-year–old vexing problem of cross-stage persistence.},
+  booktitle = {Functional and Logic Programming: 17th International Symposium, FLOPS 2024, Kumamoto, Japan, May 15–17, 2024, Proceedings},
+  pages     = {219–236},
+  numpages  = {18},
+  keywords  = {metaprogramming, staging, code generation},
+  location  = {Kumamoto, Japan}
+}

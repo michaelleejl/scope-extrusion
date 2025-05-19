@@ -44,13 +44,13 @@ if (cpu_type == Arm) then
 else 
   (*...*)
 \end{ocaml}
-% The Macocaml project aims to add type-safe, compile-time metaprogramming to 
+% The MacoCaml project aims to add type-safe, compile-time metaprogramming to 
 % \texttt{OCaml}. A key aim of the project is to ensure that metaprogramming 
 % interacts reliably, and well, with other \texttt{OCaml} language features. 
 
 Effect handlers are a powerful language construct that can simulate many other language features (state, I/O, greenthreading) \citep{pretnar-15}, and have recently been added to \texttt{OCaml} \citep{sivaramakrishnan-21}.  It is thus strategic, and timely, to investigate the interaction between metaprogramming and effect handlers. 
 
-Unfortunately, metaprogramming is known to interact unexpectedly, and poorly, with effect handlers, a problem known as \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally directs the compiler to generate code with unbound variables. In the following program, we store the variable \mintinline{ocaml}{Var(x)} into a heap cell (\mintinline{ocaml}{l}), and retrieve it outside its scope. The program thus evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
+Unfortunately, metaprogramming is known to interact unexpectedly, and poorly, with effect handlers. One problem is \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally directs the compiler to generate code with unbound variables. In the following program, we store the variable \mintinline{ocaml}{Var(x)} into a heap cell (\mintinline{ocaml}{l}), and retrieve it outside its scope. The program thus evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
 
 \begin{ocaml}
 let l: int expr ref = new(Int(1)) in 
@@ -60,13 +60,15 @@ let id_ast : (int -> int) expr = Lam(Var(x), l := Var(x); Int(1)) in
 
 The problem of scope extrusion has been widely studied, resulting in multitudinous mechanisms for managing the interaction between metaprogramming and effect handlers. Some solutions adapt the type system (Refined Environment Classifiers \citep{kiselyov-16,isoda-24}, Closed Types \citep{calcagno-00}), others insert dynamic checks into the generated code \citep{kiselyov-14}. However, there are two issues.
 
-First, we are a picky lot. Type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurred, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
+First, we are a picky lot. Type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurs, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
 
 Second, and more importantly, we lacked a way to evaluate solutions fairly and holistically. Our evaluation criteria is three-pronged: correctness, efficiency, and expressiveness. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
 
 This thesis will solve both these problems, in decreasing order of priority. 
 
 \section{Contributions}
+[NOTE: I'm not quite sure how to write this section]
+
 Concretely, our contributions are:
 \begin{enumerate}
     \item A novel ``universal'' calculus that allows for effect handlers both in the generating and generated code.
@@ -78,7 +80,7 @@ Concretely, our contributions are:
         \item Refined Environment Classifiers
     \end{enumerate}
     \item A new solution, a Best-Effort dynamic check, that we justify is correct, expressive, and efficient.
-    \item Implementations of the three dynamic checks in Macocaml.
+    \item Implementations of the three dynamic checks in MacoCaml.
 \end{enumerate}
 
 % The scope of this dissertation thus extends to effect systems with \textbf{deep} (but \textbf{unnamed}) handlers and \textbf{multi-shot continuations}.

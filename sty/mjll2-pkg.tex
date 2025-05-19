@@ -9,6 +9,7 @@
 \usepackage[amsmath,thmmarks,framed]{ntheorem} 
 \usepackage[style=0,ntheorem]{mdframed}
 \usepackage{mathpartir}
+\usepackage{centernot}
 
 % DISPLAY
 \usepackage{xcolor}
@@ -81,8 +82,10 @@
 
 
 \usepackage{tikz}
-\usetikzlibrary{automata, positioning, arrows, trees, calc,decorations.pathmorphing,shapes}
+\usetikzlibrary{automata, positioning, arrows, trees, calc,decorations.pathmorphing,decorations.pathreplacing,shapes}
 \usetikzlibrary{backgrounds}
+
+\tikzset{snake it/.style={decorate, decoration=snake}}
 
 \usepackage{import}
 % % \usepackage{pgfplots, pgfplotstable}

@@ -18,8 +18,8 @@ let rec find (t: tree) (k: 'a) = match t with
 let rec update (t: tree) (k: 'a) (v: 'b) = match t with 
   | Lf -> Br(k, v, Lf, Lf)
   | Br(k', v', l, r) -> if k == k' then Br(k, v, l, r)
-                       else if k < k' then Br(k', v', update l k v, r)
-                            else Br(k', v', l, update r k v)
+                        else if k < k' then Br(k', v', update l k v, r)
+                        else Br(k', v', l, update r k v)
 \end{ocaml}
 
 Assume the task is to build a \mintinline{ocaml}{findOrInsert} function that either finds the value associated with a key, \textit{or} inserts a default value. A naïve approach to writing this function would be
@@ -27,12 +27,12 @@ Assume the task is to build a \mintinline{ocaml}{findOrInsert} function that eit
 let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
   try find t k with NotFound -> insert t k default
 \end{ocaml}
-This function is \textbf{inefficient}. If a \mintinline{ocaml}{NotFound} exception is raised, then the \mintinline{ocaml}{find} function will have raised the exception at the point where the default value should be inserted. The function could be twice as efficient if the exception could be resumed at the point where the exception was raised, in the following style.
+This function is \textbf{inefficient}. If the \mintinline{ocaml}{find} function raises a \mintinline{ocaml}{NotFound} exception, it will do so at the point where the default value should be inserted. If computation could be resumed at the point where the exception was raised, as such:
 \begin{ocaml}
 let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
   try find t k with NotFound(p) -> continue p Br(k, default, Lf, Lf)
 \end{ocaml}
-\mintinline{ocaml}{p} represents the suspended program to be resumed, and is known as a \textit{delimited continuation}.
+then the function could be twice as fast. \mintinline{ocaml}{p} represents the suspended program to be resumed, and is known as a \textit{delimited continuation}.
 
 The aforementioned problem motivates the need for resumable exceptions. To understand the need for effect handlers, consider how one might go about \textbf{implementing} resumable exceptions. One approach might be to fork the implementation of handlers and tweak it ever-so-slightly. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee, and \textit{continually} guarantee, especially as implementations evolve, and more variants of exceptions are demanded. Second, the solution is not \textbf{customisable}. To add resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
 
@@ -53,13 +53,14 @@ let rec findOrInsert (t: tree) (k: 'a) (default: 'b) =
   | v -> v
   | effect NotFound k -> continue p Br(k, default, Lf, Lf)
 \end{ocaml}
+
 Since effect handlers may be instantiated into a range of different effects, considering the interaction of metaprogramming with effect handlers is an exercise in killing many birds with a single stone. Additionally, effect handlers were recently added to \texttt{OCaml} \citep{sivaramakrishnan-21}, making their interaction a timely problem. 
 \subsection{\texorpdfstring{\efflang{}}{Lambda-Op}: A Calculus for Effect Handlers}\label{subsection:effect-handler-calculus}
 \newcommand{\print}[1]{\texttt{\textbf{print}(#1)}}
 \newcommand{\readInt}[1]{\texttt{\textbf{read\_int}(#1)}}
 
 
-Having motivated effect handlers, I will now describe a calculus, which I call \efflang, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} will be useful for two reasons. First, a precise description of the operational behaviour of effects will aid reasoning about their interaction with metaprogramming. Second, my universal calculus will be described by extending \efflang. Throughout this section, I will use the \efflang{} program in \Cref{listing:efflang-running-example} as a running example. 
+Having motivated effect handlers, I will now describe a calculus, which I call \efflang{}, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} will be useful for two reasons. First, it will aid reasoning about the interaction between effects and metaprogramming. Second, my universal calculus will be described by extending \efflang{}. 
 
 \begin{code}
   \begin{efflst}
@@ -94,8 +95,8 @@ $\begin{array}{l}\bind{(x, y)}{\return{(\texttt{"Revolution"}, \texttt{f"\{9\}"}
 \textcolor{effComment}{$\begin{array}{l}\return{\texttt{"Revolution 9"}}\end{array}$}
 \end{eff}
 Further, I use $c_1;c_2$ as syntactic sugar for $\bind{\_}{c_1}{c_2}$. 
-I will explain key language constructs in turn.
-\begin{figure}[t]
+I will explain key language constructs in turn, with reference to a running example: the \efflang{} program in \Cref{listing:efflang-running-example}. 
+\begin{figure}
   \begin{eff-desc}
     {\large{\textbf{Syntax}}}
 
@@ -154,7 +155,7 @@ Concretely, one instance of $c$ is
 \[\textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
 In the definition of $c$, the programmer may refer to $x$ and $k$, which I will now explain. $x$ allows programs to send values (for example, values to be printed) to their environment. $k$ is a delimited continuation representing a suspended program, awaiting a value from the environment. Effects also allow programs to receive data from their environment, as in
 \[1 + \textbf{\texttt{get\_int\_from\_user}}()\]
-Note that the program is suspended until the value is receive. We may write the suspended program as $1 + [-]$, where $[-]$ indicates an as-yet-unknown value. This suspended program is represented by the continuation $k$. The expression 
+Note that the program is suspended until the value is received. We may write the suspended program as $1 + [-]$, where $[-]$ indicates an as-yet-unknown value. This suspended program is represented by the continuation $k$. The expression 
 \[\continue{k}{v}\] 
 is used to resume the suspended program with value $v$. 
 
@@ -523,38 +524,38 @@ If $\type{E[c]}{\effectType{T}}$ and $\transition{\effconfiguration{c}{E}}{\effc
 
 \newcommand{\contextequiv}{\cong_{\text{\emph{ctx}}}}
 
-Finally, \efflang{} is a \textit{fine-grain call-by-value} \citep{levy-2003} approach. We first define a notion of contextual equivalence $\contextequiv$. Informally, two computations/values are contextually equivalent if they behave the same in all ``relevant'' contexts and at all ground (first-order) types (in this case, just $\mathbb{N}$). 
+% Finally, \efflang{} is a \textit{fine-grain call-by-value} \citep{levy-2003} approach. We first define a notion of contextual equivalence $\contextequiv$. Informally, two computations/values are contextually equivalent if they behave the same in all ``relevant'' contexts and at all ground (first-order) types (in this case, just $\mathbb{N}$). 
 
-% To define a notion of ``relevant'', we first type contexts.
+% % To define a notion of ``relevant'', we first type contexts.
 
-% \begin{figure}
-% \begin{eff-desc}
-% $\inferrule{\\}{\Gamma \vdash_{\Gamma, \effectType{T}} [-]: \effectType{T}}$
-% \end{eff-desc}
-% \end{figure}
+% % \begin{figure}
+% % \begin{eff-desc}
+% % $\inferrule{\\}{\Gamma \vdash_{\Gamma, \effectType{T}} [-]: \effectType{T}}$
+% % \end{eff-desc}
+% % \end{figure}
 
-\begin{definition}[Contextual Equivalence]{effHighlight}\label{dfn:ctx-equiv}
-  $c$ and $c'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash c \contextequiv c': '\effectType{T}$ if 
-  \begin{enumerate}
-    \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
-    \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{\mathbb{N}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{\mathbb{N}}}$, 
-    \[ \effconfiguration{c}{E}  \, \to^{*} \, { \effconfiguration{\return{v}}{[-]}}  \iff  \effconfiguration{c'}{E} \, \to^{*} \,  \effconfiguration{\return{v}}{[-]} \]
-  \end{enumerate}
+% \begin{definition}[Contextual Equivalence]{effHighlight}\label{dfn:ctx-equiv}
+%   $c$ and $c'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash c \contextequiv c': '\effectType{T}$ if 
+%   \begin{enumerate}
+%     \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
+%     \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{\mathbb{N}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{\mathbb{N}}}$, 
+%     \[ \effconfiguration{c}{E}  \, \to^{*} \, { \effconfiguration{\return{v}}{[-]}}  \iff  \effconfiguration{c'}{E} \, \to^{*} \,  \effconfiguration{\return{v}}{[-]} \]
+%   \end{enumerate}
 
-  When the context $\Gamma$ is empty, we write $c \contextequiv c': \effectType{T}$, and when the type is unimportant, we write $c \contextequiv c'$
-\end{definition}
-\vspace{-\baselineskip}
-\begin{definition}[Fine-Grain CBV]{effHighlight}\label{dfn:fine-grain-cbv}
-  \efflang{} is a fine-grain call-by-value language, meaning in particular that the following equations hold (notationally, I use $c$ for computations, $v$ for values, and $f$ for function values):
-  \begin{enumerate}
-    \item $\bind{x}{\return{v}}{c} \, \contextequiv \, c[v/x]$
-    \item $c \, \contextequiv \, \bind{x}{c \,}{\return{x}}$
-    \item $\bind{x}{c_1}{(\bind{y}{c_2}{c_3})} \, \contextequiv \bind{y}{(\bind{x}{c_1}{c_2})}{c_3}$
-    \item $(\lambda x. c) v \, \contextequiv \, c[v/x]$
-    \item $f \, \contextequiv \, \lambda x. f x$
-  \end{enumerate}
-In the third equation, we assume $x$ not free in $c_3$.
-\end{definition}
+%   When the context $\Gamma$ is empty, we write $c \contextequiv c': \effectType{T}$, and when the type is unimportant, we write $c \contextequiv c'$
+% \end{definition}
+% \vspace{-\baselineskip}
+% \begin{definition}[Fine-Grain CBV]{effHighlight}\label{dfn:fine-grain-cbv}
+%   \efflang{} is a fine-grain call-by-value language, meaning in particular that the following equations hold (notationally, I use $c$ for computations, $v$ for values, and $f$ for function values):
+%   \begin{enumerate}
+%     \item $\bind{x}{\return{v}}{c} \, \contextequiv \, c[v/x]$
+%     \item $c \, \contextequiv \, \bind{x}{c \,}{\return{x}}$
+%     \item $\bind{x}{c_1}{(\bind{y}{c_2}{c_3})} \, \contextequiv \bind{y}{(\bind{x}{c_1}{c_2})}{c_3}$
+%     \item $(\lambda x. c) v \, \contextequiv \, c[v/x]$
+%     \item $f \, \contextequiv \, \lambda x. f x$
+%   \end{enumerate}
+% In the third equation, we assume $x$ not free in $c_3$.
+% \end{definition}
 
 \subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
 The design space of effect handlers is large. I consider three key design decisions made by different systems.

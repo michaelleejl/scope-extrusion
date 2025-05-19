@@ -340,3 +340,8 @@ borderline south={0.5mm}{0mm}{coreHighlight,line width=1pt},
  }
 
  \newenvironment{code}{\centering}{\par\vspace{0.6\baselineskip}}
+
+ \makeatletter
+\newcommand\colorwave[1][blue]{\bgroup \markoverwith{\lower3.5\p@\hbox{\sixly \textcolor{#1}{\char58}}}\ULon}
+\font\sixly=lasy6 % does not re-load if already loaded, so no memory problem.
+\makeatother

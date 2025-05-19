@@ -35,7 +35,7 @@
   \label{fig:elaboration-then-execution}
 \end{figure}
 
-To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, for studying said interaction. \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to implement different scope extrusion checks as algorithms in \calculusName{}, such that the checks may be evaluated in a comparative fashion. 
+To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, for studying said interaction. \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to extend \calculusName{} with various scope extrusion checks, such that the checks may be evaluated in a comparative fashion. 
 
 Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
 
@@ -723,7 +723,7 @@ I will now describe the operational semantics of \coreLang{}. Many rules are ide
    \effectRule{Op} & \transition{\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I}}\coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{\textcolor{coreHighlight}{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}}\\
   &&& \text{(where cont $=\kappa x. \, \handleWith{E_2[\return{x}]}{h}$}\\
   &&& \text{and $\opHandler{x}{k}{c} \in h$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$}\\
-  &&& \text{and \textcolor{coreHighlight}{$I' = I$ if \textsf{len}(E) $<$ I \text{else} $\textsf{max}(\textsf{idx}_{\texttt{Var}}(E_1))$)}}
+  &&& \text{and \textcolor{coreHighlight}{$I' = \textsf{min}(\textsf{len}(E), I)$)}}
   \end{array} \]
   }
 \end{core-desc}
@@ -1026,7 +1026,7 @@ If
 Proof proceeds by induction over the operational semantics. Once again, I only need to consider the augmented rules, which are very simple. 
 
 As a corollary, we get a notion of type safety.
-\begin{corollary}[Type Safety]{sourceHighlight}
+\begin{corollary}[Type Safety]{sourceHighlight}\label{cor:core-type-safety}
   If $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$ then either
   \begin{enumerate}
     \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []
@@ -1036,87 +1036,89 @@ As a corollary, we get a notion of type safety.
   \end{enumerate} 
 \end{corollary}
 
-Importantly, this notion of type safety is weak. A system which always reports a scope extrusion error (\textbf{\texttt{err}}) would have this property. Further, a system which never reports scope extrusion would have this property too. As such, we cannot additionally claim that the normal form $n$ represents a well-typed \efflang{} program. 
+Importantly, this notion of type safety is weak. A system which always reports a scope extrusion error (\textbf{\texttt{err}}) would be type safe. Further, a system which never reports scope extrusion would be type safe as well. Due to the potential presence of scope extrusion, in the third case of \Cref{cor:core-type-safety}, we cannot additionally claim that the normal form $n$ represents a well-typed \efflang{} program. 
 
-In addition to type safety, we can formulate an equational theory for \sourceLang{}. First, I prove that, underneath a top-level splice, splice and quotation are duals. Second, I prove that \sourceLang{} is a fine-grain CBV calculus. 
+% In addition to type safety, we can formulate an equational theory for \sourceLang{}. First, I prove that, underneath a top-level splice, splice and quotation are duals. Second, I prove that \sourceLang{} is a fine-grain CBV calculus. 
 
-To formulate this equational theory, we will need a notion of contextual equivalence in \coreLang{}. In turn, this demands a notion of equality between \textsf{AST}s of values, computations, and handlers. I will abuse notation and write $n_1 =_\textsf{AST} n_2$, to represent all three. The notion of equality I choose is syntactic equality up to $\alpha$-renaming. So, for example, 
-\renewcommand{\Var}[2]{\texttt{Var}(#1_{#2})}
+% To formulate this equational theory, we will need a notion of contextual equivalence in \coreLang{}. In turn, this demands a notion of equality between \textsf{AST}s of values, computations, and handlers. I will abuse notation and write $n_1 =_\textsf{AST} n_2$, to represent all three. The notion of equality I choose is syntactic equality up to $\alpha$-renaming. So, for example, 
+% \renewcommand{\Var}[2]{\texttt{Var}(#1_{#2})}
 
-\begin{center}
-\begin{tikzpicture}
-      \node (equals) {$=_{\textsf{AST}}$};
+% \begin{center}
+% \begin{tikzpicture}
+%       \node (equals) {$=_{\textsf{AST}}$};
 
-  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.west) + (-3cm, 0.7cm)$)}]
-    \node (lam) {Lam}
-    child {node (var) {$\Binder{\alpha}{\mathbb{N}}$}}
-    child {node (var) {$\Var{\alpha}{\mathbb{N}}$}};
-    \end{scope}
+%   \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.west) + (-3cm, 0.7cm)$)}]
+%     \node (lam) {Lam}
+%     child {node (var) {$\Binder{\alpha}{\mathbb{N}}$}}
+%     child {node (var) {$\Var{\alpha}{\mathbb{N}}$}};
+%     \end{scope}
 
 
-  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.east) + (3cm, 0.7cm)$)}]
-    \node (lam) {Lam}
-    child {node (var) {$\Binder{\beta}{\mathbb{N}}$}}
-    child {node (var) {$\Var{\beta}{\mathbb{N}}$}};
-    \end{scope}
+%   \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.east) + (3cm, 0.7cm)$)}]
+%     \node (lam) {Lam}
+%     child {node (var) {$\Binder{\beta}{\mathbb{N}}$}}
+%     child {node (var) {$\Var{\beta}{\mathbb{N}}$}};
+%     \end{scope}
     
-\end{tikzpicture}
-\end{center}
-but, however, 
-\begin{center}
-\begin{tikzpicture}
-      \node (equals) {$\neq_{\textsf{AST}}$};
+% \end{tikzpicture}
+% \end{center}
+% but, however, 
+% \begin{center}
+% \begin{tikzpicture}
+%       \node (equals) {$\neq_{\textsf{AST}}$};
 
-  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.west) + (-3cm, 0.7cm)$)}]
-    \node (lam) {Plus}
-    child {node (var) {1}}
-    child {node (var) {2}};
-    \end{scope}
+%   \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.west) + (-3cm, 0.7cm)$)}]
+%     \node (lam) {Plus}
+%     child {node (var) {1}}
+%     child {node (var) {2}};
+%     \end{scope}
 
 
-  \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.east) + (3cm, 0.7cm)$)}]
-    \node (lam) {Plus}
-    child {node (var) {2}}
-    child {node (var) {1}};
-    \end{scope}
+%   \begin{scope}[every node/.style={font=\ttfamily}, shift={($(equals.east) + (3cm, 0.7cm)$)}]
+%     \node (lam) {Plus}
+%     child {node (var) {2}}
+%     child {node (var) {1}};
+%     \end{scope}
     
-\end{tikzpicture}
-\end{center}
-Syntactic equality is, of course, not the only sensible notion of equality. One can also choose, for example, contextual equivalence with respect to the \efflang{} semantics. Nevertheless, armed with this notion of equality on \textsf{AST} types, it is easy to define a notion of contextual equivalence in \coreLang{}. First, define ground types 
-\[T_\textsf{Ground} \triangleq \mathbb{N} \mid \textsf{AST}(A) \mid \textsf{AST}(\effectType[\xi]{A}) \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}})\]
-and a notion of equality on each ground type ($=_{\textsf{Ground}}$), which is just numerical equality for $\mathbb{N}$ and $=_{\textsf{AST}}$ for AST types. Then,
-\begin{definition}[Contextual Equivalence]{coreHighlight}\label{dfn:ctx-equiv}
-  $t$ and $t'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash t \contextequiv t': '\effectType{T}$ if 
-  \begin{enumerate}
-    \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
-    \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{T_{\textsf{Ground}}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{T_{\textsf{Ground}}}}$, we have either 
-    \begin{enumerate}
-      \item $\langle t; E; []; \emptyset; \top \rangle \to^{\omega}$ and $\langle t'; E; []; \emptyset; \top \rangle \, \to^{\omega}$,
-      \item For some $E_1$, $M_1$, $U_1$, $I_1$, $E_2$, $M_2$, $U_2$, $I_2$\\ $\langle t; E; []; \emptyset; \top \rangle \to^{*} \langle \err; E_1; M_1; U_1; I_1 \rangle$, and \\
-      $\langle t'; E; []; \emptyset; \top \rangle \to^{*} \langle \err; E_2; M_2; U_2; I_2 \rangle$
-      \item For some $M_1$, $U_1$, $I_1$, $M_2$, $U_2$, $I_2$\\ $\langle t; E; []; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; M_1; U_1; I_1 \rangle$, and \\
-      $\langle t'; E; []; \emptyset; \top \rangle \to^{*} \langle \return{m}; [-]; M_2; U_2; I_2 \rangle$, and \\ 
-      $n =_{\textsf{Ground}} m$ 
-    \end{enumerate}
-    %  \, {\effconfiguration{\return{v}}{[-]}} \iff \effconfiguration{c'}{E} \, \to^{*} \, \effconfiguration{\return{v}}{[-]}
-  \end{enumerate}
-\end{definition}
+% \end{tikzpicture}
+% \end{center}
+% Syntactic equality is, of course, not the only sensible notion of equality. One can also choose, for example, contextual equivalence with respect to the \efflang{} semantics. Nevertheless, armed with this notion of equality on \textsf{AST} types, it is easy to define a notion of contextual equivalence in \coreLang{}. First, define ground types 
+% \[T_\textsf{Ground} \triangleq \mathbb{N} \mid \textsf{AST}(A) \mid \textsf{AST}(\effectType[\xi]{A}) \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}})\]
+% and a notion of equality on each ground type ($=_{\textsf{Ground}}$), which is just numerical equality for $\mathbb{N}$ and $=_{\textsf{AST}}$ for AST types. Then,
+% \begin{definition}[Contextual Equivalence]{coreHighlight}\label{dfn:ctx-equiv}
+%   $t$ and $t'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash t \contextequiv t': '\effectType{T}$ if 
+%   \begin{enumerate}
+%     \item $\type{c}{\effectType{T}}$ and $\type{c'}{\effectType{T}}$
+%     \item For all $E$ such that $\cdot \vdash {E[c]}: {\effectType[\emptyset]{T_{\textsf{Ground}}}}$  and $\cdot \vdash {E[c']}: {\effectType[\emptyset]{T_{\textsf{Ground}}}}$, we have either 
+%     \begin{enumerate}
+%       \item $\langle t; E; []; \emptyset; \top \rangle \to^{\omega}$ and $\langle t'; E; []; \emptyset; \top \rangle \, \to^{\omega}$,
+%       \item For some $E_1$, $M_1$, $U_1$, $I_1$, $E_2$, $M_2$, $U_2$, $I_2$\\ $\langle t; E; []; \emptyset; \top \rangle \to^{*} \langle \err; E_1; M_1; U_1; I_1 \rangle$, and \\
+%       $\langle t'; E; []; \emptyset; \top \rangle \to^{*} \langle \err; E_2; M_2; U_2; I_2 \rangle$
+%       \item For some $M_1$, $U_1$, $I_1$, $M_2$, $U_2$, $I_2$\\ $\langle t; E; []; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; M_1; U_1; I_1 \rangle$, and \\
+%       $\langle t'; E; []; \emptyset; \top \rangle \to^{*} \langle \return{m}; [-]; M_2; U_2; I_2 \rangle$, and \\ 
+%       $n =_{\textsf{Ground}} m$ 
+%     \end{enumerate}
+%     %  \, {\effconfiguration{\return{v}}{[-]}} \iff \effconfiguration{c'}{E} \, \to^{*} \, \effconfiguration{\return{v}}{[-]}
+%   \end{enumerate}
+% \end{definition}
 
-We can now prove the equational theory of \sourceLang{}. 
+% We can now prove the equational theory of \sourceLang{}. 
 
-\textbf{First, I prove that underneath a top-level splice, splice and quotation are duals}. That is, 
+Additionally, underneath a top-level splice, splice and quotation are duals. That is, 
+\begin{theorem}[Quote-Splice Duality]{sourceHighlight}
 \[\begin{array}{rcl}
-\splice[{\equote}] & = & e \\
-\equote[{\splice}] & = & e
+\splice[{\equote}] & =_{\quotemode{}} & e \\
+\equote[{\splice}] & =_{\splicemode{}} & e
 \end{array}
 \]
-Where, in this context, $=$ means ``elaborates to contextually equivalent \coreLang{} programs''. Indeed, we may prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
+\end{theorem}
+Where, in this context, $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode will affect the result of elaboration. Indeed, we may prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
 \[\begin{array}{rcl}  
   \elaborate{\splice[{\equote}]}_{\quotemode{}} = t & \iff & \elaborate{e}_{\quotemode{}} = t\\
   \elaborate{\equote[{\splice}]}_{\splicemode{}} = t & \iff & \elaborate{e}_{\splicemode{}} = t
 \end{array}
   \]
 
-To prove that \sourceLang{} is a fine-grain CBV calculus (\Cref{dfn:fine-grain-cbv}) is only slightly more involved.  
+% To prove that \sourceLang{} is a fine-grain CBV calculus (\Cref{dfn:fine-grain-cbv}) is only slightly more involved.  
 
-[TODO]
+% [TODO]
