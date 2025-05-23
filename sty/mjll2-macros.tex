@@ -18,7 +18,7 @@
 
 \newcommand{\return}[1]{\texttt{\textbf{return}} \,\, {#1}}
 \newcommand{\op}[1]{\textbf{\texttt{op}}({#1})}
-\newcommand{\bind}[3]{\texttt{\textbf{do}} \,\, {#1} \leftarrow {#2} \, \textbf{\texttt{in}} \, {#3}}
+\newcommand{\bind}[3]{\texttt{\textbf{do}} \,\, {#1} \leftarrow {#2} \; \textbf{\texttt{in}} \; {#3}}
 \newcommand{\handleWith}[2]{\textbf{\texttt{handle}} \,\, {#1} \,\, \textbf{\texttt{with}} \,\, \{{#2}\}}
 \newcommand{\continue}[2]{\textbf{\texttt{continue}} \, {#1} \, {#2}}
 
@@ -121,6 +121,12 @@ skipabove=1.2\baselineskip,
     {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mddefinition}[#1]}
     {\end{mddefinition}\end{mdframed}\par\vspace{\baselineskip}}
 
+
+    \newtheorem{mdlemma}{Lemma}[section]
+\newenvironment{lemma}[2][]%
+    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdlemma}[#1] 
+    }
+    {\end{mdlemma}\end{mdframed}\par\vspace{\baselineskip}}
   % \newenvironment{codeblock}[2][][]{
 %     \begin{tcblisting}[
 %         minted language=ocaml,

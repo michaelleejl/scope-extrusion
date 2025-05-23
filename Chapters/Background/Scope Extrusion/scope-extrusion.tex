@@ -115,7 +115,7 @@ manner in which checks are inserted, which we will make precise later. To illust
 
 While the program in \Cref{listing:efflang-maybe-not-scope-extrusion} produces an intermediate AST with extruded variables, because of the mechanism for inserting checks, it passes the Eager Dynamic Check. I assert that this behaviour is unintuitive, and exposes too much of the internals to the programmer. 
 
-\subsubsection{Refined Environment Classifiers} 
+\subsubsection{Refined Environment Classifiers}\label{subsubsection:refined-environment-classifiers}
 Refined Environment Classifiers are a static check that uses the type system to prevent scope extrusion. Recall that metaprogramming involves the \textit{creation} and \textit{manipulation} of ASTs. Refined environment classifiers prevent scope extrusion by checking:
 
 \begin{enumerate}

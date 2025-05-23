@@ -42,7 +42,7 @@ Programs written in \calculusName{} cannot be directly executed. Rather, followi
 In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, I will describe the elaboration from \sourceLang{} to \coreLang{} (\Cref{section:elaboration}). Finally, I will discuss the metatheoretic properties of \calculusName{} (\Cref{section:metatheory}). 
 % At a high-level, however, the names are suggestive: \sourceLang{} extends \efflang{} with quotation $\equote$ and splicing $\splice$, and \coreLang{} extends \efflang{} with AST constructors. 
 
-\section{The source language: \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}}\label{section:source-lang}
+\section{The Source Language: \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}}\label{section:source-lang}
 \begin{figure}
 \begin{source-desc}
   {\large \textbf{Syntax}} \\
@@ -57,7 +57,10 @@ In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang
 \end{figure}
 \sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{}, following a fine-grain call-by-value approach, divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax})
 
-Notice that we cannot quote values: we \textit{must} generate effectful programs.
+Notice that we cannot quote values: we \textit{must} generate effectful programs. For example, $\equote[1]$ is not valid syntax, instead, one must write $\equote[\return{1}]$. However, for clarity, I will abuse notation and write $\equote[1]$. Similarly, $\equote[\return{1}]$ is a computation, not a value, so one must write 
+\[\bind{a}{\equote[\return{1}]}{\op{a}}\]
+rather than $\op{\, \equote[\return{1}] \,}$. Once again, I will abuse notation for clarity.
+
 \subsection{Type System}
 \begin{figure}
   \begin{source-desc}
@@ -353,7 +356,7 @@ The \compilemode{} and \quotemode{}-mode typing rules are summarised in \Cref{fi
   \begin{center}
   \begin{minipage}[t]{0.3\textwidth}
     \centering
-    $\inferrule[(Nat)]{ \\ }{\cqtypejudge{n}{\runtimecomptype{\mathbb{N}}{\Delta}}}$
+    $\inferrule[(Nat)]{ \\ }{\cqtypejudge{m}{\runtimecomptype{\mathbb{N}}{\Delta}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.3\textwidth}
     \centering
@@ -438,7 +441,7 @@ $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma
       \centering
       $\inferrule[(\splicemode{}-Nat)]
       { \\ }
-      {\stypejudge{n}{\compiletimetype{\mathbb{N}}}}$
+      {\stypejudge{m}{\compiletimetype{\mathbb{N}}}}$
       \end{minipage}%
   \begin{minipage}[t]{0.2\textwidth}
     \centering
@@ -452,14 +455,14 @@ $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Function)]
-  {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{c}{\effectType{\compiletimetype{T_2}}}}
-  {\stypejudge{\continuation{x}{c}}{\compiletimetype{(\functionType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
+  {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{e}{\effectType{\compiletimetype{T_2}}}}
+  {\stypejudge{\function{x}{e}}{\compiletimetype{(\functionType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.5\textwidth}
   \centering
 $\inferrule[(\splicemode{}-Continuation)]
-  {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{c}{\effectType{\compiletimetype{T_2}}}}
-  {\stypejudge{\continuation{x}{c}}{\compiletimetype{(\continuationType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
+  {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{e}{\effectType{\compiletimetype{T_2}}}}
+  {\stypejudge{\continuation{x}{e}}{\compiletimetype{(\continuationType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
 \end{minipage}
   
   \vspace{5mm}
@@ -488,8 +491,8 @@ $\inferrule[(\splicemode{}-Continuation)]
   \begin{minipage}[t]{0.45\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Do)]
-    {\stypejudge{c_1}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge[\Gamma, x: T_1]{c_2}{\effectType{\compiletimetype{T_2}}}}
-    {\stypejudge{\bind{x}{c_1}{c_2}}{\effectType{\compiletimetype{T_2}}}}$
+    {\stypejudge{e_1}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge[\Gamma, x: T_1]{e_2}{\effectType{\compiletimetype{T_2}}}}
+    {\stypejudge{\bind{x}{e_1}{e_2}}{\effectType{\compiletimetype{T_2}}}}$
   \end{minipage}
   
   \vspace{5mm}
@@ -508,8 +511,8 @@ $\inferrule[(\splicemode{}-Continuation)]
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Handle)]
-    {\stypejudge{c}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \, \textsf{op} \in \textsf{dom}(h)}
-    {\stypejudge{\handleWith{c}{h}}{\effectType[\Delta']{\compiletimetype{T_2}}}}$
+    {\stypejudge{e}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \, \textsf{op} \in \textsf{dom}(h)}
+    {\stypejudge{\handleWith{e}{h}}{\effectType[\Delta']{\compiletimetype{T_2}}}}$
   \end{minipage}\\
 
   \vspace{5mm}
@@ -517,8 +520,8 @@ $\inferrule[(\splicemode{}-Continuation)]
   \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Ret-Handler)]
-    {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{c}{\effectType[\Delta']{\compiletimetype{T_2}}}}
-    {\stypejudge{\returnHandler{x}{c}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
+    {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{e}{\effectType[\Delta']{\compiletimetype{T_2}}}}
+    {\stypejudge{\returnHandler{x}{e}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
   \end{minipage}
   
   \vspace{5mm}
@@ -533,10 +536,10 @@ $\inferrule[(\splicemode{}-Continuation)]
   $\inferrule[(\splicemode{}-Op-Handler)]
     { \texttt{op}: \compiletimetype{A} \to \compiletimetype{B} \in \Sigma \\\\ 
       \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}\\
-      \stypejudge[\Gamma, x:\compiletimetype{A}, k:{\compiletimetype{(\continuationType[\Delta']{\compiletimetype{B}}{\compiletimetype{T_2}})}} ]{c}{\effectType[\Delta']{\compiletimetype{T_2}}}\\
+      \stypejudge[\Gamma, x:\compiletimetype{A}, k:{\compiletimetype{(\continuationType[\Delta']{\compiletimetype{B}}{\compiletimetype{T_2}})}} ]{e}{\effectType[\Delta']{\compiletimetype{T_2}}}\\
       \Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
-             \opHandler{x'}{k'}{c'} \notin h}
-    {\stypejudge{h ; \opHandler{x}{k}{c}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
+             \opHandler{x'}{k'}{e'} \notin h}
+    {\stypejudge{h ; \opHandler{x}{k}{e}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
   \end{minipage}
 
   \vspace{5mm}
@@ -577,7 +580,7 @@ Finally, I define the notion of a well-typed \sourceLang{} expression.
   $e$ is well-typed if $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$
 \end{definition}
 
-\section{The core language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
+\section{The Core Language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
 I now describe the core language, \coreLang{}, which is a simple extension of \efflang{}. For clarity, I rename \efflang{} values ($v$) and compuations ($c$) to \coreLang{} normal forms ($n$) and terms ($t$) respectively.  
 
 To construct \coreLang{}, I extend \efflang{} in two ways. First, I add machinery for metaprogramming:
@@ -742,7 +745,7 @@ The \textsc{Ast-Gen} rule describes the behaviour of \textbf{\texttt{mkvar}}: $\
 The other primitive, \textbf{\texttt{binderToAST}}, turns binders $\Binder{\alpha}{T}$ into usages of the binder $\Var{\alpha}{T}$ (\textsc{Ast-Use}). 
 
 \subsubsection{Scope Extrusion Checking Rules}
-More interesting are the primitives for scope extrusion checking. The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return}}, which can catch occurrences of scope extrusion. For some arbitrary AST $n$, either:
+More interesting are the primitives for scope extrusion checking. The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return}}, which can catch occurrences of scope extrusion. For some arbitrary $n$ of AST type, either:
 \begin{enumerate}
   \item All the free variables of $n$ are properly scoped, so $\checkfv{n}$ reduces to $\return{n}$ (\textsc{Sec-Chs})
   \item Some free variables of $n$ are not properly scoped, so $\checkfv{n}$ reduces to $\err$ (\textsc{Sec-Chf})
@@ -894,6 +897,20 @@ A term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \label{fig:core-typing-rules}
 \end{figure}
  
+\subsection{Implementation}
+The core calculus \coreLang{} describes abstractly a concrete \texttt{OCaml} implementation. In the concrete \texttt{OCaml} implementation, we do not need to introduce \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} as primitives. Rather, they can be encoded as a \textit{mode of use} of effects and handlers. 
+\begin{enumerate}
+  \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that are passed the free variables of $n$\\ 
+  $\checkm{n}$ is similar, except there are also \texttt{Mute} and \texttt{Unmute} effects
+  
+  \item $\dlet{\Binder{\alpha}{T}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{T}$ from the set of free variables, and either:
+  \begin{enumerate}
+    \item Resumes the continuation, if the set of free variables is now empty (all free variables properly declared/scoped)
+    \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are properly declared. Following a successful such check, the continuation may be resumed.
+  \end{enumerate}
+  \item \textbf{\texttt{err}} is an unhandled \texttt{FreeVar} effect
+\end{enumerate}
+
 \section{Elaboration from \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice} to \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:elaboration}
 Having described both \sourceLang{} and \coreLang{}, I will now describe a simple elaboration from \sourceLang{} to \coreLang{}. This elaboration will be \textit{simple} -- it will not insert any dynamic scope extrusion checks.
 
