@@ -49,6 +49,6 @@
 \contentsline {subsubsection}{\nonumberline Efficiency of the Best-Effort Dynamic Check}{54}{subsubsection*.42}%
 \contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{54}{section.4.4}%
 \contentsline {subsubsection}{\nonumberline Correctness of Refined Environment Classifiers}{57}{subsubsection*.44}%
-\contentsline {subsubsection}{\nonumberline Expressiveness of Refined Environment Classifiers}{60}{subsubsection*.46}%
+\contentsline {subsubsection}{\nonumberline Expressiveness of Refined Environment Classifiers}{62}{subsubsection*.46}%
 \contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{62}{section.4.5}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

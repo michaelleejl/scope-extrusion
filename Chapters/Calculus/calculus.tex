@@ -702,7 +702,7 @@ I will now describe the operational semantics of \coreLang{}. Many rules are ide
  {\textbf{Operational Semantics}}\\
 \[
   \begin{array}{@{}rrcl}
-  \astRule{Sym} & \transition{\coreConfiguration{\gensym{A}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Binder{\alpha}{A}}}{E}{U::\alpha}{M}{I}}\\
+  \astRule{Sym} & \transition{\coreConfiguration{\gensym{A}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Binder{\alpha}{A}}}{E}{U\cup\{\alpha\}}{M}{I}}\\
   &&&\text{(where $\alpha \notin U$)}\\
   \astRule{Use} & \transition{\coreConfiguration{\varToAST{\Binder{\alpha}{A}}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Var{\alpha}{A}}}{E}{U}{M}{I}}\\
   \vspace{1mm}
@@ -1022,12 +1022,12 @@ The proof is by induction on the typing rules, as in the example in the previous
 We can also prove that the core language \coreLang{} satisfies appropriate progress and preservation properties. 
 
 \begin{theorem}[Progress]{coreHighlight} 
-If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
+If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ such that for all $\Var{\alpha}{T} \text{ or } \Binder{\alpha}{T} \in t$, $\alpha \in U$ either 
 \begin{enumerate}
 \item $t$ of the form $\return{n}$ and $E = [-]$,
 \item $t$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
 \item $t$ of the form $\err$
-\item $\exists. t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'$
+\item $\exists t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'\rangle$
 \end{enumerate}
 \end{theorem}
 Note that I additionally have to consider the error state \textbf{\texttt{err}}. Progress is proved by induction over the typing derivation. Since I am extending \efflang{}, I only need to consider the augmented typing rules, all of which are extremely straightforward.
@@ -1038,7 +1038,7 @@ If
   \item $\Gamma \vdash E[t]: T$ and 
   \item $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
   \end{enumerate}
-  then $\Gamma \vdash E'[t']: T$ 
+  then $\Gamma \vdash E'[t']: T$ and for all $\Var{\alpha}{T} \text{ or } \Binder{\alpha}{T} \in t'$, $\alpha \in U'$
 \end{theorem}
 Proof proceeds by induction over the operational semantics. Once again, I only need to consider the augmented rules, which are very simple. 
 
@@ -1046,10 +1046,10 @@ As a corollary, we get a notion of type safety.
 \begin{corollary}[Type Safety]{sourceHighlight}\label{cor:core-type-safety}
   If $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$ then either
   \begin{enumerate}
-    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []
+    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; \emptyset
     ; \emptyset; \top \rangle \to^{\omega}$,
-    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []; \emptyset; \top \rangle \to^{*} \langle \err; E; U; M; I \rangle$ for some $E$, $U$, $M$, $I$, or 
-    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; []; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; U; M; I \rangle$ for some $U$, $M$, $I$
+    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \err; E; U; M; I \rangle$ for some $E$, $U$, $M$, $I$, or 
+    \item $\langle \elaborate{e}_{\compilemode{}}; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; U; M; I \rangle$ for some $U$, $M$, $I$
   \end{enumerate} 
 \end{corollary}
 
