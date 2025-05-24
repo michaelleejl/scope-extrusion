@@ -40,6 +40,60 @@
   abstract  = {C++ Template Metaprogramming sheds light on the most powerful idioms of today's C++, at long last delivering practical metaprogramming tools and techniques into the hands of the everyday programmer.A metaprogram is a program that generates or manipulates program code. Ever since generic programming was introduced to C++, programmers have discovered myriad "template tricks" for manipulating programs as they are compiled, effectively eliminating the barrier between program and metaprogram. While excitement among C++ experts about these capabilities has reached the community at large, their practical application remains out of reach for most programmers. This book explains what metaprogramming is and how it is best used. It provides the foundation you'll need to use the template metaprogramming effectively in your own work.This book is aimed at any programmer who is comfortable with idioms of the Standard Template Library (STL). C++ power-users will gain a new insight into their existing work and a new fluency in the domain of metaprogramming. Intermediate-level programmers who have learned a few advanced template techniques will see where these tricks fit in the big picture and will gain the conceptual foundation to use them with discipline. Programmers who have caught the scent of metaprogramming, but for whom it is still mysterious, will finally gain a clear understanding of how, when, and why it works. All readers will leave with a new tool of unprecedented power at their disposal-the Boost Metaprogramming Library.The companion CD-ROM contains all Boost C++ libraries, including the Boost Metaprogramming Library and its reference documentation, along with all of the book's sample code and extensive supplementary material.}
 }
 
+@inproceedings{sheard-02,
+  author    = {Sheard, Tim and Jones, Simon Peyton},
+  title     = {Template meta-programming for Haskell},
+  year      = {2002},
+  isbn      = {1581136056},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/581690.581691},
+  doi       = {10.1145/581690.581691},
+  abstract  = {We propose a new extension to the purely functional programming language Haskell that supports compile-time meta-programming. The purpose of the system is to support the algorithmic construction of programs at compile-time.The ability to generate code at compile time allows the programmer to implement such features as polytypic programs, macro-like expansion, user directed optimization (such as inlining), and the generation of supporting data structures and functions from existing data structures and functions.Our design is being implemented in the Glasgow Haskell Compiler, ghc.},
+  booktitle = {Proceedings of the 2002 ACM SIGPLAN Workshop on Haskell},
+  pages     = {1–16},
+  numpages  = {16},
+  keywords  = {meta programming, templates},
+  location  = {Pittsburgh, Pennsylvania},
+  series    = {Haskell '02}
+}
+
+@inproceedings{10.1145/182409.182483,
+  author    = {Lawall, Julia L. and Danvy, Olivier},
+  title     = {Continuation-based partial evaluation},
+  year      = {1994},
+  isbn      = {0897916433},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  url       = {https://doi.org/10.1145/182409.182483},
+  doi       = {10.1145/182409.182483},
+  abstract  = {Binding-time improvements aim at making partial evaluation (a.k.a. program specialization) yield a better result. They have been achieved so far mostly by hand-transforming the source program. We observe that as they are better understood, these hand-transformations are progressively integrated into partial evaluators, thereby alleviating the need for source-level binding-time improvements.Control-based binding-time improvements, for example, follow this pattern: they have evolved from ad-hoc source-level rewrites to a systematic source-level transformation into continuation-passing style (CPS). Recently, Bondorf has explicitly integrated the CPS transformation into the specializer, thus partly alleviating the need for source-level CPS transformation. This CPS integration is remarkably effective but very complex and goes beyond a simple CPS transformation. We show that it can be achieved directly by using the control operators shift and reset, which provide access to the current continuation as a composable procedure.We automate, reproduce, and extend Bondorf's results, and describe how this approach scales up to hand-writing partial-evaluation compilers. The first author has used this method to bootstrap the new release of Consel's partial evaluator Schism. The control operators not only allow the partial evaluator to remain in direct style, but also can speed up partial evaluation significantly.},
+  booktitle = {Proceedings of the 1994 ACM Conference on LISP and Functional Programming},
+  pages     = {227–238},
+  numpages  = {12},
+  location  = {Orlando, Florida, USA},
+  series    = {LFP '94}
+}
+
+@article{lawall-94,
+  author     = {Lawall, Julia L. and Danvy, Olivier},
+  title      = {Continuation-based partial evaluation},
+  year       = {1994},
+  issue_date = {July-Sept. 1994},
+  publisher  = {Association for Computing Machinery},
+  address    = {New York, NY, USA},
+  volume     = {VII},
+  number     = {3},
+  issn       = {1045-3563},
+  url        = {https://doi.org/10.1145/182590.182483},
+  doi        = {10.1145/182590.182483},
+  abstract   = {Binding-time improvements aim at making partial evaluation (a.k.a. program specialization) yield a better result. They have been achieved so far mostly by hand-transforming the source program. We observe that as they are better understood, these hand-transformations are progressively integrated into partial evaluators, thereby alleviating the need for source-level binding-time improvements.Control-based binding-time improvements, for example, follow this pattern: they have evolved from ad-hoc source-level rewrites to a systematic source-level transformation into continuation-passing style (CPS). Recently, Bondorf has explicitly integrated the CPS transformation into the specializer, thus partly alleviating the need for source-level CPS transformation. This CPS integration is remarkably effective but very complex and goes beyond a simple CPS transformation. We show that it can be achieved directly by using the control operators shift and reset, which provide access to the current continuation as a composable procedure.We automate, reproduce, and extend Bondorf's results, and describe how this approach scales up to hand-writing partial-evaluation compilers. The first author has used this method to bootstrap the new release of Consel's partial evaluator Schism. The control operators not only allow the partial evaluator to remain in direct style, but also can speed up partial evaluation significantly.},
+  journal    = {SIGPLAN Lisp Pointers},
+  month      = jul,
+  pages      = {227–238},
+  numpages   = {12}
+}
+
 @article{pretnar-15,
   title    = {An Introduction to Algebraic Effects and Handlers. Invited tutorial paper},
   journal  = {Electronic Notes in Theoretical Computer Science},

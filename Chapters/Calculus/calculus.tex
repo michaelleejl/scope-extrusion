@@ -1,6 +1,6 @@
 
 
-\chapter{Calculus}
+\chapter{Calculus}\label{chapter:calculus}
 \begin{figure}[H]
   \centering 
   \begin{tikzpicture}
@@ -88,7 +88,7 @@ rather than $\op{\, \equote[\return{1}] \,}$. Once again, I will abuse notation 
     & \text{Handlers} & \handlerType{T_1^{-1} \, ! \, \Delta}{T_2^{-1} \, ! \, \Delta'}
   \end{array}$
   \end{source-desc}
-  \caption{\sourceLang{} types. I highlight three important elements: first, stratifying types into two levels, $0$ and $-1$. Second, stratifying effects into two levels, $\xi$ (for run-time effects) and $\Delta$ for compile-time effects. Third, the \textsf{Code} type at level $-1$ allows for compile-time programs to manipulate ASTs of run-time code.}
+  \caption{\sourceLang{} types. I highlight three important elements: first, types are stratified into two levels, $0$ and $-1$. Second, effects are stratified into two levels, $\xi$ (for run-time effects) and $\Delta$ for compile-time effects. Third, the \textsf{Code} type allows for compile-time programs to manipulate ASTs of run-time code.}
   \label{fig:source-types}
 \end{figure}
 
@@ -429,7 +429,7 @@ $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma
 
 \end{center}
 \end{source-desc}
-\caption{The \compilemode{}-mode and \quotemode{}-mode typing rules for \sourceLang{}. The rules are nearly identical to the \efflang{} typing rules, with the exception of level annotations on types, except that everything -- including values like $1$ -- are typed as compile-time computations. Further, two additional rules, \textsc{(\compilemode{}-Splice)} and \textsc{(\quotemode{}-Splice)} formalise the transition to \splicemode{}-mode. The former is top-level splice and the latter is splice.}%
+\caption{The \compilemode{}-mode and \quotemode{}-mode typing rules for \sourceLang{}. The rules are nearly identical to the \efflang{} typing rules, with the exception of level annotations on types. Two additional rules, \textsc{(\compilemode{}-Splice)} (top-level splice) and \textsc{(\quotemode{}-Splice)} formalise the transition to \splicemode{}-mode.}%
 \label{fig:source-cq-typing-rules}
 \end{figure}
 
@@ -730,7 +730,7 @@ I will now describe the operational semantics of \coreLang{}. Many rules are ide
   \end{array} \]
   }
 \end{core-desc}
-\caption{Selected rules of the \coreLang{} operational semantics. Many of the rules can be trivially adapted from the \efflang{} semantics (\Cref{fig:efflang-opsem}), and therefore have been omitted. Rules relating to the muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf{\textcolor{coreHighlight}{highlighted}}.}%
+\caption{Selected rules of the \coreLang{} operational semantics. Many of the rules can be trivially adapted from the \efflang{} semantics (\Cref{fig:efflang-opsem}). The muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf{\textcolor{coreHighlight}{highlighted}}.}%
 \label{fig:corelang-opsem}
 \end{figure}
 
@@ -962,7 +962,7 @@ Elaborating terms is slightly more involved. To start, we will assume that we ha
 \[\lambda x: \mathbb{N}^0. \, e\]
 The elaboration for terms is moderated by the \textbf{mode}: \compilemode{}, \quotemode{}, or \splicemode{}. Selected rules are collated in \Cref{fig:term-elaboration}. 
 
-At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calling \textbf{\texttt{mkvar}} when binders are encountered (see earlier discussion on the necessity of \textbf{\texttt{mkvar}}). Elaboration in \compilemode{} and \quotemode{}-modes do not differ particularly significantly, with the exception of the rule for splice, where in \compilemode{}, I insert the marker for the top-level splice, and in \quotemode{}, I do not. Elaboration in \compilemode{} and \quotemode{}-modes will be further distinguished when I extend the elaboration to insert scope extrusion checks. Elaboration in \splicemode{} is effectively the identity. 
+At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calling \textbf{\texttt{mkvar}} when binders are encountered (see earlier discussion on the necessity of \textbf{\texttt{mkvar}}). Elaboration in \compilemode{} and \quotemode{}-modes do not differ particularly significantly, with the exception of the rule for splice, where in \compilemode{}, I insert the marker for the top-level splice, and in \quotemode{}, I do not. Elaboration in \compilemode{} and \quotemode{}-modes will be further distinguished when I extend the elaboration to insert scope extrusion checks. Elaboration in \splicemode{}-mode is effectively the identity. 
 
 \newcommand{\cqmode}{\compilemode{} \mid \quotemode{}}
 \begin{figure}
@@ -985,7 +985,7 @@ At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calli
     \]
     }
   \end{source-desc}
-  \caption{Selected term elaboration rules from \sourceLang{} to \coreLang{}. Elaboration is moderated by the compiler mode. In \compilemode{} and \quotemode{}, elaboration builds ASTs. While mostly identical, they differ in the elaboration for $\splice$. In \compilemode{}, one additionally inserts a marker representing the position of the top-level splice. \compilemode{} and \quotemode{} will be further distinguished when elaboration is extended to insert scope extrusion checks. In \splicemode{}, elaboration is effectively the identity. }%
+  \caption{Selected term elaboration rules from \sourceLang{} to \coreLang{}. Elaboration is moderated by the compiler mode. In \compilemode{} and \quotemode{}, elaboration builds ASTs. In \splicemode{}-mode, elaboration is effectively the identity. }%
   \label{fig:term-elaboration}
 \end{figure}
 

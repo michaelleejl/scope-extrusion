@@ -17,11 +17,11 @@
 \contentsline {mdtheorem}{{Theorem}{4.3.{1}}{Correctness of the Best-Effort Check}}{52}{mdtheorem.4.3.1}%
 \contentsline {mdtheorem}{{Theorem}{4.3.{2}}{Cause for Concern Property}}{53}{mdtheorem.4.3.2}%
 \contentsline {mddefinition}{{Definition}{4.4.{1}}{Extended source type}}{55}{mddefinition.4.4.1}%
-\contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed Expression, Refined Environment Classifiers}}{56}{mddefinition.4.4.2}%
+\contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed Expression, Refined Environment Classifiers}}{55}{mddefinition.4.4.2}%
 \contentsline {mdlemma}{{Lemma}{4.4.{1}}{Weakening for Level 0 Values}}{56}{mdlemma.4.4.1}%
-\contentsline {mdlemma}{{Lemma}{4.4.{2}}{Weakening for Level $-1$ Values}}{57}{mdlemma.4.4.2}%
+\contentsline {mdlemma}{{Lemma}{4.4.{2}}{Weakening for Level $-1$ Values}}{56}{mdlemma.4.4.2}%
 \contentsline {mdtheorem}{{Theorem}{4.4.{1}}{Correctness of Refined Environment Classifiers}}{57}{mdtheorem.4.4.1}%
 \contentsline {mddefinition}{{Definition}{4.4.{3}}{\textsf {Scoped}-Induction}}{59}{mddefinition.4.4.3}%
 \contentsline {mdlemma}{{Lemma}{4.4.{3}}{Closure under Anti-Reduction}}{59}{mdlemma.4.4.3}%
-\contentsline {mddefinition}{{Definition}{4.4.{4}}{Closed substitution}}{60}{mddefinition.4.4.4}%
+\contentsline {mddefinition}{{Definition}{4.4.{4}}{Closed substitution}}{59}{mddefinition.4.4.4}%
 \contentsline {mdlemma}{{Lemma}{4.4.{4}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{60}{mdlemma.4.4.4}%

@@ -1,4 +1,4 @@
-\begin{thebibliography}{35}
+\begin{thebibliography}{37}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -128,6 +128,14 @@ W.~Kuchta.
 \newblock URL \url{https://icfp23.sigplan.org/details/hope-2023/4/A-proof-of-normalization-for-effect-handlers}.
 \newblock Seattle, Washington, United States.
 
+\bibitem[Lawall and Danvy(1994)]{lawall-94}
+J.~L. Lawall and O.~Danvy.
+\newblock Continuation-based partial evaluation.
+\newblock \emph{SIGPLAN Lisp Pointers}, VII\penalty0 (3):\penalty0 227–238, July 1994.
+\newblock ISSN 1045-3563.
+\newblock \doi{10.1145/182590.182483}.
+\newblock URL \url{https://doi.org/10.1145/182590.182483}.
+
 \bibitem[Mainland(2012)]{mainland-2012}
 G.~Mainland.
 \newblock Explicitly heterogeneous metaprogramming with metahaskell.
@@ -187,6 +195,14 @@ M.~Servetto and E.~Zucca.
 \newblock ISBN 9781450318426.
 \newblock \doi{10.1145/2426890.2426913}.
 \newblock URL \url{https://doi.org/10.1145/2426890.2426913}.
+
+\bibitem[Sheard and Jones(2002)]{sheard-02}
+T.~Sheard and S.~P. Jones.
+\newblock Template meta-programming for haskell.
+\newblock In \emph{Proceedings of the 2002 ACM SIGPLAN Workshop on Haskell}, Haskell '02, page 1–16, New York, NY, USA, 2002. Association for Computing Machinery.
+\newblock ISBN 1581136056.
+\newblock \doi{10.1145/581690.581691}.
+\newblock URL \url{https://doi.org/10.1145/581690.581691}.
 
 \bibitem[Sivaramakrishnan et~al.(2021)Sivaramakrishnan, Dolan, White, Kelly, Jaffer, and Madhavapeddy]{sivaramakrishnan-21}
 K.~Sivaramakrishnan, S.~Dolan, L.~White, T.~Kelly, S.~Jaffer, and A.~Madhavapeddy.

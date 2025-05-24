@@ -1,8 +1,8 @@
 \chapter{Introduction}
 
-The promise of an optimising compiler is that the programmer can focus on writing maintainable code, entrusting the responsibility of \textit{optimising} said code to the compiler. 
+Many compilers perform a wide range of optimisations. This empowers programmers to focus on writing maintainable code, entrusting the responsibility of \textit{optimising} said code to the compiler. 
 
-Entrusting optimisation to the compiler is sufficient for many cases, but not all. For reasons that are both theoretical \citep{rice-53} and practical \citep{robinson-01}, compilers will never be able to identify \textit{all} opportunities for optimisation. What can be done when compiler optimisation is not enough?
+While compiler optimisation is often all one needs, it is difficult for compiler engineers to ensure, \textit{a priori}, that every user of the language has all the optimisations they require for their specific use case \citep{rice-53, robinson-01}. When users discover that their desired optimisation has not been implemented, what can they do, beyond submitting a pull request?
 % A more difficult question is thus: How does one write code that is both fast
 % and maintainable \textbf{when one cannot trust the compiler to optimise one's code}?
 % One approach involves providing explicit information about
@@ -12,7 +12,7 @@ Entrusting optimisation to the compiler is sufficient for many cases, but not al
 % programmer to identify pure functions. In \texttt{Haskell}, annotations can 
 % be used to identify strict arguments.
 
-Metaprogramming (for example, \texttt{C++} templates) \citep{abrahams-04} is one possible solution. In languages that support metaprogramming, programmers can identify what should be executed at compile-time. Importantly, programmers may write \textbf{maintainable} code, which when executed by the compiler, generates \textbf{efficient} code. For example, assume two implementations of the same function, one that runs faster on Arm, and one on Intel.
+Metaprogramming (for example, \texttt{C++} templates) \citep{abrahams-04} allows the user to ``teach the compiler a class of [new] tricks'' \citep{sheard-02}, and is therefore one possible solution. In languages that support metaprogramming, programmers can identify what should be executed at compile-time. Importantly, programmers may write \textbf{maintainable} code, which when executed by the compiler, generates \textbf{efficient} code. For example, assume two implementations of the same function, one that runs faster on Arm, and one on Intel.
 
 The maintainable way to switch between these functions is via a conditional:
 \begin{ocaml}
@@ -50,7 +50,9 @@ else
 
 Effect handlers are a powerful language construct that can simulate many other language features (state, I/O, greenthreading) \citep{pretnar-15}, and have recently been added to \texttt{OCaml} \citep{sivaramakrishnan-21}.  It is thus strategic, and timely, to investigate the interaction between metaprogramming and effect handlers. 
 
-Unfortunately, metaprogramming is known to interact unexpectedly, and poorly, with effect handlers. One problem is \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally directs the compiler to generate code with unbound variables. In the following program, we store the variable \mintinline{ocaml}{Var(x)} into a heap cell (\mintinline{ocaml}{l}), and retrieve it outside its scope. The program thus evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
+Metaprogramming is known to interact unexpectedly with effects. This interaction can be extremely desirable, for example, allowing programmers perform loop-invariant code-motion during code generation (on top of existing optimisations) \citep{kiselyov-14} without making major modifications to their existing code \citep{lawall-94}. 
+
+Unfortunately, the interaction can also be undesirable. One problem is \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally generates code with unbound variables. In the following program, effects and metaprogramming combine to extrude \mintinline{ocaml}{Var(x)} beyond its scope. The variable \mintinline{ocaml}{Var(x)} is first stored in a heap cell (\mintinline{ocaml}{l}), and subsequently retrieved outside its scope. The program thus evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
 
 \begin{ocaml}
 let l: int expr ref = new(Int(1)) in 
@@ -58,28 +60,22 @@ let id_ast : (int -> int) expr = Lam(Var(x), l := Var(x); Int(1)) in
 !l
 \end{ocaml} 
 
-The problem of scope extrusion has been widely studied, resulting in multitudinous mechanisms for managing the interaction between metaprogramming and effect handlers. Some solutions adapt the type system (Refined Environment Classifiers \citep{kiselyov-16,isoda-24}, Closed Types \citep{calcagno-00}), others insert dynamic checks into the generated code \citep{kiselyov-14}. However, there are two issues.
+The problem of scope extrusion has been widely studied, resulting in multitudinous mechanisms for managing the interaction between metaprogramming and effects. Some solutions adapt the type system (Refined Environment Classifiers \citep{kiselyov-16,isoda-24}, Closed Types \citep{calcagno-00}), others insert dynamic checks into the generated code \citep{kiselyov-14}. However, there are two issues.
 
-First, we are a picky lot. Type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurs, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
+First, I am not studying scope extrusion in a vacuum, but rather am working towards a concrete objective. The MacoCaml \citep{xie-2022} project aims to extend the \texttt{OCaml} programming language, which has effect handlers, with compile-time metaprogramming. However, until now, the MacoCaml project has had no clear policy on how metaprogramming and effects should interact. In this setting, the options become more limited. Type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurs, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
 
-Second, and more importantly, we lacked a way to evaluate solutions fairly and holistically. Our evaluation criteria is three-pronged: correctness, efficiency, and expressiveness. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
+Second, and more importantly, I lacked a way to evaluate solutions fairly and holistically. Our evaluation criterion is three-pronged: correctness, efficiency, and expressiveness. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
 
-This thesis will solve both these problems, in decreasing order of priority. 
+This thesis solves both these problems. In \Cref{chapter:calculus}, I design a common language for encoding and evaluating different solutions. In \Cref{chapter:scope-extrusion}, I use the designed language to formally describe and evaluate various checks. This process led to a novel Best-Effort dynamic check (\Cref{section:best-effort-check}), which I will argue occupies a ``goldilocks'' zone, and should be adopted by MacoCaml.
 
 \section{Contributions}
-[NOTE: I'm not quite sure how to write this section]
 
-Concretely, our contributions are:
+Concretely, the contributions of this work are:
 \begin{enumerate}
-    \item A novel ``universal'' calculus that allows for effect handlers both in the generating and generated code.
-    \item In the calculus, three precise (but different) definitions of scope extrusion.  
-    \item In the calculus, encodings of the following existing solutions: 
-    \begin{enumerate} 
-        \item Lazy dynamic check (with a proof of correctness)
-        \item Eager dynamic check (with a refutation of correctness)
-        \item Refined Environment Classifiers
-    \end{enumerate}
-    \item A new solution, a Best-Effort dynamic check, that we justify is correct, expressive, and efficient.
+    \item A novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time (\Cref{chapter:calculus}). \calculusName{} is well-typed, has the expected metatheoretic properties (\Cref{section:metatheory}), and is designed to facilitate comparative evaluation of different scope extrusion checks (\Cref{chapter:scope-extrusion}).
+    \item In \calculusName{}, a formal description of the MetaOCaml check described by \citet{kiselyov-14} (\Cref{subsubsection:eager-dynamic-check}), as well as an evaluation of its correctness (\Cref{subsection:eager-dynamic-correctness}), expressiveness (\Cref{subsection:eager-dynamic-expressiveness}), and efficiency (\Cref{subsection:eager-dynamic-efficiency}).
+    \item In \calculusName{}, a formal description of a novel Dynamic Best-Effort check (\Cref{section:best-effort-check}), which I prove correct (\Cref{subsection:best-effort-correct}), and argue, by comparison with other checks, occupies a ``goldilocks zone'' between expressiveness and efficiency (\Cref{subsection:best-effort-expressive,subsection:best-effort-efficient}). 
+    \item An encoding of refined environment classifiers \citep{kiselyov-16} into \calculusName{}, with a proof of correctness via logical relation (\Cref{subsection:rec-formal-correctness}), and an evaluation of its expressiveness compared to other checks (\Cref{subsection:rec-formal-expressiveness}).
     \item Implementations of the three dynamic checks in MacoCaml.
 \end{enumerate}
 

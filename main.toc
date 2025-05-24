@@ -1,5 +1,5 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Contributions}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.1}Contributions}{3}{section.1.1}%
 \contentsline {chapter}{\numberline {2}Background}{4}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Metaprogramming}{4}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Metaprogramming for Fast and Maintainable Code}{4}{subsection.2.1.1}%
@@ -40,15 +40,15 @@
 \contentsline {chapter}{\numberline {4}Scope Extrusion}{45}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Lazy Dynamic Check}{45}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Eager Dynamic Check}{46}{section.4.2}%
-\contentsline {subsubsection}{\nonumberline Correctness of the Eager Dynamic Check}{47}{subsubsection*.32}%
-\contentsline {subsubsection}{\nonumberline Expressiveness of the Eager Dynamic Check}{48}{subsubsection*.34}%
-\contentsline {subsubsection}{\nonumberline Efficiency of the Eager Dynamic Check}{49}{subsubsection*.36}%
+\contentsline {subsection}{\numberline {4.2.1}Correctness of the Eager Dynamic Check}{47}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Expressiveness of the Eager Dynamic Check}{48}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Efficiency of the Eager Dynamic Check}{49}{subsection.4.2.3}%
 \contentsline {section}{\numberline {4.3}Best-Effort Dynamic Check}{50}{section.4.3}%
-\contentsline {subsubsection}{\nonumberline Correctness of the Best-Effort Dynamic Check}{52}{subsubsection*.38}%
-\contentsline {subsubsection}{\nonumberline Expressiveness of the Best-Effort Dynamic Check}{53}{subsubsection*.40}%
-\contentsline {subsubsection}{\nonumberline Efficiency of the Best-Effort Dynamic Check}{54}{subsubsection*.42}%
+\contentsline {subsection}{\numberline {4.3.1}Correctness of the Best-Effort Dynamic Check}{52}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Best-Effort Dynamic Check}{53}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Efficiency of the Best-Effort Dynamic Check}{54}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{54}{section.4.4}%
-\contentsline {subsubsection}{\nonumberline Correctness of Refined Environment Classifiers}{57}{subsubsection*.44}%
-\contentsline {subsubsection}{\nonumberline Expressiveness of Refined Environment Classifiers}{62}{subsubsection*.46}%
+\contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{57}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{62}{subsection.4.4.2}%
 \contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{62}{section.4.5}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
