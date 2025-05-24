@@ -222,251 +222,251 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Transitions between modes \textbf  {\textsf  {\textcolor {compile}{c}}}{}, \textbf  {\textsf  {\textcolor {splice}{s}}}{}, and \textbf  {\textsf  {\textcolor {quote}{q}}}{}. Top-level splices transition from \textbf  {\textsf  {\textcolor {compile}{c}}}{} to \textbf  {\textsf  {\textcolor {splice}{s}}}{}, quotes transition from \textbf  {\textsf  {\textcolor {splice}{s}}}{} to \textbf  {\textsf  {\textcolor {quote}{q}}}{}, and splices (under quotes) transition from \textbf  {\textsf  {\textcolor {quote}{q}}}{} to \textbf  {\textsf  {\textcolor {splice}{s}}}{}.}}{31}{figure.3.4}\protected@file@percent }
 \newlabel{fig:compiler-mode-transitions}{{3.4}{31}{Transitions between modes \compilemode {}, \splicemode {}, and \quotemode {}. Top-level splices transition from \compilemode {} to \splicemode {}, quotes transition from \splicemode {} to \quotemode {}, and splices (under quotes) transition from \quotemode {} to \splicemode {}}{figure.3.4}{}}
 \newlabel{fig:compiler-mode-transitions@cref}{{[figure][4][3]3.4}{[1][31][]31}{}{}{}}
-\BKM@entry{id=16,dest={73656374696F6E2E332E32},srcline={583}}{5C3337365C3337375C303030545C303030685C303030655C3030305C3034305C303030435C3030306F5C303030725C303030655C3030305C3034305C3030304C5C303030615C3030306E5C303030675C303030755C303030615C303030675C303030655C3030303A5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030415C303030535C30303054}
+\BKM@entry{id=16,dest={73656374696F6E2E332E32},srcline={541}}{5C3337365C3337375C303030545C303030685C303030655C3030305C3034305C303030435C3030306F5C303030725C303030655C3030305C3034305C3030304C5C303030615C3030306E5C303030675C303030755C303030615C303030675C303030655C3030303A5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030415C303030535C30303054}
 \zref@newlabel{mdf@pagelabel-6}{\default{3.1.1}\page{32}\abspage{36}\mdf@pagevalue{32}}
 \@writefile{thm}{\contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed expression}}{32}{mddefinition.3.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}The Core Language: $\lambda _{\texttt  {AST}(\texttt  {op})}${}}{32}{section.3.2}\protected@file@percent }
-\newlabel{section:core-lang}{{3.2}{32}{The Core Language: \texorpdfstring {\coreLang {}}{Lambda-Op-AST}}{section.3.2}{}}
-\newlabel{section:core-lang@cref}{{[section][2][3]3.2}{[1][32][]32}{}{}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces The \textbf  {\textsf  {\textcolor {compile}{c}}}{}-mode and \textbf  {\textsf  {\textcolor {quote}{q}}}{}-mode typing rules for $\lambda _{\equote [\texttt  {op}]}${}. The rules are nearly identical to the $\lambda _{\texttt  {op}}${} typing rules, with the exception of level annotations on types. Two additional rules, \textsc  {(\textbf  {\textsf  {\textcolor {compile}{c}}}{}-Splice)} (top-level splice) and \textsc  {(\textbf  {\textsf  {\textcolor {quote}{q}}}{}-Splice)} formalise the transition to \textbf  {\textsf  {\textcolor {splice}{s}}}{}-mode.}}{33}{figure.3.5}\protected@file@percent }
 \newlabel{fig:source-cq-typing-rules}{{3.5}{33}{The \compilemode {}-mode and \quotemode {}-mode typing rules for \sourceLang {}. The rules are nearly identical to the \efflang {} typing rules, with the exception of level annotations on types. Two additional rules, \textsc {(\compilemode {}-Splice)} (top-level splice) and \textsc {(\quotemode {}-Splice)} formalise the transition to \splicemode {}-mode}{figure.3.5}{}}
 \newlabel{fig:source-cq-typing-rules@cref}{{[figure][5][3]3.5}{[1][32][]33}{}{}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces The \textbf  {\textsf  {\textcolor {splice}{s}}}{}-mode typing rules for $\lambda _{\equote [\texttt  {op}]}${}. The rules are exactly identical to the $\lambda _{\texttt  {op}}${} typing rules, with the exception of level annotations on types, and the additional \textsc  {(Quote)} rule, which makes level $0$ code available at compile-time. }}{34}{figure.3.6}\protected@file@percent }
 \newlabel{fig:source-s-typing-rules}{{3.6}{34}{The \splicemode {}-mode typing rules for \sourceLang {}. The rules are exactly identical to the \efflang {} typing rules, with the exception of level annotations on types, and the additional \textsc {(Quote)} rule, which makes level $0$ code available at compile-time}{figure.3.6}{}}
 \newlabel{fig:source-s-typing-rules@cref}{{[figure][6][3]3.6}{[1][32][]34}{}{}{}}
-\BKM@entry{id=17,dest={73756273656374696F6E2E332E322E31},srcline={682}}{5C3337365C3337375C3030304F5C303030705C303030655C303030725C303030615C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030535C303030655C3030306D5C303030615C3030306E5C303030745C303030695C303030635C30303073}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces $\lambda _{\texttt  {AST}(\texttt  {op})}${} syntax. The syntax is broadly the same as $\lambda _{\texttt  {op}}${}, except with the addition of AST constructors and scope extrusion checking machinery.}}{36}{figure.3.7}\protected@file@percent }
-\newlabel{fig:source-syntax}{{3.7}{36}{\coreLang {} syntax. The syntax is broadly the same as \efflang {}, except with the addition of AST constructors and scope extrusion checking machinery}{figure.3.7}{}}
-\newlabel{fig:source-syntax@cref}{{[figure][7][3]3.7}{[1][36][]36}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}The Core Language: $\lambda _{\texttt  {AST}(\texttt  {op})}${}}{35}{section.3.2}\protected@file@percent }
+\newlabel{section:core-lang}{{3.2}{35}{The Core Language: \texorpdfstring {\coreLang {}}{Lambda-Op-AST}}{section.3.2}{}}
+\newlabel{section:core-lang@cref}{{[section][2][3]3.2}{[1][32][]35}{}{}{}}
+\BKM@entry{id=17,dest={73756273656374696F6E2E332E322E31},srcline={640}}{5C3337365C3337375C3030304F5C303030705C303030655C303030725C303030615C303030745C303030695C3030306F5C3030306E5C303030615C3030306C5C3030305C3034305C303030535C303030655C3030306D5C303030615C3030306E5C303030745C303030695C303030635C30303073}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Operational Semantics}{36}{subsection.3.2.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Selected rules of the $\lambda _{\texttt  {AST}(\texttt  {op})}${} operational semantics. Many of the rules can be trivially adapted from the $\lambda _{\texttt  {op}}${} semantics (\Cref  {fig:efflang-opsem}). The muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf  {\textcolor {coreHighlight}{highlighted}}.}}{37}{figure.3.8}\protected@file@percent }
-\newlabel{fig:corelang-opsem}{{3.8}{37}{Selected rules of the \coreLang {} operational semantics. Many of the rules can be trivially adapted from the \efflang {} semantics (\Cref {fig:efflang-opsem}). The muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf {\textcolor {coreHighlight}{highlighted}}}{figure.3.8}{}}
-\newlabel{fig:corelang-opsem@cref}{{[figure][8][3]3.8}{[1][36][]37}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces $\lambda _{\texttt  {AST}(\texttt  {op})}${} syntax. The syntax is broadly the same as $\lambda _{\texttt  {op}}${}, except with the addition of AST constructors and scope extrusion checking machinery.}}{37}{figure.3.7}\protected@file@percent }
+\newlabel{fig:source-syntax}{{3.7}{37}{\coreLang {} syntax. The syntax is broadly the same as \efflang {}, except with the addition of AST constructors and scope extrusion checking machinery}{figure.3.7}{}}
+\newlabel{fig:source-syntax@cref}{{[figure][7][3]3.7}{[1][36][]37}{}{}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\nonumberline Configurations}{37}{subsubsection*.24}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\nonumberline AST Rules}{37}{subsubsection*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Scope Extrusion Checking Rules}{38}{subsubsection*.28}\protected@file@percent }
-\BKM@entry{id=18,dest={73756273656374696F6E2E332E322E32},srcline={770}}{5C3337365C3337375C303030545C303030795C303030705C303030655C3030305C3034305C303030535C303030795C303030735C303030745C303030655C3030306D}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Scope Extrusion Checking Rules}{37}{subsubsection*.28}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Selected rules of the $\lambda _{\texttt  {AST}(\texttt  {op})}${} operational semantics. Many of the rules can be trivially adapted from the $\lambda _{\texttt  {op}}${} semantics (\Cref  {fig:efflang-opsem}). The muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf  {\textcolor {coreHighlight}{highlighted}}.}}{38}{figure.3.8}\protected@file@percent }
+\newlabel{fig:corelang-opsem}{{3.8}{38}{Selected rules of the \coreLang {} operational semantics. Many of the rules can be trivially adapted from the \efflang {} semantics (\Cref {fig:efflang-opsem}). The muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf {\textcolor {coreHighlight}{highlighted}}}{figure.3.8}{}}
+\newlabel{fig:corelang-opsem@cref}{{[figure][8][3]3.8}{[1][36][]38}{}{}{}}
+\BKM@entry{id=18,dest={73756273656374696F6E2E332E322E32},srcline={728}}{5C3337365C3337375C303030545C303030795C303030705C303030655C3030305C3034305C303030535C303030795C303030735C303030745C303030655C3030306D}
 \citation{scherer-2017}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The types of $\lambda _{\texttt  {AST}(\texttt  {op})}${}. $\lambda _{\texttt  {AST}(\texttt  {op})}${} types extend $\lambda _{\texttt  {op}}${} types with an \textsf  {AST} type (for ASTs), and a \textsf  {Binder} type}}{39}{figure.3.9}\protected@file@percent }
-\newlabel{fig:core-types}{{3.9}{39}{The types of \coreLang {}. \coreLang {} types extend \efflang {} types with an \textsf {AST} type (for ASTs), and a \textsf {Binder} type}{figure.3.9}{}}
-\newlabel{fig:core-types@cref}{{[figure][9][3]3.9}{[1][39][]39}{}{}{}}
+\BKM@entry{id=19,dest={73756273656374696F6E2E332E322E33},srcline={858}}{5C3337365C3337375C303030495C3030306D5C303030705C3030306C5C303030655C3030306D5C303030655C3030306E5C303030745C303030615C303030745C303030695C3030306F5C3030306E}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Type System}{39}{subsection.3.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\nonumberline Typing Rules}{39}{subsubsection*.30}\protected@file@percent }
-\BKM@entry{id=19,dest={73756273656374696F6E2E332E322E33},srcline={900}}{5C3337365C3337375C303030495C3030306D5C303030705C3030306C5C303030655C3030306D5C303030655C3030306E5C303030745C303030615C303030745C303030695C3030306F5C3030306E}
-\BKM@entry{id=20,dest={73656374696F6E2E332E33},srcline={914}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C303030725C3030306F5C3030306D5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C303030655C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030415C303030535C30303054}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces Selected $\lambda _{\texttt  {AST}(\texttt  {op})}${} typing rules}}{40}{figure.3.10}\protected@file@percent }
-\newlabel{fig:core-typing-rules}{{3.10}{40}{Selected \coreLang {} typing rules}{figure.3.10}{}}
-\newlabel{fig:core-typing-rules@cref}{{[figure][10][3]3.10}{[1][40][]40}{}{}{}}
-\zref@newlabel{mdf@pagelabel-7}{\default{3.2.2}\page{40}\abspage{44}\mdf@pagevalue{40}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{3.2.{1}}{Well-typed term}}{40}{mddefinition.3.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-7}{\default{3.2.2}\page{39}\abspage{43}\mdf@pagevalue{39}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{3.2.{1}}{Well-typed term}}{39}{mddefinition.3.2.1}\protected@file@percent }
+\BKM@entry{id=20,dest={73656374696F6E2E332E33},srcline={872}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C303030665C303030725C3030306F5C3030306D5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C303030655C3030305C3034305C303030745C3030306F5C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030415C303030535C30303054}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces The types of $\lambda _{\texttt  {AST}(\texttt  {op})}${}. $\lambda _{\texttt  {AST}(\texttt  {op})}${} types extend $\lambda _{\texttt  {op}}${} types with an \textsf  {AST} type (for ASTs), and a \textsf  {Binder} type}}{40}{figure.3.9}\protected@file@percent }
+\newlabel{fig:core-types}{{3.9}{40}{The types of \coreLang {}. \coreLang {} types extend \efflang {} types with an \textsf {AST} type (for ASTs), and a \textsf {Binder} type}{figure.3.9}{}}
+\newlabel{fig:core-types@cref}{{[figure][9][3]3.9}{[1][39][]40}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Implementation}{40}{subsection.3.2.3}\protected@file@percent }
-\BKM@entry{id=21,dest={73756273656374696F6E2E332E332E31},srcline={932}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030795C303030705C303030655C30303073}
-\BKM@entry{id=22,dest={73756273656374696F6E2E332E332E32},srcline={948}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030435C3030306F5C3030306E5C303030745C303030655C303030785C303030745C30303073}
-\BKM@entry{id=23,dest={73756273656374696F6E2E332E332E33},srcline={960}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030655C303030725C3030306D5C30303073}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt  {op}]}${} to $\lambda _{\texttt  {AST}(\texttt  {op})}${}}{41}{section.3.3}\protected@file@percent }
-\newlabel{section:elaboration}{{3.3}{41}{Elaboration from \texorpdfstring {\sourceLang {}}{Lambda-Op-Quote-Splice} to \texorpdfstring {\coreLang {}}{Lambda-Op-AST}}{section.3.3}{}}
-\newlabel{section:elaboration@cref}{{[section][3][3]3.3}{[1][40][]41}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt  {op}]}${} to $\lambda _{\texttt  {AST}(\texttt  {op})}${}}{40}{section.3.3}\protected@file@percent }
+\newlabel{section:elaboration}{{3.3}{40}{Elaboration from \texorpdfstring {\sourceLang {}}{Lambda-Op-Quote-Splice} to \texorpdfstring {\coreLang {}}{Lambda-Op-AST}}{section.3.3}{}}
+\newlabel{section:elaboration@cref}{{[section][3][3]3.3}{[1][40][]40}{}{}{}}
+\BKM@entry{id=21,dest={73756273656374696F6E2E332E332E31},srcline={890}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030795C303030705C303030655C30303073}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces Selected $\lambda _{\texttt  {AST}(\texttt  {op})}${} typing rules}}{41}{figure.3.10}\protected@file@percent }
+\newlabel{fig:core-typing-rules}{{3.10}{41}{Selected \coreLang {} typing rules}{figure.3.10}{}}
+\newlabel{fig:core-typing-rules@cref}{{[figure][10][3]3.10}{[1][39][]41}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Elaborating Types}{41}{subsection.3.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Elaborating Contexts}{41}{subsection.3.3.2}\protected@file@percent }
-\BKM@entry{id=24,dest={73756273656374696F6E2E332E332E34},srcline={992}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030795C303030705C303030695C3030306E5C303030675C3030305C3034305C3030304A5C303030755C303030645C303030675C303030655C3030306D5C303030655C3030306E5C303030745C30303073}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces Selected term elaboration rules from $\lambda _{\equote [\texttt  {op}]}${} to $\lambda _{\texttt  {AST}(\texttt  {op})}${}. Elaboration is moderated by the compiler mode. In \textbf  {\textsf  {\textcolor {compile}{c}}}{} and \textbf  {\textsf  {\textcolor {quote}{q}}}{}, elaboration builds ASTs. In \textbf  {\textsf  {\textcolor {splice}{s}}}{}-mode, elaboration is effectively the identity. }}{42}{figure.3.11}\protected@file@percent }
-\newlabel{fig:term-elaboration}{{3.11}{42}{Selected term elaboration rules from \sourceLang {} to \coreLang {}. Elaboration is moderated by the compiler mode. In \compilemode {} and \quotemode {}, elaboration builds ASTs. In \splicemode {}-mode, elaboration is effectively the identity}{figure.3.11}{}}
-\newlabel{fig:term-elaboration@cref}{{[figure][11][3]3.11}{[1][42][]42}{}{}{}}
+\BKM@entry{id=22,dest={73756273656374696F6E2E332E332E32},srcline={906}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030435C3030306F5C3030306E5C303030745C303030655C303030785C303030745C30303073}
+\BKM@entry{id=23,dest={73756273656374696F6E2E332E332E33},srcline={918}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030655C303030725C3030306D5C30303073}
+\BKM@entry{id=24,dest={73756273656374696F6E2E332E332E34},srcline={950}}{5C3337365C3337375C303030455C3030306C5C303030615C303030625C3030306F5C303030725C303030615C303030745C303030695C3030306E5C303030675C3030305C3034305C303030545C303030795C303030705C303030695C3030306E5C303030675C3030305C3034305C3030304A5C303030755C303030645C303030675C303030655C3030306D5C303030655C3030306E5C303030745C30303073}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Elaborating Contexts}{42}{subsection.3.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Elaborating Terms}{42}{subsection.3.3.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Elaborating Typing Judgements}{42}{subsection.3.3.4}\protected@file@percent }
-\BKM@entry{id=25,dest={73656374696F6E2E332E34},srcline={1011}}{5C3337365C3337375C3030304D5C303030655C303030745C303030615C303030745C303030685C303030655C3030306F5C303030725C30303079}
+\BKM@entry{id=25,dest={73656374696F6E2E332E34},srcline={969}}{5C3337365C3337375C3030304D5C303030655C303030745C303030615C303030745C303030685C303030655C3030306F5C303030725C30303079}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces Selected term elaboration rules from $\lambda _{\equote [\texttt  {op}]}${} to $\lambda _{\texttt  {AST}(\texttt  {op})}${}. Elaboration is moderated by the compiler mode. In \textbf  {\textsf  {\textcolor {compile}{c}}}{} and \textbf  {\textsf  {\textcolor {quote}{q}}}{}, elaboration builds ASTs. In \textbf  {\textsf  {\textcolor {splice}{s}}}{}-mode, elaboration is effectively the identity. }}{43}{figure.3.11}\protected@file@percent }
+\newlabel{fig:term-elaboration}{{3.11}{43}{Selected term elaboration rules from \sourceLang {} to \coreLang {}. Elaboration is moderated by the compiler mode. In \compilemode {} and \quotemode {}, elaboration builds ASTs. In \splicemode {}-mode, elaboration is effectively the identity}{figure.3.11}{}}
+\newlabel{fig:term-elaboration@cref}{{[figure][11][3]3.11}{[1][42][]43}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Metatheory}{43}{section.3.4}\protected@file@percent }
 \newlabel{section:metatheory}{{3.4}{43}{Metatheory}{section.3.4}{}}
 \newlabel{section:metatheory@cref}{{[section][4][3]3.4}{[1][43][]43}{}{}{}}
 \zref@newlabel{mdf@pagelabel-8}{\default{3.4}\page{43}\abspage{47}\mdf@pagevalue{43}}
 \@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{43}{mdtheorem.3.4.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-9}{\default{3.4}\page{43}\abspage{47}\mdf@pagevalue{43}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{43}{mdtheorem.3.4.2}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-10}{\default{3.4}\page{43}\abspage{47}\mdf@pagevalue{43}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{43}{mdtheorem.3.4.3}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-9}{\default{3.4}\page{44}\abspage{48}\mdf@pagevalue{44}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{44}{mdtheorem.3.4.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-10}{\default{3.4}\page{44}\abspage{48}\mdf@pagevalue{44}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{44}{mdtheorem.3.4.3}\protected@file@percent }
 \zref@newlabel{mdf@pagelabel-11}{\default{3.4}\page{44}\abspage{48}\mdf@pagevalue{44}}
 \@writefile{thm}{\contentsline {mdcorollary}{{Corollary}{3.4.{1}}{Type Safety}}{44}{mdcorollary.3.4.1}\protected@file@percent }
 \newlabel{cor:core-type-safety}{{3.4.{1}}{44}{Metatheory}{mdcorollary.3.4.1}{}}
-\newlabel{cor:core-type-safety@cref}{{[mdcorollary][1][3,4]3.4.{1}}{[1][43][]44}{}{}{}}
+\newlabel{cor:core-type-safety@cref}{{[mdcorollary][1][3,4]3.4.{1}}{[1][44][]44}{}{}{}}
 \zref@newlabel{mdf@pagelabel-12}{\default{3.4}\page{44}\abspage{48}\mdf@pagevalue{44}}
 \@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{3.4.{4}}{Quote-Splice Duality}}{44}{mdtheorem.3.4.4}\protected@file@percent }
 \BKM@entry{id=26,dest={636861707465722E34},srcline={1}}{5C3337365C3337375C303030535C303030635C3030306F5C303030705C303030655C3030305C3034305C303030455C303030785C303030745C303030725C303030755C303030735C303030695C3030306F5C3030306E}
 \BKM@entry{id=27,dest={73656374696F6E2E342E31},srcline={4}}{5C3337365C3337375C3030304C5C303030615C3030307A5C303030795C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
 \citation{kiselyov-14}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Scope Extrusion}{45}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Scope Extrusion}{46}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
-\newlabel{chapter:scope-extrusion}{{4}{45}{Scope Extrusion}{chapter.4}{}}
-\newlabel{chapter:scope-extrusion@cref}{{[chapter][4][]4}{[1][45][]45}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Lazy Dynamic Check}{45}{section.4.1}\protected@file@percent }
-\newlabel{section:lazy-dynamic-check-formal}{{4.1}{45}{Lazy Dynamic Check}{section.4.1}{}}
-\newlabel{section:lazy-dynamic-check-formal@cref}{{[section][1][4]4.1}{[1][45][]45}{}{}{}}
-\zref@newlabel{mdf@pagelabel-13}{\default{4.1}\page{45}\abspage{49}\mdf@pagevalue{45}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.1.{1}}{Lazy Scope Extrusion}}{45}{mddefinition.4.1.1}\protected@file@percent }
-\newlabel{def:lazy-scope-extrusion}{{4.1.{1}}{45}{Lazy Dynamic Check}{mddefinition.4.1.1}{}}
-\newlabel{def:lazy-scope-extrusion@cref}{{[mddefinition][1][4,1]4.1.{1}}{[1][45][]45}{}{}{}}
+\newlabel{chapter:scope-extrusion}{{4}{46}{Scope Extrusion}{chapter.4}{}}
+\newlabel{chapter:scope-extrusion@cref}{{[chapter][4][]4}{[1][46][]46}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Lazy Dynamic Check}{46}{section.4.1}\protected@file@percent }
+\newlabel{section:lazy-dynamic-check-formal}{{4.1}{46}{Lazy Dynamic Check}{section.4.1}{}}
+\newlabel{section:lazy-dynamic-check-formal@cref}{{[section][1][4]4.1}{[1][46][]46}{}{}{}}
+\zref@newlabel{mdf@pagelabel-13}{\default{4.1}\page{46}\abspage{50}\mdf@pagevalue{46}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.1.{1}}{Lazy Scope Extrusion}}{46}{mddefinition.4.1.1}\protected@file@percent }
+\newlabel{def:lazy-scope-extrusion}{{4.1.{1}}{46}{Lazy Dynamic Check}{mddefinition.4.1.1}{}}
+\newlabel{def:lazy-scope-extrusion@cref}{{[mddefinition][1][4,1]4.1.{1}}{[1][46][]46}{}{}{}}
 \citation{kiselyov-14}
 \BKM@entry{id=28,dest={73656374696F6E2E342E32},srcline={49}}{5C3337365C3337375C303030455C303030615C303030675C303030655C303030725C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
 \citation{kiselyov-14}
-\zref@newlabel{mdf@pagelabel-14}{\default{4.1}\page{46}\abspage{50}\mdf@pagevalue{46}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.1.{1}}{Correctness and Expressiveness of the Lazy Dynamic Check}}{46}{mdtheorem.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Eager Dynamic Check}{46}{section.4.2}\protected@file@percent }
-\newlabel{section:eager-dynamic-check-formal}{{4.2}{46}{Eager Dynamic Check}{section.4.2}{}}
-\newlabel{section:eager-dynamic-check-formal@cref}{{[section][2][4]4.2}{[1][46][]46}{}{}{}}
-\zref@newlabel{mdf@pagelabel-15}{\default{4.2}\page{46}\abspage{50}\mdf@pagevalue{46}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.2.{1}}{Eager Scope Extrusion}}{46}{mddefinition.4.2.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-14}{\default{4.1}\page{47}\abspage{51}\mdf@pagevalue{47}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.1.{1}}{Correctness and Expressiveness of the Lazy Dynamic Check}}{47}{mdtheorem.4.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Eager Dynamic Check}{47}{section.4.2}\protected@file@percent }
+\newlabel{section:eager-dynamic-check-formal}{{4.2}{47}{Eager Dynamic Check}{section.4.2}{}}
+\newlabel{section:eager-dynamic-check-formal@cref}{{[section][2][4]4.2}{[1][47][]47}{}{}{}}
+\zref@newlabel{mdf@pagelabel-15}{\default{4.2}\page{47}\abspage{51}\mdf@pagevalue{47}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.2.{1}}{Eager Scope Extrusion}}{47}{mddefinition.4.2.1}\protected@file@percent }
 \citation{kiselyov-24}
 \BKM@entry{id=29,dest={73756273656374696F6E2E342E322E31},srcline={115}}{5C3337365C3337375C303030435C3030306F5C303030725C303030725C303030655C303030635C303030745C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030455C303030615C303030675C303030655C303030725C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
-\@writefile{lol}{\contentsline {listing}{\numberline {13}{\ignorespaces Illustrating the eager dynamic check: eager scope extrusion is caused by the $\texttt  {\textbf  {return}} \,\, {y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST: $\equote [{\splice [z]} + 1]$}}{47}{listing.13}\protected@file@percent }
-\newlabel{listing:eager-scope-extrusion-check-eg}{{13}{47}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return {y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST: $\equote [{\splice [z]} + 1]$}{listing.13}{}}
-\newlabel{listing:eager-scope-extrusion-check-eg@cref}{{[listing][13][]13}{[1][47][]47}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {14}{\ignorespaces The eager dynamic check additionally checks at top-level splices, similarly to the lazy dynamic check.}}{47}{listing.14}\protected@file@percent }
-\newlabel{listing:eager-scope-extrusion-check-eg-tls}{{14}{47}{The eager dynamic check additionally checks at top-level splices, similarly to the lazy dynamic check}{listing.14}{}}
-\newlabel{listing:eager-scope-extrusion-check-eg-tls@cref}{{[listing][14][]14}{[1][47][]47}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Correctness of the Eager Dynamic Check}{47}{subsection.4.2.1}\protected@file@percent }
-\newlabel{subsection:eager-dynamic-correctness}{{4.2.1}{47}{Correctness of the Eager Dynamic Check}{subsection.4.2.1}{}}
-\newlabel{subsection:eager-dynamic-correctness@cref}{{[subsection][1][4,2]4.2.1}{[1][47][]47}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {13}{\ignorespaces Illustrating the eager dynamic check: eager scope extrusion is caused by the $\texttt  {\textbf  {return}} \,\, {y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST: $\equote [{\splice [z]} + 1]$}}{48}{listing.13}\protected@file@percent }
+\newlabel{listing:eager-scope-extrusion-check-eg}{{13}{48}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return {y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST: $\equote [{\splice [z]} + 1]$}{listing.13}{}}
+\newlabel{listing:eager-scope-extrusion-check-eg@cref}{{[listing][13][]13}{[1][48][]48}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {14}{\ignorespaces The eager dynamic check additionally checks at top-level splices, similarly to the lazy dynamic check.}}{48}{listing.14}\protected@file@percent }
+\newlabel{listing:eager-scope-extrusion-check-eg-tls}{{14}{48}{The eager dynamic check additionally checks at top-level splices, similarly to the lazy dynamic check}{listing.14}{}}
+\newlabel{listing:eager-scope-extrusion-check-eg-tls@cref}{{[listing][14][]14}{[1][48][]48}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Correctness of the Eager Dynamic Check}{48}{subsection.4.2.1}\protected@file@percent }
+\newlabel{subsection:eager-dynamic-correctness}{{4.2.1}{48}{Correctness of the Eager Dynamic Check}{subsection.4.2.1}{}}
+\newlabel{subsection:eager-dynamic-correctness@cref}{{[subsection][1][4,2]4.2.1}{[1][48][]48}{}{}{}}
 \citation{kiselyov-14}
 \BKM@entry{id=30,dest={73756273656374696F6E2E342E322E32},srcline={163}}{5C3337365C3337375C303030455C303030785C303030705C303030725C303030655C303030735C303030735C303030695C303030765C303030655C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030455C303030615C303030675C303030655C303030725C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
-\@writefile{lol}{\contentsline {listing}{\numberline {15}{\ignorespaces The eager dynamic check is unsafe: it does not report all occurrences of eager scope extrusion. In the program, we cause eager scope extrusion ($\texttt  {\textbf  {return}} \,\, {y}$), where $y$ refers to the unbound variable $\equote [x]$ and then enter into a non-terminating loop which never refers to $y$.}}{48}{listing.15}\protected@file@percent }
-\newlabel{listing:eager-scope-extrusion-unsafe}{{15}{48}{The eager dynamic check is unsafe: it does not report all occurrences of eager scope extrusion. In the program, we cause eager scope extrusion ($\return {y}$), where $y$ refers to the unbound variable $\equote [x]$ and then enter into a non-terminating loop which never refers to $y$}{listing.15}{}}
-\newlabel{listing:eager-scope-extrusion-unsafe@cref}{{[listing][15][]15}{[1][48][]48}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {16}{\ignorespaces The eager dynamic check additionally will not report eager scope extrusion in the case where the offending AST ($\texttt  {\textbf  {return}} \,\, {y}$, where $y$ is bound to $\texttt  {Var}(x_{\mathbb  {N}})$) is thrown away.}}{48}{listing.16}\protected@file@percent }
-\newlabel{listing:eager-scope-extrusion-unsafe-no-use}{{16}{48}{The eager dynamic check additionally will not report eager scope extrusion in the case where the offending AST ($\return {y}$, where $y$ is bound to $\Var {x}{\mathbb {N}}$) is thrown away}{listing.16}{}}
-\newlabel{listing:eager-scope-extrusion-unsafe-no-use@cref}{{[listing][16][]16}{[1][48][]48}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {17}{\ignorespaces The eager dynamic check will additionally not report cases where the offending AST ($\texttt  {\textbf  {return}} \,\, {y}$, where $y$ is bound to $\texttt  {Var}(x_{\mathbb  {N}})$) is used to build ASTs, but only in safe ways. In this case, the offending AST is bound to $w$, which is only ever used in a safe way: the continuation restores the context that permits $\texttt  {Var}(x_{\mathbb  {N}})$ to be used.}}{48}{listing.17}\protected@file@percent }
-\newlabel{listing:eager-scope-extrusion-unsafe-continue}{{17}{48}{The eager dynamic check will additionally not report cases where the offending AST ($\return {y}$, where $y$ is bound to $\Var {x}{\mathbb {N}}$) is used to build ASTs, but only in safe ways. In this case, the offending AST is bound to $w$, which is only ever used in a safe way: the continuation restores the context that permits $\Var {x}{\mathbb {N}}$ to be used}{listing.17}{}}
-\newlabel{listing:eager-scope-extrusion-unsafe-continue@cref}{{[listing][17][]17}{[1][48][]48}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Expressiveness of the Eager Dynamic Check}{48}{subsection.4.2.2}\protected@file@percent }
-\newlabel{subsection:eager-dynamic-expressiveness}{{4.2.2}{48}{Expressiveness of the Eager Dynamic Check}{subsection.4.2.2}{}}
-\newlabel{subsection:eager-dynamic-expressiveness@cref}{{[subsection][2][4,2]4.2.2}{[1][48][]48}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {18}{\ignorespaces A program which will fail the eager scope extrusion check. The offending AST ($\texttt  {Var}(x_{\mathbb  {N}})$) is used to construct a larger AST in a way that appears to be unsafe $\equote [{\splice [y]+0}]$, but is actually not, since the unsafe AST is then only used in a safe way.}}{48}{listing.18}\protected@file@percent }
+\@writefile{lol}{\contentsline {listing}{\numberline {15}{\ignorespaces The eager dynamic check is unsafe: it does not report all occurrences of eager scope extrusion. In the program, we cause eager scope extrusion ($\texttt  {\textbf  {return}} \,\, {y}$), where $y$ refers to the unbound variable $\equote [x]$ and then enter into a non-terminating loop which never refers to $y$.}}{49}{listing.15}\protected@file@percent }
+\newlabel{listing:eager-scope-extrusion-unsafe}{{15}{49}{The eager dynamic check is unsafe: it does not report all occurrences of eager scope extrusion. In the program, we cause eager scope extrusion ($\return {y}$), where $y$ refers to the unbound variable $\equote [x]$ and then enter into a non-terminating loop which never refers to $y$}{listing.15}{}}
+\newlabel{listing:eager-scope-extrusion-unsafe@cref}{{[listing][15][]15}{[1][49][]49}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {16}{\ignorespaces The eager dynamic check additionally will not report eager scope extrusion in the case where the offending AST ($\texttt  {\textbf  {return}} \,\, {y}$, where $y$ is bound to $\texttt  {Var}(x_{\mathbb  {N}})$) is thrown away.}}{49}{listing.16}\protected@file@percent }
+\newlabel{listing:eager-scope-extrusion-unsafe-no-use}{{16}{49}{The eager dynamic check additionally will not report eager scope extrusion in the case where the offending AST ($\return {y}$, where $y$ is bound to $\Var {x}{\mathbb {N}}$) is thrown away}{listing.16}{}}
+\newlabel{listing:eager-scope-extrusion-unsafe-no-use@cref}{{[listing][16][]16}{[1][49][]49}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {17}{\ignorespaces The eager dynamic check will additionally not report cases where the offending AST ($\texttt  {\textbf  {return}} \,\, {y}$, where $y$ is bound to $\texttt  {Var}(x_{\mathbb  {N}})$) is used to build ASTs, but only in safe ways. In this case, the offending AST is bound to $w$, which is only ever used in a safe way: the continuation restores the context that permits $\texttt  {Var}(x_{\mathbb  {N}})$ to be used.}}{49}{listing.17}\protected@file@percent }
+\newlabel{listing:eager-scope-extrusion-unsafe-continue}{{17}{49}{The eager dynamic check will additionally not report cases where the offending AST ($\return {y}$, where $y$ is bound to $\Var {x}{\mathbb {N}}$) is used to build ASTs, but only in safe ways. In this case, the offending AST is bound to $w$, which is only ever used in a safe way: the continuation restores the context that permits $\Var {x}{\mathbb {N}}$ to be used}{listing.17}{}}
+\newlabel{listing:eager-scope-extrusion-unsafe-continue@cref}{{[listing][17][]17}{[1][49][]49}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Expressiveness of the Eager Dynamic Check}{49}{subsection.4.2.2}\protected@file@percent }
+\newlabel{subsection:eager-dynamic-expressiveness}{{4.2.2}{49}{Expressiveness of the Eager Dynamic Check}{subsection.4.2.2}{}}
+\newlabel{subsection:eager-dynamic-expressiveness@cref}{{[subsection][2][4,2]4.2.2}{[1][49][]49}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {18}{\ignorespaces A program which will fail the eager scope extrusion check. The offending AST ($\texttt  {Var}(x_{\mathbb  {N}})$) is used to construct a larger AST in a way that appears to be unsafe $\equote [{\splice [y]+0}]$, but is actually not, since the unsafe AST is then only used in a safe way.}}{49}{listing.18}\protected@file@percent }
 \BKM@entry{id=31,dest={73756273656374696F6E2E342E322E33},srcline={196}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030455C303030615C303030675C303030655C303030725C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
 \BKM@entry{id=32,dest={73656374696F6E2E342E33},srcline={199}}{5C3337365C3337375C303030425C303030655C303030735C303030745C3030302D5C303030455C303030665C303030665C3030306F5C303030725C303030745C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
-\newlabel{listing:eager-scope-extrusion-looks-unsafe}{{18}{49}{A program which will fail the eager scope extrusion check. The offending AST ($\Var {x}{\mathbb {N}}$) is used to construct a larger AST in a way that appears to be unsafe $\equote [{\splice [y]+0}]$, but is actually not, since the unsafe AST is then only used in a safe way}{listing.18}{}}
-\newlabel{listing:eager-scope-extrusion-looks-unsafe@cref}{{[listing][18][]18}{[1][49][]49}{}{}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Efficiency of the Eager Dynamic Check}{49}{subsection.4.2.3}\protected@file@percent }
-\newlabel{subsection:eager-dynamic-efficiency}{{4.2.3}{49}{Efficiency of the Eager Dynamic Check}{subsection.4.2.3}{}}
-\newlabel{subsection:eager-dynamic-efficiency@cref}{{[subsection][3][4,2]4.2.3}{[1][49][]49}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Best-Effort Dynamic Check}{50}{section.4.3}\protected@file@percent }
-\newlabel{section:best-effort-check}{{4.3}{50}{Best-Effort Dynamic Check}{section.4.3}{}}
-\newlabel{section:best-effort-check@cref}{{[section][3][4]4.3}{[1][49][]50}{}{}{}}
-\zref@newlabel{mdf@pagelabel-16}{\default{4.3}\page{50}\abspage{54}\mdf@pagevalue{50}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.3.{1}}{Best-Effort Scope Extrusion}}{50}{mddefinition.4.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces An illustration of when variables are unmuted. The stack, $E$, grows rightwards. Effects are caught by handlers (\textbf  {\textcolor {darkgrey}{dark grey}}). This captures a portion of the stack (\textbf  {\textcolor {lightgrey}{light grey}}). We track the length of the stack, in \textbf  {white}, that are never captured by an operation in this fashion. Frames in \textbf  {white} will never be able to resume a continuation.}}{51}{figure.4.1}\protected@file@percent }
-\newlabel{fig:unmute-variables-algo}{{4.1}{51}{An illustration of when variables are unmuted. The stack, $E$, grows rightwards. Effects are caught by handlers (\textbf {\textcolor {darkgrey}{dark grey}}). This captures a portion of the stack (\textbf {\textcolor {lightgrey}{light grey}}). We track the length of the stack, in \textbf {white}, that are never captured by an operation in this fashion. Frames in \textbf {white} will never be able to resume a continuation}{figure.4.1}{}}
-\newlabel{fig:unmute-variables-algo@cref}{{[figure][1][4]4.1}{[1][51][]51}{}{}{}}
+\newlabel{listing:eager-scope-extrusion-looks-unsafe}{{18}{50}{A program which will fail the eager scope extrusion check. The offending AST ($\Var {x}{\mathbb {N}}$) is used to construct a larger AST in a way that appears to be unsafe $\equote [{\splice [y]+0}]$, but is actually not, since the unsafe AST is then only used in a safe way}{listing.18}{}}
+\newlabel{listing:eager-scope-extrusion-looks-unsafe@cref}{{[listing][18][]18}{[1][50][]50}{}{}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Efficiency of the Eager Dynamic Check}{50}{subsection.4.2.3}\protected@file@percent }
+\newlabel{subsection:eager-dynamic-efficiency}{{4.2.3}{50}{Efficiency of the Eager Dynamic Check}{subsection.4.2.3}{}}
+\newlabel{subsection:eager-dynamic-efficiency@cref}{{[subsection][3][4,2]4.2.3}{[1][50][]50}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Best-Effort Dynamic Check}{51}{section.4.3}\protected@file@percent }
+\newlabel{section:best-effort-check}{{4.3}{51}{Best-Effort Dynamic Check}{section.4.3}{}}
+\newlabel{section:best-effort-check@cref}{{[section][3][4]4.3}{[1][50][]51}{}{}{}}
+\zref@newlabel{mdf@pagelabel-16}{\default{4.3}\page{51}\abspage{55}\mdf@pagevalue{51}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.3.{1}}{Best-Effort Scope Extrusion}}{51}{mddefinition.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces An illustration of when variables are unmuted. The stack, $E$, grows rightwards. Effects are caught by handlers (\textbf  {\textcolor {darkgrey}{dark grey}}). This captures a portion of the stack (\textbf  {\textcolor {lightgrey}{light grey}}). We track the length of the stack, in \textbf  {white}, that are never captured by an operation in this fashion. Frames in \textbf  {white} will never be able to resume a continuation.}}{52}{figure.4.1}\protected@file@percent }
+\newlabel{fig:unmute-variables-algo}{{4.1}{52}{An illustration of when variables are unmuted. The stack, $E$, grows rightwards. Effects are caught by handlers (\textbf {\textcolor {darkgrey}{dark grey}}). This captures a portion of the stack (\textbf {\textcolor {lightgrey}{light grey}}). We track the length of the stack, in \textbf {white}, that are never captured by an operation in this fashion. Frames in \textbf {white} will never be able to resume a continuation}{figure.4.1}{}}
+\newlabel{fig:unmute-variables-algo@cref}{{[figure][1][4]4.1}{[1][52][]52}{}{}{}}
 \BKM@entry{id=33,dest={73756273656374696F6E2E342E332E31},srcline={342}}{5C3337365C3337375C303030435C3030306F5C303030725C303030725C303030655C303030635C303030745C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030425C303030655C303030735C303030745C3030302D5C303030455C303030665C303030665C3030306F5C303030725C303030745C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Correctness of the Best-Effort Dynamic Check}{52}{subsection.4.3.1}\protected@file@percent }
-\newlabel{subsection:best-effort-correct}{{4.3.1}{52}{Correctness of the Best-Effort Dynamic Check}{subsection.4.3.1}{}}
-\newlabel{subsection:best-effort-correct@cref}{{[subsection][1][4,3]4.3.1}{[1][52][]52}{}{}{}}
-\zref@newlabel{mdf@pagelabel-17}{\default{4.3.1}\page{52}\abspage{56}\mdf@pagevalue{52}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.3.{1}}{Correctness of the Best-Effort Check}}{52}{mdtheorem.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Correctness of the Best-Effort Dynamic Check}{53}{subsection.4.3.1}\protected@file@percent }
+\newlabel{subsection:best-effort-correct}{{4.3.1}{53}{Correctness of the Best-Effort Dynamic Check}{subsection.4.3.1}{}}
+\newlabel{subsection:best-effort-correct@cref}{{[subsection][1][4,3]4.3.1}{[1][53][]53}{}{}{}}
+\zref@newlabel{mdf@pagelabel-17}{\default{4.3.1}\page{53}\abspage{57}\mdf@pagevalue{53}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.3.{1}}{Correctness of the Best-Effort Check}}{53}{mdtheorem.4.3.1}\protected@file@percent }
 \BKM@entry{id=34,dest={73756273656374696F6E2E342E332E32},srcline={355}}{5C3337365C3337375C303030455C303030785C303030705C303030725C303030655C303030735C303030735C303030695C303030765C303030655C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030425C303030655C303030735C303030745C3030302D5C303030455C303030665C303030665C3030306F5C303030725C303030745C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
-\zref@newlabel{mdf@pagelabel-18}{\default{4.3.1}\page{53}\abspage{57}\mdf@pagevalue{53}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Best-Effort Dynamic Check}{53}{subsection.4.3.2}\protected@file@percent }
-\newlabel{subsection:best-effort-expressive}{{4.3.2}{53}{Expressiveness of the Best-Effort Dynamic Check}{subsection.4.3.2}{}}
-\newlabel{subsection:best-effort-expressive@cref}{{[subsection][2][4,3]4.3.2}{[1][53][]53}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {19}{\ignorespaces The best-effort scope extrusion check reports false positives. This program attempts to build the (unsafe) AST $\lambda x.\texttt  {\textbf  {return}} \,\, {y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of $1$. Critically, the program will eventually unmute $\texttt  {Var}(y_{\mathbb  {N}})$, and the surrounding \textbf  {\texttt  {check}} will fail, as $\texttt  {Var}(y_{\mathbb  {N}})$ is free, unbound, and unmuted.}}{53}{listing.19}\protected@file@percent }
-\newlabel{listing:best-effort-imperfect}{{19}{53}{The best-effort scope extrusion check reports false positives. This program attempts to build the (unsafe) AST $\lambda x.\return {y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of $1$. Critically, the program will eventually unmute $\Var {y}{\mathbb {N}}$, and the surrounding \textbf {\texttt {check}} will fail, as $\Var {y}{\mathbb {N}}$ is free, unbound, and unmuted}{listing.19}{}}
-\newlabel{listing:best-effort-imperfect@cref}{{[listing][19][]19}{[1][53][]53}{}{}{}}
-\zref@newlabel{mdf@pagelabel-19}{\default{4.3.2}\page{53}\abspage{57}\mdf@pagevalue{53}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.3.{2}}{Cause for Concern Property}}{53}{mdtheorem.4.3.2}\protected@file@percent }
-\newlabel{thm:best-effort-cause-for-concern}{{4.3.{2}}{53}{Expressiveness of the Best-Effort Dynamic Check}{mdtheorem.4.3.2}{}}
-\newlabel{thm:best-effort-cause-for-concern@cref}{{[mdtheorem][2][4,3]4.3.{2}}{[1][53][]53}{}{}{}}
+\zref@newlabel{mdf@pagelabel-18}{\default{4.3.1}\page{54}\abspage{58}\mdf@pagevalue{54}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Best-Effort Dynamic Check}{54}{subsection.4.3.2}\protected@file@percent }
+\newlabel{subsection:best-effort-expressive}{{4.3.2}{54}{Expressiveness of the Best-Effort Dynamic Check}{subsection.4.3.2}{}}
+\newlabel{subsection:best-effort-expressive@cref}{{[subsection][2][4,3]4.3.2}{[1][54][]54}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {19}{\ignorespaces The best-effort scope extrusion check reports false positives. This program attempts to build the (unsafe) AST $\lambda x.\texttt  {\textbf  {return}} \,\, {y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of $1$. Critically, the program will eventually unmute $\texttt  {Var}(y_{\mathbb  {N}})$, and the surrounding \textbf  {\texttt  {check}} will fail, as $\texttt  {Var}(y_{\mathbb  {N}})$ is free, unbound, and unmuted.}}{54}{listing.19}\protected@file@percent }
+\newlabel{listing:best-effort-imperfect}{{19}{54}{The best-effort scope extrusion check reports false positives. This program attempts to build the (unsafe) AST $\lambda x.\return {y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of $1$. Critically, the program will eventually unmute $\Var {y}{\mathbb {N}}$, and the surrounding \textbf {\texttt {check}} will fail, as $\Var {y}{\mathbb {N}}$ is free, unbound, and unmuted}{listing.19}{}}
+\newlabel{listing:best-effort-imperfect@cref}{{[listing][19][]19}{[1][54][]54}{}{}{}}
+\zref@newlabel{mdf@pagelabel-19}{\default{4.3.2}\page{54}\abspage{58}\mdf@pagevalue{54}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.3.{2}}{Cause for Concern Property}}{54}{mdtheorem.4.3.2}\protected@file@percent }
+\newlabel{thm:best-effort-cause-for-concern}{{4.3.{2}}{54}{Expressiveness of the Best-Effort Dynamic Check}{mdtheorem.4.3.2}{}}
+\newlabel{thm:best-effort-cause-for-concern@cref}{{[mdtheorem][2][4,3]4.3.{2}}{[1][54][]54}{}{}{}}
 \BKM@entry{id=35,dest={73756273656374696F6E2E342E332E33},srcline={396}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030425C303030655C303030735C303030745C3030302D5C303030455C303030665C303030665C3030306F5C303030725C303030745C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
 \BKM@entry{id=36,dest={73656374696F6E2E342E34},srcline={401}}{5C3337365C3337375C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
 \citation{isoda-24}
 \citation{isoda-24}
-\zref@newlabel{mdf@pagelabel-20}{\default{4.3.2}\page{54}\abspage{58}\mdf@pagevalue{54}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Efficiency of the Best-Effort Dynamic Check}{54}{subsection.4.3.3}\protected@file@percent }
-\newlabel{subsection:best-effort-efficient}{{4.3.3}{54}{Efficiency of the Best-Effort Dynamic Check}{subsection.4.3.3}{}}
-\newlabel{subsection:best-effort-efficient@cref}{{[subsection][3][4,3]4.3.3}{[1][54][]54}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{54}{section.4.4}\protected@file@percent }
-\newlabel{section:refined-environment-classifiers-formal}{{4.4}{54}{Refined Environment Classifiers}{section.4.4}{}}
-\newlabel{section:refined-environment-classifiers-formal@cref}{{[section][4][4]4.4}{[1][54][]54}{}{}{}}
+\zref@newlabel{mdf@pagelabel-20}{\default{4.3.2}\page{55}\abspage{59}\mdf@pagevalue{55}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Efficiency of the Best-Effort Dynamic Check}{55}{subsection.4.3.3}\protected@file@percent }
+\newlabel{subsection:best-effort-efficient}{{4.3.3}{55}{Efficiency of the Best-Effort Dynamic Check}{subsection.4.3.3}{}}
+\newlabel{subsection:best-effort-efficient@cref}{{[subsection][3][4,3]4.3.3}{[1][55][]55}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{55}{section.4.4}\protected@file@percent }
+\newlabel{section:refined-environment-classifiers-formal}{{4.4}{55}{Refined Environment Classifiers}{section.4.4}{}}
+\newlabel{section:refined-environment-classifiers-formal@cref}{{[section][4][4]4.4}{[1][55][]55}{}{}{}}
 \citation{isoda-24}
 \citation{isoda-24}
 \citation{yallop-2019}
 \citation{isoda-24}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Extending $\lambda _{\equote [\texttt  {op}]}${} with refined environment classifiers. The only change is that \textsf  {Code} types are now annotated with an environment classifier $\gamma $, highlighted in \textbf  {\textcolor {red}{red}}.}}{55}{figure.4.2}\protected@file@percent }
-\newlabel{fig:rec-source-types}{{4.2}{55}{Extending \sourceLang {} with refined environment classifiers. The only change is that \textsf {Code} types are now annotated with an environment classifier $\gamma $, highlighted in \textbf {\textcolor {red}{red}}}{figure.4.2}{}}
-\newlabel{fig:rec-source-types@cref}{{[figure][2][4]4.2}{[1][55][]55}{}{}{}}
-\zref@newlabel{mdf@pagelabel-21}{\default{4.4}\page{55}\abspage{59}\mdf@pagevalue{55}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{1}}{Extended source type}}{55}{mddefinition.4.4.1}\protected@file@percent }
-\newlabel{dfn:extended-source-type}{{4.4.{1}}{55}{Refined Environment Classifiers}{mddefinition.4.4.1}{}}
-\newlabel{dfn:extended-source-type@cref}{{[mddefinition][1][4,4]4.4.{1}}{[1][55][]55}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {20}{\ignorespaces An example of let-insertion. For the program to be well-typed, the continuation $k$ should be polymorphic over classifiers. To prove that continuations are always polymorphic in this manner, the type system demands that handlers are polymorphic over classifiers as well.}}{55}{listing.20}\protected@file@percent }
-\newlabel{listing:refined-environment-classifiers-let-insertion}{{20}{55}{An example of let-insertion. For the program to be well-typed, the continuation $k$ should be polymorphic over classifiers. To prove that continuations are always polymorphic in this manner, the type system demands that handlers are polymorphic over classifiers as well}{listing.20}{}}
-\newlabel{listing:refined-environment-classifiers-let-insertion@cref}{{[listing][20][]20}{[1][55][]55}{}{}{}}
-\zref@newlabel{mdf@pagelabel-22}{\default{4.4}\page{55}\abspage{59}\mdf@pagevalue{55}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed Expression, Refined Environment Classifiers}}{55}{mddefinition.4.4.2}\protected@file@percent }
-\newlabel{dfn:well-typed-exp-rec}{{4.4.{2}}{55}{Refined Environment Classifiers}{mddefinition.4.4.2}{}}
-\newlabel{dfn:well-typed-exp-rec@cref}{{[mddefinition][2][4,4]4.4.{2}}{[1][55][]55}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Extending $\lambda _{\equote [\texttt  {op}]}${} with refined environment classifiers. The only change is that \textsf  {Code} types are now annotated with an environment classifier $\gamma $, highlighted in \textbf  {\textcolor {red}{red}}.}}{56}{figure.4.2}\protected@file@percent }
+\newlabel{fig:rec-source-types}{{4.2}{56}{Extending \sourceLang {} with refined environment classifiers. The only change is that \textsf {Code} types are now annotated with an environment classifier $\gamma $, highlighted in \textbf {\textcolor {red}{red}}}{figure.4.2}{}}
+\newlabel{fig:rec-source-types@cref}{{[figure][2][4]4.2}{[1][56][]56}{}{}{}}
+\zref@newlabel{mdf@pagelabel-21}{\default{4.4}\page{56}\abspage{60}\mdf@pagevalue{56}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{1}}{Extended source type}}{56}{mddefinition.4.4.1}\protected@file@percent }
+\newlabel{dfn:extended-source-type}{{4.4.{1}}{56}{Refined Environment Classifiers}{mddefinition.4.4.1}{}}
+\newlabel{dfn:extended-source-type@cref}{{[mddefinition][1][4,4]4.4.{1}}{[1][56][]56}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {20}{\ignorespaces An example of let-insertion. For the program to be well-typed, the continuation $k$ should be polymorphic over classifiers. To prove that continuations are always polymorphic in this manner, the type system demands that handlers are polymorphic over classifiers as well.}}{56}{listing.20}\protected@file@percent }
+\newlabel{listing:refined-environment-classifiers-let-insertion}{{20}{56}{An example of let-insertion. For the program to be well-typed, the continuation $k$ should be polymorphic over classifiers. To prove that continuations are always polymorphic in this manner, the type system demands that handlers are polymorphic over classifiers as well}{listing.20}{}}
+\newlabel{listing:refined-environment-classifiers-let-insertion@cref}{{[listing][20][]20}{[1][56][]56}{}{}{}}
+\zref@newlabel{mdf@pagelabel-22}{\default{4.4}\page{56}\abspage{60}\mdf@pagevalue{56}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed Expression, Refined Environment Classifiers}}{56}{mddefinition.4.4.2}\protected@file@percent }
+\newlabel{dfn:well-typed-exp-rec}{{4.4.{2}}{56}{Refined Environment Classifiers}{mddefinition.4.4.2}{}}
+\newlabel{dfn:well-typed-exp-rec@cref}{{[mddefinition][2][4,4]4.4.{2}}{[1][56][]56}{}{}{}}
 \citation{tait-67}
 \citation{isoda-24}
 \citation{kammar-2013}
 \citation{isoda-24}
-\zref@newlabel{mdf@pagelabel-23}{\default{4.4}\page{56}\abspage{60}\mdf@pagevalue{56}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{1}}{Weakening for Level 0 Values}}{56}{mdlemma.4.4.1}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-24}{\default{4.4}\page{56}\abspage{60}\mdf@pagevalue{56}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{2}}{Weakening for Level $-1$ Values}}{56}{mdlemma.4.4.2}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-23}{\default{4.4}\page{57}\abspage{61}\mdf@pagevalue{57}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{1}}{Weakening for Level 0 Values}}{57}{mdlemma.4.4.1}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-24}{\default{4.4}\page{57}\abspage{61}\mdf@pagevalue{57}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{2}}{Weakening for Level $-1$ Values}}{57}{mdlemma.4.4.2}\protected@file@percent }
 \citation{isoda-24}
 \citation{isoda-24}
 \BKM@entry{id=37,dest={73756273656374696F6E2E342E342E31},srcline={599}}{5C3337365C3337375C303030435C3030306F5C303030725C303030725C303030655C303030635C303030745C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
 \citation{benton-09}
-\zref@newlabel{mdf@pagelabel-25}{\default{4.4}\page{57}\abspage{61}\mdf@pagevalue{57}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{57}{subsection.4.4.1}\protected@file@percent }
-\newlabel{subsection:rec-formal-correctness}{{4.4.1}{57}{Correctness of Refined Environment Classifiers}{subsection.4.4.1}{}}
-\newlabel{subsection:rec-formal-correctness@cref}{{[subsection][1][4,4]4.4.1}{[1][57][]57}{}{}{}}
-\zref@newlabel{mdf@pagelabel-26}{\default{4.4.1}\page{57}\abspage{61}\mdf@pagevalue{57}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.4.{1}}{Correctness of Refined Environment Classifiers}}{57}{mdtheorem.4.4.1}\protected@file@percent }
-\newlabel{thm:refined-env-classifiers-correct}{{4.4.{1}}{57}{Correctness of Refined Environment Classifiers}{mdtheorem.4.4.1}{}}
-\newlabel{thm:refined-env-classifiers-correct@cref}{{[mdtheorem][1][4,4]4.4.{1}}{[1][57][]57}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Selected typing rules for refined environment classifiers. The \textbf  {\textsf  {\textcolor {compile}{c}}}{}$\mid $\textbf  {\textsf  {\textcolor {quote}{q}}}{}-\textsc  {Lambda} rule corresponds to \textsc  {C-Abs} in the refined environment classifier literature. Following \citeauthor  {isoda-24}, I restrict handlers and continuations to \textsf  {Code} types; However, I simplify types and typing rules by eliminating polymorphism.}}{58}{figure.4.3}\protected@file@percent }
-\newlabel{fig:refined-env-classifiers-source-typing-rules}{{4.3}{58}{Selected typing rules for refined environment classifiers. The \compilemode {}$\mid $\quotemode {}-\textsc {Lambda} rule corresponds to \textsc {C-Abs} in the refined environment classifier literature. Following \citeauthor {isoda-24}, I restrict handlers and continuations to \textsf {Code} types; However, I simplify types and typing rules by eliminating polymorphism}{figure.4.3}{}}
-\newlabel{fig:refined-env-classifiers-source-typing-rules@cref}{{[figure][3][4]4.3}{[1][57][]58}{}{}{}}
+\zref@newlabel{mdf@pagelabel-25}{\default{4.4}\page{58}\abspage{62}\mdf@pagevalue{58}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{58}{subsection.4.4.1}\protected@file@percent }
+\newlabel{subsection:rec-formal-correctness}{{4.4.1}{58}{Correctness of Refined Environment Classifiers}{subsection.4.4.1}{}}
+\newlabel{subsection:rec-formal-correctness@cref}{{[subsection][1][4,4]4.4.1}{[1][58][]58}{}{}{}}
+\zref@newlabel{mdf@pagelabel-26}{\default{4.4.1}\page{58}\abspage{62}\mdf@pagevalue{58}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.4.{1}}{Correctness of Refined Environment Classifiers}}{58}{mdtheorem.4.4.1}\protected@file@percent }
+\newlabel{thm:refined-env-classifiers-correct}{{4.4.{1}}{58}{Correctness of Refined Environment Classifiers}{mdtheorem.4.4.1}{}}
+\newlabel{thm:refined-env-classifiers-correct@cref}{{[mdtheorem][1][4,4]4.4.{1}}{[1][58][]58}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Selected typing rules for refined environment classifiers. The \textbf  {\textsf  {\textcolor {compile}{c}}}{}$\mid $\textbf  {\textsf  {\textcolor {quote}{q}}}{}-\textsc  {Lambda} rule corresponds to \textsc  {C-Abs} in the refined environment classifier literature. Following \citeauthor  {isoda-24}, I restrict handlers and continuations to \textsf  {Code} types; However, I simplify types and typing rules by eliminating polymorphism.}}{59}{figure.4.3}\protected@file@percent }
+\newlabel{fig:refined-env-classifiers-source-typing-rules}{{4.3}{59}{Selected typing rules for refined environment classifiers. The \compilemode {}$\mid $\quotemode {}-\textsc {Lambda} rule corresponds to \textsc {C-Abs} in the refined environment classifier literature. Following \citeauthor {isoda-24}, I restrict handlers and continuations to \textsf {Code} types; However, I simplify types and typing rules by eliminating polymorphism}{figure.4.3}{}}
+\newlabel{fig:refined-env-classifiers-source-typing-rules@cref}{{[figure][3][4]4.3}{[1][58][]59}{}{}{}}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
-\zref@newlabel{mdf@pagelabel-27}{\default{4.4.1}\page{59}\abspage{63}\mdf@pagevalue{59}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{3}}{\textsf {Scoped}-Induction}}{59}{mddefinition.4.4.3}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-28}{\default{4.4.1}\page{59}\abspage{63}\mdf@pagevalue{59}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{3}}{Closure under Anti-Reduction}}{59}{mdlemma.4.4.3}\protected@file@percent }
-\newlabel{lemma:closure-reduction}{{4.4.{3}}{59}{Correctness of Refined Environment Classifiers}{mdlemma.4.4.3}{}}
-\newlabel{lemma:closure-reduction@cref}{{[mdlemma][3][4,4]4.4.{3}}{[1][59][]59}{}{}{}}
-\zref@newlabel{mdf@pagelabel-29}{\default{4.4.1}\page{59}\abspage{63}\mdf@pagevalue{59}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{4}}{Closed substitution}}{59}{mddefinition.4.4.4}\protected@file@percent }
-\newlabel{dfn:closed-substitution}{{4.4.{4}}{59}{Correctness of Refined Environment Classifiers}{mddefinition.4.4.4}{}}
-\newlabel{dfn:closed-substitution@cref}{{[mddefinition][4][4,4]4.4.{4}}{[1][59][]59}{}{}{}}
+\zref@newlabel{mdf@pagelabel-27}{\default{4.4.1}\page{60}\abspage{64}\mdf@pagevalue{60}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{3}}{\textsf {Scoped}-Induction}}{60}{mddefinition.4.4.3}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-28}{\default{4.4.1}\page{60}\abspage{64}\mdf@pagevalue{60}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{3}}{Closure under Anti-Reduction}}{60}{mdlemma.4.4.3}\protected@file@percent }
+\newlabel{lemma:closure-reduction}{{4.4.{3}}{60}{Correctness of Refined Environment Classifiers}{mdlemma.4.4.3}{}}
+\newlabel{lemma:closure-reduction@cref}{{[mdlemma][3][4,4]4.4.{3}}{[1][60][]60}{}{}{}}
+\zref@newlabel{mdf@pagelabel-29}{\default{4.4.1}\page{60}\abspage{64}\mdf@pagevalue{60}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.4.{4}}{Closed substitution}}{60}{mddefinition.4.4.4}\protected@file@percent }
+\newlabel{dfn:closed-substitution}{{4.4.{4}}{60}{Correctness of Refined Environment Classifiers}{mddefinition.4.4.4}{}}
+\newlabel{dfn:closed-substitution@cref}{{[mddefinition][4][4,4]4.4.{4}}{[1][60][]60}{}{}{}}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
 \citation{biernacki-2017}
 \BKM@entry{id=38,dest={73756273656374696F6E2E342E342E32},srcline={730}}{5C3337365C3337375C303030455C303030785C303030705C303030725C303030655C303030735C303030735C303030695C303030765C303030655C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
-\zref@newlabel{mdf@pagelabel-30}{\default{4.4.1}\page{60}\abspage{64}\mdf@pagevalue{60}}
-\zref@newlabel{mdf@pagelabel-31}{\default{4.4.1}\page{60}\abspage{64}\mdf@pagevalue{60}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{4}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{60}{mdlemma.4.4.4}\protected@file@percent }
-\newlabel{lemma:fundamental}{{4.4.{4}}{60}{Correctness of Refined Environment Classifiers}{mdlemma.4.4.4}{}}
-\newlabel{lemma:fundamental@cref}{{[mdlemma][4][4,4]4.4.{4}}{[1][60][]60}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces The definition of the \textsf  {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet  {plotkin-2025} and \citet  {kuchta-2023}, where the well-foundedness of the definition is additionally justified.}}{61}{figure.4.4}\protected@file@percent }
-\newlabel{fig:logical-relation-defn}{{4.4}{61}{The definition of the \textsf {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet {plotkin-2025} and \citet {kuchta-2023}, where the well-foundedness of the definition is additionally justified}{figure.4.4}{}}
-\newlabel{fig:logical-relation-defn@cref}{{[figure][4][4]4.4}{[1][60][]61}{}{}{}}
+\zref@newlabel{mdf@pagelabel-30}{\default{4.4.1}\page{61}\abspage{65}\mdf@pagevalue{61}}
+\zref@newlabel{mdf@pagelabel-31}{\default{4.4.1}\page{61}\abspage{65}\mdf@pagevalue{61}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.4.{4}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{61}{mdlemma.4.4.4}\protected@file@percent }
+\newlabel{lemma:fundamental}{{4.4.{4}}{61}{Correctness of Refined Environment Classifiers}{mdlemma.4.4.4}{}}
+\newlabel{lemma:fundamental@cref}{{[mdlemma][4][4,4]4.4.{4}}{[1][61][]61}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces The definition of the \textsf  {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet  {plotkin-2025} and \citet  {kuchta-2023}, where the well-foundedness of the definition is additionally justified.}}{62}{figure.4.4}\protected@file@percent }
+\newlabel{fig:logical-relation-defn}{{4.4}{62}{The definition of the \textsf {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet {plotkin-2025} and \citet {kuchta-2023}, where the well-foundedness of the definition is additionally justified}{figure.4.4}{}}
+\newlabel{fig:logical-relation-defn@cref}{{[figure][4][4]4.4}{[1][61][]62}{}{}{}}
 \BKM@entry{id=39,dest={73656374696F6E2E342E35},srcline={759}}{5C3337365C3337375C303030455C303030765C303030615C3030306C5C303030755C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C30303065}
 \bibdata{library}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{62}{subsection.4.4.2}\protected@file@percent }
-\newlabel{subsection:rec-formal-expressiveness}{{4.4.2}{62}{Expressiveness of Refined Environment Classifiers}{subsection.4.4.2}{}}
-\newlabel{subsection:rec-formal-expressiveness@cref}{{[subsection][2][4,4]4.4.2}{[1][60][]62}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {21}{\ignorespaces The typing rules for refined environment classifiers forbid any program which attempts to extrude some variable $x$ to a handler. Even if $x$ is unused, or is resumed safely, this program will not type check.}}{62}{listing.21}\protected@file@percent }
-\newlabel{listing:refined-environment-classifiers-expressiveness}{{21}{62}{The typing rules for refined environment classifiers forbid any program which attempts to extrude some variable $x$ to a handler. Even if $x$ is unused, or is resumed safely, this program will not type check}{listing.21}{}}
-\newlabel{listing:refined-environment-classifiers-expressiveness@cref}{{[listing][21][]21}{[1][62][]62}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {22}{\ignorespaces Refined environment classifiers allow variables to be passed via effects, so long as the variable can never cause a scope extrusion error. In the program above, performing an effect with $z$ will never cause a scope extrusion error.}}{62}{listing.22}\protected@file@percent }
-\newlabel{listing:refined-environment-classifiers-safe}{{22}{62}{Refined environment classifiers allow variables to be passed via effects, so long as the variable can never cause a scope extrusion error. In the program above, performing an effect with $z$ will never cause a scope extrusion error}{listing.22}{}}
-\newlabel{listing:refined-environment-classifiers-safe@cref}{{[listing][22][]22}{[1][62][]62}{}{}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt  {op}]}${}}{62}{section.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{63}{subsection.4.4.2}\protected@file@percent }
+\newlabel{subsection:rec-formal-expressiveness}{{4.4.2}{63}{Expressiveness of Refined Environment Classifiers}{subsection.4.4.2}{}}
+\newlabel{subsection:rec-formal-expressiveness@cref}{{[subsection][2][4,4]4.4.2}{[1][61][]63}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {21}{\ignorespaces The typing rules for refined environment classifiers forbid any program which attempts to extrude some variable $x$ to a handler. Even if $x$ is unused, or is resumed safely, this program will not type check.}}{63}{listing.21}\protected@file@percent }
+\newlabel{listing:refined-environment-classifiers-expressiveness}{{21}{63}{The typing rules for refined environment classifiers forbid any program which attempts to extrude some variable $x$ to a handler. Even if $x$ is unused, or is resumed safely, this program will not type check}{listing.21}{}}
+\newlabel{listing:refined-environment-classifiers-expressiveness@cref}{{[listing][21][]21}{[1][63][]63}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {22}{\ignorespaces Refined environment classifiers allow variables to be passed via effects, so long as the variable can never cause a scope extrusion error. In the program above, performing an effect with $z$ will never cause a scope extrusion error.}}{63}{listing.22}\protected@file@percent }
+\newlabel{listing:refined-environment-classifiers-safe}{{22}{63}{Refined environment classifiers allow variables to be passed via effects, so long as the variable can never cause a scope extrusion error. In the program above, performing an effect with $z$ will never cause a scope extrusion error}{listing.22}{}}
+\newlabel{listing:refined-environment-classifiers-safe@cref}{{[listing][22][]22}{[1][63][]63}{}{}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt  {op}]}${}}{63}{section.4.5}\protected@file@percent }
 \bibcite{abrahams-04}{{1}{2004}{{Abrahams and Gurtovoy}}{{}}}
 \bibcite{bauer-2014}{{2}{2014}{{Bauer and Pretnar}}{{}}}
 \bibcite{benton-09}{{3}{2009}{{Benton and Hur}}{{}}}
@@ -509,4 +509,4 @@
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{19.79993pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{28.79993pt}
 \@writefile{toc}{\providecommand\tocbasic@end@toc@file{}\tocbasic@end@toc@file}
-\gdef \@abspage@last{70}
+\gdef \@abspage@last{71}

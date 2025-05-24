@@ -202,96 +202,54 @@ To illustrate the purpose of the modes, consider the following meta-program, whi
 
 \begin{center}
   \begin{tikzpicture}
-  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
   \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
-  
+  \node[anchor=north] at ($(example.south west) + (0.375cm, -0.1cm)$) {\compilemode{}};
   \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
-  
+  \node[anchor=north] at ($(example.south west) + (2.25cm, -0.1cm)$) {\splicemode{}};
   \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
-  
+  \node[anchor=north] at ($(example.south west) + (4.18cm, -0.1cm)$) {\splicemode{}};
   \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
-  
-  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
-  
-  \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
-  
-  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
-  
-  \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
-  
+  \node[anchor=north] at ($(example.south west) + (4.8655cm, -0.1cm)$) {\quotemode{}};
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (5.8cm, 0.06cm)$) rectangle ($(example.south west) + (7.65cm, -0cm)$);
+  \node[anchor=north] at ($(example.south west) + (6.7cm, -0.1cm)$) {\splicemode{}};
+  \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (8.07cm, 0.06cm)$) rectangle ($(example.south west) + (8.27cm, -0cm)$);
+  \node[anchor=north] at ($(example.south west) + (8.17cm, -0.1cm)$) {\quotemode{}};
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.75cm, 0.06cm)$) rectangle ($(example.south west) + (9.75cm, -0cm)$);
+  \node[anchor=north] at ($(example.south west) + (9.25cm, -0.1cm)$) {\splicemode{}};
+  \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.95cm, 0.06cm)$) rectangle ($(example.south west) + (10.65cm, -0cm)$);
+  \node[anchor=north] at ($(example.south west) + (10.35cm, -0.1cm)$) {\compilemode{}};
   \end{tikzpicture}
   \end{center}
 
 \begin{enumerate}
   \item[\compilemode] Identifies AST nodes that are \textcolor{compile}{\textbf{ambient}} (within which computation may take place) and \textcolor{compile}{\textbf{inert}} (cannot themselves be manipulated at compile-time). 
   
-  \begin{center}
-    \begin{tikzpicture}
-    \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
-    \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
-    
-    \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
-    
-    \end{tikzpicture}
-    \end{center}
-
+\begin{center}
+  \begin{tikzpicture}
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
+  \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.95cm, 0.06cm)$) rectangle ($(example.south west) + (10.65cm, -0cm)$);
+  \end{tikzpicture}
+  \end{center}
   \item[\splicemode] Identifies code that can be executed at compile-time to \textcolor{splice}{\textbf{manipulate ASTs}}. Will be fully reduced at compile-time, and will not appear at run-time. 
   \begin{center}
-    \begin{tikzpicture}
-    \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
-    
-    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
-    
-    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
-    
-    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
-    
-    \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
-    
-    \end{tikzpicture}
-    \end{center}
+  \begin{tikzpicture}
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
+  \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.75cm, 0.06cm)$) rectangle ($(example.south west) + (9.75cm, -0cm)$);
+  \end{tikzpicture}
+  \end{center}
 
   \item[\quotemode] Identifies code that \textcolor{quote}{\textbf{builds ASTs}} (like \compilemode-mode) that can be manipulated at compile-time (unlike \compilemode-mode), to create run-time programs. 
-  \begin{center}
-    \begin{tikzpicture}
-    \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}}]) +3$};
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
-    
-    \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (5.75cm, 0.06cm)$) rectangle ($(example.south west) + (7.55cm, -0cm)$);
-    
-    \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (7.98cm, 0.06cm)$) rectangle ($(example.south west) + (8.17cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (8.6cm, 0.06cm)$) rectangle ($(example.south west) + (9.55cm, -0cm)$);
-    
-    \draw[fill = fade, draw=fade, anchor = north west] ($(example.south west) + (9.8cm, 0.06cm)$) rectangle ($(example.south west) + (10.5cm, -0cm)$);
-    
-    \end{tikzpicture}
-    \end{center}
+\begin{center}
+  \begin{tikzpicture}
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
+  \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (8.07cm, 0.06cm)$) rectangle ($(example.south west) + (8.27cm, -0cm)$);
+  \end{tikzpicture}
+  \end{center}
   \end{enumerate}
 
 We may also describe how \textit{transitions} between modes occur:
@@ -657,7 +615,7 @@ Second, I extend \efflang{} with machinery for scope extrusion checking. This co
 \begin{enumerate}
 \item \err{}, an error state for indicating the presence of scope extrusion,
 \item \textbf{\texttt{check}}, a guarded \textbf{\texttt{return}} construct that either detects scope extrusion, and transitions to \textbf{\texttt{err}}, or does not detect scope extrusion, and transitions to \textbf{\texttt{return}},
-\item \textbf{\texttt{check$_M$}}, which behaves similarly to \textbf{\texttt{check}}, but (for reasons I will explain in [LATER CHAPTER]) allows a set of \textit{muted} variables $M$ to \textit{temporarily} extrude their scope,
+\item \textbf{\texttt{check$_M$}}, which behaves similarly to \textbf{\texttt{check}}, but (for reasons I will explain in \Cref{section:best-effort-check}) allows a set of \textit{muted} variables $M$ to \textit{temporarily} extrude their scope,
 \item \textbf{\texttt{dlet}}, a primitive for tracking which variables are well-scoped and which have extruded their scope,
 \item \textbf{\texttt{tls}}, a marker for where top-level splices would have occurred in the source program. This is for \textit{ease of reasoning only}. 
 \end{enumerate}
@@ -761,7 +719,7 @@ Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$
 
 It may seem lazy of me to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}, and I define the elaboration. Therefore, I am the (only) \coreLang{} user, and the onus is on me to justify that my elaboration uses \textbf{\texttt{check}} appropriately. 
 
-I also introduce \textbf{\texttt{check}}$_M$ as a variant of \textbf{\texttt{check}}. As I will explain in [LATER CHAPTER], to design a good scope extrusion check, it is necessary to \textit{mute} some variables, pretending that they are properly scoped. \textbf{\texttt{check}}$_M$ will behave exactly like \textbf{\texttt{check}}, except that it will also pretend the muted variables $M$ are properly scoped.
+I also introduce \textbf{\texttt{check}}$_M$ as a variant of \textbf{\texttt{check}}. As I will explain in \Cref{section:best-effort-check}, to design a good scope extrusion check, it is necessary to \textit{mute} some variables, pretending that they are properly scoped. \textbf{\texttt{check}}$_M$ will behave exactly like \textbf{\texttt{check}}, except that it will also pretend the muted variables $M$ are properly scoped.
 
 Similarly, when justifying the correctness of scope extrusion checks, it will be useful to remember the position of top-level splices in the \sourceLang{} source program. This is the purpose of \textbf{\texttt{tls}}, which should be interpreted as a no-op (\textsc{Sec-Tls}).
 
