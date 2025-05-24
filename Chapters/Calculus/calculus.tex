@@ -1022,7 +1022,7 @@ The proof is by induction on the typing rules, as in the example in the previous
 We can also prove that the core language \coreLang{} satisfies appropriate progress and preservation properties. 
 
 \begin{theorem}[Progress]{coreHighlight} 
-If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ such that for all $\Var{\alpha}{T} \text{ or } \Binder{\alpha}{T} \in t$, $\alpha \in U$ either 
+If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
 \begin{enumerate}
 \item $t$ of the form $\return{n}$ and $E = [-]$,
 \item $t$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
@@ -1038,7 +1038,7 @@ If
   \item $\Gamma \vdash E[t]: T$ and 
   \item $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
   \end{enumerate}
-  then $\Gamma \vdash E'[t']: T$ and for all $\Var{\alpha}{T} \text{ or } \Binder{\alpha}{T} \in t'$, $\alpha \in U'$
+  then $\Gamma \vdash E'[t']: T$ 
 \end{theorem}
 Proof proceeds by induction over the operational semantics. Once again, I only need to consider the augmented rules, which are very simple. 
 
