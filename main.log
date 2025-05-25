@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  25 MAY 2025 11:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  25 MAY 2025 12:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1449,10 +1449,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250525114634 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250525123110 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250525114634 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250525123110 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/C4DEFEAE2EE5A678530ED3CC7853E435.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1492,11 +1492,6 @@ LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
 [2]
 LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <17.28> not available
 (Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 71.
-
-Overfull \hbox (2.19424pt too wide) in paragraph at lines 77--78
-\OT1/qpl/m/n/12 oc-cu-pies a ``goldilocks zone'' be-tween ex-pres-sive-ness ([][]Sec-tion 4.3.2[][]) and ef-fi-ciency
- []
-
 ) (./Chapters/Background/background.tex
 
 [3]
@@ -1647,41 +1642,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 346--347
 \openout8 = `main.listing'.
 
  (./_minted/A9843D7E435ACE06F2E45CB8509E3428.highlight.minted)
-
-[18]
-Package mdframed Info: mdframed works in twoside mode on input line 494.
-Package hyperref Info: bookmark level for unknown mddefinition defaults to 0 on input line 494.
-Package mdframed Info: mdframed works in twoside mode on input line 504.
-Package hyperref Info: bookmark level for unknown mdtheorem defaults to 0 on input line 504.
+Package mdframed Info: mdframed works in twoside mode on input line 493.
+Package hyperref Info: bookmark level for unknown mddefinition defaults to 0 on input line 493.
+Package mdframed Info: mdframed works in twoside mode on input line 503.
+Package hyperref Info: bookmark level for unknown mdtheorem defaults to 0 on input line 503.
 LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
-(Font)              scaled to size 12.0pt on input line 507.
+(Font)              scaled to size 12.0pt on input line 506.
 
 
 LaTeX Font Warning: Font shape `OT1/zi4/b/it' undefined
-(Font)              using `OT1/zi4/b/n' instead on input line 507.
+(Font)              using `OT1/zi4/b/n' instead on input line 506.
 
 LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <12> not available
-(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 508.
-Package mdframed Info: mdframed works in twoside mode on input line 513.
-Package mdframed Info: mdframed works in twoside mode on input line 517.
-Package hyperref Info: bookmark level for unknown mdcorollary defaults to 0 on input line 517.
+(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 507.
+
+
+[18]
+Package mdframed Info: mdframed works in twoside mode on input line 512.
+Package mdframed Info: mdframed works in twoside mode on input line 516.
+Package hyperref Info: bookmark level for unknown mdcorollary defaults to 0 on input line 516.
 
 
 [19]
-Overfull \hbox (2.15034pt too wide) in paragraph at lines 605--606
+Overfull \hbox (2.15034pt too wide) in paragraph at lines 604--605
 []\OT1/zi4/m/it/12 OCaml \OT1/qpl/m/n/12 al-lows the pro-gram-mer to choose be-tween shal-low and deep han-dlers. Since
+ []
+
+) (./Chapters/Background/Scope Extrusion/scope-extrusion.tex
+
+[20]
+
+[21]
+Overfull \hbox (2.36963pt too wide) in paragraph at lines 65--66
+\OT1/qpl/m/n/12 dy-namic check loses in-for-ma-tion about \OT1/qpl/m/it/12 which pro-gram frag-ment \OT1/qpl/m/n/12 was re-spon-si-ble for scope
  []
 
 
 
-[20]) (./Chapters/Background/Scope Extrusion/scope-extrusion.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[21]
-
 [22]
+Overfull \hbox (2.15352pt too wide) in paragraph at lines 187--188
+[]\OT1/qpl/m/n/12 With clas-si-fiers, I may now be pre-cise about ``the vari-ables per-mit-ted to be free (within
+ []
+
+
 
 [23]
 
@@ -1977,13 +1980,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 717--719
 
 [64]
 chapter 5.
+
+Underfull \hbox (badness 10000) in paragraph at lines 16--29
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 30--39
+
+ []
+
 ) (./main.bbl
 
 [65
 
 ]
 
-[66
+[66]
+
+[67
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 126--130
@@ -1997,20 +2012,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 126--130
 
 
 
-[67]
+[68]
 Underfull \hbox (badness 4193) in paragraph at lines 223--226
 \OT1/qpl/m/n/12 programming.  \OT1/qpl/m/it/12 ACM Trans-ac-tions on Pro-gram-ming Lan-guages and Sys-tems
  []
 
 
 
-[68])
+[69])
 \tf@thm=\write10
 \openout10 = `main.thm'.
 
 
 
-[69] (./main.aux)
+[70] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-03-26>
@@ -2026,18 +2041,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 47979 strings out of 469626
- 1045157 string characters out of 5471004
+ 47986 strings out of 469626
+ 1045213 string characters out of 5471004
  1677872 words of memory out of 5000000
- 73176 multiletter control sequences out of 15000+600000
+ 73177 multiletter control sequences out of 15000+600000
  884645 words of font info for 221 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  122i,28n,134p,10944b,1528s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary6.pfb>
-Output written on main.pdf (73 pages, 952080 bytes).
+Output written on main.pdf (74 pages, 954661 bytes).
 PDF statistics:
- 1368 PDF objects out of 1440 (max. 8388607)
- 1193 compressed objects within 12 object streams
- 360 named destinations out of 1000 (max. 500000)
- 333 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1389 PDF objects out of 1440 (max. 8388607)
+ 1212 compressed objects within 13 object streams
+ 366 named destinations out of 1000 (max. 500000)
+ 341 words of extra memory for PDF output out of 10000 (max. 10000000)
 

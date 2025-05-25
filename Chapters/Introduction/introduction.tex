@@ -35,7 +35,7 @@ $(m ())
 \end{macocaml}
 Importantly, the macro \texttt{m} is executed by the compiler, \textit{at compile time}. The Arm and Intel variants are \textit{generated from a single specification}, not manually duplicated.
 
-To support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These ``suspended programs'' are best thought of as abstract syntax trees. The following code constructs the program $(\lambda x. x) 1$.
+To support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These suspended programs are best thought of as abstract syntax trees. The following code constructs the program $(\lambda x. x) 1$.
 \begin{ocaml}
 if (cpu_type == Arm) then 
   let build_app (f: (int -> int) expr) (v: int expr) = App(f, v)
@@ -66,7 +66,7 @@ First, I am not studying scope extrusion in a vacuum, but rather am working towa
 
 Second, and more importantly, I lacked a way to evaluate solutions fairly and holistically. Our evaluation criterion is three-pronged: correctness, efficiency, and expressiveness. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its own definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
 
-This thesis solves both these problems. In \Cref{chapter:calculus}, I design a common language for encoding and evaluating different solutions. In \Cref{chapter:scope-extrusion}, I use the designed language to formally describe and evaluate various checks. This process led to a novel Best-Effort dynamic check (\Cref{section:best-effort-check}), which I will argue occupies a ``goldilocks'' zone, and should be adopted by MacoCaml.
+This thesis solves both these problems. In \Cref{chapter:calculus}, I design a common language for encoding and evaluating different solutions. In \Cref{chapter:scope-extrusion}, I use the designed language to formally describe and evaluate various checks. This process led to a novel Best-Effort dynamic check (\Cref{section:best-effort-check}), which I will argue occupies a goldilocks zone, and should be adopted by MacoCaml.
 
 \section{Contributions}
 
@@ -74,7 +74,7 @@ Concretely, the contributions of this work are:
 \begin{enumerate}
     \item A novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time (\Cref{chapter:calculus}). \calculusName{} is well-typed, has the expected metatheoretic properties (\Cref{section:metatheory}), and is designed to facilitate comparative evaluation of different scope extrusion checks (\Cref{chapter:scope-extrusion}).
     \item In \calculusName{}, a formal description of the MetaOCaml check described by \citet{kiselyov-14} (\Cref{subsubsection:eager-dynamic-check}), as well as an evaluation of its correctness (\Cref{subsection:eager-dynamic-correctness}), expressiveness (\Cref{subsection:eager-dynamic-expressiveness}), and efficiency (\Cref{subsection:eager-dynamic-efficiency}).
-    \item In \calculusName{}, a formal description of a novel Dynamic Best-Effort check (\Cref{section:best-effort-check}), which I prove correct (\Cref{subsection:best-effort-correct}), and argue, by comparison with other checks, occupies a ``goldilocks zone'' between expressiveness (\Cref{subsection:best-effort-expressive}) and efficiency (\Cref{subsection:best-effort-efficient}). 
+    \item In \calculusName{}, a formal description of a novel Dynamic Best-Effort check (\Cref{section:best-effort-check}), which I prove correct (\Cref{subsection:best-effort-correct}), and argue, by comparison with other checks, occupies a goldilocks zone between expressiveness (\Cref{subsection:best-effort-expressive}) and efficiency (\Cref{subsection:best-effort-efficient}). 
     \item An encoding of refined environment classifiers \citep{kiselyov-16} into \calculusName{}, with a proof of correctness via logical relation (\Cref{subsection:rec-formal-correctness}), and an evaluation of its expressiveness compared to other checks (\Cref{subsection:rec-formal-expressiveness}).
     \item Implementations of the three dynamic checks in MacoCaml.
 \end{enumerate}

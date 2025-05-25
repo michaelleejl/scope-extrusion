@@ -11,13 +11,13 @@
 \contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt {do} and \texttt {return}}{12}{subsubsection*.6}%
 \contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{13}{subsubsection*.8}%
 \contentsline {subsubsection}{\nonumberline Operational Semantics}{14}{subsubsection*.10}%
-\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{16}{subsubsection*.12}%
+\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{15}{subsubsection*.12}%
 \contentsline {subsubsection}{\nonumberline Metatheory}{19}{subsubsection*.14}%
 \contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{19}{subsection.2.2.3}%
 \contentsline {section}{\numberline {2.3}Scope Extrusion}{21}{section.2.3}%
 \contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{22}{subsection.2.3.1}%
 \contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{22}{subsubsection*.16}%
-\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{23}{subsubsection*.18}%
+\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{22}{subsubsection*.18}%
 \contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{23}{subsubsection*.20}%
 \contentsline {chapter}{\numberline {3}Calculus}{27}{chapter.3}%
 \contentsline {section}{\numberline {3.1}The Source Language: $\lambda _{\equote [\texttt {op}]}${}}{27}{section.3.1}%
@@ -52,4 +52,5 @@
 \contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{62}{subsection.4.4.2}%
 \contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{62}{section.4.5}%
 \contentsline {chapter}{\numberline {5}Conclusion}{65}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Limitations and Future Work}{65}{section.5.1}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

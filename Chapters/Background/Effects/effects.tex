@@ -488,7 +488,6 @@ The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
   \item[(4)] That the handler \textit{only} removes \textbf{\texttt{print}} from the effects row, and no other effects. This check passes, but would fail if we tried to type the handler with, for example, $\handlerType{\effectType[\{ \textbf{\texttt{print}}, \textbf{\texttt{get}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$
   \item[(5)] That there are no other handlers for \textbf{\texttt{print}} in $h$.
 \end{enumerate}
-A full typing derivation may be found in the appendix.
 
 Finally, I define a notion of well-typed computation. 
 \begin{definition}[Well-typed computation]{effHighlight}
