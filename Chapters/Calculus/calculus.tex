@@ -117,7 +117,7 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
 
   Second, \textbf{effect rows are stratified into $\xi$ (run-time) and $\Delta$ (compile-time).}\\
   In the following example, we print $1$ at compile-time, and $2$ at run-time. Further, we read an integer at run-time.
-\[\splice[(\textbf{\texttt{print}}(1); \equote[\textbf{\texttt{print}}(2); \textbf{\texttt{readInt}}()])]\]
+\[\splice[{(\textbf{\texttt{print}}(1); \equote[\textbf{\texttt{print}}(2); \textbf{\texttt{readInt}}()])}]\]
 Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. We may now disambiguate between different computation types:
 \begin{enumerate}[leftmargin=5.8\parindent]
   \item[$T^0 \quad\quad\,\,$] Compile-time value, run-time value (value types) \\
