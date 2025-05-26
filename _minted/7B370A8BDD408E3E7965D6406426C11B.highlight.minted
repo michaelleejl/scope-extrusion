@@ -1,0 +1,15 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{type} \PYG{o}{(}\PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{o}{,} \PYG{k}{\PYGZsq{}}\PYG{n}{b}\PYG{o}{)} \PYG{n}{tree} \PYG{o}{=} \PYG{n+nc}{Lf} \PYG{o}{|} \PYG{n+nc}{Br} \PYG{k}{of} \PYG{k}{\PYGZsq{}}\PYG{n}{a} \PYG{o}{*} \PYG{k}{\PYGZsq{}}\PYG{n}{b} \PYG{o}{*} \PYG{n}{tree} \PYG{o}{*} \PYG{n}{tree}
+
+\PYG{k}{let} \PYG{k}{rec} \PYG{n}{find} \PYG{o}{(}\PYG{n}{t}\PYG{o}{:} \PYG{n}{tree}\PYG{o}{)} \PYG{o}{(}\PYG{n}{k}\PYG{o}{:} \PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{o}{)} \PYG{o}{=} \PYG{k}{match} \PYG{n}{t} \PYG{k}{with}
+ \PYG{o}{|} \PYG{n+nc}{Lf} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k}{raise} \PYG{n+nc}{NotFound}\PYG{n+nb+bp}{()}
+ \PYG{o}{|} \PYG{n+nc}{Br}\PYG{o}{(}\PYG{n}{k\PYGZsq{}}\PYG{o}{,} \PYG{n}{v}\PYG{o}{,} \PYG{n}{l}\PYG{o}{,} \PYG{n}{r}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k}{if} \PYG{n}{k} \PYG{o}{=}\PYG{o}{=} \PYG{n}{k\PYGZsq{}} \PYG{k}{then} \PYG{n}{v}
+                      \PYG{k}{else} \PYG{k}{if} \PYG{n}{k} \PYG{o}{\PYGZlt{}} \PYG{n}{k\PYGZsq{}} \PYG{k}{then} \PYG{n}{find} \PYG{n}{l} \PYG{n}{k}
+                           \PYG{k}{else} \PYG{n}{find} \PYG{n}{r} \PYG{n}{k}
+
+\PYG{k}{let} \PYG{k}{rec} \PYG{n}{update} \PYG{o}{(}\PYG{n}{t}\PYG{o}{:} \PYG{n}{tree}\PYG{o}{)} \PYG{o}{(}\PYG{n}{k}\PYG{o}{:} \PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{o}{)} \PYG{o}{(}\PYG{n}{v}\PYG{o}{:} \PYG{k}{\PYGZsq{}}\PYG{n}{b}\PYG{o}{)} \PYG{o}{=} \PYG{k}{match} \PYG{n}{t} \PYG{k}{with}
+  \PYG{o}{|} \PYG{n+nc}{Lf} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nc}{Br}\PYG{o}{(}\PYG{n}{k}\PYG{o}{,} \PYG{n}{v}\PYG{o}{,} \PYG{n+nc}{Lf}\PYG{o}{,} \PYG{n+nc}{Lf}\PYG{o}{)}
+  \PYG{o}{|} \PYG{n+nc}{Br}\PYG{o}{(}\PYG{n}{k\PYGZsq{}}\PYG{o}{,} \PYG{n}{v\PYGZsq{}}\PYG{o}{,} \PYG{n}{l}\PYG{o}{,} \PYG{n}{r}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k}{if} \PYG{n}{k} \PYG{o}{=}\PYG{o}{=} \PYG{n}{k\PYGZsq{}} \PYG{k}{then} \PYG{n+nc}{Br}\PYG{o}{(}\PYG{n}{k}\PYG{o}{,} \PYG{n}{v}\PYG{o}{,} \PYG{n}{l}\PYG{o}{,} \PYG{n}{r}\PYG{o}{)}
+                        \PYG{k}{else} \PYG{k}{if} \PYG{n}{k} \PYG{o}{\PYGZlt{}} \PYG{n}{k\PYGZsq{}} \PYG{k}{then} \PYG{n+nc}{Br}\PYG{o}{(}\PYG{n}{k\PYGZsq{}}\PYG{o}{,} \PYG{n}{v\PYGZsq{}}\PYG{o}{,} \PYG{n}{update} \PYG{n}{l} \PYG{n}{k} \PYG{n}{v}\PYG{o}{,} \PYG{n}{r}\PYG{o}{)}
+                        \PYG{k}{else} \PYG{n+nc}{Br}\PYG{o}{(}\PYG{n}{k\PYGZsq{}}\PYG{o}{,} \PYG{n}{v\PYGZsq{}}\PYG{o}{,} \PYG{n}{l}\PYG{o}{,} \PYG{n}{update} \PYG{n}{r} \PYG{n}{k} \PYG{n}{v}\PYG{o}{)}
+\end{MintedVerbatim}

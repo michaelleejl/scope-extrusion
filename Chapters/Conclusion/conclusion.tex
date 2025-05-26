@@ -1,0 +1,53 @@
+\chapter{Conclusion}
+
+In this thesis, I have made significant progress on four fronts. 
+
+\begin{enumerate}
+\item I build a novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time. I prove standard metatheoretic results about \calculusName{}.
+
+\item I formally describe and evaluate a range of scope extrusion solutions in \calculusName{}, including the existing MacoCaml check \citep{kiselyov-14} and the refined environment classifiers approach \citep{kiselyov-16}. Such comparison was facilitated by \calculusName{}, validating its design.
+
+\item I formally describe and evaluate a novel Best-Effort check, which I prove is correct, and argue by comparison with other checks, occupies a goldilocks zone between expressiveness and efficiency.
+
+\item I implement all three dynamic checks (lazy, eager, and best-effort) in MacoCaml. 
+\end{enumerate}
+
+\section{Limitations and Future Work}
+\begin{minipage}[t]{0.25\textwidth}
+  \textbf{\textsf{Let-Insertion}}
+\end{minipage}%
+\begin{minipage}[t]{0.75\textwidth}
+  This thesis was primarily concern with the \textit{undesirable} interaction of metaprogramming and effects, rather than their \textit{desirable} interaction: the previously described let-insertion \citep{yallop-2019}. 
+  \vspace{2mm}
+
+  I argue that \calculusName{} is an ideal target in which to study let-insertion. Let-insertion has typically been studied in calculi where only pure programs can be generated \citep{isoda-24}. Let-insertion is more interesting when one can generate effectful programs. Since the order of operation becomes more important, it can be more challenging to describe an ``optimal'' insertion point.
+  \vspace{2mm}
+
+  Additionally, I wish to extend my proof-of-correctness for refined environment classifiers to include polymorphism, and thus permit a form of let-insertion. 
+  \vspace{4mm}
+\end{minipage}\\
+
+\noindent\begin{minipage}[t]{0.25\textwidth}
+  \textbf{\textsf{Empirical Studies}}
+\end{minipage}%
+\begin{minipage}[t]{0.75\textwidth}
+  I asserted that the dynamic checks differ in efficency, but in the common case, rather than worst case. I would like to verify this with empirical studies.
+  \vspace{2mm}
+
+  \citet{kiselyov-14} additionally considers the \textit{usability} of scope extrusion solutions, in terms of the informativeness of error messages. I did not consider this in my evaluation, but would like to perform user studies to more thoroughly evaluate usability.
+  \vspace{4mm}
+\end{minipage}\\
+
+\noindent\begin{minipage}[t]{0.25\textwidth}
+  \textbf{\textsf{Formalisation}}
+\end{minipage}%
+\begin{minipage}[t]{0.75\textwidth}
+  The proofs in this thesis are pen-and-paper proofs. However, several are quite intricate (for example, the fundamental lemma of the \textsf{Scoped} logical relation). To ensure correctness, these proofs ought to be formalised in a theorem prover.
+\end{minipage}
+
+
+
+
+
+
+

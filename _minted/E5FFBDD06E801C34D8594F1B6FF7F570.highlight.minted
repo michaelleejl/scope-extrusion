@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let} \PYG{n}{memcpy} \PYG{n}{source} \PYG{n}{target} \PYG{n}{n} \PYG{o}{=} \PYG{k}{if} \PYG{o}{(}\PYG{n}{architecture} \PYG{o}{=}\PYG{o}{=} \PYG{n+nc}{AArch64}\PYG{o}{)} \PYG{k}{then}
+                               \PYG{c}{(*}\PYG{c}{ return this program }\PYG{c}{*)}
+                             \PYG{k}{else}
+                                \PYG{k}{match} \PYG{n}{vector\PYGZus{}extensions} \PYG{k}{with}
+                                \PYG{o}{|} \PYG{n+nc}{None} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{c}{(*}\PYG{c}{ return this program }\PYG{c}{*)}
+                                \PYG{o}{|} \PYG{n+nc}{Some}\PYG{o}{(}\PYG{n+nc}{AVX512}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{c}{(*}\PYG{c}{ return this program }\PYG{c}{*)}
+                                \PYG{o}{|} \PYG{o}{..}\PYG{o}{.}
+\PYG{n}{memcpy} \PYG{n}{source} \PYG{n}{target} \PYG{n}{n}
+\end{MintedVerbatim}
