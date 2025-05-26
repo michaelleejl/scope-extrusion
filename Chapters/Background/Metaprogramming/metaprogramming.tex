@@ -3,9 +3,9 @@ What is MacoCaml-style metaprogramming? I will provide an answer in two steps. F
 
 \subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
 
-Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''\footnote{Though not the worst answer: ``use ChatGPT''}. Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
+Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''. Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
 
-I illustrate this tension by considering a concrete problem. Consider computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume $f$ of type \mintinline{ocaml}{differentiable}
+For example, consider computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume $f$ of type \mintinline{ocaml}{differentiable}
 
 \begin{ocaml}
 type differentiable = Sin | Tanh | Sigmoid | `$\ldots$`
@@ -18,7 +18,7 @@ For example, the following expression represents $\sin\circ \tanh$.
 Compose(Tanh, Sin)
 \end{ocaml}
 
-We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}.\ The \mintinline{ocaml}{grad_main} function (\Cref{listing:ocaml-grad-main}) is one maintainable way to computes gradients: 
+We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}.\ The \mintinline{ocaml}{grad_main} function (\Cref{listing:ocaml-grad-main}) is one maintainable way to compute gradients: 
 
 \begin{code}
 \begin{ocamllst}
@@ -48,7 +48,7 @@ let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
 
 Although \mintinline{ocaml}{grad_fast} only works for a single $f$, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
 
-The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over $f$. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is more specialised to a specific $f$. More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
+The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over $f$. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is specialised to a specific $f$. More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
 
 The tension between maintainability (abstraction) and efficiency (specialisation) has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
@@ -59,9 +59,9 @@ How does one write maintainable and efficient code, \textbf{when one cannot trus
 One answer is metaprogramming, which gives users the ability to perform code-generation. Programmers may thus take matters into their own hands: manually generating optimised code when the compiler may not automatically do so for them. The \mintinline{ocaml}{grad} function in \texttt{JAX}, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
 
 \subsubsection{Speeding up exponentiation with Metaprogramming}
-Metaprogramming allows for code-generation via the creation and manipulation of abstract syntax trees (ASTs). I will now illustrate how metaprogramming works with reference to MacoCaml, which implements \textit{compile-time} metaprogramming. 
+Metaprogramming allows for code-generation via the creation and manipulation of abstract syntax trees (ASTs). I will now illustrate how metaprogramming works with reference to MacoCaml, which allows for \textit{compile-time} metaprogramming. 
 
-While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a morally equivalent, but simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable implementation is the \mintinline{ocaml}{pow} function (\Cref{listing:ocaml-pow-maintainable}):
+While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable implementation is the \mintinline{ocaml}{pow} function (\Cref{listing:ocaml-pow-maintainable}):
 
 \begin{code}
 \begin{ocamllst}
@@ -75,7 +75,7 @@ let rec pow (n: int) (x: int) =
 
 As it may be applied to any exponent \mintinline{ocaml}{n}, \mintinline{ocaml}{pow} is analogous to \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}), which could be applied to \textit{any} differentiable function $f$. 
 
-However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ =$ \mintinline{ocaml}{2}, then a more efficient, but less maintainable implementation, is the \mintinline{ocaml}{square} function (\Cref{listing:ocaml-pow-fast}), analogous to \mintinline{ocaml}{grad_fast} (\Cref{listing:ocaml-grad-fast}).
+However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ =$ \mintinline{ocaml}{2}, then a more efficient (but less maintainable) implementation is the \mintinline{ocaml}{square} function (\Cref{listing:ocaml-pow-fast}), analogous to \mintinline{ocaml}{grad_fast} (\Cref{listing:ocaml-grad-fast}).
 
 \begin{code}
 \begin{ocamllst}
@@ -102,7 +102,7 @@ square 3 (*at runtime: 9*)
 % Notice that \mintinline{ocaml}{pow_gen} broadly resembles \mintinline{ocaml}{pow}, with the exception of \textit{metaprogramming annotations} like \mintinline{ocaml}{<<>>} and \mintinline{ocaml}{$}. These . 
 Recall that (compile-time) metaprogramming gives the programmer the ability to generate programs at compile-time, for use at run-time. We may build this in two steps, by:
 \begin{enumerate}
-  \item Deciding on a representation for code values, such that code can be created and manipulated by programs. Once we have a representation for code values, it is possible to write expressions that return code values. These expressions serve as program generators.
+  \item Deciding on a representation for code values, such that code can be created and manipulated by programs. With representation for code values, it is possible to write expressions that return code values. These expressions serve as program generators.
   \item Building a mechanism for executing expressions \textit{at compile-time}. We can constrain this mechanism, using types, so only generators can be executed at compile-time. 
 \end{enumerate}
 
@@ -146,7 +146,7 @@ let cube y = $(pow_gen 3 Var(y)) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
 
 % The ability to create and manipulate ASTs, combined with the ability to construct and execute functions at compile-time, allows for compile-time code generation. In the example below, we execute \mintinline{ocaml}{add_zero} at compile-time to generate the program \mintinline{ocaml}{(1*2)+0}.
 Further, rather than explicit AST constructors, ASTs are created by the \mintinline{ocaml}{<<>>} (``quote'') and \mintinline{ocaml}{$} annotations. Quotation creates ASTs, by converting a program into its AST representation. For example,
-\[\text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}\]
+\[\text{\mintinline{ocaml}{<< x + 0 >>}} = \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}\]
 Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion, allowing for programs that \textit{manipulate} ASTs. 
 
 \[ \text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(x, Int(0))}} \]
@@ -169,7 +169,7 @@ let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
 \end{macocaml}
 where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
 \subsection{The Design Space of Metalanguages}\label{subsection:metaprogramming-design}
-Different metalanguages provide slightly different variants of metaprogramming to the user. In this section, I taxonomise these languages by considering three key design decisions:
+Different metalanguages provide slightly different variants of metaprogramming to the user. I taxonomise these languages by considering three key design decisions:
 \begin{enumerate}
   \item \textbf{\textsf{Homogenous or Heterogenous}}\\
          \textit{Do the generated (``object'') and generating (``meta'') languages agree or differ?}

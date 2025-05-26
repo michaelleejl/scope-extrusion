@@ -28,7 +28,7 @@ $\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Na
   \label{listing:efflang-scope-extrusion}
   \end{code}
 
-It is difficult to give a precise definition to scope extrusion, because there are multiple competing definitions \citep{kiselyov-14,kiselyov-16}, and many are given informally. For example, is scope extrusion a property of the \textit{result} of evaluation \citep{kiselyov-16}, as in \Cref{listing:efflang-scope-extrusion}, or is it a property of \textit{intermediate} configurations \citep{kiselyov-14}? We can, for example, build ASTs with extruded variables, that are bound at some future point. In \Cref{listing:efflang-maybe-scope-extrusion}, we produce the intermediate AST $\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})$, which is not well scoped. However, the result of evaluation is well scoped: $\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}$. Does \Cref{listing:efflang-maybe-scope-extrusion} exhibit scope extrusion?
+It is difficult to give a precise definition to scope extrusion, because there are multiple competing definitions \citep{kiselyov-14,kiselyov-16}, and many are given informally. For example, is scope extrusion a property of the \textit{result} of evaluation \citep{kiselyov-16}, as in \Cref{listing:efflang-scope-extrusion}, or is it a property of \textit{intermediate} configurations \citep{kiselyov-14}? We can, for example, build ASTs with extruded variables that are bound at some future point. In \Cref{listing:efflang-maybe-scope-extrusion}, we produce the intermediate AST $\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})$, which is not well scoped. However, the result of evaluation is well scoped: $\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\texttt{Nat}({0}), \Var{x}{\mathbb{N}})}$. Does \Cref{listing:efflang-maybe-scope-extrusion} exhibit scope extrusion?
 
 
 \begin{code}
@@ -52,17 +52,13 @@ It is difficult to give a precise definition to scope extrusion, because there a
 \label{listing:efflang-maybe-scope-extrusion}
 \end{code}
 
-Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scope-extrusion}. Making precise the competing definitions of scope extrusion these competing definitions, and their relation to one another, is a contribution of this dissertation. 
+Nevertheless, all definitions agree on the example in \Cref{listing:efflang-scope-extrusion}. Making precise the competing definitions of scope extrusion is a contribution of this dissertation. 
 
 \subsection{Existing Solutions to the Scope Extrusion Problem}
 There are multiple solutions to the problem of scope extrusion. The solution space can be broadly divided into two types of approaches: static (type-based) and dynamic. I will now survey two dynamic approaches, which I term the lazy and eager checks, and one static approach, the method of refined environment classifiers \citep{kiselyov-16,isoda-24}. 
 
 \subsubsection{Lazy Dynamic Check}\label{subsubsection:lazy-dynamic-check}
 Scope extrusion, at least, of the kind in \Cref{listing:efflang-no-scope-extrusion}, may seem trivial to resolve: evaluate the program to completion, and check that the resulting AST is well-scoped \citep{kiselyov-14}. I term this the Lazy Dynamic Check. This approach, while clearly correct and maximally expressive, is not ideal for efficiency and error reporting reasons. 
-
-To illustrate the inefficiency of this approach, consider a slight variation of \Cref{listing:efflang-scope-extrusion}, \Cref{listing:efflang-lazy-scope-extrusion-inefficient}. In \Cref{listing:efflang-lazy-scope-extrusion-inefficient}, we can, in theory, report a warning as soon scope extrusion is detected. However, waiting for the result of the program can be much more inefficient. 
-
-In terms of error reporting, note that, in waiting for the result of execution, the lazy dynamic check loses information about \textit{which program fragment} was responsible for scope extrusion, reducing the informativeness of reported errors \citep{kiselyov-14}.  
 
 \begin{code}
   \begin{efflst}
@@ -85,6 +81,10 @@ In terms of error reporting, note that, in waiting for the result of execution, 
 \captionof{listing}{A \efflang{} program that evaluates to the $\Var{x}{\mathbb{N}}$. Executing the entire program to determine if it exhibits scope extrusion is inefficient.}%
 \label{listing:efflang-lazy-scope-extrusion-inefficient}
 \end{code}
+
+To illustrate the inefficiency of this approach, consider a slight variation of \Cref{listing:efflang-scope-extrusion}, \Cref{listing:efflang-lazy-scope-extrusion-inefficient}. In \Cref{listing:efflang-lazy-scope-extrusion-inefficient}, we can, in theory, report a warning as soon scope extrusion is detected. However, waiting for the result of the program can be much more inefficient. 
+
+In terms of error reporting, note that, in waiting for the result of execution, the lazy dynamic check loses information about \textit{which program fragment} was responsible for scope extrusion, reducing the informativeness of reported errors \citep{kiselyov-14}.  
 
 \subsubsection{Eager Dynamic Check}\label{subsubsection:eager-dynamic-check}
 A second dynamic check, motivated by the problems with the Lazy Dynamic Check, adopts a stricter definition of scope extrusion. During the code generation process, one inserts checks into the running program, reporting errors when one encounters  unbound free variables in intermediate ASTs. Hence, the Eager Dynamic Check would classify the program in \Cref{listing:efflang-maybe-scope-extrusion} as exhibiting scope extrusion. The Eager Dynamic Check has been adopted by BER MetaOCaml, and offers better efficiency and error reporting guarantees over the Lazy Dynamic Check \citep{kiselyov-14}.
@@ -186,7 +186,7 @@ As every variable binder creates a scope, we may refer to the classifier created
 
 With classifiers, I may now be precise about ``the variables permitted to be free (within the scope)''. As illustrated by the nesting in \Cref{fig:refined-enviroment-classifiers-basic}, scopes are related to other scopes. For example, since the scope $\gamma_{fx}$ is created within scope $\gamma_{f}$, any variable tagged with $\gamma_f$ may be safely used in the scope $\gamma_{fx}$. I say $\gamma_f$ is compatible with $\gamma_{fx}$, and write 
 \[\gamma_{f} \sqsubseteq \gamma_{fx}\]
-The compatibility relation ($\sqsubseteq$) is a partial order, meaning $\sqsubseteq$ is reflexive, anti-symmetric, and transitive, and identifies a smallest classifier. Reflexivity expresses that  $\texttt{Var}(\alpha)$ may be used within the scope it creates
+The compatibility relation ($\sqsubseteq$) is a partial order, meaning $\sqsubseteq$ is reflexive, anti-symmetric, and transitive. Further, it identifies a smallest classifier. Reflexivity expresses that  $\texttt{Var}(\alpha)$ may be used within the scope it creates
 \[\forall \gamma. \, \gamma \sqsubseteq \gamma \] 
 anti-symmetric, since nesting only proceeds in one direction
 \[\forall \gamma_1, \gamma_2. \, \gamma_1 \sqsubseteq \gamma_2 \land \gamma_2 \sqsubseteq \gamma_1 \implies \gamma_1 = \gamma_2 \] 
@@ -292,12 +292,12 @@ The above example focused on \textbf{creating} ASTs, and had no compile-time exe
 
 Key to the prevention of scope extrusion is the typing of handlers and operations, like \textbf{\texttt{extrude}}, that manipulate ASTs. Since these rules are complex, I describe them informally. The handle expression
 \[\handleWith{e}{h}\]
-is in scope $\gamma_{\bot}$. Therefore, for each operation handled by $h$, such as \textbf{\texttt{extrude}}, the argument to the operation must either not be an AST, or be an AST that is well-scoped at some $\gamma \sqsubseteq \gamma_{\bot}$. 
+is in scope $\gamma_{\bot}$. Therefore, for each operation handled by $h$ (e.g.\textbf{\texttt{extrude}}), the argument to the operation must either not be an AST, or be an AST that is well-scoped at some $\gamma \sqsubseteq \gamma_{\bot}$. 
 % We 
 % \[\textbf{\texttt{extrude}}: \texttt{AST}(\mathbb{N})^{\gamma_{\bot}} \to 1^{\gamma_{\bot}}\]
 However, $\texttt{Var}(\alpha)$ is typed at $\gamma_{\alpha}$, and clearly, $\gamma_{\alpha} \not\sqsubseteq \gamma_{\bot}$. There is thus no way to type the scope extrusion example in \Cref{listing:efflang-scope-extrusion}.
 
-Note that the analysis was independent of the \textit{body} of the handler. Therefore, the examples in \Cref{listing:efflang-maybe-not-scope-extrusion,listing:efflang-maybe-scope-extrusion} are \textit{also} not well-typed. Perhaps somewhat surprisingly, so too is \Cref{listing:efflang-no-scope-extrusion} (which would pass both the Eager and Lazy Dynamic Checks). Refined environment classifiers statically prevent variables ($\texttt{Var}(\alpha)$) from becoming \textit{available} in program fragments ($\texttt{\textbf{op}}(y, k) \mapsto \ldots$) where, \textit{if misused}, \textit{might} result in scope extrusion. This is, of course, an over-approximation. It means that the refined environment classifiers check prevents not only both types of scope extrusion, but even more benign examples, such as that in \Cref{listing:efflang-no-scope-extrusion}.
+Note that the analysis was independent of the \textit{body} of the handler. Therefore, the examples in \Cref{listing:efflang-maybe-not-scope-extrusion,listing:efflang-maybe-scope-extrusion} are \textit{also} not well-typed. Perhaps somewhat surprisingly, so too is \Cref{listing:efflang-no-scope-extrusion} (which would pass both the Eager and Lazy Dynamic Checks). Refined environment classifiers statically prevent variables ($\texttt{Var}(\alpha)$) from becoming \textit{available} in program fragments ($\texttt{\textbf{op}}(y, k) \mapsto \ldots$) where, \textit{if misused}, \textit{might} result in scope extrusion. This is, of course, an over-approximation that will reject benign programs (\Cref{listing:efflang-no-scope-extrusion}).
 
 \begin{code}
   \begin{efflst}

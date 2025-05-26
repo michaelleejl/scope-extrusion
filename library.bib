@@ -58,21 +58,11 @@
   series    = {Haskell '02}
 }
 
-@inproceedings{10.1145/182409.182483,
-  author    = {Lawall, Julia L. and Danvy, Olivier},
-  title     = {Continuation-based partial evaluation},
-  year      = {1994},
-  isbn      = {0897916433},
-  publisher = {Association for Computing Machinery},
-  address   = {New York, NY, USA},
-  url       = {https://doi.org/10.1145/182409.182483},
-  doi       = {10.1145/182409.182483},
-  abstract  = {Binding-time improvements aim at making partial evaluation (a.k.a. program specialization) yield a better result. They have been achieved so far mostly by hand-transforming the source program. We observe that as they are better understood, these hand-transformations are progressively integrated into partial evaluators, thereby alleviating the need for source-level binding-time improvements.Control-based binding-time improvements, for example, follow this pattern: they have evolved from ad-hoc source-level rewrites to a systematic source-level transformation into continuation-passing style (CPS). Recently, Bondorf has explicitly integrated the CPS transformation into the specializer, thus partly alleviating the need for source-level CPS transformation. This CPS integration is remarkably effective but very complex and goes beyond a simple CPS transformation. We show that it can be achieved directly by using the control operators shift and reset, which provide access to the current continuation as a composable procedure.We automate, reproduce, and extend Bondorf's results, and describe how this approach scales up to hand-writing partial-evaluation compilers. The first author has used this method to bootstrap the new release of Consel's partial evaluator Schism. The control operators not only allow the partial evaluator to remain in direct style, but also can speed up partial evaluation significantly.},
-  booktitle = {Proceedings of the 1994 ACM Conference on LISP and Functional Programming},
-  pages     = {227–238},
-  numpages  = {12},
-  location  = {Orlando, Florida, USA},
-  series    = {LFP '94}
+@misc{huceke-memcpy,
+  author       = {huceke},
+  title        = {memcpy.c},
+  howpublished = {\url{https://github.com/huceke/xine-lib-vaapi/blob/master/src/xine-utils/memcpy.c}},
+  note         = {Accessed: 2025-05-26}
 }
 
 @article{lawall-94,

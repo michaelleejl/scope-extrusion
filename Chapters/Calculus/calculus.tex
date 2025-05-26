@@ -35,7 +35,7 @@
   \label{fig:elaboration-then-execution}
 \end{figure}
 
-To re-iterate, I am considering the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). In this chapter, I describe a calculus, \calculusName{}, for studying said interaction. \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to extend \calculusName{} with various scope extrusion checks, such that the checks may be evaluated in a comparative fashion. 
+This thesis considers the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). This chapter describes a calculus, \calculusName{}, for studying said interaction.\ \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to extend \calculusName{} with various scope extrusion checks, such that the checks may be evaluated in a comparative fashion. 
 
 Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
 
@@ -55,11 +55,11 @@ In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang
 \caption{\sourceLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of quotes and splices.}
 \label{fig:source-syntax}
 \end{figure}
-\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{}, following a fine-grain call-by-value approach, divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax})
+\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{} divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax})
 
-Notice that we cannot quote values: we \textit{must} generate effectful programs. For example, $\equote[1]$ is not valid syntax, instead, one must write $\equote[\return{1}]$. However, for clarity, I will abuse notation and write $\equote[1]$. Similarly, $\equote[\return{1}]$ is a computation, not a value, so one must write 
+Notice that we cannot quote values: we \textit{must} generate effectful programs. For example, $\equote[1]$ is not valid syntax, instead, one must write $\equote[\return{1}]$. Similarly, $\equote[\return{1}]$ is a computation, not a value, so one must write 
 \[\bind{a}{\equote[\return{1}]}{\op{a}}\]
-rather than $\op{\, \equote[\return{1}] \,}$. Once again, I will abuse notation for clarity.
+rather than $\op{\, \equote[\return{1}] \,}$. However, in both cases, I will abuse notation for clarity.
 
 \subsection{Type System}
 \begin{figure}
@@ -92,7 +92,7 @@ rather than $\op{\, \equote[\return{1}] \,}$. Once again, I will abuse notation 
   \label{fig:source-types}
 \end{figure}
 
-I will now introduce the \sourceLang{} type system, by first introducing the types, and then the typing rules. The \sourceLang{} types are summarised in \Cref{fig:source-types}. I highlight three important details: types are stratified into two levels ($-1$ for compile-time and $0$ for run-time), effect rows are similarly stratified, and run-time code is made available at compile-time via a \textsf{Code} type.
+I will now introduce the \sourceLang{} type system. The \sourceLang{} types are summarised in \Cref{fig:source-types}. I highlight three important details: types are stratified into two levels ($-1$ for compile-time and $0$ for run-time), effect rows are similarly stratified, and run-time code is made available at compile-time via a \textsf{Code} type.
 
 First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-1}$ (compile-time).}
 
@@ -100,7 +100,7 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
   \[\lambda x: \mathbb{N}. \, \$(3 + x)\]
   However, removing the splice makes the program well-typed
   \[\lambda x: \mathbb{N}. \, 3 + x\]
-  Following \citet{xie-2023}, I introduce integer levels to enforce separation between compile-time and run-time naturals. While the precise notion of level is slightly more involved (see below), for my purposes, it is sufficient to think of level $0$ as run-time (so $\mathbb{N}^0$ is a run-time natural), and $-1$ for compile-time. The ill-typed example becomes
+  Following \citet{xie-2023}, I introduce integer levels to enforce separation between compile-time and run-time naturals. While the precise notion of level is slightly more involved (see below), for my purposes, it is sufficient to think of level $0$ as run-time (so $\mathbb{N}^0$ is a run-time natural), and $-1$ as compile-time. The ill-typed example becomes
   \[\lambda x: \mathbb{N}^0. \, \$(\textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{-1})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})})\]
   and the well-typed example 
   \[\lambda x: \mathbb{N}^0. \, \textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{0})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})}\]
@@ -110,10 +110,10 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
     The level of an expression $e$ is calculated by subtracting the number of surrounding splices from the number of surrounding quotations.
   \end{definition}
 
-  The definition of level generalises to multi-stage languages, where negative levels ($-1, -2, \ldots$) represent compile-time and non-negative levels ($0, 1, \ldots$) represent run-time. In a multi-staged language, separation is even more granular: for example, level $1$ and level $0$ naturals, despite both being run-time naturals, are disambiguated. However, since we only deal with two stages, we only consider two levels, $0$ and $-1$. The definition, and the examples above, further imply that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a run-time program. 
+  The definition of level generalises to multi-stage languages, where negative levels ($-1, -2, \ldots$) represent compile-time and non-negative levels ($0, 1, \ldots$) represent run-time. In a multi-staged language, separation is even more granular: for example, level $1$ and level $0$ run-time naturals are disambiguated. However, since I only deal with two stages, it is sufficient to consider only levels $0$ and $-1$. The definition, and the examples above, further imply that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a run-time program. 
 
 
-  Notice that the opening question was slightly devious\footnote{sorry}! We cannot assign a type to \textit{program fragments}, like $3$, since without knowledge of the wider context, we cannot know which level we are at: in the ill-typed example, $3$ occurs under a splice, but no quotes, so it has type $\mathbb{N}^{-1}$, and in the well-typed example, it has type $\mathbb{N}^0$. Unless otherwise stated, I will always assume program fragments are not nested in any quotes or splices, and thus occur at level $0$.
+  Notice that the opening question was slightly devious\footnote{sorry}! We cannot assign a type to \textit{program fragments}, like $3$, since without knowledge of the wider context, we cannot know which level we are at: in the ill-typed example, $3$ occurs under a splice, but no quotes, so it has type $\mathbb{N}^{-1}$, and in the well-typed example, it has type $\mathbb{N}^0$. Unless otherwise stated, I will always assume program fragments occur at level $0$.
 
   Second, \textbf{effect rows are stratified into $\xi$ (run-time) and $\Delta$ (compile-time).}\\
   In the following example, we print $1$ at compile-time, and $2$ at run-time. Further, we read an integer at run-time.
@@ -132,7 +132,7 @@ Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{pr
 % As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
 Third, \textbf{there is an level $-1$ \textsf{Code} type, representing run-time ASTs.}\\ 
-  By stratifying types to two levels, we have ensured that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable meta-programming, run-time terms \textit{should be available} at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms.
+  By stratifying types, we have ensured that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable meta-programming, run-time terms \textit{should be available} at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms.
 % Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
 
 Putting it all together, we can now interpret complex \sourceLang{} types, like 
@@ -608,7 +608,7 @@ The compile-time function \texttt{mkfun} is a higher-order function that takes s
 \[\texttt{mkfun} \,  (\lambda a. \equote[{\splice[(a)]} + 1]) \]
 In the example \sourceLang{} program, $k$ calls \texttt{mkfun}. This means that one constructs a \textit{nested} function, whose formal parameters are bound to $a$ and $b$ respectively. If we simply elaborated $x$ into $\Binder{x}{\mathbb{N}}$, we would bind both $a$ and $b$ to $\Binder{x}{\mathbb{N}}$, and generate the following (incorrect) AST: 
  \[\return{\texttt{Lam}(\Binder{x}{\mathbb{N}}, \texttt{Lam}(\Binder{x}{\mathbb{N}}, \texttt{Ret}(\texttt{Pair}(\Var{x}{\mathbb{N}}, \Var{x}{\mathbb{N}}))))}\]
- The problem is that we do not have $\alpha$-renaming ``for free''. We thus need to ensure that \texttt{mkfun} is elaborated into a function that generates \textit{fresh} names for $x$ each time it is called. This is the purpose of \textbf{\texttt{mkvar}}. 
+ We thus need to ensure that \texttt{mkfun} is elaborated into a function that generates \textit{fresh} names for $x$ each time it is called. This is the purpose of \textbf{\texttt{mkvar}}. 
 \end{enumerate}
 
 Second, I extend \efflang{} with machinery for scope extrusion checking. This comprises:

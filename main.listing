@@ -1,1 +1,1 @@
-type _ Effect.t += Print: nat -> unit
+type _ Effect.t += Op: A -> B

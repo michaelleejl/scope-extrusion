@@ -1,7 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let} \PYG{n}{f} \PYG{n+nb+bp}{()} \PYG{o}{=} \PYG{k}{if} \PYG{o}{(}\PYG{n}{cpu\PYGZus{}type} \PYG{o}{=}\PYG{o}{=} \PYG{n+nc}{Arm}\PYG{o}{)} \PYG{k}{then}
-             \PYG{c}{(*}\PYG{c}{ return this program }\PYG{c}{*)}
-           \PYG{k}{else}
-             \PYG{c}{(*}\PYG{c}{ return this program }\PYG{c}{*)}
-\PYG{n}{f} \PYG{n+nb+bp}{()}
-\end{MintedVerbatim}
