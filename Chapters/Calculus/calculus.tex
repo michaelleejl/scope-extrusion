@@ -88,7 +88,7 @@ rather than $\op{\, \equote[\return{1}] \,}$. However, in both cases, I will abu
     & \text{Handlers} & \handlerType{T_1^{-1} \, ! \, \Delta}{T_2^{-1} \, ! \, \Delta'}
   \end{array}$
   \end{source-desc}
-  \caption{\sourceLang{} types. I highlight three important elements: first, types are stratified into two levels, $0$ and $-1$. Second, effects are stratified into two levels, $\xi$ (for run-time effects) and $\Delta$ for compile-time effects. Third, the \textsf{Code} type allows for compile-time programs to manipulate ASTs of run-time code.}
+  \caption{\sourceLang{} types. Types are stratified into two levels, $0$ and $-1$. Similarly, effects are stratified into two levels, $\xi$ (for run-time effects) and $\Delta$ (for compile-time effects). The \textsf{Code} type allows for compile-time programs to manipulate ASTs of run-time code.}
   \label{fig:source-types}
 \end{figure}
 
@@ -387,7 +387,7 @@ $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma
 
 \end{center}
 \end{source-desc}
-\caption{The \compilemode{}-mode and \quotemode{}-mode typing rules for \sourceLang{}. The rules are nearly identical to the \efflang{} typing rules, with the exception of level annotations on types. Two additional rules, \textsc{(\compilemode{}-Splice)} (top-level splice) and \textsc{(\quotemode{}-Splice)} formalise the transition to \splicemode{}-mode.}%
+\caption{The \compilemode{}-mode and \quotemode{}-mode typing rules for \sourceLang{}. The rules are nearly identical to the \efflang{} typing rules. Two additional rules, \textsc{(\compilemode{}-Splice)} (top-level splice) and \textsc{(\quotemode{}-Splice)} formalise the transition to \splicemode{}-mode.}%
 \label{fig:source-cq-typing-rules}
 \end{figure}
 
@@ -509,7 +509,7 @@ $\inferrule[(\splicemode{}-Continuation)]
 
 \end{center}
   \end{source-desc}
-\caption{The \splicemode{}-mode typing rules for \sourceLang{}. The rules are exactly identical to the \efflang{} typing rules, with the exception of level annotations on types, and the additional \textsc{(Quote)} rule, which makes level $0$ code available at compile-time. }%
+\caption{The \splicemode{}-mode typing rules for \sourceLang{}. The rules (sans levels) are exactly identical to the \efflang{} typing rules. The additional \textsc{\splicemode{}-Quote} rule makes level $0$ code available at compile-time. }%
 \label{fig:source-s-typing-rules}
 \end{figure}
 
@@ -723,7 +723,8 @@ I also introduce \textbf{\texttt{check}}$_M$ as a variant of \textbf{\texttt{che
 
 Similarly, when justifying the correctness of scope extrusion checks, it will be useful to remember the position of top-level splices in the \sourceLang{} source program. This is the purpose of \textbf{\texttt{tls}}, which should be interpreted as a no-op (\textsc{Sec-Tls}).
 
-The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, behave as normal, but additionally mute or unmute \texttt{Var}s. The operations of muting and unmuting are best explained in [THE NEXT CHAPER]. For now, they are \textbf{\textcolor{coreHighlight}{highlighted}}, and can be mostly ignored. At a high level, when an operation is performed, we mute some set of variables, and potentially update the point at which they should be unmuted. When we remove a declared variable, we additionally check if we ought to unmute variables (and do so if we should).
+The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, behave as normal, but additionally mute or unmute \texttt{Var}s. Muting and unmuting are explained in \Cref{section:best-effort-check}. For now, they are \textbf{\textcolor{coreHighlight}{highlighted}}, and can be ignored. 
+% At a high level, when an operation is performed, we mute some set of variables, and potentially update the point at which they should be unmuted. When we remove a declared variable, we additionally check if we ought to unmute variables (and do so if we should).
 
 \subsection{Type System}
 Extending the types is similarly straightforward. I add only two types: a \textsf{Binder} type and an \textsf{AST} type. The types are summarised in \Cref{fig:core-types}.
@@ -885,12 +886,11 @@ Elaborating effect rows will just be the identity, that is
   \elaborate{\Delta} &=& \Delta \\
   \elaborate{\xi}&=&{\xi}
 \end{array}\]
-and I will not touch on them any further. 
 
 \subsection{Elaborating Types}
-To define elaboration of types, it will be convenient to refer to a helper function, \textsf{erase}, that \textit{erases} all of the level annotations (and elaborates effect rows). It is easy to define inductively, and I do not give a formal definition, but rather an example. 
+To define elaboration of types, it will be convenient to refer to a helper function, \textsf{erase}, that \textit{erases} all of the level annotations (and elaborates effect rows). I do not give a formal definition, but rather an example. 
 \[\textsf{erase}((\functionType[\xi]{T_1^0}{T_2^0})^0) = \functionType[\elaborate{\xi}]{T_1}{T_2}\]
-I can now define elaboration of types easily. In a nutshell, level $0$ types elaborate into \textsf{AST} types. Level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types.
+I can now define elaboration of types. In a nutshell, level $0$ types elaborate into \textsf{AST} types. Level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types.
 \[
 \begin{array}{rcl}
   \elaborate{T^0} & = & \AST{\erase{T^0}}\\
@@ -912,7 +912,7 @@ Elaborating contexts is \textit{slightly} subtle. Rather than mapping the elabor
   \elaborate{\Gamma, x:T^{-1}} & = & \elaborate{\Gamma}, x: \elaborate{T^{-1}}
 \end{array}
 \]
-To see why this is the case, notice that the only cases where the context $\Gamma$ is extended with a level $0$ variable $x: T^0$ occur in \compilemode{} or \quotemode{}. In these modes, we are building ASTs, and thus $x$ must be an AST \textsf{Binder}. 
+To see why this is the case, notice that the only cases where the context $\Gamma$ is extended with a level $0$ variable occur in \compilemode{} or \quotemode{}. In these modes, we are building ASTs, and thus $x$ must be an AST \textsf{Binder}. 
 % \subsection{Elaborating Effects}
 
 \subsection{Elaborating Terms}
@@ -920,7 +920,7 @@ Elaborating terms is slightly more involved. To start, we will assume that we ha
 \[\lambda x: \mathbb{N}^0. \, e\]
 The elaboration for terms is moderated by the \textbf{mode}: \compilemode{}, \quotemode{}, or \splicemode{}. Selected rules are collated in \Cref{fig:term-elaboration}. 
 
-At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calling \textbf{\texttt{mkvar}} when binders are encountered (see earlier discussion on the necessity of \textbf{\texttt{mkvar}}). Elaboration in \compilemode{} and \quotemode{}-modes do not differ particularly significantly, with the exception of the rule for splice, where in \compilemode{}, I insert the marker for the top-level splice, and in \quotemode{}, I do not. Elaboration in \compilemode{} and \quotemode{}-modes will be further distinguished when I extend the elaboration to insert scope extrusion checks. Elaboration in \splicemode{}-mode is effectively the identity. 
+At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calling \textbf{\texttt{mkvar}} when binders are encountered. Elaboration in \compilemode{} and \quotemode{}-modes do not differ significantly, with the exception of the rule for splice, where in \compilemode{}, I insert the marker for the top-level splice, and in \quotemode{}, I do not. The \compilemode{} and \quotemode{}-modes will become important when building scope extrusion checks. Elaboration in \splicemode{}-mode is effectively the identity. 
 
 \newcommand{\cqmode}{\compilemode{} \mid \quotemode{}}
 \begin{figure}
@@ -993,10 +993,10 @@ Note that I additionally have to consider the error state \textbf{\texttt{err}}.
 \begin{theorem}[Reduction Preservation]{coreHighlight}
 If 
 \begin{enumerate} 
-  \item $\Gamma \vdash E[t]: T$ and 
+  \item $\Gamma \vdash E[t]: \effectType{T}$ and 
   \item $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
   \end{enumerate}
-  then $\Gamma \vdash E'[t']: T$ 
+  then $\Gamma \vdash E'[t']: \effectType{T}$ 
 \end{theorem}
 Proof proceeds by induction over the operational semantics. Once again, I only need to consider the augmented rules, which are very simple. 
 
@@ -1087,7 +1087,7 @@ Additionally, underneath a top-level splice, splice and quotation are duals. Tha
 \end{array}
 \]
 \end{theorem}
-Where, in this context, $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode will affect the result of elaboration. Indeed, we may prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
+Where, in this context, $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode will affect the result of elaboration. Indeed, I prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
 \[\begin{array}{rcl}  
   \elaborate{\splice[{\equote}]}_{\quotemode{}} = t & \iff & \elaborate{e}_{\quotemode{}} = t\\
   \elaborate{\equote[{\splice}]}_{\splicemode{}} = t & \iff & \elaborate{e}_{\splicemode{}} = t

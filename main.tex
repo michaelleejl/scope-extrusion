@@ -30,17 +30,24 @@
 \author{Michael Jing Long Lee}
 
 \begin{document}
+%TC:macro \cite [option:ignore,ignore]
+%TC:fileinclude \import dir,file
+%TC:fileinclude \subimport dir,file
+%TC:ignore
 \frontmatter
 {
-\maketitle
+\import{}{coverpage}
+\import{}{declaration}
+\import{}{acknowledgements}
+
+\import{Abstract/}{abstract}
 
 \hypersetup{linkcolor=black, linkbordercolor=white}
 \tableofcontents
 
-%TC:fileinclude \import dir,file
-
-\import{Abstract/}{abstract}
  }
+ %TC:endignore
+
 \mainmatter
 \import{Chapters/Introduction/}{introduction}
 

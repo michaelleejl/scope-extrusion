@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  26 MAY 2025 12:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  31 MAY 2025 14:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1361,62 +1361,79 @@ Package tocbasic Info: omitting babel extension for `lol'
 \scr@dte@lstlisting@maxnumwidth=\skip163
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 36.
+ (./coverpage.tex
+<./crest.png, id=7, 253.9086pt x 288.5982pt>
+File: ./crest.png Graphic file (type png)
+<use ./crest.png>
+Package pdftex.def Info: ./crest.png  used on input line 14.
+(pdftex.def)             Requested size: 177.7348pt x 202.01735pt.
+LaTeX Font Info:    Trying to load font information for OT1+lmss on input line 22.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <12> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 36.
 LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <24.88> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 36.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmr.fd
-File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
-File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omslmsy.fd
-File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omxlmex.fd
-File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <17.28> on input line 36.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 36.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 36.
-LaTeX Font Info:    Trying to load font information for U+lasy on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/base/ulasy.fd
-File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
-)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Trying to load font information for U+stmry on input line 36.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 22.
+
 
 [1
 
 
 
-
-
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}] (./main.toc
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc} <./crest.png>]) (./declaration.tex
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <12> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 1.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/ot1lmr.fd
+File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
+File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omslmsy.fd
+File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omxlmex.fd
+File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 2.
+(Font)              <12> on input line 6.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 2.
+(Font)              <8> on input line 6.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 6.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/base/ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+LaTeX Font Info:    Trying to load font information for U+stmry on input line 6.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/stmaryrd/Ustmry.fd)) (./acknowledgements.tex
+
+[2
+
+]
+LaTeX Font Info:    Trying to load font information for TS1+qpl on input line 5.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/tex-gyre/ts1qpl.fd
+File: ts1qpl.fd 2009/09/25 v1.2 font definition file for TS1/qpl
+)) (./Abstract/abstract.tex
+
+[3
+
+{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}])
+
+[4
+
+] (./main.toc
 LaTeX Font Info:    Trying to load font information for OT1+zi4 on input line 10.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ot1zi4.fd
 File: ot1zi4.fd 2018/01/14 OT1/zi4 (Inconsolata)
@@ -1427,21 +1444,17 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
 \tf@toc=\write7
 \openout7 = `main.toc'.
 
- (./Abstract/abstract.tex
 
-[2
+
+[5
 
 {/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-ot1-0.enc}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}]
 
 
 LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <12> not available
-(Font)              Font shape `OT1/qpl/m/it' tried instead on input line 1.
+(Font)              Font shape `OT1/qpl/m/it' tried instead on input line 51.
 
-[3])
-
-[4
-
-] (./Chapters/Introduction/introduction.tex
+[6] (./Chapters/Introduction/introduction.tex
 chapter 1.
 \g__tcobox_out_iow=\write8
 \openout8 = `main.listing'.
@@ -1449,10 +1462,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250526124814 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250531145441 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250526124814 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250531145441 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/E5FFBDD06E801C34D8594F1B6FF7F570.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1470,603 +1483,4 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
 \openout8 = `main.listing'.
 
  (./_minted/E630B12E9BCD53B6B834062D170B55BF.highlight.minted)
-Overfull \hbox (9.93787pt too wide) in paragraph at lines 43--45
-\OT1/qpl/m/n/12 Importantly, the \OT1/zi4/m/n/12 memcpy \OT1/qpl/m/n/12 macro is ex-e-cuted by the com-piler, guar-an-tee-ing that the branches
- []
-
-
-
-[1
-
-
-
-]
-\openout8 = `main.listing'.
-
- (./_minted/AFAF43DC962FBB6365E61FA903AFE1D5.highlight.minted) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted
-LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
-(Font)              scaled to size 12.0pt on input line 3.
-) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted) (./_minted/E12FE2EF6E1121A33EE1AC7327216FAD.highlight.minted) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/5248D195E94933B74B85D4DC78AE94C8.highlight.minted)
-
-[2]
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <17.28> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 79.
-) (./Chapters/Background/background.tex
-
-[3]
-chapter 2.
-(./Chapters/Background/Metaprogramming/metaprogramming.tex
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <14.4> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 4.
- (./_minted/07B91A9610C408331B0074269596D116.highlight.minted)
-Overfull \hbox (10.45563pt too wide) in paragraph at lines 8--9
-\OT1/qpl/m/n/12 back-prop-a-ga-tion over a neu-ral net-work. More pre-cisely, as-sume $\OML/lmm/m/it/12 f$ \OT1/qpl/m/n/12 of type [] 
- []
-
-\openout8 = `main.listing'.
-
-(./_minted/176241E00EF9049246C897D0893EADD7.highlight.minted
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 2.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 2.
-)
-\openout8 = `main.listing'.
-
- (./_minted/39D7115D3C08B7083A7C61CB8BCAB6B7.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/D2B933F6BC30C8B6FDDD3B800517FB4D.highlight.minted) (./_minted/4B219D1941E8D08514181ADEE35F5F76.highlight.minted) (./_minted/556F5A46E71FBBF1A3FA9D7C0251222E.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/0B3972FF6FD5680B27E91A2836A02211.highlight.minted)
-Underfull \vbox (badness 4391) has occurred while \output is active []
-
-
-
-[4
-
-]
-Package hyperref Info: bookmark level for unknown listing defaults to 0 on input line 33.
- (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/70C0BAA042A5166E41B4A2DFFED09C43.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/D85C12F52E4EA208315013AB215FD031.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/E109C50FA94E47146EC51233B66209FC.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
-
-[5] (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/1011CF54540A8171C8BEB2A5AF05F97C.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/2782FDADCF13F0B5070F5CCA715C7539.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/5CA370431FA33AFF063D08035EFCB2D0.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/DDA4FB8C6D9AEC718A6AFC828B8B0E50.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/BEE3AC98B046364BFEEE481554787FA0.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/4D353A8BB606E6B2A2EB598E35256FAA.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/3DE925E4648A32F902C234F71508C0A1.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/61AC0D84CE559D46B3E402339F9B4F71.highlight.minted) (./_minted/2D353926D8B152734ED62D1A5FB3209D.highlight.minted)
-
-[6] (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted) (./_minted/08C1C7864785805E895FF73B636D453F.highlight.minted) (./_minted/BC9F84902D61B247B113DA5789EBE129.highlight.minted
-LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 3.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
-File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
-)
-LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
-(Font)              scaled to size 12.0pt on input line 3.
-) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/E255775B48FED725410A274376FF89BC.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/F10C406C117F7C8983DA65E5F0831574.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/C2BA6E7804B98A7874E57B6ADA48E220.highlight.minted) (./_minted/B56B1DDD7D8AD69B31B4005D61F207F9.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/DAB3E4FA94C4DFFE2AF7670F8D90A4F9.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted)
-
-[7{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}] (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/2E2DA777DC132CE989358529BEB7A9C5.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/58BDD47C8E4ECA2B687C2FB90178B8A4.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/B8B26BD4A44168D01664294F457EC463.highlight.minted) (./_minted/9E9D94C6B427C464D72889D44BFD7BE5.highlight.minted) (./_minted/ADC21D8A6E2349AEAF5E333329D75232.highlight.minted) (./_minted/8F48AEE7CABDFBF174DC4634B5103770.highlight.minted)
-
-[8]
-\openout8 = `main.listing'.
-
- (./_minted/E2FFC8F355CAF8355FFFD6D50C54C1B4.highlight.minted)) (./Chapters/Background/Effects/effects.tex
-
-[9] (./_minted/33C076FFDCDA5B78EBAD85ACF5E7A333.highlight.minted) (./_minted/E76FE302821A92BD9B839D014065F3F6.highlight.minted) (./_minted/59EE28C0E25435FC81152B9557102E1F.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted) (./_minted/59EE28C0E25435FC81152B9557102E1F.highlight.minted) (./_minted/6EF202E75E68D4882AAB12E7BABA0D7C.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/7B370A8BDD408E3E7965D6406426C11B.highlight.minted
-LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
-(Font)              scaled to size 10.0pt on input line 2.
-LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
-(Font)              scaled to size 10.0pt on input line 6.
-) (./_minted/231B85DD15245E1677C63C53BF49AE64.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/30402CFACDA34C35A24ECDA41804CF90.highlight.minted) (./_minted/33C076FFDCDA5B78EBAD85ACF5E7A333.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/CB6644A3290998930943EEADDA39FE9D.highlight.minted) (./_minted/5E9C175BD3C72BFA0A4E9C8CE1A84AF6.highlight.minted)
-
-[10] (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted)
-\openout8 = `main.listing'.
-
- (./_minted/CBD1B610128CA9B2A07BA570410B15A2.highlight.minted)
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 58.
-LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
-(Font)              scaled to size 14.4pt on input line 58.
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <10> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 58.
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <7> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 58.
-LaTeX Font Info:    Trying to load font information for OMS+zi4 on input line 72.
-LaTeX Font Info:    No file OMSzi4.fd. on input line 72.
-
-
-LaTeX Font Warning: Font shape `OMS/zi4/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 72.
-
-
-
-[11]
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 111.
-LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
-(Font)              scaled to size 10.95pt on input line 114.
-LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
-(Font)              scaled to size 10.95pt on input line 114.
-\openout8 = `main.listing'.
-
- (./_minted/F41964BF2D58E8F2142A06EF5DFA62C0.highlight.minted) (./_minted/A1789BB165F04BAAB74C605B39963857.highlight.minted) (./_minted/6750158339C3D7D3ED3741ED1636192A.highlight.minted) (./_minted/CF8215434E9E26FE9A9B2F2114336788.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted)
-
-[12]
-
-[13]
-Underfull \hbox (badness 10000) in paragraph at lines 191--192
-
- []
-
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 206.
-
-
-[14{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-rm-sc.enc}]
-Underfull \hbox (badness 10000) in paragraph at lines 305--306
-
- []
-
-
-
-[15]
-\openout8 = `main.listing'.
-
- (./_minted/F054FDA90CBCF4F92CFE4D605526A07D.highlight.minted)
-
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 358--359
-
- []
-
-
-Overfull \hbox (18.13919pt too wide) in paragraph at lines 475--476
-[]\OT1/qpl/m/n/12 Second, the \OT1/qpl/m/sc/12 Op \OT1/qpl/m/n/12 rule. Note the $[] \OMS/lmsy/m/n/12 2 \OT1/lmr/m/n/12 ^^A$ \OT1/qpl/m/n/12 re-stric-tion: flex-i-bil-ity al-lows us to over-approximate
- []
-
-
-
-[17]
-
-[18]
-Package mdframed Info: mdframed works in twoside mode on input line 501.
-Package hyperref Info: bookmark level for unknown mddefinition defaults to 0 on input line 501.
-Package mdframed Info: mdframed works in twoside mode on input line 511.
-Package hyperref Info: bookmark level for unknown mdtheorem defaults to 0 on input line 511.
-LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
-(Font)              scaled to size 12.0pt on input line 514.
-
-
-LaTeX Font Warning: Font shape `OT1/zi4/b/it' undefined
-(Font)              using `OT1/zi4/b/n' instead on input line 514.
-
-LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <12> not available
-(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 515.
-Package mdframed Info: mdframed works in twoside mode on input line 520.
-Package mdframed Info: mdframed works in twoside mode on input line 524.
-Package hyperref Info: bookmark level for unknown mdcorollary defaults to 0 on input line 524.
-
-
-[19]
-
-[20]) (./Chapters/Background/Scope Extrusion/scope-extrusion.tex
-
-[21]
-Overfull \hbox (2.36963pt too wide) in paragraph at lines 87--88
-\OT1/qpl/m/n/12 dy-namic check loses in-for-ma-tion about \OT1/qpl/m/it/12 which pro-gram frag-ment \OT1/qpl/m/n/12 was re-spon-si-ble for scope
- []
-
-
-
-[22]
-
-[23]
-Overfull \hbox (2.15352pt too wide) in paragraph at lines 187--188
-[]\OT1/qpl/m/n/12 With clas-si-fiers, I may now be pre-cise about ``the vari-ables per-mit-ted to be free (within
- []
-
-
-
-[24]
-
-[25])) (./Chapters/Calculus/calculus.tex
-
-[26]
-chapter 3.
-LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
-(Font)              scaled to size 8.0pt on input line 8.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <29.86> on input line 23.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <20.74> on input line 23.
-LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
-(Font)              scaled to size 17.28pt on input line 45.
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--49
-
- []
-
-
-
-[27
-
-]
-Overfull \hbox (2.0493pt too wide) in paragraph at lines 60--61
-\OT1/qpl/m/n/12 ple, $\OMS/lmsy/m/n/12 hh\OT1/lmr/m/n/12 1\OMS/lmsy/m/n/12 ii$ \OT1/qpl/m/n/12 is not valid syn-tax, in-stead, one must write $\OMS/lmsy/m/n/12 hh[]  \OT1/lmr/m/n/12 1\OMS/lmsy/m/n/12 ii$\OT1/qpl/m/n/12 . Sim-i-larly, $\OMS/lmsy/m/n/12 hh[]  \OT1/lmr/m/n/12 1\OMS/lmsy/m/n/12 ii$
- []
-
-
-
-[28]
-Overfull \hbox (6.16164pt too wide) in paragraph at lines 102--104
-\OT1/qpl/m/n/12 Following Xie et al. [][][], I in-tro-duce in-te-ger lev-els to en-force sep-a-ra-tion be-tween compile-
- []
-
-Package mdframed Info: mdframed works in twoside mode on input line 109.
-
-
-
-LaTeX Font Warning: Font shape `OT1/zi4/m/sl' undefined
-(Font)              using `OT1/zi4/m/n' instead on input line 129.
-
-
-LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <8> not available
-(Font)              Font shape `OT1/qpl/m/it' tried instead on input line 129.
-
-
-LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <6> not available
-(Font)              Font shape `OT1/qpl/m/it' tried instead on input line 129.
-
-[29]
-Missing character: There is no ' in font nullfont!
-
-Overfull \hbox (7.99915pt too wide) in paragraph at lines 166--167
- [] 
- []
-
-
-
-[30]
-Overfull \hbox (2.13326pt too wide) in paragraph at lines 226--227
-[]\OT1/qpl/m/n/12 Identifies AST nodes that are []\OT1/qpl/b/n/12 am-bi-ent[] \OT1/qpl/m/n/12 (within which com-pu-ta-tion may take place)
- []
-
-
-Overfull \hbox (4.17305pt too wide) in paragraph at lines 245--246
-[]\OT1/qpl/m/n/12 Identifies code that []\OT1/qpl/b/n/12 builds ASTs[] \OT1/qpl/m/n/12 (like []\OT1/lmss/bx/n/12 c[]\OT1/qpl/m/n/12 -mode) that can be ma-nip-u-lated at compile-
- []
-
-
-
-[31]
-
-LaTeX Font Warning: Font shape `OT1/lmss/b/sc' undefined
-(Font)              using `OT1/lmss/b/n' instead on input line 307.
-
-LaTeX Font Info:    Font shape `OT1/lmss/b/sc' in size <12> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 307.
-LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <10.95> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 317.
-LaTeX Font Info:    Font shape `OT1/lmss/b/sc' in size <10.95> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 381.
-Package mdframed Info: mdframed works in twoside mode on input line 537.
-LaTeX Font Info:    Font shape `OT1/lmss/b/it' in size <12> not available
-(Font)              Font shape `OT1/lmss/bx/it' tried instead on input line 538.
-LaTeX Font Info:    Font shape `OT1/lmss/bx/it' in size <12> not available
-(Font)              Font shape `OT1/lmss/bx/sl' tried instead on input line 538.
-
-
-[32]
-
-[33]
-
-[34]
-
-[35]
-Overfull \hbox (9.25023pt too wide) in paragraph at lines 607--608
-[]\OT1/qpl/m/n/12 The compile-time func-tion \OT1/zi4/m/sl/12 mkfun \OT1/qpl/m/n/12 is a higher-order func-tion that takes some compile-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 625--626
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 652--654
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 658--659
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 659--661
-
- []
-
-
-
-[36]
-
-[37]
-
-[38]
-Underfull \hbox (badness 10000) in paragraph at lines 733--735
-
- []
-
-Package mdframed Info: mdframed works in twoside mode on input line 790.
-
-
-[39]
-
-[40]
-Underfull \vbox (badness 4582) has occurred while \output is active []
-
-
-
-[41]
-
-[42]
-Overfull \hbox (13.35056pt too wide) detected at line 964
-[]
- []
-
-Package mdframed Info: mdframed works in twoside mode on input line 974.
-Package mdframed Info: mdframed works in twoside mode on input line 982.
-
-
-[43]
-Package mdframed Info: Not enough space on this page on input line 990.
-Package mdframed Info: mdframed works in twoside mode on input line 993.
-Package mdframed Info: mdframed works in twoside mode on input line 1004.
-Package mdframed Info: mdframed works in twoside mode on input line 1083.
-
-Overfull \hbox (39.04794pt too wide) in paragraph at lines 1084--1084
-[][] 
- []
-
-
-
-[44]) (./Chapters/Scope-Extrusion/scope-extrusion.tex
-
-[45]
-chapter 4.
-Package mdframed Info: mdframed works in twoside mode on input line 23.
-
-
-[46
-
-]
-Package mdframed Info: mdframed works in twoside mode on input line 44.
-Package mdframed Info: mdframed works in twoside mode on input line 66.
-
-Overfull \hbox (6.51637pt too wide) detected at line 84
-[]
- []
-
-
-
-[47]
-
-[48]
-Underfull \vbox (badness 1142) has occurred while \output is active []
-
-
-
-[49]
-
-[50]
-Package mdframed Info: mdframed works in twoside mode on input line 213.
-
-
-[51]
-
-[52]
-
-[53]
-Package mdframed Info: mdframed works in twoside mode on input line 354.
-
-
-[54]
-Package mdframed Info: mdframed works in twoside mode on input line 386.
-
-
-[55]
-Package mdframed Info: mdframed works in twoside mode on input line 424.
-
-Underfull \hbox (badness 10000) in paragraph at lines 442--443
-
- []
-
-Package mdframed Info: mdframed works in twoside mode on input line 468.
-
-
-[56]
-Package mdframed Info: mdframed works in twoside mode on input line 503.
-Package hyperref Info: bookmark level for unknown mdlemma defaults to 0 on input line 503.
-
-
-[57]
-Package mdframed Info: mdframed works in twoside mode on input line 513.
-LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 513.
-LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 513.
-
-
-LaTeX Font Warning: Font shape `U/stmry/b/n' undefined
-(Font)              using `U/stmry/m/n' instead on input line 513.
-
-Package mdframed Info: mdframed works in twoside mode on input line 612.
-
-
-[58]
-
-[59]
-Package mdframed Info: Not enough space on this page on input line 619.
-Package mdframed Info: mdframed works in twoside mode on input line 641.
-
-Overfull \hbox (6.1846pt too wide) in paragraph at lines 642--644
-[]\OT1/qpl/m/it/12 For some prop-erty $\OT1/lmr/m/n/12 ^^H$ \OT1/qpl/m/it/12 on closed terms of type $\U/stmry/m/n/12 J\OML/lmm/m/it/12 ^^\ \OT1/lmr/m/n/12 ! ^^A\U/stmry/m/n/12 K$\OT1/qpl/m/it/12 ,
- []
-
-Package mdframed Info: mdframed works in twoside mode on input line 653.
-
-Overfull \hbox (3.41243pt too wide) in paragraph at lines 654--655
-[]\OT1/qpl/m/it/12 If $\OMS/lmsy/m/n/12 h\OML/lmm/m/it/12 t\OT1/lmr/m/n/12 ; \OML/lmm/m/it/12 E\OT1/lmr/m/n/12 ; \OML/lmm/m/it/12 U\OMS/lmsy/m/n/12 i ![] h\OML/lmm/m/it/12 t[]\OT1/lmr/m/n/12 ; \OML/lmm/m/it/12 E[]\OT1/lmr/m/n/12 ; \OML/lmm/m/it/12 U[]\OMS/lmsy/m/n/12 i$ \OT1/qpl/m/it/12 and $\OML/lmm/m/it/12 E[]\OT1/lmr/m/n/12 [\OML/lmm/m/it/12 t[]\OT1/lmr/m/n/12 ] \OMS/lmsy/m/n/12 2
- []
-
-
-
-[60]
-Package mdframed Info: Not enough space on this page on input line 655.
-Package mdframed Info: mdframed works in twoside mode on input line 663.
-Package mdframed Info: mdframed works in twoside mode on input line 676.
-
-Overfull \hbox (10.97743pt too wide) in paragraph at lines 677--678
-[]
- []
-
-
-Overfull \hbox (1.94017pt too wide) in paragraph at lines 687--689
-[]\OT1/qpl/m/n/12 By weak-en-ing, and the in-duc-tion hy-poth-e-sis, $\U/stmry/b/n/12 J\OML/lmm/m/it/12 e\U/stmry/b/n/12 K[]\OT1/lmr/m/n/12 ([]) \OMS/lmsy/m/n/12 2 [][]$\OT1/qpl/m/n/12 ,
- []
-
-
-Overfull \hbox (1.5575pt too wide) in paragraph at lines 689--690
-\OT1/qpl/m/n/12 The term $[]  [] \OMS/lmsy/m/n/12   [] [] []$ \OT1/qpl/m/n/12 re-duces to $[]\OT1/lmr/m/n/12 ([](\OML/lmm/m/it/12 []\OT1/lmr/m/n/12 )\OML/lmm/m/it/12 ; n\OT1/lmr/m/n/12 )$\OT1/qpl/m/n/12 ,
- []
-
-
-
-[61]
-LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 704.
-
-Overfull \hbox (3.55731pt too wide) in paragraph at lines 699--716
-[]$[]$ 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 717--719
-
- []
-
-
-
-[62]
-
-[63]) (./Chapters/Conclusion/conclusion.tex
-
-[64]
-chapter 5.
-
-Underfull \hbox (badness 10000) in paragraph at lines 16--29
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 30--40
-
- []
-
-) (./main.bbl
-
-[65
-
-]
-
-[66]
-
-[67
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 132--136
-[]\OT1/qpl/m/n/12 W. Kuchta.  A proof of nor-mal-iza-tion for ef-fect han-dlers, Sept.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 132--136
-\OT1/qpl/m/n/12 2023.  URL [][]$\OT1/zi4/m/sl/12 https : / / icfp23 . sigplan . org / details / hope-[]2023 / 4 /
- []
-
-
-
-[68]
-Underfull \hbox (badness 4193) in paragraph at lines 229--232
-\OT1/qpl/m/n/12 programming.  \OT1/qpl/m/it/12 ACM Trans-ac-tions on Pro-gram-ming Lan-guages and Sys-tems
- []
-
-
-
-[69])
-\tf@thm=\write10
-\openout10 = `main.thm'.
-
-
-
-[70] (./main.aux)
- ***********
-LaTeX2e <2024-11-01> patch level 2
-L3 programming layer <2025-03-26>
- ***********
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
- ) 
-Here is how much of TeX's memory you used:
- 48012 strings out of 469626
- 1046307 string characters out of 5471004
- 1677893 words of memory out of 5000000
- 73191 multiletter control sequences out of 15000+600000
- 884645 words of font info for 221 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 122i,28n,134p,10944b,1528s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary6.pfb>
-Output written on main.pdf (74 pages, 955247 bytes).
-PDF statistics:
- 1398 PDF objects out of 1440 (max. 8388607)
- 1221 compressed objects within 13 object streams
- 371 named destinations out of 1000 (max. 500000)
- 341 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+Overfu

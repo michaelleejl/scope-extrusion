@@ -28,7 +28,7 @@ let memcpy source target n = if (architecture == AArch64) then
 memcpy source target n
 \end{ocaml}
 
-Since \mintinline{ocaml}{architecture} and \mintinline{ocaml}{vector_extensions} are known at compile-time, they may be eliminated by an optimising compiler. If the compiler does not perform this optimisation, programmers might have to rely on pre-processing directives, or duplicate their code, increasing maintenance costs. With metaprogramming, however, they may write: 
+Since \mintinline{ocaml}{architecture} and \mintinline{ocaml}{vector_extensions} are known at compile-time, they may be eliminated by an optimising compiler. If the compiler does not perform this optimisation, programmers might have to duplicate their code, increasing maintenance costs. Alternatively, they may use pre-processing directives, though this may lead to awkward code structures. With metaprogramming, however, they may write: 
 \begin{macocaml}
 (* macro and $ can be read as annotations which 
    indicate that the code should be run at compile-time *)
