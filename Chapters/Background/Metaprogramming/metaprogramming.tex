@@ -1,207 +1,232 @@
 \section{Metaprogramming}\label{section:metaprogramming-technical}
-What is MacoCaml-style metaprogramming? I will provide an answer in two steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I will consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}), highlighting decisions made by MacoCaml.
+What is MacoCaml-style metaprogramming? I provide an answer in two steps. First, I motivate metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable (\Cref{subsection:metaprogramming-motivation}). Second, I consider the design space of metaprogramming (\Cref{subsection:metaprogramming-design}), highlighting decisions made by MacoCaml designers.
 
 \subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
 
-Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? A naïve answer is ``by being a skilled programmer''. Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
+Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
 
-For example, consider computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume $f$ of type \mintinline{ocaml}{differentiable}
+To illustrate this tension, I adapt an example from the \texttt{JAX} machine learning library to \texttt{OCaml}. Consider computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, I only consider Polynomials and composition)
 
 \begin{ocaml}
-type differentiable = Sin | Tanh | Sigmoid | `$\ldots$`
-                    | Polynomial of float list
-                    | Compose of differentiable * differentiable
+type diff = Poly of int list 
+          | Compose of diff * diff
 \end{ocaml}
-For example, the following expression represents $\sin\circ \tanh$. 
+For example, the following expression represents $2(x^2 + 2x) + 4$. 
 % or $\cos \circ \tanh(x) $ depending on if the argument is \mintinline{ocaml}{true} or \mintinline{ocaml}{false}. 
 \begin{ocaml}
-Compose(Tanh, Sin)
+Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4]))
 \end{ocaml}
 
-We wish to write a function \mintinline{ocaml}{grad} such that $\text{\mintinline{ocaml}{grad}} \, f = f'$. For simplicity, assume the existence of a helper function, \mintinline{ocaml}{grad_of}, that returns the gradient of basic functions. For example, \mintinline{ocaml}{grad_of Sin 0.0} $=$ \mintinline{ocaml}{cos 0.0} $=$ \mintinline{ocaml}{1.0}.\ The \mintinline{ocaml}{grad_main} function (\Cref{listing:ocaml-grad-main}) is one maintainable way to compute gradients: 
+The \mintinline{ocaml}{app: diff -> int} function evaluates elements of type \mintinline{ocaml}{diff}. 
+
+\begin{ocaml}
+let rec app (f: diff) (x: int) = 
+  let rec app_poly (cs: int list) (x : int) (acc: int) = match cs with 
+    | [] -> acc 
+    | c::cs -> app_poly cs x (c + (x * acc)) 
+  in match f with 
+    | Poly(cs)      -> match cs with 
+                      | [] -> 0
+                      | c::cs -> app_poly cs x c
+    | Compose(g, h) -> app h (app g x)
+\end{ocaml}
+
+We wish to write a function \mintinline{ocaml}{grad: diff -> float -> float} that computes the gradient of its first argument with respect to its second. The \mintinline{ocaml}{grad_main} function (\Cref{listing:ocaml-grad-main}) is one maintainable way to compute gradients: 
 
 \begin{code}
 \begin{ocamllst}
-let rec grad_main f x = match f with
-  | Sin
-  | Tanh
-  | Sigmoid
-  | `$\ldots$`
-  | Polynomial(_) -> grad_of f x 
-  | Compose(f, g) -> (grad_main f x) * (grad_main g (app f x))
+let rec grad_main (f: diff) (x: int) = 
+  let grad_poly (cs: int list) (x: int) = 
+    let grad_p c (a, b) = (c * b :: a, b + 1) 
+    let (res, _) = List.fold_right grad_p cs ([], 0) in 
+    app Poly(remove_last res) x (*remove_last removes the last element of a list*)
+  in match f with
+    | Poly(cs)      -> grad_poly cs x
+    | Compose(g, h) -> grad_main g x * grad_main h (app g x)
+
 \end{ocamllst}
 \captionof{listing}{A maintainable implementation of \mintinline{ocaml}{grad}}%
 \label{listing:ocaml-grad-main}
 \end{code}
 
-However, \mintinline{ocaml}{grad_main} may not be the most efficient implementation. Performing a \mintinline{ocaml}{match} on every recursive call might result in expensive branches. If \mintinline{ocaml}{x} is a vector, and the weights of a polynomial are vectors, then \mintinline{ocaml}{grad_main} could hide opportunities for cache prefetching.
+% Applying \mintinline{ocaml}{grad_main} to $2(x^2 + 2x + 3)^2 + 4$, we obtain
+% \begin{ocaml}
+% Mul(Poly([2.0 ; 2.0]), Compose([1.0 ; 2.0 ; 3.0], Poly([4.0])))
+% \end{ocaml}
+% may not be the most efficient implementation. Performing a \mintinline{ocaml}{match} on every recursive call might result in expensive branches. If \mintinline{ocaml}{x} is a vector, and the weights of a Poly are vectors, then \mintinline{ocaml}{grad_main} could hide opportunities for cache prefetching.
 
-If $f$ is known in advance, for example, $f =$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}, we could implement a more efficient \mintinline{ocaml}{grad_fast} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
+This approach is inefficient. If the function to be differentiated (\mintinline{ocaml}{f}) is known in advance, for example, \mintinline{ocaml}{f} $= 2(x^2 + 2x) + 4$, we could specialise \mintinline{ocaml}{grad} to a more efficient \mintinline{ocaml}{grad_spec} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
 
 \begin{code}
 \begin{ocamllst}
-let grad_fast x = (cos x) /. (cosh (sin x) ** 2)
+let grad_spec x = 4 * x + 4
 \end{ocamllst}
-\captionof{listing}{A fast implementation of \mintinline{ocaml}{grad}, assuming $f =$ \text{\mintinline{ocaml}{Compose(Tanh, Sin)}}}
+\captionof{listing}{An implementation of \mintinline{ocaml}{grad}, specialised to \mintinline{ocaml}{f} $=2(x^2 + 2x) + 4$}
 \label{listing:ocaml-grad-fast}
 \end{code}    
 
-Although \mintinline{ocaml}{grad_fast} only works for a single $f$, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
+% Although \mintinline{ocaml}{grad_fast} only works for a single \mintinline{ocaml}{f}, it has eliminated the branching overhead, and enabled opportunities for prefetching. It is thus likely to be faster.
 
-The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable in part because it parameterises over $f$. More generally, abstraction centralises implementations, thus reducing maintenance costs. However, \mintinline{ocaml}{grad_fast} is more efficient because it is specialised to a specific $f$. More generally, many compiler optimisations, like monomorphisation, eliminate abstraction, simplifying functions by applying known arguments in advance. 
+The \mintinline{ocaml}{grad} example illustrates the trade-off between maintainability and efficiency.\ \mintinline{ocaml}{grad_main} is maintainable because it parameterises over \mintinline{ocaml}{f}. More generally, abstraction centralises implementations, reducing maintenance costs. However, \mintinline{ocaml}{grad_spec} is more efficient because it is specialised to a specific \mintinline{ocaml}{f}. More generally, specialisation applies known arguments in advance, creating opportunities for optimisation. 
 
 The tension between maintainability (abstraction) and efficiency (specialisation) has also been observed in regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
-A more informed answer might therefore be ``by letting the compiler generate optimised versions of my maintainable code''. Not quite: for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know $f$ at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that \mintinline{ocaml}{grad} would perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation \citep{rice-53}. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
+A better approach might therefore be to write maintainable code, delegating the responsibility of optimisation to the compiler. While this suffices for many cases, for reasons both theoretical and practical, compiler optimisations can be insufficient. In theory, we proposed an optimisation that assumed we would always know \mintinline{ocaml}{f} at, or before, compile-time. Is this a reasonable assumption? It is: we assumed that \mintinline{ocaml}{grad} would perform backpropagation over neural networks. The network over which backpropagation is performed is known at compile-time. However, notice that this justification appeals to domain-specific knowledge regarding how \mintinline{ocaml}{grad} will be used. In the general case, \mintinline{ocaml}{grad} could be applied to a function not known until runtime. It is not feasible to expect a compiler to spot all opportunities for optimisation \citep{rice-53}. In practice, while compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations.
 
 How does one write maintainable and efficient code, \textbf{when one cannot trust the compiler to optimise one's code}?
 
-One answer is metaprogramming, which gives users the ability to perform code-generation. Programmers may thus take matters into their own hands: manually generating optimised code when the compiler may not automatically do so for them. The \mintinline{ocaml}{grad} function in \texttt{JAX}, a Python-based machine learning framework, uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
+One answer, and the approach taken by \texttt{JAX} \citep{jax-grad-metaprogramming}, is metaprogramming, which gives users the ability to perform code-generation. Programmers may thus take matters into their own hands: manually generating optimised code when the compiler may not automatically do so for them. The \mintinline{ocaml}{grad} function in \texttt{JAX} uses metaprogramming for precisely this purpose \citep{jax-grad-metaprogramming}.
 
-\subsubsection{Speeding up exponentiation with Metaprogramming}
-Metaprogramming allows for code-generation via the creation and manipulation of abstract syntax trees (ASTs). I will now illustrate how metaprogramming works with reference to MacoCaml, which allows for \textit{compile-time} metaprogramming. 
+\subsubsection{The Mechanics of Metaprogramming}
+Metaprogramming allows for code generation. Thus, it can be utilised to write a function, \mintinline{ocaml}{grad_gen}, which resembles \mintinline{ocaml}{grad_main} (inheriting its maintainability), but that generates a program which resembles \mintinline{ocaml}{grad_spec} (inheriting its efficiency). 
 
-While the \mintinline{ocaml}{grad} example motivated metaprogramming, for pedagogical reasons, I switch to a simpler example: raising an integer \mintinline{ocaml}{x} to an exponent \mintinline{ocaml}{n}. One maintainable implementation is the \mintinline{ocaml}{pow} function (\Cref{listing:ocaml-pow-maintainable}):
-
-\begin{code}
-\begin{ocamllst}
-let rec pow (n: int) (x: int) = 
-  if n == 0 then 1 
-  else x * pow (n-1) x
-\end{ocamllst}
-\captionof{listing}{A maintainable implementation of an exponentiation function}
-\label{listing:ocaml-pow-maintainable}
-\end{code}
-
-As it may be applied to any exponent \mintinline{ocaml}{n}, \mintinline{ocaml}{pow} is analogous to \mintinline{ocaml}{grad_main} (\Cref{listing:ocaml-grad-main}), which could be applied to \textit{any} differentiable function $f$. 
-
-However, should we know the exponent in advance, for example \mintinline{ocaml}{n} $ =$ \mintinline{ocaml}{2}, then a more efficient (but less maintainable) implementation is the \mintinline{ocaml}{square} function (\Cref{listing:ocaml-pow-fast}), analogous to \mintinline{ocaml}{grad_fast} (\Cref{listing:ocaml-grad-fast}).
-
-\begin{code}
-\begin{ocamllst}
-let square x = x * x
-\end{ocamllst}
-\captionof{listing}{An efficient implementation of exponentiation, assuming \mintinline{ocaml}{n} $=$ \mintinline{ocaml}{2}}
-\label{listing:ocaml-pow-fast}
-\end{code}
-
-Metaprogramming can be utilised to write a function, \mintinline{ocaml}{pow_gen}, which resembles \mintinline{ocaml}{pow} (inheriting its maintainability), but that generates a program which resembles \mintinline{ocaml}{square} (inheriting its efficiency). \Cref{listing:ocaml-pow-gen} presents the meta-programmed \mintinline{ocaml}{pow_gen} function. Compilation generates \mintinline{ocaml}{y * y * 1}, which resembles the body of \mintinline{ocaml}{square}. I will now explain the mechanics of generation.
+\Cref{listing:ocaml-pow-gen} presents the metaprogrammed \mintinline{ocaml}{grad_gen} function. On line 20, \mintinline{ocaml}{grad_gen} is used to generate \mintinline{ocaml}{(2 * (y+2)) * 2}, which resembles the body of \mintinline{ocaml}{grad_spec}. I will now explain the mechanics of generation.
 
 \begin{code}
 \begin{macocamllst}
-macro rec pow_gen (n: int) (x: int expr) = 
-  if n == 0 then <<1>> 
-  else <<$x * $(pow_gen (n-1) x)>>
-let square y = $(pow_gen 2 <<y>>) (*after compile-time: y * y * 1 *)
-square 3 (*at runtime: 9*)
+macro rec app_gen (f: diff) (x: int expr) = 
+  let rec app_poly_gen (cs: int list) (x : int expr) (acc: int expr) = match cs with 
+    | [] -> acc 
+    | c::cs -> app_poly_gen cs x <<c + ($x * $acc)>>
+  in match f with 
+    | Poly(cs)      -> match cs with 
+                      | [] -> <<0>>
+                      | c::cs -> app_poly cs x <<c>>
+    | Compose(g, h) -> app_gen h (app_gen g x)
+
+macro rec grad_gen (f: diff) (x: int expr) = 
+  let grad_poly_gen (cs: int list) (x: int expr) = 
+    let grad_p c (a, b) = (c * b :: a, b + 1) 
+    let (res, _) = List.fold_right grad_p cs ([], 0) in 
+    app_gen Poly(remove_last res) x
+  in match f with
+    | Poly(cs)      -> grad_poly_gen cs x
+    | Compose(g, h) -> << $(grad_main g <<x>>) * $(grad_main h (app_gen g <<x>>)) >>
+
+let grad_spec y = $(grad_gen Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4])) <<y>>)
+                   (* generates (2 + (y * 2)) * 2 *)
 \end{macocamllst}
-\captionof{listing}{A meta-programmed \mintinline{ocaml}{pow_gen} function, which resembles \mintinline{ocaml}{pow} but generates \mintinline{ocaml}{square}}
+\captionof{listing}{A metaprogrammed \mintinline{ocaml}{grad_gen} function, which resembles \mintinline{ocaml}{grad_main} but generates a function resembling \mintinline{ocaml}{grad_spec}}
 \label{listing:ocaml-pow-gen}
 \end{code}
 
 % Notice that \mintinline{ocaml}{pow_gen} broadly resembles \mintinline{ocaml}{pow}, with the exception of \textit{metaprogramming annotations} like \mintinline{ocaml}{<<>>} and \mintinline{ocaml}{$}. These . 
-Recall that (compile-time) metaprogramming gives the programmer the ability to generate programs at compile-time, for use at run-time. We may build this in two steps, by:
+In MacoCaml, the programmer is able to generate code at compile-time, for use at run-time. I separate this into two language features:
 \begin{enumerate}
-  \item Deciding on a representation for code values, such that code can be created and manipulated by programs. With representation for code values, it is possible to write expressions that return code values. These expressions serve as program generators.
-  \item Building a mechanism for executing expressions \textit{at compile-time}. We can constrain this mechanism, using types, so only generators can be executed at compile-time. 
+  \item A type for code, with mechanisms for creating and manipulating values of this type. Expressions that return values of code type serve as code generators.
+  \item A mechanism for executing expressions \textit{at compile-time}. By using the type-system, MacoCaml ensures only code generators can be executed at compile-time. Thus compile-time evaluation will always produce code values that can be evaluated at run-time (as opposed to \mintinline{ocaml}{int}s, for example, which cannot). 
 \end{enumerate}
 
-First, we represent code values as ASTs. Generated programs are ASTs, and program generators are expressions that evaluate to ASTs. For clarity, assume that there exists an AST node for each language construct. For example, the integer \mintinline{ocaml}{1} has AST node \mintinline{ocaml}{Int(1)}. If a program has type \mintinline{ocaml}{'a}, then its AST node has type \mintinline{ocaml}{'a expr}. One can now write program generators, that evaluate to ASTs, for example:  
+First, in MacoCaml, code of type \mintinline{ocaml}{'a} has type \mintinline{ocaml}{'a expr}. For example, code of type \mintinline{ocaml}{int} has type \mintinline{ocaml}{int expr}. 
+%   One can now write program generators that evaluate to ASTs, for example:  
+% \begin{ocaml}
+% let rec pow_gen (n: int) (x: int expr) = 
+%   if n == 0 then Int(1) 
+%   else Mul(x, (pow_gen (n-1) x))
+% pow_gen 2 Int(3) (*Mul(Int(3), Mul(Int(3), Int(1)))*)
+% pow_gen 2 Var(y) (*Mul(Var(y), Mul(Var(y), Int(1)))*)
+% pow_gen 3 Var(y) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), Int(1))))*)
+% \end{ocaml}
+In MacoCaml, the \mintinline{ocaml}{<<->>} (``quote'') annotation converts expressions to code values (similar to how \mintinline{ocaml}{[-]} converts expressions to list values). For example, \mintinline{ocaml}{<<1>>} has type \mintinline{ocaml}{int expr}. Under a quotation, the \mintinline{ocaml}{$-} (``splice'') annotation stops this conversion, allowing for evaluation under a quotation. For example, 
+
+\begin{center}\mintinline{ocaml}{<<$(print "hello"; <<1>>) + 0 >>}\end{center} 
+
+\noindent prints \mintinline{ocaml}{"hello"} and evaluates to \mintinline{ocaml}{<<1+0>>}.
+
+While not an accurate description of MacoCaml, it can be useful to think of elements of type \mintinline{ocaml}{'a expr} as abstract syntax trees (ASTs). In this conceptual model, quotation creates ASTs, by converting a program into its AST representation. For example,
+\begin{center}
+\text{\mintinline{ocaml}{<< x + 0 >>}} \text{ can be thought of as } \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}
+\end{center}
+Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion, allowing for programs that \textit{manipulate} ASTs. 
+\begin{center} \text{\mintinline{ocaml}{<< $x + 0 >>}} \text{ can be thought of as } \text{\mintinline{ocaml}{Plus(x, Int(0))}}
+\end{center}
+Interleaving quotes and splices executes code to build ASTs
+\begin{center}\text{\mintinline{ocaml}{<<$(print "hello"; <<1>>) + 0>>}} \\ 
+can be thought of as \\
+ \text{\mintinline{ocaml}{Plus(print "hello"; Int(1), Int(0))}} \end{center}
+Rewriting the \mintinline{ocaml}{app_gen} function in this incorrect style could be clarifying:
+
+\begin{ocaml}
+let rec app_gen (f: diff) (x: int ast) = 
+  let rec app_poly_gen (cs: int list) (x : int ast) (acc: int ast) = match cs with 
+    | [] -> acc 
+    | c::cs -> app_poly_gen cs x Plus(Int(c), Mul(x,acc))
+  in match f with 
+    | Poly(cs)      -> match cs with 
+                      | [] -> Int(0)
+                      | c::cs -> app_poly cs x Int(c)
+    | Compose(g, h) -> app_gen h (app_gen g x)
+
+app_gen Poly([2; 2]) Var(y)
+        (* Plus(Int(2), Mul(Var(y), Int(2))), or (2 + (y*2)) *)
+\end{ocaml}
+
+Second, to evaluate expressions at compile-time, MacoCaml offers the top-level splice, a splice (\mintinline{ocaml}{$}) annotation not surrounded by quotes (\mintinline{ocaml}{<<>>}). Notice that \mintinline{ocaml}{$} is overloaded. We must be careful to disambiguate between \textbf{top-level splices}, which execute programs at compile-time, and \textbf{splices under quotations}, which stop conversion to the code type. In \Cref{listing:ocaml-pow-gen}, there is only one top-level splice, on line 20: \mintinline{ocaml}{$(grad_gen ...)}. We may now shift expressions of type \mintinline{ocaml}{'a expr} under top-level splices, to perform generation at compile time. 
+
+Note that to access \mintinline{ocaml}{grad_gen} at compile-time, we must also move it under the top-level splice, resulting in code duplication:
+
 \begin{macocaml}
-let rec pow_gen (n: int) (x: int expr) = 
-  if n == 0 then Int(1) 
-  else Mul(x, (pow_gen (n-1) x))
-pow_gen 2 Int(3) (*Mul(Int(3), Mul(Int(3), 1))*)
-pow_gen 2 Var(y) (*Mul(Var(y), Mul(Var(y), 1))*)
-pow_gen 3 Var(y) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
+let grad_spec y  = $(let grad_gen = ... in 
+                     grad_gen Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4])) <<y>>) 
+let grad_spec' y = $(let grad_gen = ... in 
+                     grad_gen Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8])) <<y>>) 
 \end{macocaml}
 
-Second, we need a mechanism to execute expressions at compile-time. In MacoCaml, this is the ``top-level splice'', a splice (\mintinline{ocaml}{$}) annotation not surrounded by quotes (\mintinline{ocaml}{<<>>}). In \Cref{listing:ocaml-pow-gen}, there is only one top-level splice, on line 4: \mintinline{ocaml}{$(pow_gen 2 <<y>>)}. We may now shift program generators (and only program generators) under top-level splices, to perform generation at compile time. Note that to access \mintinline{ocaml}{pow_gen} at compile-time, we must also move it under the top-level splice. 
-
-\begin{macocaml}
-let square y = $(let rec pow_gen (n: int) (x: int expr) = ...
-                 in pow_gen 2 Var(y)) 
-               (*Mul(Var(y), Mul(Var(y), 1))*)
-let cube y   = $(let rec pow_gen (n: int) (x: int expr) = ...
-                 in pow_gen 3 Var(y)) 
-               (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
-\end{macocaml}
-
-To allow compile-time functions, like \mintinline{ocaml}{pow_gen}, to be re-used across multiple top-level splices, MacoCaml introduces the \mintinline{\macocamlLexer}{macro} (\Cref{listing:ocaml-macros})
-
-\begin{code}
-\begin{macocamllst}
-macro rec pow_gen (n: int) (x: int expr) = 
-  if n == 0 then Int(1) 
-  else Mul(x, (pow_gen (n-1) x))
-let square y = $(pow_gen 2 Var(y)) (*Mul(Var(y), Mul(Var(y), 1))*)
-let cube y = $(pow_gen 3 Var(y)) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), 1)))*)
-  \end{macocamllst}
-
-  \captionof{listing}{In MacoCaml, \mintinline{\macocamlLexer}{macro} allows for definitions to be shared across top-level splices}
-
-  \label{listing:ocaml-macros}
-\end{code}
+To allow compile-time functions, like \mintinline{ocaml}{grad_gen}, to be re-used across multiple top-level splices, MacoCaml introduces the \mintinline{\macocamlLexer}{macro}.
 % To allow definitions to
 
 % The ability to create and manipulate ASTs, combined with the ability to construct and execute functions at compile-time, allows for compile-time code generation. In the example below, we execute \mintinline{ocaml}{add_zero} at compile-time to generate the program \mintinline{ocaml}{(1*2)+0}.
-Further, rather than explicit AST constructors, ASTs are created by the \mintinline{ocaml}{<<>>} (``quote'') and \mintinline{ocaml}{$} annotations. Quotation creates ASTs, by converting a program into its AST representation. For example,
-\[\text{\mintinline{ocaml}{<< x + 0 >>}} = \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}\]
-Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion, allowing for programs that \textit{manipulate} ASTs. 
 
-\[ \text{\mintinline{ocaml}{<< $x + 0 >>}} = \text{\mintinline{ocaml}{Plus(x, Int(0))}} \]
-In MacoCaml, the programmer interleaves quotes and splices to perform code generation
-\[\text{\mintinline{ocaml}{<< $(add_zero <<1>>) + 0 >>}} = \text{\mintinline{ocaml}{Plus(add_zero Int(1), Int(0))}} \]
-Notice that \mintinline{ocaml}{$} is overloaded. We must be careful to disambiguate between ``top-level splices'', which execute programs at compile-time, and splices under quotations, which stop conversion to AST. 
-
-Re-writing \Cref{listing:ocaml-macros} in this style (being careful about non-top-level splices), we obtain exactly \Cref{listing:ocaml-pow-gen}.
-
-Applying this technique to the \mintinline{ocaml}{grad} example, we obtain
-\begin{macocaml}
-macro rec grad_gen f x = match f with
-  | Sin
-  | Tanh
-  | Sigmoid
-  | ...
-  | Polynomial(_) -> grad_of f x 
-  | Compose(f, g) -> <<$(grad_gen f x) * $(grad_gen g (app f x))>>
-let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
-\end{macocaml}
-where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
+% Notice that \Cref{listing:ocaml-macros} is exactly \Cref{listing:ocaml-pow-gen}. Applying this technique to the \mintinline{ocaml}{grad} example, we obtain
+% \begin{macocaml}
+% macro rec grad_gen f x = match f with
+%   | Sin
+%   | Tanh
+%   | Sigmoid
+%   | ...
+%   | Poly(_) -> grad_of f x 
+%   | Compose(f, g) -> <<$(grad_gen f x) * $(grad_gen g (app f x))>>
+% let grad_fast x = $(grad_gen Compose(Tanh, Sin) <<x>>)
+% \end{macocaml}
+% where \mintinline{ocaml}{grad_of} and \mintinline{ocaml}{app} are appropriately modified.
 \subsection{The Design Space of Metalanguages}\label{subsection:metaprogramming-design}
-Different metalanguages provide slightly different variants of metaprogramming to the user. I taxonomise these languages by considering three key design decisions:
+Different metalanguages provide slightly different variants of metaprogramming to the user. Different variants could interact differently with effect handlers. To clarify the scope of this thesis: I focus on homogenous, compile-time, two-stage metaprogramming: 
+
 \begin{enumerate}
   \item \textbf{\textsf{Homogenous or Heterogenous}}\\
-         \textit{Do the generated (``object'') and generating (``meta'') languages agree or differ?}
+         \textit{Do the generated and generating languages agree or differ?}
   
-        If the object and meta languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogenous} \citep{kiselyov-2024}.
+        If the generated and generating languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogenous} \citep{kiselyov-2024}.
 
-        MacoCaml allows for homogenous metaprogramming, where \texttt{OCaml} code generates \texttt{OCaml} code. In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 
+        MacoCaml allows for homogenous metaprogramming, where \texttt{OCaml} code generates \texttt{OCaml} code. I focus on homogenous metaprogramming.
+        %  In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 
 
   \item \textbf{\textsf{Run-time or Compile-Time}} \\
         \textit{When does the generation take place?}
 
-        Code generation could take place at compile-time (as with MacoCaml programs or \texttt{C} macros), or at run-time (as with \texttt{MetaOCaml} \citep{kiselyov-14}). 
+        Code generation could take place at compile-time (as with MacoCaml programs), or at run-time.
+        % (as with \texttt{MetaOCaml} \citep{kiselyov-14}). 
 
         % Run-time code generation may still be used to write fast and maintainable code, by adding a phase after the traditional compilation pipeline where the compiled code is executed. 
         
-        Run-time and compile-time metaprogramming differ non-trivially. The former requires a language construct (\mintinline{ocaml}{!}, or ``run'') for explicit invocation of the compiler. Further, with run-time metaprogramming, generated and generating programs may share a heap. 
+        Run-time and compile-time metaprogramming differ non-trivially. For example, with run-time metaprogramming, generated and generating programs may share a heap. 
+        % The former requires a language construct (\mintinline{ocaml}{!}, or ``run'') for explicit invocation of the compiler. 
 
-        MacoCaml supports compile-time metaprogramming, and we will pay no further attention to run-time metaprogramming.
+        MacoCaml supports compile-time metaprogramming, and I pay no further attention to run-time metaprogramming.
         
   \item \textbf{\textsf{Two-stage or Multi-stage}} \\
   \textit{How many stages of code generation are allowed?}
 
-  When introducing MacoCaml, I illustrated how one uses top-level splices to shift computation from run-time (``level $0$'') to compile-time (``level $-1$''). Might it be possible to shift computation from compile-time to a pre-compile-time (``level $-2$'' phase), for example, via a nested splice?
+  When introducing MacoCaml, I illustrated how one uses top-level splices to shift computation from run-time (``level $0$'') to compile-time (``level $-1$''). I describe levels formally in \Cref{subsection:sourcelang-type-system} (\Cref{dfn:level}, \Cpageref{dfn:level}). For now, it suffices to think of a level as a phase of evaluation: everything at level $-1$ must be fully evaluated before anything at level $0$ is evaluated. Might it be possible to shift computation from compile-time to a pre-compile-time (``level $-2$'') phase, for example, via a nested splice?
   \begin{macocaml}
-$($ pow_gen 2 Var(y))
+$($ grad_gen f <<y>> )
   \end{macocaml}
   In a two-stage system, one is restricted to operating between two levels, so this is disallowed. In contrast, in a multi-stage system, one can operate between any number of levels. Multi-stage metaprogramming is thus strictly more general than two-stage metaprogramming.
   
-  Although nested splices are disallowed in MacoCaml, it is a multi-stage system, since entire modules may be imported at a decremented level \citep{xie-2023}. 
+  Although nested splices are disallowed in MacoCaml, it is a multi-stage system, since entire modules may be imported at a decremented level \citep{xie-2023}. However, I focus on two-stage metaprogramming. 
 \end{enumerate}
   
-MacoCaml offers homogenous, compile-time, multi-stage metaprogramming. The scope of this dissertation is slightly more restrictive: I focus on two-stage, not multi-stage metaprogramming. This restriction was motivated by a cost-benefit analysis:
+Although MacoCaml is a multi-stage language, I restrict the scope of my dissertation to two stages. This restriction was motivated by a cost-benefit analysis:
 \begin{enumerate}
   \item \textbf{Cost}: Since in MacoCaml, the module system is the only mechanism for achieving multi-stage programming, investigating multi-stage metaprogramming would require the investigation of module systems, effects, and metaprogramming. The interaction between module systems and metaprogramming is still an ongoing area of research \citep{chiang-2024}.
   \item \textbf{Benefit}: In practice, ``almost all uses'' of multi-stage metaprogramming only use two stages \citep{inoue-2012}. Further, scope extrusion can be observed, and is often studied, in two-stage systems \citep{isoda-24,kiselyov-16}.

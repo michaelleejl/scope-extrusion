@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  31 MAY 2025 14:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  1 JUN 2025 15:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1462,10 +1462,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250531145441 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250601151149 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250531145441 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250601151149 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/E5FFBDD06E801C34D8594F1B6FF7F570.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1483,4 +1483,343 @@ LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
 \openout8 = `main.listing'.
 
  (./_minted/E630B12E9BCD53B6B834062D170B55BF.highlight.minted)
-Overfu
+Overfull \hbox (9.93787pt too wide) in paragraph at lines 43--45
+\OT1/qpl/m/n/12 Importantly, the \OT1/zi4/m/n/12 memcpy \OT1/qpl/m/n/12 macro is ex-e-cuted by the com-piler, guar-an-tee-ing that the branches
+ []
+
+
+
+[1
+
+
+
+]
+\openout8 = `main.listing'.
+
+ (./_minted/AFAF43DC962FBB6365E61FA903AFE1D5.highlight.minted) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted
+LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
+(Font)              scaled to size 12.0pt on input line 3.
+) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted) (./_minted/E12FE2EF6E1121A33EE1AC7327216FAD.highlight.minted) (./_minted/5C329831FBD52B26E02200FC4E09A9BC.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/5248D195E94933B74B85D4DC78AE94C8.highlight.minted)
+
+[2]
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <17.28> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 81.
+) (./Chapters/Background/background.tex
+
+[3]
+chapter 2.
+(./Chapters/Background/Metaprogramming/metaprogramming.tex
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <14.4> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 4.
+ (./_minted/B4E82A3B653B9E807037989C05AA7FA9.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/A846B7E0B57151AF2A33802BDF56AF6D.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/D7ABE96558634776F65961208D74A998.highlight.minted) (./_minted/441F1685E87F780941970E691CCEFC57.highlight.minted) (./_minted/B4E82A3B653B9E807037989C05AA7FA9.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/74EEB9026ABE0576C9A1090768FBDE08.highlight.minted) (./_minted/0855D60D0C4C1D8CF3363B23EF1031CA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted)
+
+[4
+
+]
+\openout8 = `main.listing'.
+
+ (./_minted/EA837455B2B2B035BB2169207165CE18.highlight.minted)
+Package hyperref Info: bookmark level for unknown listing defaults to 0 on input line 48.
+ (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/6C8750BD4E032F6DC3746DA3F465EA91.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/92C0EBE0E9ED7D17C1D3319E4082DA03.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/6C8750BD4E032F6DC3746DA3F465EA91.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/3C63D19530CEE915C353B101E5C3B178.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted) (./_minted/9587204A8D93BA86489C6743477948AA.highlight.minted)
+
+[5] (./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/6C8750BD4E032F6DC3746DA3F465EA91.highlight.minted) (./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted) (./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted) (./_minted/0E520EB057759BB844FBDAAD03E85336.highlight.minted) (./_minted/6C8750BD4E032F6DC3746DA3F465EA91.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/82E096A6953C9740A68A001604E03187.highlight.minted) (./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/6C8750BD4E032F6DC3746DA3F465EA91.highlight.minted) (./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted) (./_minted/439594CB83DD6D270AAEB1A029A6AC19.highlight.minted) (./_minted/6C8750BD4E032F6DC3746DA3F465EA91.highlight.minted) (./_minted/1F8C2737081202C4F791D09710C24377.highlight.minted) (./_minted/BC9F84902D61B247B113DA5789EBE129.highlight.minted
+LaTeX Font Info:    Trying to load font information for TS1+zi4 on input line 3.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/inconsolata/ts1zi4.fd
+File: ts1zi4.fd 2018/01/14 TS1/zi4 (Inconsolata)
+)
+LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
+(Font)              scaled to size 12.0pt on input line 3.
+) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted) (./_minted/1F8C2737081202C4F791D09710C24377.highlight.minted) (./_minted/273A279237F1CB9A68165520AC00899E.highlight.minted) (./_minted/BCFFF28250BC563281EFC0EBA5CFA9EF.highlight.minted) (./_minted/9F4FBF543012E6ECA2A3B6D750B1B8E6.highlight.minted) (./_minted/D5C97CBC80DC1A6572B8D216495C4905.highlight.minted) (./_minted/273A279237F1CB9A68165520AC00899E.highlight.minted) (./_minted/93FE1838BA5DD5FFB4FD4B1FC3E28259.highlight.minted)
+
+[6{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/inconsolata/i4-ts1.enc}] (./_minted/07E15841D2A845EAB8980984DCDF1EAD.highlight.minted) (./_minted/D47799A94345B00595DEC343D84A4FF0.highlight.minted) (./_minted/FAD8C21FFCB08AC51785A90383D934BE.highlight.minted) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted) (./_minted/5C3987361CD546D3035C4443B0D000D8.highlight.minted) (./_minted/3C6F7EFDB89EEB9E6D5FBA47202D693C.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/F8D1971990BDF80B9A8708EA7A75A0A1.highlight.minted) (./_minted/E2A3DC5D2DFB8863A6F9E33CE112267B.highlight.minted) (./_minted/2E53FC73DDEA9BB950A5B9D5A8E9DDB6.highlight.minted) (./_minted/B2EA996D082D580CE6ED6EB8E07B7370.highlight.minted) (./_minted/AA0625998DF41350CCA65741449BA03C.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/56743DD91237C128CFF05C00D75EBD5E.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/7BBC273A0227DC1DE73F0A6AF097006F.highlight.minted) (./_minted/4DA3C1A18A581E236697289DC45F5255.highlight.minted) (./_minted/3E854B17E40B91433FB6CC34DCCD9F11.highlight.minted) (./_minted/CB54FE54F7B8F4E5A2BEA710A06017F8.highlight.minted)
+Overfull \hbox (1.62183pt too wide) in paragraph at lines 164--165
+[]\OT1/qpl/m/n/12 Second, to eval-u-ate ex-pres-sions at compile-time, Ma-co-Caml of-fers the top-level splice,
+ []
+
+(./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/0F3D4E2A19276A8DFFF77B9D30C4FAFD.highlight.minted
+LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
+(Font)              scaled to size 10.0pt on input line 4.
+) (./_minted/5662CE3ED3A07D0ED3D4B7CBAA66EDD4.highlight.minted) (./_minted/E278356EAEE2B03DEFF01D35D37B2F1C.highlight.minted)
+
+[7]
+\openout8 = `main.listing'.
+
+ (./_minted/2E573DDD057B470FB719D2CDB219792B.highlight.minted)
+
+[8]) (./Chapters/Background/Effects/effects.tex (./_minted/33C076FFDCDA5B78EBAD85ACF5E7A333.highlight.minted) (./_minted/E76FE302821A92BD9B839D014065F3F6.highlight.minted) (./_minted/59EE28C0E25435FC81152B9557102E1F.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted) (./_minted/59EE28C0E25435FC81152B9557102E1F.highlight.minted) (./_minted/6EF202E75E68D4882AAB12E7BABA0D7C.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/7B370A8BDD408E3E7965D6406426C11B.highlight.minted
+LaTeX Font Info:    Font shape `TS1/zi4/b/n' will be
+(Font)              scaled to size 10.0pt on input line 2.
+) (./_minted/231B85DD15245E1677C63C53BF49AE64.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/30402CFACDA34C35A24ECDA41804CF90.highlight.minted)
+
+[9] (./_minted/33C076FFDCDA5B78EBAD85ACF5E7A333.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/CB6644A3290998930943EEADDA39FE9D.highlight.minted) (./_minted/5E9C175BD3C72BFA0A4E9C8CE1A84AF6.highlight.minted) (./_minted/AA2296C914D94FDA1CCFE93C1A89F08D.highlight.minted)
+\openout8 = `main.listing'.
+
+ (./_minted/CBD1B610128CA9B2A07BA570410B15A2.highlight.minted)
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+
+[10]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <14.4> on input line 58.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 58.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 58.
+LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
+(Font)              scaled to size 14.4pt on input line 58.
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <10> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 58.
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <7> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 58.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 67.
+LaTeX Font Info:    Trying to load font information for OMS+zi4 on input line 72.
+LaTeX Font Info:    No file OMSzi4.fd. on input line 72.
+
+
+LaTeX Font Warning: Font shape `OMS/zi4/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 72.
+
+
+
+[11]
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10.95> on input line 111.
+LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
+(Font)              scaled to size 10.95pt on input line 114.
+LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
+(Font)              scaled to size 10.95pt on input line 114.
+\openout8 = `main.listing'.
+
+ (./_minted/F41964BF2D58E8F2142A06EF5DFA62C0.highlight.minted) (./_minted/A1789BB165F04BAAB74C605B39963857.highlight.minted) (./_minted/6750158339C3D7D3ED3741ED1636192A.highlight.minted) (./_minted/CF8215434E9E26FE9A9B2F2114336788.highlight.minted) (./_minted/C4409FDBE77C267167D32FB1A114BC4F.highlight.minted) (./_minted/D5B9D3E2D99091EACC1065D3893DFED2.highlight.minted)
+
+[12]
+
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 191--192
+
+ []
+
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <8> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 206.
+
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 305--306
+
+ []
+
+\openout8 = `main.listing'.
+
+(./_minted/F054FDA90CBCF4F92CFE4D605526A07D.highlight.minted)
+
+[15]
+
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 358--359
+
+ []
+
+
+
+[17]
+Overfull \hbox (18.13919pt too wide) in paragraph at lines 475--476
+[]\OT1/qpl/m/n/12 Second, the \OT1/qpl/m/sc/12 Op \OT1/qpl/m/n/12 rule. Note the $[] \OMS/lmsy/m/n/12 2 \OT1/lmr/m/n/12 ^^A$ \OT1/qpl/m/n/12 re-stric-tion: flex-i-bil-ity al-lows us to over-approximate
+ []
+
+Package mdframed Info: mdframed works in twoside mode on input line 501.
+Package hyperref Info: bookmark level for unknown mddefinition defaults to 0 on input line 501.
+Package mdframed Info: mdframed works in twoside mode on input line 511.
+Package hyperref Info: bookmark level for unknown mdtheorem defaults to 0 on input line 511.
+LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
+(Font)              scaled to size 12.0pt on input line 514.
+
+LaTeX Font Warning: Font shape `OT1/zi4/b/it' undefined
+(Font)              using `OT1/zi4/b/n' instead on input line 514.
+
+LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <12> not available
+(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 515.
+Package mdframed Info: Not enough space on this page on input line 518.
+
+
+[18]
+Package mdframed Info: Not enough space on this page on input line 518.
+Package mdframed Info: mdframed works in twoside mode on input line 520.
+Package mdframed Info: mdframed works in twoside mode on input line 524.
+Package hyperref Info: bookmark level for unknown mdcorollary defaults to 0 on input line 524.
+
+
+[19]) (./Chapters/Background/Scope Extrusion/scope-extrusion.tex
+
+[20]
+
+[21]
+Overfull \hbox (2.36963pt too wide) in paragraph at lines 87--88
+\OT1/qpl/m/n/12 dy-namic check loses in-for-ma-tion about \OT1/qpl/m/it/12 which pro-gram frag-ment \OT1/qpl/m/n/12 was re-spon-si-ble for scope
+ []
+
+
+
+[22]
+Overfull \hbox (2.15352pt too wide) in paragraph at lines 187--188
+[]\OT1/qpl/m/n/12 With clas-si-fiers, I may now be pre-cise about ``the vari-ables per-mit-ted to be free (within
+ []
+
+
+
+[23]
+
+[24]
+
+[25])) (./Chapters/Calculus/calculus.tex
+
+[26]
+chapter 3.
+LaTeX Font Info:    Font shape `TS1/zi4/m/n' will be
+(Font)              scaled to size 8.0pt on input line 8.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <29.86> on input line 23.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <20.74> on input line 23.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <17.28> on input line 23.
+LaTeX Font Info:    Font shape `OT1/zi4/b/n' will be
+(Font)              scaled to size 17.28pt on input line 45.
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+
+ []
+
+
+
+[27
+
+]
+Overfull \hbox (2.0493pt too wide) in paragraph at lines 60--61
+\OT1/qpl/m/n/12 ple, $\OMS/lmsy/m/n/12 hh\OT1/lmr/m/n/12 1\OMS/lmsy/m/n/12 ii$ \OT1/qpl/m/n/12 is not valid syn-tax, in-stead, one must write $\OMS/lmsy/m/n/12 hh[]  \OT1/lmr/m/n/12 1\OMS/lmsy/m/n/12 ii$\OT1/qpl/m/n/12 . Sim-i-larly, $\OMS/lmsy/m/n/12 hh[]  \OT1/lmr/m/n/12 1\OMS/lmsy/m/n/12 ii$
+ []
+
+
+
+[28]
+Overfull \hbox (6.16164pt too wide) in paragraph at lines 102--104
+\OT1/qpl/m/n/12 Following Xie et al. [][][], I in-tro-duce in-te-ger lev-els to en-force sep-a-ra-tion be-tween compile-
+ []
+
+Package mdframed Info: mdframed works in twoside mode on input line 109.
+
+
+
+LaTeX Font Warning: Font shape `OT1/zi4/m/sl' undefined
+(Font)              using `OT1/zi4/m/n' instead on input line 129.
+
+
+LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <8> not available
+(Font)              Font shape `OT1/qpl/m/it' tried instead on input line 129.
+
+
+LaTeX Font Warning: Font shape `OT1/qpl/m/sl' in size <6> not available
+(Font)              Font shape `OT1/qpl/m/it' tried instead on input line 129.
+
+[29]
+Missing character: There is no ' in font nullfont!
+
+Overfull \hbox (7.99915pt too wide) in paragraph at lines 166--167
+ [] 
+ []
+
+
+
+[30]
+Overfull \hbox (2.13326pt too wide) in paragraph at lines 226--227
+[]\OT1/qpl/m/n/12 Identifies AST nodes that are []\OT1/qpl/b/n/12 am-bi-ent[] \OT1/qpl/m/n/12 (within which com-pu-ta-tion may take place)
+ []
+
+
+Overfull \hbox (4.17305pt too wide) in paragraph at lines 245--246
+[]\OT1/qpl/m/n/12 Identifies code that []\OT1/qpl/b/n/12 builds ASTs[] \OT1/qpl/m/n/12 (like []\OT1/lmss/bx/n/12 c[]\OT1/qpl/m/n/12 -mode) that can be ma-nip-u-lated at compile-
+ []
+
+
+
+[31]
+
+LaTeX Font Warning: Font shape `OT1/lmss/b/sc' undefined
+(Font)              using `OT1/lmss/b/n' instead on input line 307.
+
+LaTeX Font Info:    Font shape `OT1/lmss/b/sc' in size <12> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 307.
+LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <10.95> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 317.
+LaTeX Font Info:    Font shape `OT1/lmss/b/sc' in size <10.95> not available
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 381.
+Package mdframed Info: mdframed works in twoside mode on input line 537.
+LaTeX Font Info:    Font shape `OT1/lmss/b/it' in size <12> not available
+(Font)              Font shape `OT1/lmss/bx/it' tried instead on input line 538.
+LaTeX Font Info:    Font shape `OT1/lmss/bx/it' in size <12> not available
+(Font)              Font shape `OT1/lmss/bx/sl' tried instead on input line 538.
+
+
+[32]
+
+[33]
+
+[34]
+
+[35]
+Overfull \hbox (9.25023pt too wide) in paragraph at lines 607--608
+[]\OT1/qpl/m/n/12 The compile-time func-tion \OT1/zi4/m/sl/12 mkfun \OT1/qpl/m/n/12 is a higher-order func-tion that takes some compile-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 625--626
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 652--654
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 658--659
+
+ []
+
+
+Underfull

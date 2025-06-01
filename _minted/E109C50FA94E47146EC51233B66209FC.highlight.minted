@@ -1,3 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n+nc}{Compose}\PYG{o}{(}\PYG{n+nc}{Tanh}\PYG{o}{,} \PYG{n+nc}{Sin}\PYG{o}{)}
-\end{MintedVerbatim}

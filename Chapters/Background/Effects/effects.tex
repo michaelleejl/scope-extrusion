@@ -1,5 +1,5 @@
 \section{Effect Handlers}\label{section:effects-technical}
-What is an effect handler? I will first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I will introduce a calculus for studying the operational behaviour of effect handlers, à lá \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus will be useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers. Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I will consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
+What is an effect handler? I first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I introduce a calculus for studying the operational behaviour of effect handlers, à la \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus is useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers. Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
 
 \subsection{Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
 Effects are a mechanism by which a program interacts with its environment. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Effects are typically defined and understood separately, meaning they are not easily composable. They are also implemented by compiler engineers rather than programmers, meaning they are not customisable. Effect handlers provide a programmable, unifying framework that may be instantiated into different effects. This allows for composable and customisable treatment of effects.
@@ -60,7 +60,7 @@ Since effect handlers may be instantiated into a range of different effects, con
 \newcommand{\readInt}[1]{\texttt{\textbf{read\_int}(#1)}}
 
 
-Having motivated effect handlers, I will now describe a calculus, which I call \efflang{}, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} will be useful for two reasons. First, it will aid reasoning about the interaction between effects and metaprogramming. Second, my universal calculus will be described by extending \efflang{}. 
+Having motivated effect handlers, I now describe a calculus, which I call \efflang{}, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} is useful for two reasons. First, it aids reasoning about the interaction between effects and metaprogramming. Second, in \Cref{chapter:calculus}, I present my calculus by extending \efflang{}. 
 
 \begin{code}
   \begin{efflst}
@@ -79,11 +79,11 @@ Having motivated effect handlers, I will now describe a calculus, which I call \
 \textcolor{effComment}{$\begin{array}{l}\return{(\texttt{3}, \texttt{"1;2"})}\end{array}$}
 
   \end{efflst}
-  \captionof{listing}{A \efflang{} program that returns $(\texttt{3}, \texttt{"1;2"})$. It will be used as a running example throughout this section.}
+  \captionof{listing}{A \efflang{} program that returns $(\texttt{3}, \texttt{"1;2"})$. It is used as a running example throughout this section.}
   \label{listing:efflang-running-example}
   \end{code}
 
-\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In addition to this base syntax, in this section, I will assume \efflang{} is extended with the following language extensions: 
+\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In addition to this base syntax, in this section, I assume \efflang{} is extended with the following language extensions: 
 \begin{enumerate}
   \item A unit value $()$,
   \item Pairs $(\texttt{1}, \texttt{2})$ which can be destructured $\bind{(x, y)}{\return{(\texttt{1}, \texttt{2})}}{\, x+y}$,
@@ -103,7 +103,7 @@ $\begin{array}{l}\bind{(x, y)}{\return{(\texttt{"Revolution"}, \texttt{f"\{9\}"}
 \textcolor{effComment}{$\begin{array}{l}\return{\texttt{"Revolution 9"}}\end{array}$}
 \end{eff}
 Further, I use $c_1;c_2$ as syntactic sugar for $\bind{\_}{c_1}{c_2}$. 
-I will explain key language constructs in turn, with reference to a running example: the \efflang{} program in \Cref{listing:efflang-running-example}. 
+I explain key language constructs in turn, with reference to a running example: the \efflang{} program in \Cref{listing:efflang-running-example}. 
 \begin{figure}
   \begin{eff-desc}
     {\large{\textbf{Syntax}}}
@@ -140,7 +140,7 @@ or alternatively, evaluate \texttt{1}, apply it, then evaluate \texttt{2}
 $\bind{x}{\return{\texttt{1}}}{(\bind{f}{\texttt{plus} \, x}{\bind{y}{\return{\texttt{2}}}{f y}})}$
 \end{eff}
 
-Both choices are valid, but the programmer must choose. For clarity, where the order cannot affect the result (both choices evaluate to $\return{3}$), I will abuse notation and write (for instance) $1+2$. 
+Both choices are valid, but the programmer must choose. For clarity, where the order cannot affect the result (both choices evaluate to $\return{3}$), I abuse notation and write (for instance) $1+2$. 
 
 \subsubsection{Performing effects: \texttt{op}, \texttt{handle}, and \texttt{continue}}
 Having made explicit the order of operation, I now consider effect handlers. Recall that effect handlers allow users to register custom effects with custom semantics.
@@ -150,7 +150,7 @@ For simplicity, \efflang{} assumes that the effects have been registered in adva
 $\bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$
 \end{eff}
 
-In the program fragment above, \textbf{\texttt{print}} is an effect, but with as-yet-unknown semantics. Effect handlers, which comprise a \textbf{return handler} and zero or more \textbf{operation handlers}, specify how effects interact with their environment, and thus may be used to give effects meaning. I will define an effect handler that accumulates print statements in a string (some ``\texttt{stdout}'').  For example, the aforementioned program should return $(\texttt{3}, \texttt{"1; 2"})$.
+In the program fragment above, \textbf{\texttt{print}} is an effect, but with as-yet-unknown semantics. Effect handlers, which comprise a \textbf{return handler} and zero or more \textbf{operation handlers}, specify how effects interact with their environment, and thus may be used to give effects meaning. I define an effect handler that accumulates print statements in a string (some ``\texttt{stdout}'').  For example, the aforementioned program should return $(\texttt{3}, \texttt{"1; 2"})$.
 
 I begin by considering how to handle the case where there are no calls to \textbf{\texttt{print}}. For example, in the program $\return{\texttt{3}}$. I wish to return both the value and an empty string: in this case, $(\texttt{3}, \texttt{""})$. I achieve this by specifying a \textit{return handler}, of the form:
 \[\textbf{\texttt{return}}(x) \mapsto {c}\]
@@ -161,7 +161,7 @@ Next, I consider how to handle a call to \textbf{\texttt{print}}. I use an opera
 Where $c$ is the user-defined semantics for \textbf{\texttt{print}}.
 Concretely, one instance of $c$ is 
 \[\textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
-In the definition of $c$, the programmer may refer to $x$ and $k$, which I will now explain. $x$ allows programs to send values (for example, values to be printed) to the handler. $k$ is a delimited continuation representing a suspended program, awaiting a value from its environment. Effects also allow programs to receive data from their environments, as in
+In the definition of $c$, the programmer may refer to $x$ and $k$, which I now explain. $x$ allows programs to send values (for example, values to be printed) to the handler. $k$ is a delimited continuation representing a suspended program, awaiting a value from its environment. Effects also allow programs to receive data from their environments, as in
 \[1 + \textbf{\texttt{get\_int\_from\_user}}()\]
 Note that the program is suspended until the value is received. I write the suspended program as $1 + [-]$, where $[-]$ indicates an as-yet-unknown value. This suspended program is represented by the continuation $k$. The expression 
 \[\continue{k}{v}\] 
@@ -233,7 +233,7 @@ Having described \efflang{} informally, I now describe its semantics more precis
 \label{fig:efflang-opsem}
 \end{figure}
 
-The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à lá \citet{kiselyov-2012}. Most of the rules are standard. I focus on two rules: \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
+The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à la \citet{kiselyov-2012}. Most of the rules are standard. I focus on two rules: \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
 % For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. 
 
 To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, consider the evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
@@ -298,7 +298,7 @@ $\begin{array}{l}
 
 
 \subsubsection{Type-and-Effect System}
-I now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types, which I will now briefly describe. 
+I now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types, which I now briefly describe. 
 
 \begin{figure}
   \begin{eff-desc}
@@ -323,7 +323,7 @@ In \texttt{OCaml}, this would correspond to writing:
 \begin{ocaml}
 type _ Effect.t += Op: A -> B
 \end{ocaml}
-I will not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
+I do not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
 \[\texttt{recursive}: 1 \to (\functionType[\{ \texttt{recursive} \}]{1}{1})\]
 Thus, one may write programs which do not terminate, by ``tying the knot''. 
 
@@ -503,7 +503,7 @@ Finally, I define a notion of well-typed computation.
 \end{definition}
 
 \subsubsection{Metatheory}
-I will build not only on \efflang{}, but on metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}.
+I build not only on \efflang{}, but on metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}.
 
 \renewcommand{\effconfiguration}[2]{\langle {#1}; {#2} \rangle}
 \renewcommand{\transition}[2]{#1 \rightarrow #2}

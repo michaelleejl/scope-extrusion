@@ -1,3 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n+nc}{Plus}\PYG{o}{(}\PYG{n}{add\PYGZus{}zero} \PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{1}\PYG{o}{)}\PYG{o}{,} \PYG{n+nc}{Int}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{)}\PYG{o}{)}
-\end{MintedVerbatim}

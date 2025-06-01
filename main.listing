@@ -1,1 +1,1 @@
-Compose(Tanh, Sin)
+type _ Effect.t += Op: A -> B

@@ -122,7 +122,7 @@ The eager dynamic check also checks at top-level splices, like the lazy dynamic 
 To the best of my knowledge, the eager dynamic check is a faithful model of the \texttt{MetaOCaml} check, as described by \citet{kiselyov-24}.
 
 \subsection{Correctness of the Eager Dynamic Check}\label{subsection:eager-dynamic-correctness}
-We can attempt to prove the correctness of the eager dynamic check: all cases of eager scope extrusion are reported (by transitioning to \textbf{\texttt{err}}). This eager dynamic is, unfortunately, incorrect: we may cause eager scope extrusion, but never use the offending AST $n$ in an unsafe way. 
+We can attempt to prove the correctness of the eager dynamic check: all cases of eager scope extrusion are reported (by transitioning to \textbf{\texttt{err}}). This eager dynamic is, unfortunately, incorrect: we may cause eager scope extrusion, but never use the offending AST $n$ in an unsafe way, and thus the eager dynamic check will not report that scope extrusion occurred. 
 
 For example, recall that we can write non-terminating programs in \sourceLang{}. Consider the \sourceLang{} program in \Cref{listing:eager-scope-extrusion-unsafe}, where $\Omega$ is some non-terminating program that never refers to $z$. After translation, the program will reduce to a configuration that exhibits eager scope extrusion ($\return{y}$). However, the program will immediately enter into a non-terminating loop, and scope extrusion will never be reported.
 
@@ -502,20 +502,20 @@ Following \citet{isoda-24}, I prove a weakening lemma. As types are stratified i
 \begin{lemma}[Weakening for Level 0 Values]{sourceHighlight}
   If $\rcqtypejudge{\gamma}{e}{T^0}$ then
   \begin{enumerate}
-    \item $\rcqtypejudge[\Gamma, (x:T_1^0)^{\gamma'}]{\gamma}{e}{T^0}$ for some $\gamma' \in \Gamma$
+    \item $\rcqtypejudge[\Gamma, (x:T_1^0)^{\gamma'}]{\gamma}{e}{T^0}$ for arbitrary $\gamma' \in \Gamma$
     \item $\rcqtypejudge[\Gamma, (x:T_1^{-1})]{\gamma}{e}{T^0}$ 
-    \item $\rcqtypejudge[\Gamma, \gamma']{\gamma}{e}{T^0}$, for some $\gamma' \notin \Gamma$
-    \item $\rcqtypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{\gamma}{e}{T^0}$, for some $\gamma', \gamma'' \in \Gamma$
+    \item $\rcqtypejudge[\Gamma, \gamma']{\gamma}{e}{T^0}$, for arbitrary $\gamma' \notin \Gamma$
+    \item $\rcqtypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{\gamma}{e}{T^0}$, for arbitrary $\gamma', \gamma'' \in \Gamma$
   \end{enumerate}
 \end{lemma}
 \vspace{-\baselineskip}
 \begin{lemma}[Weakening for Level $-1$ Values]{sourceHighlight}
   If $\stypejudge{e}{T^{-1}}$ then
   \begin{enumerate}
-    \item $\stypejudge[\Gamma, (x:T_1^0)^{\gamma'}]{e}{T^0}$ for some $\gamma' \in \Gamma$
+    \item $\stypejudge[\Gamma, (x:T_1^0)^{\gamma'}]{e}{T^0}$ for arbitrary $\gamma' \in \Gamma$
     \item $\stypejudge[\Gamma, (x:T_1^{-1})]{e}{T^{-1}}$ 
-    \item $\stypejudge[\Gamma, \gamma']{e}{T^{-1}}$, for some $\gamma' \notin \Gamma$
-    \item $\stypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{e}{T^{-1}}$, for some $\gamma', \gamma'' \in \Gamma$
+    \item $\stypejudge[\Gamma, \gamma']{e}{T^{-1}}$, for arbitrary $\gamma' \notin \Gamma$
+    \item $\stypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{e}{T^{-1}}$, for arbitrary $\gamma', \gamma'' \in \Gamma$
   \end{enumerate}
 \end{lemma}
 Proof of these lemmas is by induction on the typing derivation.

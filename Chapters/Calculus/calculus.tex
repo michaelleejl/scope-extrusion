@@ -61,7 +61,7 @@ Notice that we cannot quote values: we \textit{must} generate effectful programs
 \[\bind{a}{\equote[\return{1}]}{\op{a}}\]
 rather than $\op{\, \equote[\return{1}] \,}$. However, in both cases, I will abuse notation for clarity.
 
-\subsection{Type System}
+\subsection{Type System}\label{subsection:sourcelang-type-system}
 \begin{figure}
   \begin{source-desc}
     $\begin{array}{lllr}
@@ -106,7 +106,7 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
   \[\lambda x: \mathbb{N}^0. \, \textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{0})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})}\]
   More precisely, levels are defined as follows:
 
-  \begin{definition}[Level]{sourceHighlight}
+  \begin{definition}[Level]{sourceHighlight}\label{dfn:level}
     The level of an expression $e$ is calculated by subtracting the number of surrounding splices from the number of surrounding quotations.
   \end{definition}
 
