@@ -389,10 +389,10 @@ Where the square brackets $[-]$ separate the evaluation context (outside) and th
 
 However, altering the semantics in such a manner means that any transition could potentially have a side effect: unmuting variables. To keep the semantics standard, and to more closely model the implementation of the check, I associate the act of unmuting with \textbf{\texttt{dlet}}. That is, the only configuration whose transition may unmute variables is 
 \[\langle \dlet{\Binder{\alpha}{T}}{\return{n}}; E; U; M; I \rangle \]
-In the previous example, the transition from $\dlet{\Binder{z}{\mathbb{N}}}{\return{n}}$ unmutes variables. Therefore, $\Var{x}{\mathbb{N}}$ is still muted when the \texttt{App} constructor is checked ($\checkm{\App{f}{a}}$), but unmuted when we check the constructor of the outer lambda. 
+In the previous example, the transition from $\dlet{\Binder{z}{\mathbb{N}}}{\return{n}}$ unmutes variables. Therefore, $\Var{x}{\mathbb{N}}$ is still muted when the \texttt{App} constructor is checked, but unmuted when we check the constructor of the outer lambda. 
 This is the side-effect/side-condition in the \textsc{Sec-Dlt} rule (\Cref{fig:corelang-opsem}).
 
-The best-effort scope extrusion check is thus simple: change all \textbf{\texttt{check}}s to $\textbf{\texttt{check}}_M$s. For example, 
+The best-effort scope extrusion check is thus simple: change all \textbf{\texttt{check}}s, except the one after the top-level-splice, to $\textbf{\texttt{check}}_M$s. For example, 
 {
   \footnotesize
 \[
@@ -404,7 +404,7 @@ The $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]
 {
 \[\begin{array}{@{}l}
   \bind{x}{\gensym{\mathbb{N}}}{} \\
-  {\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow \textcolor{selected}{\textbf{{\texttt{check}$_M$}}}(\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{{\textcolor{selected}{\textbf{{\texttt{check}$_M$}}}(\textbf{\texttt{dlet}}(y,}}} \\
+  {\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow {\textbf{{\texttt{check}}}}(\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{{\textcolor{selected}{\textbf{{\texttt{check}$_M$}}}(\textbf{\texttt{dlet}}(y,}}} \\
     \quad\quad\quad\quad\quad\quad\quad
     \quad\quad\quad\quad\quad\quad\,\,
     \textbf{\texttt{do}}\;{\texttt{body}_2} \leftarrow {(\bind{a}{\varToAST{x}}{}}\\
@@ -423,7 +423,7 @@ The $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]
 \end{array}\]
 }
 
-Since the context outside the top-level splice is \textit{ambient} and \textit{inert}, it can never be captured by a handler. Hence, the $\textbf{\texttt{check}}_M$ at the top-level splice will always behave like a \textbf{\texttt{check}}. Additionally, since $\textbf{\texttt{check}}_M$s are at least as permissive as \textbf{\texttt{check}}s, the best-effort dynamic check is at least as expressive as the eager dynamic check. I verify that the implementation of the best-effort scope extrusion check allows the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}. 
+Since $\textbf{\texttt{check}}_M$s are at least as permissive as \textbf{\texttt{check}}s, the best-effort dynamic check is at least as expressive as the eager dynamic check. The implementation of the best-effort scope extrusion check allows the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}. 
 
 \subsection{Correctness of the Best-Effort Dynamic Check}\label{subsection:best-effort-correct}
 Correctness of the best-effort dynamic check is easy to show: if there is best-effort scope extrusion, then either one of the the $\textbf{\texttt{check}}_M$s reports an error, or none do. In the latter case, we degenerate to the lazy dynamic check, where the top-level-splice \textbf{\texttt{check}} must report an error. 
@@ -707,7 +707,7 @@ The two important definitions are the logical relation on the $T^{0} (\gamma)$ v
 
 For a normal form $n$ to be in the relation of the $T^{0} (\gamma)$ type, $n$ must be an AST of the right type \textbf{and} the free variables of $n$ need to be permitted by $\gamma$ (permissibility was previously defined in \Cref{subsubsection:refined-environment-classifiers}, \Cpageref{subsubsection:refined-environment-classifiers}). Recall that the definition of permissibility assumes some known partial order on classifiers, e.g. $\gamma' \sqsubseteq \gamma$. The partial order is carried by the index $\Theta$. 
 
-The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}, where the well-foundedness of the definition is additionally justified. Defining the logical as a fixed point gives rise to the principle of \textsf{Scoped}-Induction
+The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}, where the well-foundedness of the definition is additionally justified. Defining the logical relation as a fixed point gives rise to the principle of \textsf{Scoped}-Induction
 
 \newcommand{\scoped}[2][\Theta]{\textsf{Scoped}_{{#1}, {#2}}}
 

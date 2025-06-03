@@ -20,7 +20,7 @@
 \contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed Expression, Refined Environment Classifiers}}{55}{mddefinition.4.4.2}%
 \contentsline {mdlemma}{{Lemma}{4.4.{1}}{Weakening for Level 0 Values}}{56}{mdlemma.4.4.1}%
 \contentsline {mdtheorem}{{Theorem}{4.4.{1}}{Correctness of Refined Environment Classifiers}}{57}{mdtheorem.4.4.1}%
-\contentsline {mddefinition}{{Definition}{4.4.{3}}{\textsf {Scoped}-Induction}}{59}{mddefinition.4.4.3}%
+\contentsline {mddefinition}{{Definition}{4.4.{3}}{\textsf {Scoped}-Induction}}{57}{mddefinition.4.4.3}%
 \contentsline {mdlemma}{{Lemma}{4.4.{2}}{Closure under Anti-Reduction}}{59}{mdlemma.4.4.2}%
 \contentsline {mddefinition}{{Definition}{4.4.{4}}{Closed substitution}}{59}{mddefinition.4.4.4}%
 \contentsline {mdlemma}{{Lemma}{4.4.{3}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{59}{mdlemma.4.4.3}%
