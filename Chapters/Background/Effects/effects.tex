@@ -1,72 +1,91 @@
 \section{Effect Handlers}\label{section:effects-technical}
-What is an effect handler? I first motivate effect handlers by considering the problem of adding resumable exceptions to \texttt{OCaml} (\Cref{subsection:effect-handler-motivation}). Second, I introduce a calculus for studying the operational behaviour of effect handlers, à la \citet{pretnar-15} (\Cref{subsection:effect-handler-calculus}). This calculus is useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers. Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, I consider the design space of effect handlers (\Cref{subsection:effect-handler-design}).
+What is an effect handler? \Cref{subsection:effect-handler-motivation} first motivates effect handlers, as a way to build composable and customisable effects. \Cref{subsection:effect-handler-calculus} introduces a calculus for studying the operational behaviour of effect handlers, à la \citet{pretnar-15}. This calculus is useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers. Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, \Cref{subsection:effect-handler-design} considers the design space of effect handlers.
 
 \subsection{Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
-Effects are a mechanism by which a program interacts with its environment. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Effects are typically defined and understood separately, meaning they are not easily composable. They are also implemented by compiler engineers rather than programmers, meaning they are not customisable. Effect handlers provide a programmable, unifying framework that may be instantiated into different effects. This allows for composable and customisable treatment of effects.
+Effects are a mechanism by which a program interacts with its environment. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Different effects are typically defined and understood separately from each other, meaning they are not easily composable. They are also typically implemented by compiler engineers rather than programmers, meaning they are not customisable. In contrast, effect handlers provide a unifying and programmable framework that may be instantiated into different effects, allowing for composable and customisable treatment of effects \citep{kiselyov-2012}.
 
-To illustrate the need for effect handlers, consider the following problem, by \citet{kiselyov-2012}. Assume a binary search tree of (key, value) pairs. The following code provides two functions. The first \mintinline{ocaml}{find}s a value \mintinline{ocaml}{v} associated with key \mintinline{ocaml}{k}, raising a \mintinline{ocaml}{NotFound} exception if \mintinline{ocaml}{k} is not in the tree. The second \mintinline{ocaml}{update}s the dictionary with a fresh key value pair, overwriting old values.
+% To illustrate the need for effect handlers, consider the following problem, by \citet{kiselyov-2012}. Assume a binary search tree of (key, value) pairs. The following code provides two functions. The first \mintinline{ocaml}{find}s a value \mintinline{ocaml}{v} associated with key \mintinline{ocaml}{k}, raising a \mintinline{ocaml}{NotFound} exception if \mintinline{ocaml}{k} is not in the tree. The second \mintinline{ocaml}{update}s the dictionary with a fresh key value pair, overwriting old values.
 
-\begin{ocaml}
-type ('a, 'b) tree = Lf | Br of 'a * 'b * tree * tree 
+% \begin{ocaml}
+% type ('a, 'b) tree = Lf | Br of 'a * 'b * tree * tree 
 
-let rec find (t: tree) (k: 'a) = match t with 
- | Lf -> raise NotFound()
- | Br(k', v, l, r) -> if k == k' then v 
-                      else if k < k' then find l k
-                           else find r k
+% let rec find (t: tree) (k: 'a) = match t with 
+%  | Lf -> raise NotFound()
+%  | Br(k', v, l, r) -> if k == k' then v 
+%                       else if k < k' then find l k
+%                            else find r k
 
-let rec update (t: tree) (k: 'a) (v: 'b) = match t with 
-  | Lf -> Br(k, v, Lf, Lf)
-  | Br(k', v', l, r) -> if k == k' then Br(k, v, l, r)
-                        else if k < k' then Br(k', v', update l k v, r)
-                        else Br(k', v', l, update r k v)
-\end{ocaml}
+% let rec update (t: tree) (k: 'a) (v: 'b) = match t with 
+%   | Lf -> Br(k, v, Lf, Lf)
+%   | Br(k', v', l, r) -> if k == k' then Br(k, v, l, r)
+%                         else if k < k' then Br(k', v', update l k v, r)
+%                         else Br(k', v', l, update r k v)
+% \end{ocaml}
 
-Assume the task is to build a \mintinline{ocaml}{findOrInsert} function that either finds the value associated with a key, \textit{or} inserts a default value. A naïve approach to writing this function would be
-\begin{ocaml}  
-let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
-  try find t k with NotFound -> insert t k default
-\end{ocaml}
-This function is \textbf{inefficient}. If the \mintinline{ocaml}{find} function raises a \mintinline{ocaml}{NotFound} exception, it will do so at the point where the default value should be inserted. If computation could be resumed at the point where the exception was raised, as such:
-\begin{ocaml}
-let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
-  try find t k with NotFound(p) -> continue p Br(k, default, Lf, Lf)
-\end{ocaml}
-then the function could be twice as fast. \mintinline{ocaml}{p} represents the suspended program to be resumed, and is known as a \textit{delimited continuation}.
+% Assume the task is to build a \mintinline{ocaml}{findOrInsert} function that either finds the value associated with a key, \textit{or} inserts a default value. A naïve approach to writing this function would be
+% \begin{ocaml}  
+% let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
+%   try find t k with NotFound -> insert t k default
+% \end{ocaml}
+% This function is \textbf{inefficient}. If the \mintinline{ocaml}{find} function raises a \mintinline{ocaml}{NotFound} exception, it will do so at the point where the default value should be inserted. If computation could be resumed at the point where the exception was raised, as such:
+% \begin{ocaml}
+% let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
+%   try find t k with NotFound(p) -> continue p Br(k, default, Lf, Lf)
+% \end{ocaml}
+% then the function could be twice as fast. \mintinline{ocaml}{p} represents the suspended program to be resumed, and is known as a \textit{delimited continuation}.
 
-The aforementioned problem motivates the need for resumable exceptions. To understand the need for effect handlers, consider how one might go about \textbf{implementing} resumable exceptions. One approach might be to fork the implementation of handlers and tweak it ever-so-slightly. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee, and \textit{continually} guarantee. Second, the solution is not \textbf{customisable}. Adding resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
+% The aforementioned problem motivates the need for resumable exceptions. 
+% To illustrate how effect handlers may be useful, consider the problem of adding resumable exceptions to an existing language . One approach might be to fork the implementation of exception handlers. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee, and \textit{continually} guarantee. Second, the solution is not \textbf{customisable}. Adding resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
 
-Effect handlers resolve both composability and customisability issues. Much like how exception handlers allow users to create custom exceptions with custom semantics, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects (in the earlier example, resumable exceptions, but more generally, state, I/O, greenthreading, non-determinism, and more) as effect handlers ensures composability by design. 
+Much like how exception handlers allow users to create custom exceptions with custom semantics, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects as effect handlers ensures composability by design. 
 
-With effect handlers, we can re-write the previous example to obtain the behaviour of resumable exceptions, even if the \texttt{OCaml} compiler does not support it, with the guarantee that \mintinline{ocaml}{NotFound} will interact predictably with other defined effects.
-\begin{ocaml}
-type _ Effect.t += NotFound: unit -> tree t
+% With effect handlers, we can re-write the previous example to obtain the behaviour of resumable exceptions, even if the \texttt{OCaml} compiler does not support it, with the guarantee that \mintinline{ocaml}{NotFound} will interact predictably with other defined effects.
+% \begin{ocaml}
+% type _ Effect.t += NotFound: unit -> tree t
 
-let rec find (t: tree) (k: 'a) = match t with 
-  | Lf -> NotFound()
-  | Br(k', v, l, r) -> if k == k' then v 
-                      else if k < k' then find l k
-                            else find r k
+% let rec find (t: tree) (k: 'a) = match t with 
+%   | Lf -> NotFound()
+%   | Br(k', v, l, r) -> if k == k' then v 
+%                       else if k < k' then find l k
+%                             else find r k
 
-let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
-  match find t k with NotFound(p) with 
-  | v -> v
-  | effect NotFound k -> continue p Br(k, default, Lf, Lf)
-\end{ocaml}
+% let rec findOrInsert (t: tree) (k: 'a) (default: 'b) = 
+%   match find t k with NotFound(p) with 
+%   | v -> v
+%   | effect NotFound k -> continue p Br(k, default, Lf, Lf)
+% \end{ocaml}
 
-Since effect handlers may be instantiated into a range of different effects, considering the interaction of metaprogramming with effect handlers is an exercise in killing many birds with a single stone. Additionally, effect handlers were recently added to \texttt{OCaml} \citep{sivaramakrishnan-21}, making their interaction a timely problem. 
+Since effect handlers may be instantiated into a range of different effects, considering the interaction of metaprogramming with effect handlers is an exercise in killing many birds with a single stone. Additionally, effect handlers were recently added to \texttt{OCaml} \citep{sivaramakrishnan-21}, making their interaction with metaprogramming a timely problem. 
 \subsection{\texorpdfstring{\efflang{}}{Lambda-Op}: A Calculus for Effect Handlers}\label{subsection:effect-handler-calculus}
-\newcommand{\print}[1]{\texttt{\textbf{print}(#1)}}
+\newcommand{\print}[1]{\texttt{\textbf{print}}(\texttt{#1})}
 \newcommand{\readInt}[1]{\texttt{\textbf{read\_int}(#1)}}
 
 
-Having motivated effect handlers, I now describe a calculus, which I call \efflang{}, for reasoning about their operational behaviour.\ \efflang{} is a slight variant of the calculus described by \citet{pretnar-15}. Understanding \efflang{} is useful for two reasons. First, it aids reasoning about the interaction between effects and metaprogramming. Second, in \Cref{chapter:calculus}, I present my calculus by extending \efflang{}. 
+This section presents a calculus, \efflang{}, for reasoning about the operational behaviour of effect handlers.\ \efflang{} is broadly similar to the calculus described by \citet{pretnar-15} \footnote{Differences will be clarified as they arise}, and will be used in later sections to study the interaction between effect handlers and metaprogramming. 
+
+
+\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In this section, I additionally assume \efflang{} additionally supports a unit value (), pairs with pattern matching, strings with concatenation and Python-style format strings. 
+
+For example, treating $\bind{x}{c_1}{c_2}$ as a let-binding (and ignoring \textbf{\texttt{return}}, which is explained shortly), the following code evaluates to \texttt{"Revolution 9"}.
+
+% \texttt{\^} \texttt{f"\{$y$\}"}}}
+\begin{eff}
+$\begin{array}{l}\bind{(x, y)}{\return{(\texttt{"Revolution"}, \texttt{f"\{9\}"})}}{\, x \text{ \^\ } y}\end{array}$
+\vspace{2mm} 
+\textcolor{effComment}{\hrule height 0.2mm \relax}
+\vspace{2mm} 
+
+\textcolor{effComment}{$\begin{array}{l}\return{\texttt{"Revolution 9"}}\end{array}$}
+\end{eff}
+Further, I use $c_1;c_2$ as syntactic sugar for $\bind{\_}{c_1}{c_2}$. 
+This section explains key language constructs in turn, with reference to a running example: the \efflang{} program in \Cref{listing:efflang-running-example}. 
+
 
 \begin{code}
   \begin{efflst}
     $\begin{array}{l}
       \textbf{\texttt{handle}} \\
-      \quad \bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{2}}{\, x + y}}} \\
+      \quad \bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}} \\
       \textbf{\texttt{with}} \\
       \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
       \quad \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\\
@@ -83,30 +102,10 @@ Having motivated effect handlers, I now describe a calculus, which I call \effla
   \label{listing:efflang-running-example}
   \end{code}
 
-\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In addition to this base syntax, in this section, I assume \efflang{} is extended with the following language extensions: 
-\begin{enumerate}
-  \item A unit value $()$,
-  \item Pairs $(\texttt{1}, \texttt{2})$ which can be destructured $\bind{(x, y)}{\return{(\texttt{1}, \texttt{2})}}{\, x+y}$,
-  \item Strings \texttt{"Hello"},
-  \item Format strings \texttt{f"\{1\}"}, and
-  \item String concatenation \texttt{\^}
-\end{enumerate}
-For example, the following code evaluates to \texttt{"Revolution 9"}.
-
-% \texttt{\^} \texttt{f"\{$y$\}"}}}
-\begin{eff}
-$\begin{array}{l}\bind{(x, y)}{\return{(\texttt{"Revolution"}, \texttt{f"\{9\}"})}}{\, x \text{ \^\ } y}\end{array}$
-\vspace{2mm} 
-\textcolor{effComment}{\hrule height 0.2mm \relax}
-\vspace{2mm} 
-
-\textcolor{effComment}{$\begin{array}{l}\return{\texttt{"Revolution 9"}}\end{array}$}
-\end{eff}
-Further, I use $c_1;c_2$ as syntactic sugar for $\bind{\_}{c_1}{c_2}$. 
-I explain key language constructs in turn, with reference to a running example: the \efflang{} program in \Cref{listing:efflang-running-example}. 
 \begin{figure}
   \begin{eff-desc}
     {\large{\textbf{Syntax}}}
+\vspace{2mm}
 
   $\begin{array}{@{}llll}
   \text{Values} & v & := & x \mid n \mid \lambda x. c \mid \kappa x.c\\
@@ -125,49 +124,71 @@ I explain key language constructs in turn, with reference to a running example: 
 Effects force us to carefully consider the order of evaluation. For example, consider the following \texttt{OCaml} programs:
 \begin{ocaml}
 let pure      = (1+0) + (2+0)
-let effectful = let l = new 0 in (l := 1; 1) + (l := 2; 2)
+let effectful = let l = ref 0 in (l := 1; 1) + (l := 2; 2)
 \end{ocaml}
 The result of \mintinline{ocaml}{pure}, which has no effects, is independent of the evaluation order. In contrast, the result of \mintinline{ocaml}{effectful} \textit{is} dependent on the evaluation order. If terms are evaluated left-to-right, the value of \mintinline{ocaml}{!l} is \mintinline{ocaml}{2}, otherwise, it is \mintinline{ocaml}{1}.
 
-In order to be precise about the order of evaluation, \efflang{} terms are stratified into two syntactic categories, ``inert values'' ($v$) and ``potentially effectful computations'' ($c$) \citep{pretnar-15}. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ sequences computations, forcing programmers to be explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
+In order to be precise about the order of evaluation, \efflang{} follows \citeauthor{pretnar-15}'s approach of stratifying terms into distinct syntactic categories, with ``inert values'' ($v$) disjoint from ``potentially effectful computations'' ($c$). However, while \citeauthor{pretnar-15} treats handlers $h$ as values, in \efflang{}, they are a third syntactic category, disjoint from both values and computations. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ acts like a let-binding, sequencing computations. This forces programmers to be explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
 
-For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} \texttt{1} \texttt{2}? Are both arguments evaluated before application, or are evaluation and application interleaved? The syntax forces programmers to choose explicitly. The programmer can either fully evaluate both arguments before applying them in turn, 
+For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} $c_1$ $c_2$, where $c_1$ and $c_2$ are compuations that evaluate to naturals? Are both arguments evaluated before application, or are evaluation and application interleaved? The syntax forces programmers to choose explicitly. The programmer can either fully evaluate both arguments before applying them in turn, 
 \begin{eff}
-$\bind{x}{\return{\texttt{1}}}{(\bind{y}{\return{\texttt{2}}}{(\bind{f}{\texttt{plus} \, x}{f y})})}$
+$\bind{x}{c_1}{(\bind{y}{c_2}{(\bind{f}{\texttt{plus} \, x}{f y})})}$
 \end{eff}
-or alternatively, evaluate \texttt{1}, apply it, then evaluate \texttt{2}
+or alternatively, $c_1$, apply it, then evaluate $c_2$
 \begin{eff}
-$\bind{x}{\return{\texttt{1}}}{(\bind{f}{\texttt{plus} \, x}{\bind{y}{\return{\texttt{2}}}{f y}})}$
+$\bind{x}{c_1}{(\bind{f}{\texttt{plus} \, x}{(\bind{y}{c_2}{f y})})}$
 \end{eff}
 
-Both choices are valid, but the programmer must choose. For clarity, where the order cannot affect the result (both choices evaluate to $\return{3}$), I abuse notation and write (for instance) $1+2$. 
+Both choices are valid, but the programmer must choose. For clarity, where the order cannot affect the result (for example, $c_1 = \return{\texttt{1}}$, $c_2 = \return{\texttt{2}}$), I abuse notation and write $c_1+c_2$. Similarly, for clarity, I implicitly cast values to computations (writing $\texttt{1}+\texttt{2}$ rather than $\return{\texttt{1}} + \return{\texttt{2}}$).
 
 \subsubsection{Performing effects: \texttt{op}, \texttt{handle}, and \texttt{continue}}
-Having made explicit the order of operation, I now consider effect handlers. Recall that effect handlers allow users to register custom effects with custom semantics.
-
-For simplicity, \efflang{} assumes that the effects have been registered in advanced, parameterising over them with the placeholder $\op{v}$. Assume that the user has declared the effects \texttt{\textbf{print}} and \texttt{\textbf{readInt}} in advance. This would allow the user to write programs like 
+Recall that effect handlers allow users to register custom effects with custom semantics.\ \efflang{} assumes that the effects have been registered in advanced, parameterising over them with the placeholder $\op{v}$. Assume that the user has declared the effect \texttt{\textbf{print}} in advance. They may thus write programs which refer to \texttt{\textbf{print}}:
 \begin{eff}
 $\bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$
 \end{eff}
 
-In the program fragment above, \textbf{\texttt{print}} is an effect, but with as-yet-unknown semantics. Effect handlers, which comprise a \textbf{return handler} and zero or more \textbf{operation handlers}, specify how effects interact with their environment, and thus may be used to give effects meaning. I define an effect handler that accumulates print statements in a string (some ``\texttt{stdout}'').  For example, the aforementioned program should return $(\texttt{3}, \texttt{"1; 2"})$.
+In the program fragment above, \textbf{\texttt{print}} is an effect, but with as-yet-unknown semantics. Effect handlers, which comprise a \textbf{return handler} and zero or more \textbf{operation handlers}, specify how effects interact with their environment, and thus may be used to give effects meaning. Consider defining an effect handler that accumulates print statements in a string (some ``\texttt{stdout}'').  For example, the aforementioned program should return $(\texttt{3}, \texttt{"1; 2"})$.
 
-I begin by considering how to handle the case where there are no calls to \textbf{\texttt{print}}. For example, in the program $\return{\texttt{3}}$. I wish to return both the value and an empty string: in this case, $(\texttt{3}, \texttt{""})$. I achieve this by specifying a \textit{return handler}, of the form:
+% I begin by considering how to handle the case where there are no calls to \textbf{\texttt{print}}. For example, in the program $\return{\texttt{3}}$. I wish to return both the value and an empty string: in this case, $(\texttt{3}, \texttt{""})$. I achieve this by specifying a \textit{return handler}, of the form:
+First, an effect handler must handle programs that have no calls to \textbf{\texttt{print}}. For such a program, the accummulating handler should return both the value and the empty string: $(\texttt{3}, \texttt{""})$. The return handler is written as follows:
 \[\textbf{\texttt{return}}(x) \mapsto {c}\]
-In this case, I set $c$ to $\return{(x, \texttt{""})}$. All effect handlers must specify a return handler. In many cases, the return handler is simply the identity. 
+where $c$ is set to $\return{(x, \texttt{""})}$. All effect handlers must specify a return handler. In many cases, the return handler is simply the identity. 
 
-Next, I consider how to handle a call to \textbf{\texttt{print}}. I use an operation handler of the form 
+Next, an effect handler must handle programs that perform \textbf{\texttt{print}} effects, by specifying an operation handler of the form:
 \[\textbf{\texttt{print}}(x, k) \mapsto {c}\]
-Where $c$ is the user-defined semantics for \textbf{\texttt{print}}.
+where $c$ is the user-defined semantics for \textbf{\texttt{print}}.
 Concretely, one instance of $c$ is 
-\[\textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
-In the definition of $c$, the programmer may refer to $x$ and $k$, which I now explain. $x$ allows programs to send values (for example, values to be printed) to the handler. $k$ is a delimited continuation representing a suspended program, awaiting a value from its environment. Effects also allow programs to receive data from their environments, as in
-\[1 + \textbf{\texttt{get\_int\_from\_user}}()\]
-Note that the program is suspended until the value is received. I write the suspended program as $1 + [-]$, where $[-]$ indicates an as-yet-unknown value. This suspended program is represented by the continuation $k$. The expression 
-\[\continue{k}{v}\] 
-is used to resume the suspended program with value $v$. 
+\[{\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\]
+In the definition of $c$, the programmer may refer to $x$, the argument passed to \textbf{\texttt{print}}, and $k$, a delimited continuation from the point the effect was performed to the point it was handled. The delimited continuation can be thought of as a suspended program, awaiting a value from its environment. Effects allow programs to receive data from their environments, as in
+\begin{center}
+  \begin{tikzpicture}
+   \node[] (example) {\textcolor{white}{$\handleWith{\textcolor{black}{\;\;\;\; \textcolor{selected}{\textbf{\texttt{get\_int\_from\_user}}()} + \texttt{1}}\;\;\;\; }{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \ldots}$}};
 
-I now able to interpret the concrete operation handler $c$: the handler resumes the suspended program, supplying a unit value, since \textbf{\texttt{print}} effects do not receive values. Evaluating the (now unsuspended) program eventually returns a value $v$ and some partially accumulated \texttt{stdout} $s$. The handler then prepends the printed value, $x$, onto $s$. 
+   \begin{scope}[on background layer]
+    \draw[draw=fade, fill=selectedTarget, rounded corners=1mm] ($(example.north west) + (-0.1, 0.04)$) rectangle ($(example.south west) + (1.64, 0)$);
+
+    \draw[draw=fade, fill=selectedTarget, rounded corners=1mm] ($(example.north east) + (0.1, 0.04)$) rectangle ($(example.south east) + (-7.3, 0)$);
+   \end{scope}
+
+   \node[rotate = 90, text=comment] (brace) at ($(example.south) + (-0.9, -0.1)$) {\Large \{ };
+
+   \node[text=comment, anchor = north, align=center] (comment) at ($(brace.south)$) {\footnotesize The delimited continuation $\kappa y. y+\texttt{1}$,\\
+   \footnotesize captured from the point the effect was \\ 
+   \footnotesize performed to the point it was handled.};
+
+  \end{tikzpicture}
+\end{center}
+\noindent where the program that adds one is suspended until the value is received. I write the suspended program as $\kappa y. \; y+\texttt{1}$, where the variable $y$ indicates the as-yet-unknown value. $\kappa y. \; y+\texttt{1}$ is the continuation bound to $k$. The syntax is evocative: continuations can be thought of as being \textit{like}  functions $\lambda y. \; y+\texttt{1}$ (in \citeauthor{pretnar-15}'s calculus, functions and continuations share a type). However, for technical reasons relating to scope extrusion (\Cref{section:best-effort-check,section:refined-environment-classifiers-formal}), in \efflang{}, continuations and functions are disambiguated both syntactically and at the type-level (mirroring the approach by \citet{isoda-24}). The expression 
+\[\continue{k}{v}\] 
+is used to resume the suspended program, substiting value $v$ for $y$. For example,  
+\[\handleWith{\texttt{1} + \textbf{\texttt{get\_int\_from\_user}}()}{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \continue{k}{\texttt{2}}}\]
+steps to $\texttt{1} + \texttt{2}$ (and thus evaluates to \texttt{3}).
+
+In \efflang{}, the continuation to be bound to $k$ is calculated. In contrast, in \citeauthor{pretnar-15}'s calculus, it is explicitly written by the programmer, using the syntax 
+\[\op{v; y.c}\]
+where $y.c$ is the continuation to be bound to $k$.\ \citeauthor{pretnar-15} acknowledges that the approach adopted by \efflang{} is an equivalent formulation.
+
+The concrete operation handler thus resumes the suspended program, supplying a unit value, since \textbf{\texttt{print}} effects do not receive values. Evaluating the (now unsuspended) program eventually returns a value $v$ and some partially accumulated \texttt{stdout} $s$. The handler then prepends the printed value, $x$, onto $s$. 
 % Second, \textit{any effect can be understood in terms of send and receive operations}. Programs interact with their environment in two fundamental ways: they either \textit{receive} values from their environment (as above), or they \textit{send} values to its environment, for example via a \texttt{print}. 
 
 % $x$, $k$, 
@@ -182,7 +203,7 @@ Having defined the semantics for \textbf{\texttt{print}}, the user may now inter
 Notice that multiple effects may be handled by the same handler, and the same effect might be handled by multiple handlers, potentially with different semantics. 
 
 \subsubsection{Operational Semantics}
-Having described \efflang{} informally, I now describe its semantics more precisely, via an operational semantics \Cref{fig:efflang-opsem}. 
+The semantics of \efflang{} are made precise via an operational semantics (\Cref{fig:efflang-opsem}). The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à la \citet{kiselyov-2012}. The two key rules are \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
 
 \begin{figure}[ht]
   \arraycolsep=3pt
@@ -190,7 +211,7 @@ Having described \efflang{} informally, I now describe its semantics more precis
   
   {\large\textbf{Operational Semantics}}\\
 
-  \renewcommand{\effconfiguration}[2]{{#1}; {#2}}
+  \renewcommand{\effconfiguration}[2]{\langle {#1}; {#2} \rangle}
   \renewcommand{\transition}[2]{#1 & \rightarrow & #2}
   \newcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
   \newcommand{\reductionRule}[1]{\rulename{Red}{#1}}
@@ -222,24 +243,23 @@ Having described \efflang{} informally, I now describe its semantics more precis
   \congruenceRule{Pop} & \transition{\effconfiguration{\return{v}}{E[F]}}{\effconfiguration{F[\return{v}]}{E}}\\
   \vspace{1mm} \\
   \effectRule{Op} & \transition{\effconfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}}\effconfiguration{c[v/x, \kappa x. \, \handleWith{E_2[\return{x}]}{h} / k]}{E_1}\\
-  &&& \text{(where $\opHandler{x}{k}{c} \in h$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$)}\\
-  \effectRule{Cnt} & \transition{\effconfiguration{\continue{E_2}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1[E_2]}}
+  &&& \text{(where $\textbf{\texttt{op}} \in \textsf{dom}(h)$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$)}\\
+  \effectRule{Cnt} & \transition{\effconfiguration{\continue{\kappa x. E_2[\return{x}]}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1[E_2]}}
 
 \end{array}
 \]
   }
 \end{eff-desc}
-\caption{The operational semantics of \efflang. The semantics is given on configurations of the form $\langle c, E \rangle$, with the brackets dropped for clarity. Rules are divided into three classes: reduction rules $\textsc{Red-}X$, which perform computation, congruence rules $\textsc{Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc{Eff-}Z$ that are special to \efflang}
+\caption{The operational semantics of \efflang. The semantics is given on configurations of the form $\langle c; E \rangle$. Rules are divided into three classes: reduction rules $\textsc{Red-}X$, which perform computation, congruence rules $\textsc{Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc{Eff-}Z$ that are special to \efflang{}.}
 \label{fig:efflang-opsem}
 \end{figure}
 
-The operational semantics is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à la \citet{kiselyov-2012}. Most of the rules are standard. I focus on two rules: \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
 % For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. 
 
 To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, consider the evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
 \[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
 \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\end{array}\]
-After several applications of \textsc{Cng-Psh}, we obtain the configuration
+Several applications of \textsc{Cng-Psh} produces the configuration
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -250,11 +270,11 @@ After several applications of \textsc{Cng-Psh}, we obtain the configuration
   \]
 }
 
-Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op}, we can suspend the program, find the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and give the \textbf{\texttt{print}} effect the desired semantics
+Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op}, suspends the program, finds the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and gives the \textbf{\texttt{print}} effect the desired semantics
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
-  \langle \, \bind{(v, s)}{\continue{(\continuation{u}{\, \handleWith{E}{h}})}{()}}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}} &;& [-] \rangle
+  \langle \, \bind{(v, s)}{\continue{(\continuation{u}{\, \handleWith{E}{h}})}{()}}{\return{(v, \texttt{f"\{1\};"} \text{ \^\ } s)}} &;& [-] \rangle
 \end{array}
   \]
 }
@@ -262,11 +282,11 @@ Applying \textsc{Cng-Psh},
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
-  \langle \, \continue{(\continuation{u}{\, \handleWith{E}{h}})}{()} &;& \bind{(v, s)}{[-]\,}{\return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}}\, \rangle
+  \langle \, \continue{(\continuation{u}{\, \handleWith{E}{h}})}{()} &;& \bind{(v, s)}{[-]\,}{\return{(v, \texttt{f"\{1\};"} \text{ \^\ } s)}}\, \rangle
 \end{array}
   \]
 }
-Applying \textsc{Eff-Cnt}, we can resume the program that was suspended
+Applying \textsc{Eff-Cnt} resumes the program that was suspended
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -276,7 +296,7 @@ Applying \textsc{Eff-Cnt}, we can resume the program that was suspended
   && \quad \quad \textbf{\texttt{do}} \, y \leftarrow (\print{2};\return{\texttt{2}})\\
   && \quad\quad \textbf{\texttt{in}} \, {\, x + y}\\
   && \quad \textbf{\texttt{with}} \, \{ h \}\\
-  && \textbf{\texttt{in}} \, \return{(v, \texttt{f"\{$1$\};"} \text{ \^\ } s)}  \, \rangle
+  && \textbf{\texttt{in}} \, \return{(v, \texttt{f"\{1\};"} \text{ \^\ } s)}  \, \rangle
 \end{array}
   \]
 }
@@ -284,9 +304,9 @@ The side-condition on \textsc{Eff-Op} is needed because the user may define mult
 \begin{eff}
 $\begin{array}{l}
   \textbf{\texttt{handle}} \\
-  \quad \handleWith{\textbf{\texttt{read}()}}{\returnHandler{y}{\return{y}}; \textbf{\texttt{read}}(x, k) \mapsto {\continue{k}{1}}} \\
+  \quad \handleWith{\textbf{\texttt{read}}()}{\returnHandler{y}{\return{y}}; \textbf{\texttt{read}}(x, k) \mapsto {\continue{k}{\texttt{1}}}} \\
   \textbf{\texttt{with}} \\ 
-  \quad \{ \returnHandler{y}{\return{y}}; \textbf{\texttt{read}}(x, k) \mapsto {\continue{k}{2}} \}
+  \quad \{ \returnHandler{y}{\return{y}}; \textbf{\texttt{read}}(x, k) \mapsto {\continue{k}{\texttt{2}}} \}
 \end{array}$ 
 
 \vspace{2mm} 
@@ -296,9 +316,18 @@ $\begin{array}{l}
 \textcolor{effComment}{$\begin{array}{l}\return{\texttt{1}}\end{array}$}
 \end{eff}
 
-
+To be precise, the domain of a handler $h$, $\textsf{dom}(h)$, is the set of operations for which it has handlers. For example, the domain of 
+\[\{ \returnHandler{x}{\return{x}}; \textbf{\texttt{read}}(\_, k) \mapsto \continue{k}{\texttt{1}}; \textbf{\texttt{shirk}}(x, k) \mapsto \textbf{\texttt{shirk}}(x)
+\} \] 
+is $\{ \textbf{\texttt{read}}, \textbf{\texttt{shirk}} \}$ (even though the responsibility for handling the \textbf{\texttt{shirk}} effect is shirked).
+Given an evaluation context, $E$, the set of effects handled by the context $\textsf{handled}(E)$, is the union of all of the domains of the handler frames in $E$. That is, 
+\[\textsf{handled}(\handleWith{(\handleWith{[-]+1}{h_1})}{h_2}) = \textsf{dom}(h_1) \cup \textsf{dom}(h_2)\]
+The latest handler $h$ for an effect \textbf{\texttt{op}} in a context $E$ is found by decomposing $E$ into 
+\[E_1[\handleWith{E_2}{h}]\]
+such that $\textbf{\texttt{op}} \in \textsf{dom}(h)$ ($h$ handles $\textbf{\texttt{op}}$) and $\textbf{\texttt{op}} \not\in \textsf{handled}(E_2)$ (no handlers for \textbf{\texttt{op}} in $E_2$). If such an $h$ exists, this condition identifies it uniquely. 
 \subsubsection{Type-and-Effect System}
-I now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types, which I now briefly describe. 
+\Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types. Types are divided into value types (for example, $\mathbb{N}$), computation types ($\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$), and handler types ($\handlerType{\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{\mathbb{N}}}$). Since computations may have effects, computation types track unhandled effects using an effects row ($\Delta$), which in \efflang{} is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects.
+
 
 \begin{figure}
   \begin{eff-desc}
@@ -310,30 +339,19 @@ I now give a type-and-effect system to \efflang{}. \Cref{fig:efflang-type-syntax
                               &\quad\quad\,\,\, \mid \functionType{T_1}{T_2} & \text{functions}\\
                               &\quad\quad\,\,\, \mid \continuationType{T_1}{T_2} & \text{continuations}\\ \\
     \text{Computation type} & \effectType{T} \\
-    \text{Handler type} & \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}
+    \text{Handler type} & \handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}
   \end{array}$
   \end{eff-desc}
-  \caption{\efflang{} types. Notice that, just as terms are divided into values, computations, and handlers, types are divided into value types ($T$), computation types ($\effectType{T}$), and handler types ($\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}$)}
+  \caption{\efflang{} types. Notice that, just as terms are divided into values, computations, and handlers, types are divided into value types ($T$), computation types ($\effectType{T}$), and handler types ($\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}$)}
   \label{fig:efflang-type-syntax}
 \end{figure}
 
-Previously, I assumed that the user declared their effects in advance. I additionally assume that they declare the types of their effects in advance, and that I store the mapping from effects to types in $\Sigma$. That is, 
-\[\texttt{op}: A \to B \in \Sigma \]
-In \texttt{OCaml}, this would correspond to writing:
-\begin{ocaml}
-type _ Effect.t += Op: A -> B
-\end{ocaml}
-I do not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
-\[\texttt{recursive}: 1 \to (\functionType[\{ \texttt{recursive} \}]{1}{1})\]
-Thus, one may write programs which do not terminate, by ``tying the knot''. 
-
-Just like terms, types are divided into value types (for example, $\mathbb{N}$), computation types ($\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$), and handler types ($\handlerType{\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{\mathbb{N}}}$). Since computations may have effects, computation types track unhandled effects using an effects row ($\Delta$), which in \efflang{} is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects.
 \[
 \begin{array}{lll}
   \textbf{Term} &\hspace{8mm}& \textbf{Type} \\
-  3 && \mathbb{N} \\ 
-  \bind{x}{\return{1}}{\bind{y}{\return{2}}{x + y}} &&  \effectType[\emptyset]{\mathbb{N}} \\ 
-  \bind{x}{\texttt{\textbf{print}($1$)}; \return{1}}{\bind{y}{\return{2}}{x + y}} &&  \effectType[\{ \texttt{\textbf{print}}\}]{\mathbb{N}} \\ 
+  \texttt{3} && \mathbb{N} \\ 
+  \bind{x}{\return{\texttt{1}}}{\bind{y}{\return{\texttt{2}}}{x + y}} &&  \effectType[\emptyset]{\mathbb{N}} \\ 
+  \bind{x}{\print{1}; \return{\texttt{2}}}{\bind{y}{\return{\texttt{2}}}{x + y}} &&  \effectType[\{ \texttt{\textbf{print}}\}]{\mathbb{N}} \\ 
 \end{array}
 \]
 
@@ -343,7 +361,7 @@ Functions are values, and are applied to other values, but produce computations 
 \]
 is a value that accepts a value of type $\mathbb{N}$ and returns a computation of type $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$. Functions thus have suspended effects, which I write $\functionType{T_1}{T_2}$. In this case, the function has type $\functionType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}{\mathbb{N}}$. For technical reasons, continuations and functions need to be distinguished, but in most cases they may be treated equivalently. 
 
-Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects row. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}$. For example, a handler of the form  
+Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects row. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}$. For example, a handler of the form  
 \[ \begin{array}{ll}
   \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
     \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
@@ -351,7 +369,21 @@ Handlers transform computations of one type to computations of another type. Thi
 \]
 may be given type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$, reflecting both the handling of the \textbf{\texttt{print}} effect and the transformation of the return type to include the collated print statements.
 
-I now consider the typing rules for terms, which are collated in \Cref{fig:efflang-type-system}. Most rules are standard, but a few are worth paying attention to. 
+\efflang{} assumes that the user declares their effects in advance. It additionally assumes that they declare the types of their effects in advance, and that this mapping is stored in $\Sigma$. That is, 
+\[\texttt{op}: A \to B \in \Sigma \]
+In \texttt{OCaml}, this would correspond to writing:
+\begin{ocaml}
+type _ Effect.t += Op: A -> B
+\end{ocaml}
+\efflang{} does not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
+\[\texttt{recursive}: 1 \to (\functionType[\{ \texttt{recursive} \}]{1}{1})\]
+Thus, one may write programs which do not terminate, by ``tying the knot'', for example 
+\begin{eff}
+  $\handleWith{(\lambda \_ . \textbf{\texttt{recursive}} ()) ()}{\textbf{\texttt{recursive}}(\_, k) \mapsto {\continue{k}{(\lambda \_. \textbf{\texttt{recursive}} ())}}}$
+\end{eff}
+Note that for the program to be well-typed, the program fragment $\lambda \_. \textbf{\texttt{recursive}} ()$ must refer to \textbf{\texttt{recursive}} in its type: $\functionType[\{ \texttt{recursive} \}]{1}{1}$. Thus, the declared type of the \textbf{\texttt{recursive}} effect must be recursive. 
+
+The typing rules for terms are collated in \Cref{fig:efflang-type-system}. The key rules are \textsc{Return}, \textsc{Do}, \textsc{Op}, and the handler rules (\textsc{Ret-Handler}, \textsc{Op-Handler}).
 
 \begin{figure}
   \begin{eff-desc}
@@ -410,7 +442,7 @@ $\inferrule[(Continuation)]
   \begin{minipage}[t]{0.55\textwidth}
     \centering
   $\inferrule[(Do)]
-    {\type{c_1}{\effectType{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
+    {\type{c_1}{\effectType[\Delta_1]{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
     {\type{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
   \end{minipage}
   
@@ -418,7 +450,7 @@ $\inferrule[(Continuation)]
   % \begin{minipage}[t]{0.5\textwidth}
   %   \centering
   % $\inferrule[(Do)]
-  %   {\type{c_1}{\effectType{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
+  %   {\type{c_1}{\effectType[\Delta_1]{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
   %   {\type{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
   % \end{minipage}%
   \begin{minipage}[t]{0.5\textwidth}
@@ -430,8 +462,8 @@ $\inferrule[(Continuation)]
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Handle)]
-    {\type{c}{\effectType{T_1}} \\ \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \, \textsf{op} \in \textsf{dom}(h)}
-    {\type{\handleWith{c}{h}}{\effectType[\Delta']{T_2}}}$
+    {\type{c}{\effectType[\Delta_1]{T_1}} \\ \type{h}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
+    {\type{\handleWith{c}{h}}{\effectType[\Delta_2]{T_2}}}$
   \end{minipage}\\
 
   \vspace{5mm}
@@ -439,8 +471,8 @@ $\inferrule[(Continuation)]
   \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(Ret-Handler)]
-    {\type[, x:T_1]{c}{\effectType[\Delta']{T_2}}}
-    {\type{\returnHandler{x}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}$
+    {\type[, x:T_1]{c}{\effectType[\Delta_2]{T_2}}}
+    {\type{\returnHandler{x}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}$
   \end{minipage}
   
   \vspace{5mm}
@@ -454,11 +486,11 @@ $\inferrule[(Continuation)]
     \centering
   $\inferrule[(Op-Handler)]
     { \texttt{op}: A \to B \in \Sigma \\\\ 
-      \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}\\
-      \type[, x:A, k:{\continuationType[\Delta']{B}{T_2}} ]{c}{\effectType[\Delta']{T_2}}\\
-      \Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
+      \type{h}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}\\
+      \type[, x:A, k:{\continuationType[\Delta_2]{B}{T_2}} ]{c}{\effectType[\Delta_2]{T_2}}\\
+      \Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
              \opHandler{x'}{k'}{c'} \notin h}
-    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}$
+    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}$
   \end{minipage}
     }
   \end{eff-desc}
@@ -466,29 +498,29 @@ $\inferrule[(Continuation)]
   \label{fig:efflang-type-system}
   \end{figure}
 
-First, the \textsc{Return} and \textsc{Do} rules. In the \textsc{Return} rule, we are allowed to assign the term $\return{v}$ any set of effects. For example, we could write:
+The \textsc{Return} rule permits $\return{v}$ to be typed with any set of effects. For example:
 \[\inferrule{ }{\type[]{\return{\texttt{0}}}{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}}\] 
-This flexibility is important, because to type $\bind{x}{c_1}{c_2}$, the \textsc{Do} rule requires both $c_1$ and $c_2$ to have the same effects. For example, without this flexibility, we would not be able to complete the following typing derivation
+This flexibility is important, because to type $\bind{x}{c_1}{c_2}$, the \textsc{Do} rule requires $c_1$ and $c_2$ to have the same effects. For example, without this flexibility, it would not be possible to complete the following typing derivation:
 \[\inferrule{\vdots}{\type[]{\bind{x}{\print{0}}{\return{\texttt{0}}}}{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}}\] 
 A valid alternative would be to add explicit subtyping. However, such an approach would no longer be syntax directed. 
 
-Second, the \textsc{Op} rule. Note the $\texttt{op} \in \Delta$ restriction: flexibility allows us to over-approximate the effects in a term, but never underapproximate them. 
+The \textsc{Op} rule forces the performed operation to be tracked by the effects row ($\texttt{op} \in \Delta$): flexibility allows the type system to over-approximate the effects in a term, but not to underapproximate them. 
 
-Third, the \textsc{Ret-Handler} and \textsc{Op-Handler} rules, which are used to type handlers. Assume we are trying to type the handler 
+Following the approach by \citet{biernacki-2017}, handlers are typed clause-by-clause, using the \textsc{Ret-Handler} and \textsc{Op-Handler} rules. In contrast, \citeauthor{pretnar-15} types a handler with a single rule that checks all clauses at once. Consider typing the handler:
 \[ \begin{array}{ll}
   \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
     \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
   \end{array}
 \]
-with the type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. We apply the \textsc{Op-Handler} rule, which is transcribed below. Preconditions are numbered for reference. 
+with type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This involves applying the \textsc{Op-Handler} rule, which is transcribed below. Preconditions are numbered for reference. 
 \[\inferrule[(Op-Handler)]
     { (1)\,  \texttt{op}: A \to B \in \Sigma \\\\
-     (2)\, \type{h}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}\\
-      (3)\,\type[, x:A, k:{\continuationType[\Delta']{B}{T_2}} ]{c}{\effectType[\Delta']{T_2}}\\
-      (4)\,\Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
+     (2)\, \type{h}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}\\
+      (3)\,\type[, x:A, k:{\continuationType[\Delta_2]{B}{T_2}} ]{c}{\effectType[\Delta_2]{T_2}}\\
+      (4)\,\Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
       (5)\, \opHandler{x'}{k'}{c'} \notin h}
-    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}}}\]
-The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
+    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}\]
+The preconditions of the \textsc{Op-Handler} rule check, in turn that:
 \begin{enumerate}
   \item[(1)] $\textbf{\texttt{print}}: \mathbb{N} \to 1 \in \Sigma$, which is true by assumption
   \item[(2)] Recursively check the rest of the handler $h = \returnHandler{x}{\return{(x, \texttt{""})}}$, ensuring it has type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This follows from a trivial application of the \textsc{Ret-Handler} rule. 
@@ -497,13 +529,13 @@ The preconditions of the \textsc{Op-Handler} rule direct us to check, in turn:
   \item[(5)] That there are no other handlers for \textbf{\texttt{print}} in $h$.
 \end{enumerate}
 
-Finally, I define a notion of well-typed computation. 
+Finally, I define a notion of well-typed computation. For a computation to be well-typed, one must prove that all of its effects will be handled.  
 \begin{definition}[Well-typed computation]{effHighlight}
   $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
 \end{definition}
 
 \subsubsection{Metatheory}
-I build not only on \efflang{}, but on metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}.
+Discussion around the interaction between effect handlers and metaprogramming will build on some metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}.
 
 \renewcommand{\effconfiguration}[2]{\langle {#1}; {#2} \rangle}
 \renewcommand{\transition}[2]{#1 \rightarrow #2}
@@ -565,7 +597,7 @@ If $\type{E[c]}{\effectType{T}}$ and $\transition{\effconfiguration{c}{E}}{\effc
 % \end{definition}
 
 \subsection{The Design Space of Effect Handlers}\label{subsection:effect-handler-design}
-The design space of effect handlers is large. I consider three key design decisions made by different systems.
+The design space of effect handlers is large. Different design decisions could impact how effect handlers interact with metaprogramming. This thesis focuses on unnamed and deep effect handlers that permit multi-shot continuations:
 
 \renewcommand{\effconfiguration}[2]{{#1}; {#2}}
 \renewcommand{\transition}[2]{#1 & \rightarrow & #2}
@@ -577,11 +609,11 @@ The design space of effect handlers is large. I consider three key design decisi
 \begin{enumerate} 
 
  \item \textbf{\textsf{Named or Unnamed Handlers}}\\
-        \textit{Can I invoke a specific handler for an operation?}
+        \textit{Can an effect invoke a specific handler, rather than the ``latest''?}
         
-        In \efflang{}, when there are multiple handlers for the same effect, the ``most recent'' handler for that effect is invoked. An alternative approach is \textbf{named handlers} \citep{xie-2022}, where, by associating each handler with a \textit{name}, the programmer can more easily specify which handler should be invoked. 
+        In \efflang{}, when there are multiple handlers for the same effect, the ``latest'' handler for that effect is invoked. An alternative approach is \textbf{named handlers} \citep{xie-2022}, where, by associating each handler with a \textit{name}, the programmer can more easily specify which handler should be invoked. 
 
-        While named handlers can be more ergonomic, they do not provide greater expressiveness \citep{xie-2022}. I do not consider named handlers in this thesis.
+        While named handlers can be more ergonomic, they do not provide greater expressiveness \citep{xie-2022}. This thesis only considers unnamed handlers.
 
   \item \textbf{\textsf{Deep, Shallow, or Sheep Handlers}}\\
          \textit{Are multiple instances of the same effect handled by the same handler?}
@@ -591,35 +623,35 @@ The design space of effect handlers is large. I consider three key design decisi
          \begin{efflst}
           $\begin{array}{l}
             \textbf{\texttt{handle}} \\
-            \quad \textbf{\textsf{addn}}(1) + \textbf{\textsf{addn}}(2) \\
+            \quad \textbf{\textsf{addn}}(\texttt{1}) + \textbf{\textsf{addn}}(\texttt{2}) \\
             \textbf{\texttt{with}} \\
             \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{x}}; \\
-            \quad \; \, \textbf{\texttt{addn}}(y, k) \mapsto \continue{k}{(y+1)} \}\\
+            \quad \; \, \textbf{\texttt{addn}}(y, k) \mapsto \continue{k}{(y+\texttt{1})} \}\\
           \end{array}$
           \vspace{2mm} 
           \textcolor{effComment}{\hrule height 0.2mm \relax}
           \vspace{2mm} 
           
-          \textcolor{effComment}{$\begin{array}{l}\return{5}\end{array}$}
+          \textcolor{effComment}{$\begin{array}{l}\return{\texttt{5}}\end{array}$}
         \end{efflst}
 
-        I could also have chosen \textit{not} to reinstate the handler, in an approach known as \textbf{shallow} handlers \citep{hillestrom-2018}. The example above would be stuck, since the second \textbf{\texttt{addn}} would not be handled.
+        An alternative semantics would \textit{not} to reinstate the handler, in an approach known as \textbf{shallow} handlers \citep{hillestrom-2018}. The example above would be stuck, since the second \textbf{\texttt{addn}} would not be handled.
 
-        Finally, I could have chosen to modify the interface for \textbf{\texttt{continue}} such that it accepts a handler
+        Another alternative would be to modify the interface for \textbf{\texttt{continue}} such that it accepts a handler
         \[\textbf{\texttt{continue}} \, k \,  \, v \, h\]
-        This would allow multiple effects to be handled by different handlers. That is, the programmer could add $1$ the first time \textbf{\texttt{addn}} is performed, and $2$ the second time (the program would return $2+4=6$). These handlers behave as a hybrid of shallow and deep handlers, and are thus termed \textbf{sheep} handlers \citep{phipps-costin-2023}. 
+        This would allow multiple effects to be handled by different handlers. That is, the programmer could add $\texttt{1}$ the first time \textbf{\texttt{addn}} is performed, and $\texttt{2}$ the second time (the program would return $\texttt{2}+\texttt{4}=\texttt{6}$). These handlers behave as a hybrid of shallow and deep handlers, and are thus termed \textbf{sheep} handlers \citep{phipps-costin-2023}. 
          
-        Since most prior work on scope extrusion focuses on deep handlers \citep{isoda-24}, I focus on those. 
+        In keeping with most prior work on scope extrusion, this thesis focuses on deep handlers \citep{isoda-24}. 
 
         \item \textbf{\textsf{One-Shot or Multi-Shot Continuations}}\\
-        \textit{How many times can one resume the same continuation?}
+        \textit{How many times can the same continuation be resumed?}
  
         In \efflang{}, continuations may be resumed multiple times. For example, the programmer can write 
         
         \begin{efflst}
           $\begin{array}{l}
             \textbf{\texttt{handle}} \\
-            \quad \textbf{\textsf{performTwice}}(1) \\
+            \quad \textbf{\textsf{performTwice}}(\texttt{1}) \\
             \textbf{\texttt{with}} \\
             \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{x}}; \\
             \quad \; \, \textbf{\texttt{performTwice}}(y, k) \mapsto (\continue{k}{y}) + (\continue{k}{y}) \}\\
@@ -628,12 +660,12 @@ The design space of effect handlers is large. I consider three key design decisi
           \textcolor{effComment}{\hrule height 0.2mm \relax}
           \vspace{2mm} 
           
-          \textcolor{effComment}{$\begin{array}{l}\return{2}\end{array}$}
+          \textcolor{effComment}{$\begin{array}{l}\return{\texttt{2}}\end{array}$}
         \end{efflst}
         
         Such an effect system is said to permit \textbf{multi-shot continuations}. Multi-shot continuations are useful for simulating certain effects, like non-determinism \citep{phipps-costin-2023}. 
 
-        In other systems, like \texttt{OCaml} and \texttt{WasmFX} \citep{phipps-costin-2023}, this is not allowed: continuations are only allowed to be resumed once. These systems permit \textbf{one-shot continuations}. 
+        In \texttt{OCaml}, this is not allowed: continuations are only allowed to be resumed once. These systems permit \textbf{one-shot continuations}. 
 
-        Although continuations in \texttt{OCaml} are one-shot, I believe it is worthwhile to study effect systems with multi-shot continuations.
+        Although continuations in \texttt{OCaml} are one-shot, this thesis studies effect systems with multi-shot continuations.
 \end{enumerate}

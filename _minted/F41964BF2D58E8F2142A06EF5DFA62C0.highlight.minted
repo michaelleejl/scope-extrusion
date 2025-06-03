@@ -1,4 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let} \PYG{n}{pure}      \PYG{o}{=} \PYG{o}{(}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{l+m+mi}{0}\PYG{o}{)} \PYG{o}{+} \PYG{o}{(}\PYG{l+m+mi}{2}\PYG{o}{+}\PYG{l+m+mi}{0}\PYG{o}{)}
-\PYG{k}{let} \PYG{n}{effectful} \PYG{o}{=} \PYG{k}{let} \PYG{n}{l} \PYG{o}{=} \PYG{k}{new} \PYG{l+m+mi}{0} \PYG{k}{in} \PYG{o}{(}\PYG{n}{l} \PYG{o}{:=} \PYG{l+m+mi}{1}\PYG{o}{;} \PYG{l+m+mi}{1}\PYG{o}{)} \PYG{o}{+} \PYG{o}{(}\PYG{n}{l} \PYG{o}{:=} \PYG{l+m+mi}{2}\PYG{o}{;} \PYG{l+m+mi}{2}\PYG{o}{)}
-\end{MintedVerbatim}

@@ -34,11 +34,11 @@ Since \mintinline{ocaml}{architecture} and \mintinline{ocaml}{vector_extensions}
    indicate that the code should be run at compile-time *)
 macro memcpy source target n = if (architecture == AArch64) then 
                                (* generate this program, to be run later *)
-                             else 
-                                match vector_extensions with
-                                | None -> (* generate this program *)
-                                | Some(AVX512) -> (* generate this program *)
-                                | ...
+                               else 
+                                 match vector_extensions with
+                                 | None -> (* generate this program *)
+                                 | Some(AVX512) -> (* generate this program *)
+                                 | ...
 $(memcpy <<source>> <<target>> <<n>>)
 \end{macocaml}
 Importantly, the \texttt{memcpy} macro is executed by the compiler, guaranteeing that the branches will be eliminated. This process of using metaprogramming to select the most performant \texttt{memcpy} on any given system is used in practice, for instance, by the \texttt{xine} media player \citep{huceke-memcpy}.

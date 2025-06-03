@@ -42,7 +42,7 @@
 \newcommand{\equote}[1][e]{\langle \langle #1 \rangle \rangle}
 \newcommand{\splice}[1][e]{\$ #1 }
 
-\newcommand{\effconfiguration}[2]{\langle {#1}, {#2} \rangle}
+\newcommand{\effconfiguration}[2]{\langle {#1} ; {#2} \rangle}
 \newcommand{\transition}[2]{{#1} \leadsto {#2}}
 
 
@@ -105,6 +105,13 @@ innerrightmargin=0pt,
 skipabove=\baselineskip,
 skipabove=1.2\baselineskip,
 }
+
+% \newtheoremstyle{break}
+%   {\topsep}{\topsep}%
+%   {\itshape}{}%
+%   {\bfseries}{}%
+%   {\newline}{}%
+\theoremstyle{break}
 
 \renewtheorem{mdtheorem}{Theorem}[section]
 \newenvironment{theorem}[2][]%

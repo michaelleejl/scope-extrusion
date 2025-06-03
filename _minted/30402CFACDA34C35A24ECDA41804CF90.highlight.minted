@@ -1,4 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let} \PYG{k}{rec} \PYG{n}{findOrInsert} \PYG{o}{(}\PYG{n}{t}\PYG{o}{:} \PYG{n}{tree}\PYG{o}{)} \PYG{o}{(}\PYG{n}{k}\PYG{o}{:} \PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{o}{)} \PYG{o}{(}\PYG{n}{default}\PYG{o}{:} \PYG{k}{\PYGZsq{}}\PYG{n}{b}\PYG{o}{)} \PYG{o}{=}
-  \PYG{k}{try} \PYG{n}{find} \PYG{n}{t} \PYG{n}{k} \PYG{k}{with} \PYG{n+nc}{NotFound} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{insert} \PYG{n}{t} \PYG{n}{k} \PYG{n}{default}
-\end{MintedVerbatim}

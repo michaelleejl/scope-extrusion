@@ -5,12 +5,12 @@
   \centering 
   \begin{tikzpicture}
     \begin{scope}[every node/.style={inner sep=0.5cm}, font=\ttfamily\scriptsize, anchor = east, rounded corners, line width = 0.4mm]
-  \node[align=left, fill=sourceBackground, draw=sourceHighlight] (source-program) {\,\$(\textbf{do}$\, x \leftarrow \equote[\return{0}]$\\
+  \node[align=left, fill=sourceBackground, draw=sourceHighlight] (source-program) {\,\$(\textbf{do}$\, x \leftarrow \equote[\return{\texttt{0}}]$\\
   \,\quad \textbf{in} $(\lambda z. \return{z})(x))$};
-  \node[align=left, fill=coreBackground, draw=coreHighlight] (core-program) at ($(source-program.east) + (6.4cm, 0cm)$){\textbf{tls}(\textbf{do}$\, x \leftarrow \return{\texttt{Ret}(\texttt{Nat}(0))}$ \\ 
+  \node[align=left, fill=coreBackground, draw=coreHighlight] (core-program) at ($(source-program.east) + (6.4cm, 0cm)$){\textbf{tls}(\textbf{do}$\, x \leftarrow \return{\texttt{Ret}(\texttt{Nat}(\texttt{0}))}$ \\ 
   \quad\quad\textbf{in} $(\lambda z. \return{z})(x)$$)$};
 
-  \node[align=left, fill=effBackground, draw=effHighlight] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Ret$($Nat$(0))$\\ };
+  \node[align=left, fill=effBackground, draw=effHighlight] (normal-form) at ($(core-program.east) + (4cm, 0cm)$) {Ret$($Nat$(\texttt{0}))$\\ };
   \end{scope}
 
   \begin{scope}[every node/.style={font = \scriptsize}]
@@ -35,11 +35,11 @@
   \label{fig:elaboration-then-execution}
 \end{figure}
 
-This thesis considers the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and an \textbf{effect system} with deep handlers and multi-shot continuations (\Cpageref{section:effects-technical}). This chapter describes a calculus, \calculusName{}, for studying said interaction.\ \calculusName{} will have both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} will not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim will be to extend \calculusName{} with various scope extrusion checks, such that the checks may be evaluated in a comparative fashion. 
+This thesis considers the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and deep, unnamed \textbf{effect handlers} with multi-shot continuations (\Cpageref{section:effects-technical}). This chapter describes a calculus, \calculusName{}, for studying said interaction.\ \calculusName{} has both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which one may write effectful compile-time code that generates effectful run-time code. However, \calculusName{} does not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim is to extend \calculusName{} with various scope extrusion checks, and evaluate these checks in a comparative fashion. 
 
-Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to a ``core'' language,\, \coreLang{}.\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks may be inserted. 
+Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to \coreLang{} (the ``core'' language).\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks are inserted (\Cref{chapter:scope-extrusion}). 
 
-In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, I will describe the elaboration from \sourceLang{} to \coreLang{} (\Cref{section:elaboration}). Finally, I will discuss the metatheoretic properties of \calculusName{} (\Cref{section:metatheory}). 
+This chapter first introduces \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, \Cref{section:elaboration} describes the elaboration from \sourceLang{} to \coreLang{} (), and \Cref{section:metatheory} discusses the metatheoretic properties of \calculusName{}. 
 % At a high-level, however, the names are suggestive: \sourceLang{} extends \efflang{} with quotation $\equote$ and splicing $\splice$, and \coreLang{} extends \efflang{} with AST constructors. 
 
 \section{The Source Language: \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}}\label{section:source-lang}
@@ -55,11 +55,11 @@ In this chapter, I will first introduce \sourceLang{} (\Cref{section:source-lang
 \caption{\sourceLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of quotes and splices.}
 \label{fig:source-syntax}
 \end{figure}
-\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{} divides terms into two syntactic categories, values $v$ and computations $c$. \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax})
+\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{} divides terms into two syntactic categories, values $v$ and computations $c$.\ \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax}).
 
-Notice that we cannot quote values: we \textit{must} generate effectful programs. For example, $\equote[1]$ is not valid syntax, instead, one must write $\equote[\return{1}]$. Similarly, $\equote[\return{1}]$ is a computation, not a value, so one must write 
-\[\bind{a}{\equote[\return{1}]}{\op{a}}\]
-rather than $\op{\, \equote[\return{1}] \,}$. However, in both cases, I will abuse notation for clarity.
+Notice that values cannot be quoted: only effectful programs may be generated using quotes. For example, $\equote[\texttt{1}]$ is not valid syntax, instead, one must write $\equote[\return{\texttt{1}}]$. Similarly, $\equote[\return{\texttt{1}}]$ is a computation, not a value, so one must write 
+\[\bind{a}{\equote[\return{\texttt{1}}]}{\op{a}}\]
+rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I abuse notation and write $\op{\equote[\texttt{1}]}$.
 
 \subsection{Type System}\label{subsection:sourcelang-type-system}
 \begin{figure}
@@ -78,61 +78,61 @@ rather than $\op{\, \equote[\return{1}] \,}$. However, in both cases, I will abu
     && \quad\quad\,\, \mid {(\continuationType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
     & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.8mm}
      && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.8mm}
-    & \text{Handlers} & (\handlerType{T_1^{0} \, ! \, \xi}{T_2^{0} \, ! \, \xi'})\, !\, \Delta\\ \\ 
+    & \text{Handlers} & (\handlerType{T_1^{0} \, ! \, \xi_1}{T_2^{0} \, ! \, \xi_2})\, !\, \Delta\\ \\ 
 
     \textbf{Level $-$1} & \text{Values} & T^{-1} ::= \mathbb{N}^{-1} & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     && \quad\quad\quad \mid {(\functionType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
     && \quad\quad\quad \mid {(\continuationType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
     && \quad\quad\quad \mid {\textsf{Code}({T^{0} \, ! \, \xi})}^{-1} & \text{\footnotesize{run-time code}} \\\vspace{0.8mm}
     & \text{Computations} & T^{-1} \, ! \, \Delta \\\vspace{0.8mm}
-    & \text{Handlers} & \handlerType{T_1^{-1} \, ! \, \Delta}{T_2^{-1} \, ! \, \Delta'}
+    & \text{Handlers} & \handlerType{T_1^{-1} \, ! \, \Delta_1}{T_2^{-1} \, ! \, \Delta_2}
   \end{array}$
   \end{source-desc}
-  \caption{\sourceLang{} types. Types are stratified into two levels, $0$ and $-1$. Similarly, effects are stratified into two levels, $\xi$ (for run-time effects) and $\Delta$ (for compile-time effects). The \textsf{Code} type allows for compile-time programs to manipulate ASTs of run-time code.}
+  \caption{\sourceLang{} types. Types are stratified into two levels, $0$ and $-1$. Similarly, effects are stratified into two levels, $\xi$ (for run-time effects) and $\Delta$ (for compile-time effects). The \textsf{Code} type allows compile-time programs to manipulate ASTs of run-time code.}
   \label{fig:source-types}
 \end{figure}
 
-I will now introduce the \sourceLang{} type system. The \sourceLang{} types are summarised in \Cref{fig:source-types}. I highlight three important details: types are stratified into two levels ($-1$ for compile-time and $0$ for run-time), effect rows are similarly stratified, and run-time code is made available at compile-time via a \textsf{Code} type.
+The \sourceLang{} types are summarised in \Cref{fig:source-types}. There are three important details: types are stratified into two levels ($-1$ for compile-time and $0$ for run-time), effect rows are similarly stratified, and run-time code is made available at compile-time via a \textsf{Code} type.
 
-First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-1}$ (compile-time).}
+First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-1}$ (compile-time)}.
 
-  To motivate this stratification, consider the following question: what is the type of the number $3$ in \sourceLang{}? Perhaps surprisingly, the answer is not $\mathbb{N}$. Since we are working with a two-stage system, we must be careful to disambiguate between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should \textbf{not} be well-typed, since $3$ is a compile-time natural, whereas $x$ is a run-time natural. 
-  \[\lambda x: \mathbb{N}. \, \$(3 + x)\]
-  However, removing the splice makes the program well-typed
-  \[\lambda x: \mathbb{N}. \, 3 + x\]
-  Following \citet{xie-2023}, I introduce integer levels to enforce separation between compile-time and run-time naturals. While the precise notion of level is slightly more involved (see below), for my purposes, it is sufficient to think of level $0$ as run-time (so $\mathbb{N}^0$ is a run-time natural), and $-1$ as compile-time. The ill-typed example becomes
-  \[\lambda x: \mathbb{N}^0. \, \$(\textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{-1})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})})\]
-  and the well-typed example 
-  \[\lambda x: \mathbb{N}^0. \, \textcolor{comment}{(\textcolor{black}{3}:\mathbb{N}^{0})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})}\]
+  To motivate this stratification, consider the type of the number \texttt{3} in \sourceLang{}. Perhaps surprisingly, the type of \texttt{3} is not $\mathbb{N}$. Since \sourceLang{} is a two-stage system, it carefully disambiguates between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should \textbf{not} be well-typed, since \texttt{3} is a compile-time natural, whereas $x$ is a run-time natural. 
+  \[\lambda x: \mathbb{N}. \; \$(\texttt{3} + x)\]
+  However, removing the splice makes the program well-typed:
+  \[\lambda x: \mathbb{N}. \; \texttt{3} + x\]
+  Following \citet{xie-2023}, \sourceLang{} introduces integer levels to enforce separation between compile-time and run-time naturals. While the precise notion of level is slightly more involved (\Cref{dfn:level}), for \sourceLang{}, it is sufficient to think of level $0$ as run-time (so $\mathbb{N}^0$ is a run-time natural), and $-1$ as compile-time. The ill-typed example becomes:
+  \[\lambda x: \mathbb{N}^0. \; \$(\textcolor{comment}{(\textcolor{black}{\texttt{3}}:\mathbb{N}^{-1})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})})\]
+  and the well-typed example: 
+  \[\lambda x: \mathbb{N}^0. \; \textcolor{comment}{(\textcolor{black}{\texttt{3}}:\mathbb{N}^{0})} + \textcolor{comment}{(\textcolor{black}{x}:\mathbb{N}^{0})}\]
   More precisely, levels are defined as follows:
 
   \begin{definition}[Level]{sourceHighlight}\label{dfn:level}
     The level of an expression $e$ is calculated by subtracting the number of surrounding splices from the number of surrounding quotations.
   \end{definition}
 
-  The definition of level generalises to multi-stage languages, where negative levels ($-1, -2, \ldots$) represent compile-time and non-negative levels ($0, 1, \ldots$) represent run-time. In a multi-staged language, separation is even more granular: for example, level $1$ and level $0$ run-time naturals are disambiguated. However, since I only deal with two stages, it is sufficient to consider only levels $0$ and $-1$. The definition, and the examples above, further imply that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a run-time program. 
+  The definition of level generalises to multi-stage languages, where negative levels ($-1, -2, \ldots$) represent compile-time and non-negative levels ($0, 1, \ldots$) represent run-time. In a multi-stage language, separation is even more granular: for example, level $1$ and level $0$ run-time naturals are disambiguated. However, since \sourceLang{} is a two-stage language, it is sufficient to consider only levels $0$ and $-1$. The definition, and the examples above, further imply that the ``default'' level, in the absence of quotes and splices, is level $0$. Intuitively, in the absence of quotes and splices, the programmer is ignoring metaprogramming facilities, and constructing a run-time program. 
 
 
-  Notice that the opening question was slightly devious\footnote{sorry}! We cannot assign a type to \textit{program fragments}, like $3$, since without knowledge of the wider context, we cannot know which level we are at: in the ill-typed example, $3$ occurs under a splice, but no quotes, so it has type $\mathbb{N}^{-1}$, and in the well-typed example, it has type $\mathbb{N}^0$. Unless otherwise stated, I will always assume program fragments occur at level $0$.
+  It is impossible, without further information, to assign a type to \textit{program fragments}, like \texttt{3}. Without knowledge of the wider context, it is impossible to know which level the program fragment is at: in the ill-typed example, \texttt{3} occurs under a splice, but no quotes, so it occurs at level $-1$ and has type $\mathbb{N}^{-1}$. In contrast, in the well-typed example, \texttt{3} occurs at level $0$ and has type $\mathbb{N}^0$. Unless otherwise stated, I always assume program fragments occur at level $0$.
 
-  Second, \textbf{effect rows are stratified into $\xi$ (run-time) and $\Delta$ (compile-time).}\\
-  In the following example, we print $1$ at compile-time, and $2$ at run-time. Further, we read an integer at run-time.
-\[\splice[{(\textbf{\texttt{print}}(1); \equote[\textbf{\texttt{print}}(2); \textbf{\texttt{readInt}}()])}]\]
-Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. We may now disambiguate between different computation types:
+  Second, \textbf{effect rows are stratified into $\xi$ (run-time) and $\Delta$ (compile-time)}.\\
+  The following example prints \texttt{1} at compile-time, and \texttt{2} at run-time. Further, it reads an integer at run-time.
+\[\splice[{(\textbf{\texttt{print}}(\texttt{1}); \equote[\textbf{\texttt{print}}(\texttt{2}); \textbf{\texttt{readInt}}()])}]\]
+Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. Disambiguating run-time and compile-time effects disambiguates different computation types:
 \begin{enumerate}[leftmargin=5.8\parindent]
   \item[$T^0 \quad\quad\,\,$] Compile-time value, run-time value (value types) \\
   \textit{Example}: The type of $x$ in $\lambda x. \return{x}$
   \item[$T^0 \, ! \, \xi \quad\;$] Compile-time value, run-time computation  \\
-  \textit{Example}: The type of $x$ in $\splice[(\bind{x}{\equote[\return{1}]}{\return{x}})]$
+  \textit{Example}: The type of $x$ in $\splice[(\bind{x}{\equote[\texttt{1}]}{\return{x}})]$
   \item[$T^0 \, ! \, \Delta \quad$] Compile-time computation, run-time value \\
   \textit{Example}: $\lambda x. \return{x}$ 
   \item[$T^0 \, ! \, \Delta; \xi$] Compile and run-time computation \\
-  \textit{Example}: $\splice[(\bind{x}{\equote[\return{1}]}{\return{x}})]$
+  \textit{Example}: $\splice[(\bind{x}{\equote[\texttt{1}]}{\return{x}})]$
 \end{enumerate}
 % As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
-Third, \textbf{there is an level $-1$ \textsf{Code} type, representing run-time ASTs.}\\ 
-  By stratifying types, we have ensured that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable meta-programming, run-time terms \textit{should be available} at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms.
+Third, \textbf{there is a level $-1$ \textsf{Code} type, representing run-time ASTs}.\\ 
+  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable meta-programming, run-time terms should be available at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms.
 % Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
 
 Putting it all together, we can now interpret complex \sourceLang{} types, like 
@@ -175,13 +175,11 @@ Putting it all together, we can now interpret complex \sourceLang{} types, like
 %   \item The function returns an AST of some run-time computation with type $\mathbb{N} \, ! \, \{\texttt{print},\texttt{readInt}\}$
 % \end{enumerate}
 \subsubsection{Typing Judgement}
-Having described the types, I now present the type system. The typing rules are collated in \Cref{fig:source-cq-typing-rules,fig:source-s-typing-rules}. I will first explain the typing judgement, then highlight some key rules. 
-
-The shape of the typing judgement is mostly familiar, though, as in \citet{xie-2023}, I add level information and compiler modes. Level information will turn out to be redundant, but we will revisit this later.
+The \sourceLang{} typing rules are collated in \Cref{fig:source-cq-typing-rules,fig:source-s-typing-rules}. The shape of the typing judgement is mostly familiar, though, as in \citet{xie-2023}, it is augmented with level information (which is shown to be redundant and thus dropped) and compiler modes. 
 \[\Gamma \vdash^{\text{Level}}_{\text{Mode}} e: T\]
 % I shall explain these in turn. 
 
-\textbf{Level}. Recall that, when describing the \efflang{} types, I argued that one cannot type a program fragment, like $3$, directly. One must also know the \textit{level} ($0$ or $-1$), which is accordingly attached to the typing judgement.
+\textbf{Level}. Recall that, when describing the \efflang{} types, it was not possible to type a program fragment, like \textsf{3}, directly. One must also know the \textit{level} ($0$ or $-1$), which is accordingly attached to the typing judgement.
 
 
 \newcommand{\compilemode}{\textbf{\textsf{\textcolor{compile}{c}}}}
@@ -198,11 +196,11 @@ The shape of the typing judgement is mostly familiar, though, as in \citet{xie-2
   \textit{Last surrounding annotation is a quote}
 \end{enumerate}
 
-To illustrate the purpose of the modes, consider the following meta-program, which evaluates to the AST of $\lambda x. 1+2+3$. This program adopts the shorthand of \Cref{subsection:effect-handler-calculus}, where \texttt{\textbf{return}}s are implicitly inserted (for example, $\equote[1]$ should really be $\equote[\return{1}]$), and we elide the order of operation ($1+2$ should really be written out using \textbf{\texttt{do}}). The emphasis is on the three modes:
+To illustrate the purpose of the modes, consider the following meta-program, which evaluates to the AST of $\lambda x. \texttt{1}+\texttt{2}+\texttt{3}$:
 
 \begin{center}
   \begin{tikzpicture}
-  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + \texttt{2}}])}{\bind{a}{\equote[\texttt{1}]}{f a}})] + \texttt{3}$};
   \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
   \node[anchor=north] at ($(example.south west) + (0.375cm, -0.1cm)$) {\compilemode{}};
   \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
@@ -227,7 +225,7 @@ To illustrate the purpose of the modes, consider the following meta-program, whi
   
 \begin{center}
   \begin{tikzpicture}
-  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + \texttt{2}}])}{\bind{a}{\equote[\texttt{1}]}{f a}})] + \texttt{3}$};
   \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (0.05cm, 0.06cm)$) rectangle ($(example.south west) + (0.7cm, -0cm)$);
   \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.95cm, 0.06cm)$) rectangle ($(example.south west) + (10.65cm, -0cm)$);
   \end{tikzpicture}
@@ -235,7 +233,7 @@ To illustrate the purpose of the modes, consider the following meta-program, whi
   \item[\splicemode] Identifies code that can be executed at compile-time to \textcolor{splice}{\textbf{manipulate ASTs}}. Will be fully reduced at compile-time, and will not appear at run-time. 
   \begin{center}
   \begin{tikzpicture}
-  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + \texttt{2}}])}{\bind{a}{\equote[\texttt{1}]}{f a}})] + \texttt{3}$};
   \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (1.2cm, 0.06cm)$) rectangle ($(example.south west) + (3.3cm, -0cm)$);
   \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (4.08cm, 0.06cm)$) rectangle ($(example.south west) + (4.28cm, -0cm)$);
   \draw[fill = splice, draw=splice, anchor = north west] ($(example.south west) + (8.75cm, 0.06cm)$) rectangle ($(example.south west) + (9.75cm, -0cm)$);
@@ -245,20 +243,19 @@ To illustrate the purpose of the modes, consider the following meta-program, whi
   \item[\quotemode] Identifies code that \textcolor{quote}{\textbf{builds ASTs}} (like \compilemode-mode) that can be manipulated at compile-time (unlike \compilemode-mode), to create run-time programs. 
 \begin{center}
   \begin{tikzpicture}
-  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + 2}])}{\bind{a}{\equote[1]}{f a}})] +3$};
+  \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + \texttt{2}}])}{\bind{a}{\equote[\texttt{1}]}{f a}})] + \texttt{3}$};
   \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (4.58cm, 0.06cm)$) rectangle ($(example.south west) + (5.15cm, -0cm)$);
   \draw[fill = quote, draw=quote, anchor = north west] ($(example.south west) + (8.07cm, 0.06cm)$) rectangle ($(example.south west) + (8.27cm, -0cm)$);
   \end{tikzpicture}
   \end{center}
   \end{enumerate}
 
-We may also describe how \textit{transitions} between modes occur:
+It is possible to transition between modes (\Cref{fig:compiler-mode-transitions}):
 \begin{enumerate}
   \item Top-level splices ($\splice$) transition from \compilemode{} (outside the splice) to \splicemode{} (within).
   \item Quotes ($\equote[e]$) transition from \splicemode{} (outside the quote) to \quotemode{} (within).
   \item Splices ($\splice$) transition from \quotemode{} (outside the splice) to \splicemode{} (within).
 \end{enumerate}
-Transitions between modes are illustrated in \Cref{fig:compiler-mode-transitions}.
 
 \begin{figure}
   \centering
@@ -277,7 +274,7 @@ Transitions between modes are illustrated in \Cref{fig:compiler-mode-transitions
 \label{fig:compiler-mode-transitions}
 \end{figure}
 
-Since \sourceLang{} has only two levels, and my type system will ban nested splices and quotations ($\splice[\splice]$ and $\equote[\equote]$ are not valid program fragments), the compiler mode will uniquely identify the level (\compilemode{} and \quotemode{} imply level $0$, and \splicemode{} level $-1$). I thus drop the level from my typing judgement, leaving it implicit.
+Since \sourceLang{} has only two levels, and the type system bans nested splices and quotations ($\splice[\splice]$ and $\equote[\equote]$ are not valid program fragments), the compiler mode uniquely identifies the level (\compilemode{} and \quotemode{} imply level $0$, and \splicemode{} level $-1$). As shorthand, I thus drop the level from the typing judgement, leaving it implicit.
 
 \newcommand{\cqtypejudge}[3][\Gamma]{{#1} \vdash_{\compilemode \mid \quotemode} {#2} : {#3}}
 \newcommand{\ctypejudge}[3][\Gamma]{{#1} \vdash_{\compilemode} {#2} : {#3}}
@@ -288,7 +285,7 @@ Since \sourceLang{} has only two levels, and my type system will ban nested spli
 \newcommand{\compiletimetype}[1]{{#1}^{-1}}
 \newcommand{\compiletimecomptype}[2]{{#1}^{-1} ! {#2}}
 
-Further, the typing judgements for \compilemode{} and \quotemode{} will be identical in almost all cases. To avoid repetition, I introduce the following notation
+Further, the typing judgements for \compilemode{} and \quotemode{} are identical in almost all cases. To avoid repetition, I introduce the following notation
 \[\cqtypejudge{e}{T}\]
 Where, for example, the typing rule 
 \[\inferrule{\cqtypejudge[\Gamma_1]{e_1}{T_1} \\ \cdots \\ \cqtypejudge[\Gamma_n]{e_n}{T_n} }{\cqtypejudge{e}{T}}\]
@@ -355,14 +352,14 @@ $\inferrule[(App)]{\cqtypejudge[\Gamma]{v_1}{\runtimecomptype{(\functionType[\xi
 \end{minipage}%
 \begin{minipage}[t]{0.5\textwidth}
   \centering
-  $\inferrule[(Handle)]{\cqtypejudge[\Gamma]{e}{\runtimecomptype{T_1}{\Delta;\xi}} \\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta} \\ \forall \texttt{op} \in \Delta \setminus \Delta' \, . \, \texttt{op} \in \textsf{dom}(h)}{\cqtypejudge{\handleWith{e}{h}}{\runtimecomptype{T_2}{\Delta;\xi'}}}$
+  $\inferrule[(Handle)]{\cqtypejudge[\Gamma]{e}{\runtimecomptype{T_1}{\Delta;\xi_1}} \\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta} \\ \forall \texttt{op} \in \xi_1 \setminus \xi_2 \, . \, \texttt{op} \in \textsf{dom}(h)}{\cqtypejudge{\handleWith{e}{h}}{\runtimecomptype{T_2}{\Delta;\xi_2}}}$
 \end{minipage}
 
 \vspace{5mm}
 
 \begin{minipage}[t]{\textwidth}
   \centering
-$\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi'}}}{\cqtypejudge{\returnHandler{x}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta}}$
+$\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi_2}}}{\cqtypejudge{\returnHandler{x}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta}}$
 \end{minipage}
 
 \vspace{5mm}
@@ -370,8 +367,8 @@ $\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_
 \begin{minipage}[t]{1\linewidth}
   \centering
 $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma 
-\\\\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta}
-\\\\ \cqtypejudge[\Gamma, x: A^0, k: {(\continuationType[\xi']{B^0}{T_2^0})^0} ]{e}{\runtimecomptype{T_2}{\Delta;\xi'}} \\ \xi\ \subseteq \xi \setminus \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi'}})\,!\,\Delta}}$
+\\\\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta}
+\\\\ \cqtypejudge[\Gamma, x: A^0, k: {(\continuationType[\xi_2]{B^0}{T_2^0})^0} ]{e}{\runtimecomptype{T_2}{\Delta;\xi_2}} \\ \xi_2\ \subseteq \xi_1 \setminus \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta}}$
 \end{minipage}
 
 \vspace{5mm}
@@ -412,7 +409,7 @@ $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma
 
   \begin{minipage}[t]{0.5\textwidth}
     \centering
-  $\inferrule[(\splicemode{}-Function)]
+  $\inferrule[(\splicemode{}-Lambda)]
   {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{e}{\effectType{\compiletimetype{T_2}}}}
   {\stypejudge{\function{x}{e}}{\compiletimetype{(\functionType{\compiletimetype{T_1}}{\compiletimetype{T_2}})}}}$
   \end{minipage}%
@@ -469,8 +466,8 @@ $\inferrule[(\splicemode{}-Continuation)]
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Handle)]
-    {\stypejudge{e}{\effectType{\compiletimetype{T_1}}} \\ \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}} \\ \forall \textsf{op} \in \Delta \setminus \Delta'. \, \textsf{op} \in \textsf{dom}(h)}
-    {\stypejudge{\handleWith{e}{h}}{\effectType[\Delta']{\compiletimetype{T_2}}}}$
+    {\stypejudge{e}{\effectType[\Delta_1]{\compiletimetype{T_1}}} \\ \stypejudge{h}{\compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{T_1}}}{\effectType[\Delta_2]{\compiletimetype{T_2}}})}} \\ \forall \textsf{op} \in \Delta_1 \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
+    {\stypejudge{\handleWith{e}{h}}{\effectType[\Delta_2]{\compiletimetype{T_2}}}}$
   \end{minipage}\\
 
   \vspace{5mm}
@@ -478,8 +475,8 @@ $\inferrule[(\splicemode{}-Continuation)]
   \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Ret-Handler)]
-    {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{e}{\effectType[\Delta']{\compiletimetype{T_2}}}}
-    {\stypejudge{\returnHandler{x}{e}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
+    {\stypejudge[\Gamma, x:\compiletimetype{T_1}]{e}{\effectType[\Delta_2]{\compiletimetype{T_2}}}}
+    {\stypejudge{\returnHandler{x}{e}}{\compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{T_1}}}{\effectType[\Delta_2]{\compiletimetype{T_2}}})}}}$
   \end{minipage}
   
   \vspace{5mm}
@@ -493,11 +490,11 @@ $\inferrule[(\splicemode{}-Continuation)]
     \centering
   $\inferrule[(\splicemode{}-Op-Handler)]
     { \texttt{op}: \compiletimetype{A} \to \compiletimetype{B} \in \Sigma \\\\ 
-      \stypejudge{h}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}\\
-      \stypejudge[\Gamma, x:\compiletimetype{A}, k:{\compiletimetype{(\continuationType[\Delta']{\compiletimetype{B}}{\compiletimetype{T_2}})}} ]{e}{\effectType[\Delta']{\compiletimetype{T_2}}}\\
-      \Delta' \subseteq \Delta \setminus \{ \texttt{op} \} \\
+      \stypejudge{h}{\compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{T_1}}}{\effectType[\Delta_2]{\compiletimetype{T_2}}})}}\\
+      \stypejudge[\Gamma, x:\compiletimetype{A}, k:{\compiletimetype{(\continuationType[\Delta_2]{\compiletimetype{B}}{\compiletimetype{T_2}})}} ]{e}{\effectType[\Delta_2]{\compiletimetype{T_2}}}\\
+      \Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
              \opHandler{x'}{k'}{e'} \notin h}
-    {\stypejudge{h ; \opHandler{x}{k}{e}}{\compiletimetype{(\handlerType{\effectType{\compiletimetype{T_1}}}{\effectType[\Delta']{\compiletimetype{T_2}}})}}}$
+    {\stypejudge{h ; \opHandler{x}{k}{e}}{\compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{T_1}}}{\effectType[\Delta_2]{\compiletimetype{T_2}}})}}}$
   \end{minipage}
 
   \vspace{5mm}
@@ -513,10 +510,10 @@ $\inferrule[(\splicemode{}-Continuation)]
 \label{fig:source-s-typing-rules}
 \end{figure}
 
-Recall that the \textsf{Code} type makes available at compile-time a representation of ASTs of level $0$ programs. Recall further that $\equote$ is the mechanism for \textit{creating} ASTs (elements of type \textsf{Code}) from run-time programs. This intuition is captured by the \textsc{\splicemode{}-Quote} rule, where, to verify that $\equote$ is a valid AST of type \textsf{Code}, we verify that $e$ is a run-time program of the corresponding type.
+Recall that the \textsf{Code} type makes level $0$ programs available at compile-time, as ASTs. Recall further that $\equote$ is the mechanism for \textit{creating} ASTs (elements of type \textsf{Code}) from run-time programs. This intuition is captured by the \textsc{\splicemode{}-Quote} rule, where, to verify that, at compile-time, $\equote$ is a valid AST of type \textsf{Code}, it is sufficient to verify that at run-time, $e$ is a program of the corresponding type.
 \[\inferrule[(\splicemode{}-Quote)]{\qtypejudge{e}{\runtimecomptype{T}{\Delta ; \xi}}}{\stypejudge{\equote}{\effectType{\compiletimetype{\textsf{Code}(\runtimecomptype{T}{\xi})}}}}\]
 
-The dual to $\equote$ is $\splice$, which \textit{eliminates} compile-time ASTs by transforming them (back) into run-time code. This intuition is captured by the \textsc{\quotemode{}-Splice} and \textsc{\compilemode{}-Splice} rules, where, to verify that $\splice$ is a valid run-time program, we check that $e$ is a valid compile-time AST of the corresponding type. 
+The dual to $\equote$ is $\splice$, which \textit{eliminates} compile-time ASTs by transforming them (back) into run-time code. This intuition is captured by the \textsc{\quotemode{}-Splice} and \textsc{\compilemode{}-Splice} rules, where, to verify that $\splice$ is a valid run-time program, it is sufficient to verify that $e$ is a valid compile-time AST of the corresponding type. 
 
 \begin{center}
 \begin{minipage}[t]{0.5\textwidth}
@@ -533,20 +530,20 @@ The dual to $\equote$ is $\splice$, which \textit{eliminates} compile-time ASTs 
 
 Note that since there are no \textsc{\quotemode-Quote} or \textsc{\splicemode-Splice} rules, the type system bans nested splices and quotations, and thus we can focus purely on levels $0$ and $-1$. 
 
-Finally, I define the notion of a well-typed \sourceLang{} expression. 
+A \sourceLang{} expression is well-typed if, under the empty context, and in \compilemode{}-mode, one can prove that all effects are handled at both compile-time and run-time. 
 \begin{definition}[Well-typed expression]{sourceHighlight}
   $e$ is well-typed if $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$
 \end{definition}
 
 \section{The Core Language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
-I now describe the core language, \coreLang{}, which is a simple extension of \efflang{}. For clarity, I rename \efflang{} values ($v$) and compuations ($c$) to \coreLang{} normal forms ($n$) and terms ($t$) respectively.  
+The core language, \coreLang{}, is a simple extension of \efflang{}. \coreLang{} normal forms ($n$), terms ($t$), and handlers ($h$) are extended versions of \efflang{} values ($v$), computations ($c$), and handlers ($h$) respectively.  
 
-To construct \coreLang{}, I extend \efflang{} in two ways. First, I add machinery for metaprogramming:
+\coreLang{} extends \efflang{} in two ways. First, it adds machinery for metaprogramming:
 
 \begin{enumerate}
 \item \textbf{AST} nodes (like \texttt{Nat} and \texttt{Var}) and \textbf{binders} (\underline{\texttt{Var}})
 
-The syntax explicitly disambiguates between binders (\underline{\texttt{Var}}) and AST nodes. For example, consider the AST of $\lambda\alpha{}$${:}\mathbb{N}. \,\alpha$, where I contrast the binder (left subtree) with the usage of the binder (right subtree).
+The syntax explicitly disambiguates between binders (\underline{\texttt{Var}}) and AST nodes. For example, consider the AST of $\lambda\alpha{}$${:}\mathbb{N}. \,\alpha$, where the binder (left subtree) is contrasted with the usage of the binder (right subtree).
 
 \begin{center}
   \begin{tikzpicture}
@@ -558,13 +555,13 @@ The syntax explicitly disambiguates between binders (\underline{\texttt{Var}}) a
   \end{tikzpicture}
 \end{center}
 
-This syntactic distinction is important because \textsf{Binder}s and \textsf{AST}s need to be distinguished at the type level, and I wish to keep the typing rules syntax directed. To see why it is important to distinguish \textsf{Binder}s and \textsf{AST}s at the \textit{type} level, consider the following malformed AST:
+This syntactic distinction is important to keep the typing rules syntax directed, because \textsf{Binder}s and \textsf{AST}s need to be distinguished at the type level. To see why it is important to distinguish \textsf{Binder}s and \textsf{AST}s at the \textit{type} level, consider the following malformed AST:
 \begin{center}
   \begin{tikzpicture}
     \begin{scope}[every node/.style={font=\ttfamily}]
     \node (lam) {Lam}
-    child {node (var) {Nat(0)}}
-    child {node (var) {Nat(0)}};
+    child {node (var) {Nat$($0$)$}}
+    child {node (var) {Nat$($0$)$}};
     \end{scope}
   \end{tikzpicture}
 \end{center}
@@ -573,7 +570,7 @@ The aforementioned malformed AST should be ill-typed. To do so, it is insufficie
 
 \item \textbf{\texttt{binderToAST}}, a primitive for turning binders (\underline{\texttt{Var}}) into \textit{usages} of binders (\texttt{Var})
 
-This allows us to write programs like the following:
+This allows for programs like:
 \begin{core}
 $\begin{array}{l}
   \textbf{\texttt{do}} \, \, {x} \leftarrow {\Binder{\alpha}{\mathbb{N}}} \, \, \textbf{\texttt{in}} \\
@@ -587,7 +584,7 @@ $\begin{array}{l}
 \textcolor{coreComment}{$\begin{array}{l}\return{\texttt{Lam}(\Binder{\alpha}{\mathbb{N}}, \Var{\alpha}{\mathbb{N}})}\end{array}$}
 \end{core}
 
-\item $\gensym{T}$, a primitive for generating fresh binders of type $T$ (\underline{\texttt{Var}})
+\item $\gensym{T}$, a primitive for generating fresh binders of type $T$, $\Binder{\alpha}{T}$ where $\alpha$ not previously used
 
 To illustrate why \textbf{\texttt{mkvar}} is necessary, recall that \coreLang{} acts as an elaboration target for \sourceLang{}. Consider the following \sourceLang{} program, which should ideally generate the AST of $\lambda \alpha. \lambda \beta. \, \return{(\alpha, \beta)}$
 
@@ -604,18 +601,18 @@ $\begin{array}{l}
 \textcolor{sourceComment}{$\begin{array}{l}\return{\texttt{Lam}(\Binder{\alpha}{\mathbb{N}}, \texttt{Lam}(\Binder{\beta}{\mathbb{N}}, \texttt{Ret}(\texttt{Pair}(\Var{\alpha}{\mathbb{N}}, \Var{\beta}{\mathbb{N}}))))}\end{array}$}
 \end{source}
 
-The compile-time function \texttt{mkfun} is a higher-order function that takes some compile-time function $k$. $k$ takes in a binder, $x$, and constructs the \textsf{body} of a function $\lambda x. \textsf{body}$. For example, in order to generate the body $x + 1$, we could write 
-\[\texttt{mkfun} \,  (\lambda a. \equote[{\splice[(a)]} + 1]) \]
-In the example \sourceLang{} program, $k$ calls \texttt{mkfun}. This means that one constructs a \textit{nested} function, whose formal parameters are bound to $a$ and $b$ respectively. If we simply elaborated $x$ into $\Binder{x}{\mathbb{N}}$, we would bind both $a$ and $b$ to $\Binder{x}{\mathbb{N}}$, and generate the following (incorrect) AST: 
+The compile-time function \texttt{mkfun} is a higher-order function that accepts some compile-time function $k$. $k$ takes a binder, $x$, and constructs the \textsf{body} of a function $\lambda x. \textsf{body}$. For example, the following application generates the body $x + \texttt{1}$:
+\[\texttt{mkfun} \,  (\lambda a. \equote[{\splice[(a)]} + \texttt{1}]) \]
+In the example \sourceLang{} program, $k$ calls \texttt{mkfun}. This constructs a \textit{nested} function, whose formal parameters are bound to $a$ and $b$ respectively. If $x$ was elaborated into $\Binder{x}{\mathbb{N}}$, both $a$ and $b$ would be bound to $\Binder{x}{\mathbb{N}}$, generating the following (incorrect) AST: 
  \[\return{\texttt{Lam}(\Binder{x}{\mathbb{N}}, \texttt{Lam}(\Binder{x}{\mathbb{N}}, \texttt{Ret}(\texttt{Pair}(\Var{x}{\mathbb{N}}, \Var{x}{\mathbb{N}}))))}\]
- We thus need to ensure that \texttt{mkfun} is elaborated into a function that generates \textit{fresh} names for $x$ each time it is called. This is the purpose of \textbf{\texttt{mkvar}}. 
+ Thus, \texttt{mkfun} should be elaborated into a function that generates \textit{fresh} names for $x$ each time it is called. This is the purpose of \textbf{\texttt{mkvar}}. 
 \end{enumerate}
 
-Second, I extend \efflang{} with machinery for scope extrusion checking. This comprises:
+Second, \coreLang{} extends \efflang{} with machinery for scope extrusion checking. This comprises:
 \begin{enumerate}
 \item \err{}, an error state for indicating the presence of scope extrusion,
-\item \textbf{\texttt{check}}, a guarded \textbf{\texttt{return}} construct that either detects scope extrusion, and transitions to \textbf{\texttt{err}}, or does not detect scope extrusion, and transitions to \textbf{\texttt{return}},
-\item \textbf{\texttt{check$_M$}}, which behaves similarly to \textbf{\texttt{check}}, but (for reasons I will explain in \Cref{section:best-effort-check}) allows a set of \textit{muted} variables $M$ to \textit{temporarily} extrude their scope,
+\item \textbf{\texttt{check}}, a guarded \textbf{\texttt{return}} that either detects scope extrusion, and transitions to \textbf{\texttt{err}}, or does not detect scope extrusion, and transitions to \textbf{\texttt{return}},
+\item \textbf{\texttt{check$_M$}}, which behaves similarly to \textbf{\texttt{check}}, but (as \Cref{section:best-effort-check} explains) allows a set of \textit{muted} variables $M$ to \textit{temporarily} extrude their scope,
 \item \textbf{\texttt{dlet}}, a primitive for tracking which variables are well-scoped and which have extruded their scope,
 \item \textbf{\texttt{tls}}, a marker for where top-level splices would have occurred in the source program. This is for \textit{ease of reasoning only}. 
 \end{enumerate}
@@ -638,9 +635,9 @@ Second, I extend \efflang{} with machinery for scope extrusion checking. This co
 
 Notice that, while the calculus the \textit{machinery} for scope extrusion checking, it does not demand that one \textit{use} it, or use it \textit{properly}. Scope extrusion checking is not a language feature, but an algorithm one builds on top of the calculus. 
 \subsection{Operational Semantics}
-I will now describe the operational semantics of \coreLang{}. Many rules are identical to those of \efflang{} (\Cref{fig:efflang-opsem}): interesting rules are collated in \Cref{fig:corelang-opsem}. Rules are divided into those related to AST construction (\textsc{Ast-Rule}), and those related to \textbf{s}cope \textbf{e}xtrusion \textbf{c}hecking (\textsc{Sec-Rule}). I will now explain key rules. 
+The semantics of \coreLang{} are made precise via an operational semantics. Many rules are identical to those of \efflang{} (\Cref{fig:efflang-opsem}): interesting rules are collated in \Cref{fig:corelang-opsem}. Rules are divided into those related to AST construction (\textsc{Ast-Rule}), and those related to \textbf{s}cope \textbf{e}xtrusion \textbf{c}hecking (\textsc{Sec-Rule}).
 
-\newcommand{\coreConfiguration}[5]{{#1}; {#2}; {#3}; {#4}; {#5}}
+\newcommand{\coreConfiguration}[5]{\langle {#1}; {#2}; {#3}; {#4}; {#5} \rangle}
   % \renewcommand{\transition}[2]{#1 & \rightarrow & #2}
   % \renewcommand{\rulename}[2]{(\textsc{{#1}-{#2}})}
   \newcommand{\astRule}[1]{\rulename{Ast}{#1}}
@@ -688,46 +685,46 @@ I will now describe the operational semantics of \coreLang{}. Many rules are ide
   \end{array} \]
   }
 \end{core-desc}
-\caption{Selected rules of the \coreLang{} operational semantics. Many of the rules can be trivially adapted from the \efflang{} semantics (\Cref{fig:efflang-opsem}). The muting and unmuting of variables is complex, and will be best explained when we discuss scope extrusion checks. For now, these mechanisms are \textbf{\textcolor{coreHighlight}{highlighted}}.}%
+\caption{Selected rules of the \coreLang{} operational semantics. Many of the rules can be trivially adapted from the \efflang{} semantics (\Cref{fig:efflang-opsem}). The muting and unmuting of variables is complex, and explained in \Cref{section:best-effort-check}. For now, these mechanisms are \textbf{\textcolor{coreHighlight}{highlighted}}.}%
 \label{fig:corelang-opsem}
 \end{figure}
 
 \subsubsection{Configurations}
 Like \efflang{}, the operational semantics is defined over \textit{configurations}. In \coreLang{}, configurations have the form:
 \[\langle t; E; U; M; I \rangle\]
-I will describe each element of the configuration at a high level: their roles will become clearer as we introduce each rule. $t$ and $E$ are as they are in \efflang{}: terms and evaluation contexts. $U$ acts as a source of freshness for name generation. $M$ is a set of muted variables, i.e. those that we do not want to trigger a scope extrusion error, even if they have extruded their scope. $I$ indicates the point at which we should \textit{unmute}, setting $M$ to $\emptyset$. 
+At a high level, $t$ and $E$ are terms and evaluation contexts. $U$ acts as a source of freshness for name generation. $M$ is a set of muted variables, i.e. those that do not to trigger a scope extrusion error, even if they have extruded their scope. $I$ indicates the point at which variables in $M$ should be \textit{unmuted}, by setting $M$ to $\emptyset$. 
 
 \subsubsection{AST Rules}
-The \textsc{Ast-Gen} rule describes the behaviour of \textbf{\texttt{mkvar}}: $\gensym{T}$ produces a \texttt{Var} of type $T$ and some name $\alpha$. Recall that names should be \textbf{fresh}: that is, multiple calls to \textbf{\texttt{mkvar}} should always return variables with different names. In order to ensure that names are fresh, we need to keep track of names that have been previously generated. This is the purpose of $U$ in the configuration, and the side condition on the rule. To ensure determinacy of the semantics, we will assume that names are chosen \textit{deterministically}.
+The \textsc{Ast-Gen} rule describes the behaviour of \textbf{\texttt{mkvar}}: $\gensym{T}$ produces a \texttt{\underline{Var}} of type $T$ and some name $\alpha$. Recall that names should be \textbf{fresh}: that is, multiple calls to \textbf{\texttt{mkvar}} should always return variables with different names. This involves remembering names that have been previously generated, which are collected in $U$. To ensure determinacy of the semantics, names are chosen \textit{deterministically}.
 
 The other primitive, \textbf{\texttt{binderToAST}}, turns binders $\Binder{\alpha}{T}$ into usages of the binder $\Var{\alpha}{T}$ (\textsc{Ast-Use}). 
 
 \subsubsection{Scope Extrusion Checking Rules}
-More interesting are the primitives for scope extrusion checking. The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return}}, which can catch occurrences of scope extrusion. For some arbitrary $n$ of AST type, either:
+The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return}}, which can catch occurrences of scope extrusion. For some arbitrary $n$ of AST type, either:
 \begin{enumerate}
   \item All the free variables of $n$ are properly scoped, so $\checkfv{n}$ reduces to $\return{n}$ (\textsc{Sec-Chs})
   \item Some free variables of $n$ are not properly scoped, so $\checkfv{n}$ reduces to $\err$ (\textsc{Sec-Chf})
 \end{enumerate}
 What does it mean to be ``properly scoped'' (the side condition on \textsc{Sec-Chs})? The answer is slightly subtle. Consider the following program 
 \[\bind{\texttt{body}}{\checkfv{n}}{\checkfv{\Lam{\Var{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
-I argue that $\Var{\alpha}{\mathbb{N}}$ \textbf{ought to be} properly scoped in $n$ (should not cause a transition to $\err$). However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, I defer it to the programmer. The programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
+Should $\Var{\alpha}{\mathbb{N}}$ occur in $n$, it should be ``properly scoped'': it should not cause a transition to $\err$. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. The programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
 \[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{n}}{\checkfv{\Lam{\Var{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
-More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{A}}{[-]}$ on the evaluation context $E$. I use the notation $\projfvs{E}$ to filter out variables declared in this manner. For example,
+More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{A}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{A}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{A} \}\]
 
 Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus checks that the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been properly declared, or to be precise, a subset of $\projfvs{E}$. 
 
-It may seem lazy of me to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}, and I define the elaboration. Therefore, I am the (only) \coreLang{} user, and the onus is on me to justify that my elaboration uses \textbf{\texttt{check}} appropriately. 
+It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}, and I define the elaboration. Therefore, the onus is on me to justify that any defined elaboration uses \textbf{\texttt{dlet}} and \textbf{\texttt{check}}appropriately. 
 
-I also introduce \textbf{\texttt{check}}$_M$ as a variant of \textbf{\texttt{check}}. As I will explain in \Cref{section:best-effort-check}, to design a good scope extrusion check, it is necessary to \textit{mute} some variables, pretending that they are properly scoped. \textbf{\texttt{check}}$_M$ will behave exactly like \textbf{\texttt{check}}, except that it will also pretend the muted variables $M$ are properly scoped.
+\textbf{\texttt{check}}$_M$ is a variant of \textbf{\texttt{check}}. As \Cref{section:best-effort-check} explains, to design a good scope extrusion check, it is necessary to \textit{mute} some variables, pretending that they are properly scoped. \textbf{\texttt{check}}$_M$ behaves exactly like \textbf{\texttt{check}}, except that it pretends that the muted variables $M$ are properly scoped.
 
-Similarly, when justifying the correctness of scope extrusion checks, it will be useful to remember the position of top-level splices in the \sourceLang{} source program. This is the purpose of \textbf{\texttt{tls}}, which should be interpreted as a no-op (\textsc{Sec-Tls}).
+Similarly, when justifying the correctness of scope extrusion checks, it is useful to remember the position of top-level splices in the \sourceLang{} source program. This is the purpose of \textbf{\texttt{tls}}. Since \textbf{\texttt{tls}} is only used for reasoning, it is interpreted as a no-op (\textsc{Sec-Tls}).
 
 The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, behave as normal, but additionally mute or unmute \texttt{Var}s. Muting and unmuting are explained in \Cref{section:best-effort-check}. For now, they are \textbf{\textcolor{coreHighlight}{highlighted}}, and can be ignored. 
 % At a high level, when an operation is performed, we mute some set of variables, and potentially update the point at which they should be unmuted. When we remove a declared variable, we additionally check if we ought to unmute variables (and do so if we should).
 
 \subsection{Type System}
-Extending the types is similarly straightforward. I add only two types: a \textsf{Binder} type and an \textsf{AST} type. The types are summarised in \Cref{fig:core-types}.
+\coreLang{} extends \efflang{} types with a \textsf{Binder} type and an \textsf{AST} type (\Cref{fig:core-types}).
 
 \begin{figure}[t]
   \begin{core-desc}
@@ -742,7 +739,7 @@ Extending the types is similarly straightforward. I add only two types: a \texts
                               &\quad\quad\,\,\, \mid \functionType[\xi]{A_1}{A_2} & \text{functions}\\
                               &\quad\quad\,\,\, \mid \continuationType[\xi]{A_1}{A_2} & \text{continuations}\\ \\
     \text{Computation type} & \effectType[\xi]{A} \\
-    \text{Handler type} & \handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}}
+    \text{Handler type} & \handlerType{\effectType[\xi_1]{A_1}}{\effectType[\xi_2]{A_2}}
     \end{array}$
     
     \vspace{4mm}
@@ -756,9 +753,9 @@ Extending the types is similarly straightforward. I add only two types: a \texts
                               &\quad\quad\,\,\, \mid \textsf{Binder}(A) & \text{binders}\\
                               &\quad\quad\,\,\, \mid \textsf{AST}(A) & \text{AST (value)}\\
                               &\quad\quad\,\,\, \mid \textsf{AST}(\effectType[\xi]{A}) & \text{AST (computation)}\\
-                              &\quad\quad\,\,\, \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}}) & \text{AST (handler)}\\
+                              &\quad\quad\,\,\, \mid \textsf{AST}(\handlerType{\effectType[\xi_1]{A_1}}{\effectType[\xi_2]{A_2}}) & \text{AST (handler)}\\
     % \text{Computation type} & \effectType{T} \\
-    % \text{Handler type} & \handlerType{\effectType{T_1}}{\effectType[\Delta']{T_2}}
+    % \text{Handler type} & \handlerType{\effectType{T_1}}{\effectType[\Delta_2]{T_2}}
   \end{array}$
   \end{core-desc}
   \caption{The types of \coreLang{}. \coreLang{} types extend \efflang{} types with an \textsf{AST} type (for ASTs), and a \textsf{Binder} type}%
@@ -780,14 +777,14 @@ Extending the types is similarly straightforward. I add only two types: a \texts
 % The aforementioned malformed AST should be ill-typed. To do so, it is insufficient to require that the left sub-tree is of type $\textsf{AST($\mathbb{N}$)}$. It must specifically be a \underline{\textsf{Var}} AST node. That is the purpose of the \textsf{Binder} type. 
 
 \subsubsection{Typing Rules}
-I now describe a selection of \coreLang{} typing rules (\Cref{fig:core-typing-rules}). The rules are extremely straightforward: $\Binder{\alpha}{A}$ is a \textsf{Binder} of type $A$, and $\Var{\alpha}{A}$ is an \textsf{AST} of type $A$. $\gensym{A}$ is a computation that produces \textsf{Binder}s of type $A$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is a \textsf{Binder} and $n_2$ an AST. 
+The \sourceLang{} typing rules are extremely straightforward: for example, $\Binder{\alpha}{A}$ is a \textsf{Binder} of type $A$, and $\Var{\alpha}{A}$ is an \textsf{AST} of type $A$. $\gensym{A}$ is a computation that produces \textsf{Binder}s of type $A$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is a \textsf{Binder} and $n_2$ an AST. 
 
 Notice that this type system does not guarantee that the resulting AST is \textit{well-scoped}, for example, the following is well-typed:
 \[\cdot \vdash {\Var{\alpha}{A}}: {\textsf{AST}(A)}\]
 
 The typing rules for scope extrusion checks are even more straightforward: they are effectively invisible to the type system. The only complex case is \textbf{\texttt{err}}, which can be assigned any type in any context. \textbf{\texttt{err}} thus behaves similarly to \textbf{\texttt{absurd}} in \texttt{Haskell}, or in the $\lambda$-calculus extended with the empty type \citep{scherer-2017}.
 
-Finally, I define the notion of well-typed term. 
+A \coreLang{} term is well-typed if under an empty context, one can prove that all (compile-time) effects are handled. 
 \begin{definition}[Well-typed term]{coreHighlight}
 A term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \end{definition}
@@ -846,7 +843,7 @@ A term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 
     \begin{minipage}[t]{\textwidth}
       \centering
-    $\inferrule[(Check)]{\type{n}{T} \\ T = \textsf{AST}(A) \lor \textsf{AST}(\effectType[\xi]{A}) \lor \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}})}{\type{\checkfv{n}}{\effectType{T}}}$
+    $\inferrule[(Check)]{\type{n}{T} \\ T = \textsf{AST}(A) \lor \textsf{AST}(\effectType[\xi]{A}) \lor \textsf{AST}(\handlerType{\effectType[\xi_1]{A_1}}{\effectType[\xi_2]{A_2}})}{\type{\checkfv{n}}{\effectType{T}}}$
     \end{minipage}
 
   \end{center}
@@ -857,21 +854,21 @@ A term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \end{figure}
  
 \subsection{Implementation}
-The core calculus \coreLang{} describes abstractly a concrete \texttt{OCaml} implementation. In the concrete \texttt{OCaml} implementation, we do not need to introduce \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} as primitives. Rather, they can be encoded as a \textit{mode of use} of effects and handlers. 
+The core calculus \coreLang{} describes a concrete \texttt{OCaml} implementation. In the concrete \texttt{OCaml} implementation, \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} are not primitives. Rather, they are encoded as a \textit{mode of use} of effects and handlers. 
 \begin{enumerate}
   \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that are passed the free variables of $n$\\ 
   $\checkm{n}$ is similar, except there are also \texttt{Mute} and \texttt{Unmute} effects
   
   \item $\dlet{\Binder{\alpha}{T}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{T}$ from the set of free variables, and either:
   \begin{enumerate}
-    \item Resumes the continuation, if the set of free variables is now empty (all free variables properly declared/scoped)
+    \item Resumes the continuation, if the set of free variables is now empty (all free variables properly declared)
     \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are properly declared. Following a successful such check, the continuation may be resumed.
   \end{enumerate}
   \item \textbf{\texttt{err}} is an unhandled \texttt{FreeVar} effect
 \end{enumerate}
 
 \section{Elaboration from \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice} to \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:elaboration}
-Having described both \sourceLang{} and \coreLang{}, I will now describe a simple elaboration from \sourceLang{} to \coreLang{}. This elaboration will be \textit{simple} -- it will not insert any dynamic scope extrusion checks.
+This section describes an elaboration from \sourceLang{} to \coreLang{}. This elaboration is \textit{simple}: it will not insert any dynamic scope extrusion checks (as opposed to other elaborations in \Cref{chapter:scope-extrusion}, which will insert checks).
 
 \newcommand{\elaborate}[1]{\llbracket #1 \rrbracket}
 \newcommand{\erase}[1]{\textsf{erase}(#1)}
@@ -879,32 +876,32 @@ Having described both \sourceLang{} and \coreLang{}, I will now describe a simpl
 \newcommand{\Code}[1]{\textsf{Code}(#1)}
 
 
-The elaboration is defined on typing judgements: I elaborate a \sourceLang{} judgement to a \coreLang{} judgement. To do so, I define four elaborations: on effect rows, types, contexts, and terms. As it will be clear from context which elaboration is being referred to, I will abuse notation and write $\llbracket - \rrbracket$ for all four.
+The elaboration is defined on typing judgements: \sourceLang{} judgements elaborate to \coreLang{} judgements. This decomposes into four elaborations: on effect rows, types, contexts, and terms. As the context disambiguates the specific elaboration, I abuse notation and write $\llbracket - \rrbracket$ for all four elaborations.
 
-Elaborating effect rows will just be the identity, that is 
+Elaborating effect rows is just be the identity, that is 
 \[\begin{array}{rcl}
   \elaborate{\Delta} &=& \Delta \\
   \elaborate{\xi}&=&{\xi}
 \end{array}\]
 
 \subsection{Elaborating Types}
-To define elaboration of types, it will be convenient to refer to a helper function, \textsf{erase}, that \textit{erases} all of the level annotations (and elaborates effect rows). I do not give a formal definition, but rather an example. 
-\[\textsf{erase}((\functionType[\xi]{T_1^0}{T_2^0})^0) = \functionType[\elaborate{\xi}]{T_1}{T_2}\]
-I can now define elaboration of types. In a nutshell, level $0$ types elaborate into \textsf{AST} types. Level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types.
+To define the elaboration of types, it is convenient to refer to a helper function, \textsf{erase}, that \textit{erases} all of the level annotations (and elaborates effect rows). I do not give a formal definition, but rather an example. 
+\[\textsf{erase}((\functionType[\xi]{T_1^0}{T_2^0})^0) = \functionType[\elaborate{\xi}]{\textsf{erase}(T_1^0)}{\textsf{erase}(T_2^0)}\]
+In a nutshell, level $0$ types elaborate into \textsf{AST} types. Level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types.
 \[
 \begin{array}{rcl}
   \elaborate{T^0} & = & \AST{\erase{T^0}}\\
   \elaborate{\effectType[\xi]{T^0}} & = & \AST{\erase{\effectType[\xi]{T^0}}}\\
   \elaborate{\effectType[\Delta]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{T^0}}}\\
   \elaborate{\effectType[\Delta ; \xi]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{\effectType[\xi]{T^0}}}}\\
-  \elaborate{{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})}^0} & = & {\AST{\erase{(\handlerType{\effectType[\xi]{T_1^0}}{\effectType[\xi']{T_2^0}})^0}}}\\\\
+  \elaborate{{(\handlerType{\effectType[\xi_1]{T_1^0}}{\effectType[\xi_2]{T_2^0}})}^0} & = & {\AST{\erase{(\handlerType{\effectType[\xi_1]{T_1^0}}{\effectType[\xi_2]{T_2^0}})^0}}}\\\\
   \elaborate{T^{-1}} & = & \text{if} \, T \neq \Code{\effectType[\xi]{T^0}} \, \text{then} \, \erase{T^{-1}} \\ && \text{else}\, \AST{\erase{\effectType[\xi]{T^0}}}\\
   \elaborate{\effectType{T^{-1}}} & = & \effectType[\elaborate{\Delta}]{\elaborate{T^{-1}}}\\
-  \elaborate{{(\handlerType{\effectType[\Delta]{T_1^{-1}}}{\effectType[\xi']{T_2^{-1}}})}^{-1}} & = & {\AST{\erase{(\handlerType{\effectType[\Delta]{T_1^{-1}}}{\effectType[\xi']{T_2^{-1}}})^{-1}}}}
+  \elaborate{{(\handlerType{\effectType[\Delta_1]{T_1^{-1}}}{\effectType[\Delta_2]{T_2^{-1}}})}^{-1}} & = & {\AST{\erase{(\handlerType{\effectType[\Delta_1]{T_1^{-1}}}{\effectType[\Delta_2]{T_2^{-1}}})^{-1}}}}
 \end{array}
 \]
 \subsection{Elaborating Contexts}
-Elaborating contexts is \textit{slightly} subtle. Rather than mapping the elaboration function over all types in the context, we treat the level $0$ types slightly differently, elaborating in \textsf{Binder}, rather than \textsf{AST} types. 
+Elaboration of contexts is subtle. Level $0$ types in the context are elaborated into \textsf{Binder}, rather than \textsf{AST} types. Elaboration of contexts thus cannot be defined by straightforward elaboration of each type in the context.
 \[
 \begin{array}{rcl}
   \elaborate{\cdot} & = & \cdot \\
@@ -912,15 +909,45 @@ Elaborating contexts is \textit{slightly} subtle. Rather than mapping the elabor
   \elaborate{\Gamma, x:T^{-1}} & = & \elaborate{\Gamma}, x: \elaborate{T^{-1}}
 \end{array}
 \]
-To see why this is the case, notice that the only cases where the context $\Gamma$ is extended with a level $0$ variable occur in \compilemode{} or \quotemode{}. In these modes, we are building ASTs, and thus $x$ must be an AST \textsf{Binder}. 
+To see why this is the case, notice that the only cases where the context $\Gamma$ is extended with a level $0$ variable occur in \compilemode{} or \quotemode{}. These modes build ASTs, and thus $x$ must be an AST \textsf{Binder}. 
 % \subsection{Elaborating Effects}
 
 \subsection{Elaborating Terms}
-Elaborating terms is slightly more involved. To start, we will assume that we have annotated all binders with their types, for example 
-\[\lambda x: \mathbb{N}^0. \, e\]
+Elaboration of terms assumes that all binders have been annotated with their types, for example 
+\[\lambda x: \mathbb{N}^0. \; e\]
 The elaboration for terms is moderated by the \textbf{mode}: \compilemode{}, \quotemode{}, or \splicemode{}. Selected rules are collated in \Cref{fig:term-elaboration}. 
 
-At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calling \textbf{\texttt{mkvar}} when binders are encountered. Elaboration in \compilemode{} and \quotemode{}-modes do not differ significantly, with the exception of the rule for splice, where in \compilemode{}, I insert the marker for the top-level splice, and in \quotemode{}, I do not. The \compilemode{} and \quotemode{}-modes will become important when building scope extrusion checks. Elaboration in \splicemode{}-mode is effectively the identity. 
+At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs. Since variables in the context have {\textsf{Binder}} type, elaboration of \textit{usages} of variables must use \textbf{\texttt{binderToAST}} to convert the \textsf{Binder} ($\Binder{\alpha}{A}$) to an \textsf{AST} ($\Var{\alpha}{A}$). Further, to ensure binders are appropriately renamed, the elaboration must elaborate binders to \textbf{\texttt{mkvar}}s. 
+
+Take, for example, the elaboration of $\lambda x: {\mathbb{N}}^0. \; \return{x}$ in \compilemode{} or \quotemode{}, where $\textsf{erase}(\mathbb{N}^0) = \mathbb{N}$:
+\begin{center}
+  \begin{tikzpicture}
+    \node[align=left](example){$\begin{array}{@{}l}\bind{x}{\gensym{\mathbb{N}}}{}\\
+    \bind{\texttt{body}}{(\bind{n}{\varToAST{x}}{\return{\Ret{n}}})}{}\\
+    {\return{\Lam{x}{\texttt{body}}}}\end{array}$};
+
+    \begin{scope}[on background layer, font=\scriptsize\bfseries, text=comment, align=left]
+    \draw[draw=comment, line width = 0.3mm] ($(example.north) + (-3.7cm, 0.6cm)$) circle[radius=1.4mm] node (annote-1) {\tiny{1}};
+    \node[anchor = east, align=right] (annote-1-text) at ($(annote-1.west) + (0.1cm, -0.15cm)$) {Generate fresh \\ \textsf{Binder} for $x$} ;
+    \draw[draw=comment, line width =0.3mm] ($(example.north) + (-3.2cm, -0.1cm)$) |- (annote-1.east);
+
+    \draw[draw=comment, line width = 0.3mm] ($(example.west) + (-0.4cm, -0cm)$) circle[radius=1.4mm] node (annote-2) {\tiny{2}};
+    \node[anchor = east, align=right] (annote-2-text) at ($(annote-2.west) + (0.1cm, -0.15cm)$) {Generate \\ function body} ;
+    \draw[draw=comment, line width =0.3mm] (example.west) -- (annote-2.east);
+
+    \draw[draw=comment, line width = 0.3mm] ($(example.north east) + (-5.3cm, 0cm)$) circle[radius=1.4mm] node (annote-3) {\tiny{3}};
+    \node[anchor = north west, align=left] (annote-3-text) at ($(annote-3.east) + (-0.1cm, 0.27cm)$) {Convert $x$ from \textsf{Binder} \\ to \textsf{AST} type} ;
+    \draw[draw=comment, line width =0.3mm] ($(example.north east) + (-5.8cm, -0.6cm)$) |- (annote-3.west);
+
+    \draw[draw=comment, line width = 0.3mm] ($(example.south east) + (-8.5cm, -0.3cm)$) circle[radius=1.4mm] node (annote-4) {\tiny{4}};
+    \node[anchor = north west, align=left] (annote-4-text) at ($(annote-4.east) + (-0.1cm, 0cm)$) {Return AST of function} ;
+    \draw[draw=comment, line width =0.3mm]  ($(example.south east) + (-9cm, 0.18cm)$) |- (annote-4.west);
+
+  \end{scope}
+    \end{tikzpicture}
+\end{center}
+
+Elaboration in \compilemode{} and \quotemode{}-modes do not differ significantly, with the exception of the rule for splice, where in \compilemode{}-mode, the marker for the top-level splice is inserted, and in \quotemode{}-mode, it is not. The \compilemode{} and \quotemode{}-modes become important when building scope extrusion checks. Elaboration in \splicemode{}-mode is effectively the identity. 
 
 \newcommand{\cqmode}{\compilemode{} \mid \quotemode{}}
 \begin{figure}
@@ -948,11 +975,11 @@ At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs, calli
 \end{figure}
 
 \subsection{Elaborating Typing Judgements}
-We may now elaborate full typing judgements, by elaborating each component in the judgement. For example, take the typing judgement for lambdas in \compilemode{}-mode. 
+Elaboration of typing judgements can now be defined compositionally. For example, take the typing judgement for lambdas in \compilemode{}-mode:
 \[
 {\inferrule{\ctypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi}}}{\ctypejudge{\lambda x.e}{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}}
 \]
-which we elaborate by applying the elaboration component-wise
+which is elaborated by applying the elaboration component-wise
 \newcommand{\typejudge}[3][\Gamma]{#1 \vdash #2 : #3}
 \[
 {\inferrule{\typejudge[\elaborate{\Gamma, x: T_1^0}]{\elaborate{e}_{\compilemode{}}}{\elaborate{\runtimecomptype{T_2}{\Delta;\xi}}}}{\typejudge[\elaborate{\Gamma}]{\elaborate{\lambda x.e}_{\compilemode{}}}{\elaborate{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}}}
@@ -963,13 +990,13 @@ Letting $A_i = \erase{T_i^0}$, and $\elaborate{e}_{\compilemode{}} = t$, and app
 {\inferrule{\typejudge[\elaborate{\Gamma}, x: \textsf{Binder}(A_1)]{t}{\effectType{\AST{\effectType[\xi]{A_2}}}}}{\typejudge[\elaborate{\Gamma}]{\bind{x}{\gensym{\erase{T^0}}}{\bind{\texttt{body}}{t}{\return{\Lam{x}{\texttt{body}}}}}}{\effectType{\AST{\functionType[\xi]{A_1}{A_2}}}}}}
 \]
 }
-which, assuming that the premise is valid typing derivation, corresponds to a valid \sourceLang{} typing derivation.
+which, assuming that the premise is valid typing derivation, corresponds to a valid \coreLang{} typing derivation.
 
-Is this true in general? Do \sourceLang{} typing derivations always elaborate into \coreLang{} typing derivations? Yes, but the question begets a larger point: what properties can we claim about the calculus as defined? What metatheoretic results may we establish?
+Is this true in general? Do \sourceLang{} typing derivations always elaborate into \coreLang{} typing derivations? Yes, but the question begets a larger point: what properties can be claimed about the calculus as defined? What metatheoretic results may be established?
 \section{Metatheory}\label{section:metatheory}
-I now establish several metatheoretic properties of the \sourceLang{} calculus.
+This section states and proves several metatheoretic results about \sourceLang{} and \coreLang{}. 
 
-The first states that well-typed \sourceLang{} programs elaborate into well-typed \coreLang{} programs.
+First, well-typed \sourceLang{} programs elaborate into well-typed \coreLang{} programs:
 
 \begin{theorem}[Elaboration Preservation]{sourceHighlight}
   If $\Gamma \vdash_{\star} e: \tau$ then $\elaborate{\Gamma} \vdash \elaborate{e}_{\star}: \elaborate{\tau}$, where $\star = \compilemode{} \mid \quotemode{} \mid \splicemode{}$ and $\tau$ is a level $0$ or level $-1$ value, computation, or handler type. 
@@ -977,7 +1004,7 @@ The first states that well-typed \sourceLang{} programs elaborate into well-type
 
 The proof is by induction on the typing rules, as in the example in the previous section.  
 
-We can also prove that the core language \coreLang{} satisfies appropriate progress and preservation properties. 
+Additionally, the core language \coreLang{} satisfies appropriate progress and preservation properties. 
 
 \begin{theorem}[Progress]{coreHighlight} 
 If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
@@ -988,19 +1015,15 @@ If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ either
 \item $\exists t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'\rangle$
 \end{enumerate}
 \end{theorem}
-Note that I additionally have to consider the error state \textbf{\texttt{err}}. Progress is proved by induction over the typing derivation. Since I am extending \efflang{}, I only need to consider the augmented typing rules, all of which are extremely straightforward.
+Progress is proved by induction over the typing derivation. Since \coreLang{} is built by extending \efflang{}, the proof need only consider the augmented typing rules, all of which are extremely straightforward.
 
 \begin{theorem}[Reduction Preservation]{coreHighlight}
-If 
-\begin{enumerate} 
-  \item $\Gamma \vdash E[t]: \effectType{T}$ and 
-  \item $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
-  \end{enumerate}
-  then $\Gamma \vdash E'[t']: \effectType{T}$ 
+If $\Gamma \vdash E[t]: \effectType{T}$ and $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
+then $\Gamma \vdash E'[t']: \effectType{T}$ 
 \end{theorem}
-Proof proceeds by induction over the operational semantics. Once again, I only need to consider the augmented rules, which are very simple. 
+Proof proceeds by induction over the operational semantics. Once again, one need only consider the augmented rules, which are very simple. 
 
-As a corollary, we get a notion of type safety.
+As a corollary, we obtain a notion of type safety.
 \begin{corollary}[Type Safety]{sourceHighlight}\label{cor:core-type-safety}
   If $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$ then either
   \begin{enumerate}
@@ -1009,9 +1032,10 @@ As a corollary, we get a notion of type safety.
     \item $\langle \elaborate{e}_{\compilemode{}}; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \err; E; U; M; I \rangle$ for some $E$, $U$, $M$, $I$, or 
     \item $\langle \elaborate{e}_{\compilemode{}}; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \return{n}; [-]; U; M; I \rangle$ for some $U$, $M$, $I$
   \end{enumerate} 
+where the initial configuration comprises an elaborated term, the empty evaluation context, an empty set indicating that no variables have been previously generated, another empty set indicating no variables have been muted, and $\top$, indicating that there is (currently) no plan to unmute variables.
 \end{corollary}
 
-Importantly, this notion of type safety is weak. A system which always reports a scope extrusion error (\textbf{\texttt{err}}) would be type safe. Further, a system which never reports scope extrusion would be type safe as well. Due to the potential presence of scope extrusion, in the third case of \Cref{cor:core-type-safety}, we cannot additionally claim that the normal form $n$ represents a well-typed \efflang{} program. 
+Importantly, this notion of type safety is weak. A system which always reports a scope extrusion error (\textbf{\texttt{err}}) would be type safe. Further, a system which never reports scope extrusion would be type safe as well. Due to the potential presence of scope extrusion, the third case of \Cref{cor:core-type-safety} cannot additionally claim that the normal form $n$ represents a well-typed \efflang{} program. 
 
 % In addition to type safety, we can formulate an equational theory for \sourceLang{}. First, I prove that, underneath a top-level splice, splice and quotation are duals. Second, I prove that \sourceLang{} is a fine-grain CBV calculus. 
 
@@ -1058,7 +1082,7 @@ Importantly, this notion of type safety is weak. A system which always reports a
 % \end{tikzpicture}
 % \end{center}
 % Syntactic equality is, of course, not the only sensible notion of equality. One can also choose, for example, contextual equivalence with respect to the \efflang{} semantics. Nevertheless, armed with this notion of equality on \textsf{AST} types, it is easy to define a notion of contextual equivalence in \coreLang{}. First, define ground types 
-% \[T_\textsf{Ground} \triangleq \mathbb{N} \mid \textsf{AST}(A) \mid \textsf{AST}(\effectType[\xi]{A}) \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi']{A_2}})\]
+% \[T_\textsf{Ground} \triangleq \mathbb{N} \mid \textsf{AST}(A) \mid \textsf{AST}(\effectType[\xi]{A}) \mid \textsf{AST}(\handlerType{\effectType[\xi]{A_1}}{\effectType[\xi_2]{A_2}})\]
 % and a notion of equality on each ground type ($=_{\textsf{Ground}}$), which is just numerical equality for $\mathbb{N}$ and $=_{\textsf{AST}}$ for AST types. Then,
 % \begin{definition}[Contextual Equivalence]{coreHighlight}\label{dfn:ctx-equiv}
 %   $t$ and $t'$ are contextually equivalent at context $\Gamma$ and type $\effectType{T}$, written $\Gamma \vdash t \contextequiv t': '\effectType{T}$ if 
@@ -1079,7 +1103,7 @@ Importantly, this notion of type safety is weak. A system which always reports a
 
 % We can now prove the equational theory of \sourceLang{}. 
 
-Additionally, underneath a top-level splice, splice and quotation are duals. That is, 
+Finally, underneath a top-level splice, splice and quotation are duals. That is, 
 \begin{theorem}[Quote-Splice Duality]{sourceHighlight}
 \[\begin{array}{rcl}
 \splice[{\equote}] & =_{\quotemode{}} & e \\
@@ -1087,7 +1111,7 @@ Additionally, underneath a top-level splice, splice and quotation are duals. Tha
 \end{array}
 \]
 \end{theorem}
-Where, in this context, $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode will affect the result of elaboration. Indeed, I prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
+Where, in this context, $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode affects the result of elaboration. Indeed, it is possible to prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
 \[\begin{array}{rcl}  
   \elaborate{\splice[{\equote}]}_{\quotemode{}} = t & \iff & \elaborate{e}_{\quotemode{}} = t\\
   \elaborate{\equote[{\splice}]}_{\splicemode{}} = t & \iff & \elaborate{e}_{\splicemode{}} = t

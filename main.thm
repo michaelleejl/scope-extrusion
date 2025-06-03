@@ -1,27 +1,26 @@
 \contentsline {mddefinition}{{Definition}{2.2.{1}}{Well-typed computation}}{18}{mddefinition.2.2.1}%
-\contentsline {mdtheorem}{{Theorem}{2.2.{1}}{Progress}}{19}{mdtheorem.2.2.1}%
-\contentsline {mdtheorem}{{Theorem}{2.2.{2}}{Preservation}}{19}{mdtheorem.2.2.2}%
-\contentsline {mdcorollary}{{Corollary}{2.2.{1}}{Type Safety}}{19}{mdcorollary.2.2.1}%
-\contentsline {mddefinition}{{Definition}{3.1.{1}}{Level}}{29}{mddefinition.3.1.1}%
-\contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed expression}}{32}{mddefinition.3.1.2}%
-\contentsline {mddefinition}{{Definition}{3.2.{1}}{Well-typed term}}{40}{mddefinition.3.2.1}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{43}{mdtheorem.3.4.1}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{43}{mdtheorem.3.4.2}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{44}{mdtheorem.3.4.3}%
-\contentsline {mdcorollary}{{Corollary}{3.4.{1}}{Type Safety}}{44}{mdcorollary.3.4.1}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{4}}{Quote-Splice Duality}}{44}{mdtheorem.3.4.4}%
-\contentsline {mddefinition}{{Definition}{4.1.{1}}{Lazy Scope Extrusion}}{45}{mddefinition.4.1.1}%
-\contentsline {mdtheorem}{{Theorem}{4.1.{1}}{Correctness and Expressiveness of the Lazy Dynamic Check}}{46}{mdtheorem.4.1.1}%
+\contentsline {mdtheorem}{{Theorem}{2.2.{1}}{Progress}}{18}{mdtheorem.2.2.1}%
+\contentsline {mdtheorem}{{Theorem}{2.2.{2}}{Preservation}}{18}{mdtheorem.2.2.2}%
+\contentsline {mdcorollary}{{Corollary}{2.2.{1}}{Type Safety}}{18}{mdcorollary.2.2.1}%
+\contentsline {mddefinition}{{Definition}{3.1.{1}}{Level}}{28}{mddefinition.3.1.1}%
+\contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed expression}}{31}{mddefinition.3.1.2}%
+\contentsline {mddefinition}{{Definition}{3.2.{1}}{Well-typed term}}{38}{mddefinition.3.2.1}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{42}{mdtheorem.3.4.1}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{42}{mdtheorem.3.4.2}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{42}{mdtheorem.3.4.3}%
+\contentsline {mdcorollary}{{Corollary}{3.4.{1}}{Type Safety}}{43}{mdcorollary.3.4.1}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{4}}{Quote-Splice Duality}}{43}{mdtheorem.3.4.4}%
+\contentsline {mddefinition}{{Definition}{4.1.{1}}{Lazy Scope Extrusion}}{44}{mddefinition.4.1.1}%
+\contentsline {mdtheorem}{{Theorem}{4.1.{1}}{Correctness and Expressiveness of the Lazy Dynamic Check}}{45}{mdtheorem.4.1.1}%
 \contentsline {mddefinition}{{Definition}{4.2.{1}}{Eager Scope Extrusion}}{46}{mddefinition.4.2.1}%
-\contentsline {mddefinition}{{Definition}{4.3.{1}}{Best-Effort Scope Extrusion}}{50}{mddefinition.4.3.1}%
+\contentsline {mddefinition}{{Definition}{4.3.{1}}{Best-Effort Scope Extrusion}}{49}{mddefinition.4.3.1}%
 \contentsline {mdtheorem}{{Theorem}{4.3.{1}}{Correctness of the Best-Effort Check}}{52}{mdtheorem.4.3.1}%
 \contentsline {mdtheorem}{{Theorem}{4.3.{2}}{Cause for Concern Property}}{53}{mdtheorem.4.3.2}%
 \contentsline {mddefinition}{{Definition}{4.4.{1}}{Extended source type}}{55}{mddefinition.4.4.1}%
 \contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed Expression, Refined Environment Classifiers}}{55}{mddefinition.4.4.2}%
 \contentsline {mdlemma}{{Lemma}{4.4.{1}}{Weakening for Level 0 Values}}{56}{mdlemma.4.4.1}%
-\contentsline {mdlemma}{{Lemma}{4.4.{2}}{Weakening for Level $-1$ Values}}{56}{mdlemma.4.4.2}%
 \contentsline {mdtheorem}{{Theorem}{4.4.{1}}{Correctness of Refined Environment Classifiers}}{57}{mdtheorem.4.4.1}%
 \contentsline {mddefinition}{{Definition}{4.4.{3}}{\textsf {Scoped}-Induction}}{59}{mddefinition.4.4.3}%
-\contentsline {mdlemma}{{Lemma}{4.4.{3}}{Closure under Anti-Reduction}}{59}{mdlemma.4.4.3}%
+\contentsline {mdlemma}{{Lemma}{4.4.{2}}{Closure under Anti-Reduction}}{59}{mdlemma.4.4.2}%
 \contentsline {mddefinition}{{Definition}{4.4.{4}}{Closed substitution}}{59}{mddefinition.4.4.4}%
-\contentsline {mdlemma}{{Lemma}{4.4.{4}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{60}{mdlemma.4.4.4}%
+\contentsline {mdlemma}{{Lemma}{4.4.{3}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{59}{mdlemma.4.4.3}%
