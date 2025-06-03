@@ -755,7 +755,9 @@ Proof of \Cref{lemma:fundamental} is by induction on the source \sourceLang{} ty
 \[\bind{x}{\gensym{\erase{T_1^0 (\gamma')}}}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho})}{\return{\Lam{x}{\texttt{body}}}}}\]
 in $\scoped{\effectType{(\functionType[\xi]{T_1^0}{T_2^0})^0} (\gamma)}$. It is clear that this reduces to
 \[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x})}{\return{\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{\texttt{body}}}}}\]
- By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that the term above is in the logical relation. By weakening, and the induction hypothesis, $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}}})$:
+ By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that the term above is in the logical relation. 
+ 
+ By weakening, and the induction hypothesis, $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}}})$:
 \begin{enumerate}
   \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$ reduces to some $\return{n}$, then by the inductive hypothesis it is of AST type and all its free variables are permitted by $\gamma'$. The term $\bind{\texttt{body}}{\return{n}}{\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{\texttt{body}}}$ reduces to $\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{n}$, where $\Var{\alpha}{T_1^{\gamma'}}$ is bound. By the typing rules, of the free variables, $\alpha$ is the only variable tagged with classifier $\gamma'$. So under $\Theta$, we conclude that the free variables of $\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
   \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$ reduces to $E[\op{n}]$, then because the context $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from the inductive hypothesis.
@@ -821,9 +823,6 @@ $\begin{array}{l}
 \label{listing:refined-environment-classifiers-expressiveness}
 \end{code}
 
-Thus, even if the handler throws $x$ away, or resumes a continuation with $x$, the program in \Cref{listing:refined-environment-classifiers-expressiveness} does not type-check. Consequently, neither do \Cref{listing:eager-scope-extrusion-unsafe,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue,listing:eager-scope-extrusion-looks-unsafe}. Thus, refined environment classifiers are less expressive even than the eager dynamic check. 
-
-The only variables that refined environment classifiers permit are those that never cause scope extrusion, for example, the variable $z$ in \Cref{listing:refined-environment-classifiers-safe}.
 
 \begin{code}
 \begin{source}
@@ -835,6 +834,13 @@ $\begin{array}{l}
 \captionof{listing}{Refined environment classifiers allow variables to be passed via effects, so long as the variable can never cause a scope extrusion error. In the program above, performing an effect with $z$ never causes a scope extrusion error.}%
 \label{listing:refined-environment-classifiers-safe}
 \end{code}
+
+Thus, even if the handler throws $x$ away, or resumes a continuation with $x$, the program in \Cref{listing:refined-environment-classifiers-expressiveness} does not type-check. Consequently, neither do \Cref{listing:eager-scope-extrusion-unsafe,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue,listing:eager-scope-extrusion-looks-unsafe}. Thus, refined environment classifiers are less expressive even than the eager dynamic check. 
+
+
+The only variables that refined environment classifiers permit are those that never cause scope extrusion, for example, the variable $z$ in \Cref{listing:refined-environment-classifiers-safe}.
+
+
 
 \section{Evaluation of \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}} \label{section:evaluation}
 \sourceLang{} is an appropriate language in which to encode, and evaluate, scope extrusion checks. Formalising scope extrusion in \sourceLang{} provided clarity, resulting in a new Best-Effort check, which finds a sweet spot between the eager and dynamic checks. Additionally, unifying checks under a common language allows for comparative evaluation, developing a bank of \sourceLang{} programs, which may serve as litmus tests of expressiveness.
