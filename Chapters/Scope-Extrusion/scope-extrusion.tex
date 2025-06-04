@@ -34,7 +34,7 @@ The second condition implies that $n$ is spliced into a larger, ambient and iner
 
 The lazy dynamic check is defined as a modified term elaboration ${\elaborate{-}}^{\textbf{Lazy}}$. Two modifications are made to the term elaboration described in \Cref{section:elaboration}. First, \textbf{\texttt{check}}s are performed after top-level splices:
 \[\elaborate{\splice[e]}_{\compilemode{}}^{\textbf{Lazy}} \triangleq {\checkfv{(\tls{\elaborate{e}_{\splicemode{}}^{\textbf{Lazy}}})}}\]
-Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside top-level splices are declared safe (\Cref{dfn:declared-safe}), and thus do not cause the \textbf{\texttt{check}} to fail. For example, in $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$, $x$ is a binder in \compilemode{}-mode while $y$ is a binder in \quotemode{}-mode. $x$ should be declared safe (a free $x$ should not cause the \textbf{\texttt{check}} to transition to \textbf{\texttt{err}}), but $y$ should not. Thus, elaboration of binders in \compilemode{}-mode (but not \quotemode{}-mode) should be declared via \textbf{\texttt{dlet}}:
+Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside top-level splices are declared safe (\Cref{dfn:declared-safe}), and thus do not cause the \textbf{\texttt{check}} to fail. For example, in $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$, $x$ is a binder in \compilemode{}-mode while $y$ is a binder in \quotemode{}-mode. $x$ should be declared safe (a free $x$ should not cause the \textbf{\texttt{check}} to transition to \textbf{\texttt{err}}), but $y$ should not. Thus, elaboration of binders in \compilemode{}-mode (but not \quotemode{}-mode) should insert \textbf{\texttt{dlet}}s:
 {
   \footnotesize
 \[\elaborate{\lambda x: T^0. \, e}_{\compilemode{}}^{\textbf{Lazy}} = \bind{x}{\gensym{\erase{T^0}}}{ \dlet{x}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode{}}^\textbf{Lazy}}{\return{\Lam{x}{\texttt{body}}}}}}\]
@@ -143,12 +143,12 @@ Intuitively, the eager dynamic check performs a check whenever an AST is built. 
 \begin{code} 
  \begin{source}
   $\begin{array}{l}
-      \$(\textbf{\texttt{do}} \, z \leftarrow (\textbf{\texttt{handle}} \equote[{\lambda x. \, \splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}] \\
-      \quad\quad\quad\quad\,\; \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[0]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\})\\
+      \$(\textbf{\texttt{do}} \, z \leftarrow (\textbf{\texttt{handle}} \; \equote[{\, \lambda x. \,\splice[({{\, \textbf{\texttt{extrude}}(\equote[x]) \,}})]\,}] \\
+      \quad\quad\quad\quad\,\; \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[\texttt{0}]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\})\\
       \quad \textbf{\texttt{in}} \, \equote[{\splice[z] + 1}])
     \end{array}$
  \end{source}
- \captionof{listing}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return{y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST: $\equote[{\splice[z]} + 1]$, where $y$ is not declared safe}%
+ \captionof{listing}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return{y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote[{\splice[z]} + 1]$, where $y$ is not declared safe}%
  \label{listing:eager-scope-extrusion-check-eg}
 \end{code}
 
@@ -159,12 +159,12 @@ The eager dynamic check also checks at top-level splices, like the lazy dynamic 
 \begin{code} 
  \begin{source}
   $\begin{array}{l}
-      \textbf{\texttt{do}} \, z \leftarrow \$(\textbf{\texttt{handle}} \equote[{\lambda x. \splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}] \\
-      \quad\quad\quad\quad\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[0]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\})\\
+      \textbf{\texttt{do}} \, z \leftarrow \$(\textbf{\texttt{handle}} \; \equote[{\, \lambda x. \,\splice[(\,{{ \textbf{\texttt{extrude}}(\equote[x])}}\,)] \,}] \\
+      \quad\quad\quad\quad\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[\texttt{0}]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\})\\
       \textbf{\texttt{in}} \, z + 1
     \end{array}$
  \end{source}
- \captionof{listing}{The eager dynamic check additionally checks at top-level splices, similarly to the lazy dynamic check.}%
+ \captionof{listing}{The eager dynamic check additionally checks at top-level splices.}%
  \label{listing:eager-scope-extrusion-check-eg-tls}
 \end{code}
 
@@ -178,12 +178,12 @@ For example, recall that \sourceLang{} permits non-terminating programs. Conside
 \begin{code} 
  \begin{source}
   $\begin{array}{l}
-      \$(\textbf{\texttt{do}} \, z \leftarrow (\textbf{\texttt{handle}} \equote[{\lambda x. \splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}] \\
-      \quad\quad\quad\quad\,\; \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[0]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\})\\
+      \$(\textbf{\texttt{do}} \, z \leftarrow (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \,\splice[(\,{{\textbf{\texttt{extrude}}(\equote[x])}}\,)]} \,] \\
+      \quad\quad\quad\quad\,\; \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[\texttt{0}]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\})\\
       \quad \textbf{\texttt{in}} \, \Omega)
     \end{array}$
  \end{source}
- \captionof{listing}{The eager dynamic check does not report all occurrences of eager scope extrusion. The program causes eager scope extrusion ($\return{y}$), and then enters into a non-terminating loop which never refers to $y$.}%
+ \captionof{listing}{The eager dynamic check does not report all occurrences of eager scope extrusion. The program causes eager scope extrusion ($\return{y}$), and then enters into a non-terminating loop which never refers to $z$.}%
  \label{listing:eager-scope-extrusion-unsafe}
 \end{code}
 
@@ -193,8 +193,8 @@ Non-termination is not the only source of this behaviour. For example, the offen
 \begin{code} 
  \begin{source}
   $\begin{array}{l}
-      \$(\textbf{\texttt{handle}} \, \equote[{\lambda x. \splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}] \\
-      \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[0]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\return{y}}{\equote[0]}}\})
+      \$(\textbf{\texttt{handle}} \; \equote[\,{\lambda x. \,\splice[(\,{{\textbf{\texttt{extrude}}(\equote[x])}}\,)]}\,] \\
+      \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\equote[\texttt{0}]}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\return{y}}{\equote[\texttt{0}]}}\})
     \end{array}$
  \end{source}
  \captionof{listing}{The eager dynamic check additionally will not report eager scope extrusion in the case where the offending AST is discarded.}%
@@ -206,7 +206,7 @@ Finally, in the most interesting example, the program may recover from scope ext
 \begin{code} 
  \begin{source}
   $\begin{array}{l}
-      \$ (\textbf{\texttt{handle}} \, \equote[{\lambda x. \return{\splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}}] \\
+      \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \,\return{\splice[( \, {{\textbf{\texttt{extrude}}(\equote[x])}} \,)]}} \,] \\
       \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\return{y}}{\continue{k}{w}}}\})
     \end{array}$
  \end{source}
@@ -219,13 +219,13 @@ Finally, in the most interesting example, the program may recover from scope ext
 \citet{kiselyov-14} acknowledges the incorrectness of the eager dynamic check, but argues that it makes the check more permissive. Permissiveness increases expressiveness, and is therefore desirable: a \textit{feature}, not a \textit{bug}. 
 
 \subsection{Expressiveness of the Eager Dynamic Check}\label{subsection:eager-dynamic-expressiveness}
-The expressiveness of the eager dynamic check, however, is not without issue. First, the eager dynamic check reports false positives (\Cref{listing:eager-scope-extrusion-looks-unsafe}), and is thus less expressive than the lazy dynamic check, with  illustrating an example.
+The expressiveness of the eager dynamic check, however, is not without issues. First, the eager dynamic check reports false positives (\Cref{listing:eager-scope-extrusion-looks-unsafe}), and is thus less expressive than the lazy dynamic check.
 %  that the eager dynamic check is not maximally expressive, since we can use the offending AST in a way that \textit{appears} to be unsafe, but is actually not.
 
 \begin{code} 
  \begin{source}
   $\begin{array}{l}
-      \$ (\textbf{\texttt{handle}} \, \equote[{\lambda x. {\splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}}] \\
+      \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, {\splice[(\, {{\textbf{\texttt{extrude}}(\equote[x])}} \, )]}}\,] \\
       \;\;\,\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\equote[{\splice[y]} + \texttt{0}]}{\continue{k}{w}}}\})
     \end{array}$
  \end{source}
@@ -243,9 +243,9 @@ More generally, for program fragments $P$ and $P'$:
 
 One has to appeal to the operational behaviour of the eager dynamic check to explain why these equations do not hold. In my opinion, this exposes too much of the internal operation of the check to the user. 
 
-One possible attempt to make the eager dynamic check more predictable is to change the \splicemode{}-mode elaboration of \textbf{\texttt{return}}, such that each \textbf{\texttt{return}} elaborates into a \textbf{\texttt{check}}
+One possible attempt to make the eager dynamic check more predictable is to change the \splicemode{}-mode elaboration of \textbf{\texttt{return}}, such that each \textbf{\texttt{return}} elaborates into a \textbf{\texttt{check}}:
 \[\elaborate{\return{v}}_{\splicemode{}} = \checkfv{\elaborate{v}_{\splicemode{}}}\]
-While this restores certain equations (for example, \Cref{listing:eager-scope-extrusion-unsafe-no-use} will now report a scope extrusion error), it will break others. For example, it is no longer the case that
+While this restores certain equations (for example, \Cref{listing:eager-scope-extrusion-unsafe-no-use} will now report a scope extrusion error), it will break others. For example, the following equation no longer holds:
 \[\bind{\_}{\return{v}}{e} =_{\splicemode{}} e\]
 since the \textbf{\texttt{return}} is elaborated into a \textbf{\texttt{check}}, which $v$ may fail.
 
@@ -306,7 +306,7 @@ To understand the best-effort dynamic check, consider the program in \Cref{listi
        \quad\quad\quad\quad\quad\quad\quad\;\, \, {\return{\Lam{x}{\texttt{body}} }}) \\
       \textbf{\texttt{with}} \\ 
       \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \\ 
-      \quad\;\, \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\checkfv{\texttt{Plus}(y, \texttt{Nat}(0))}}{\continue{k}{w}}}\}
+      \quad\;\, \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\checkfv{\texttt{Plus}(y, \texttt{Nat}(\texttt{0}))}}{\continue{k}{w}}}\}
     \end{array}$};
     % (-8,example.south) -- (-2,example.south) -- (2,0) -- (4,0);
   \end{scope}
@@ -331,13 +331,13 @@ To understand the best-effort dynamic check, consider the program in \Cref{listi
 
 \end{center}
 
-The check fails because when an effect is performed, the variable $\Var{x}{\mathbb{N}}$ is no longer declared safe. Since $y$ is bound to $\Var{x}{\mathbb{N}}$, executing the handler for \textbf{\texttt{extrude}} reports an error. The problem is that the continuation $k$ can be used to bind $\Var{x}{\mathbb{N}}$. It is not clear, when the \texttt{Plus} AST is constructed and checked, that eager scope extrusion \textit{must} lead to lazy scope extrusion. 
+The check fails because when an effect is performed, the variable $\Var{x}{\mathbb{N}}$ is no longer declared safe. Since $y$ is bound to $\Var{x}{\mathbb{N}}$, checking the AST $\texttt{Plus}(y, \texttt{Nat}(\texttt{0}))$ reports an error. The problem is that the continuation $k$ can be used to bind $\Var{x}{\mathbb{N}}$. It is not clear, when the \texttt{Plus} AST is constructed and checked, that eager scope extrusion \textit{must} lead to lazy scope extrusion. 
 
 To make the check more expressive, therefore, it may be useful to temporarily allow $\Var{x}{\mathbb{N}}$ to extrude its scope, delaying error reporting until one knows for certain that one must have lazy scope extrusion. 
 
-The $\textbf{\texttt{check}}_M$ primitive allows $\Var{x}{\mathbb{N}}$ to temporarily extrude its scope. $\textbf{\texttt{check}}_M$ checks for scope extrusion, but turns a blind eye to some set of muted variables $M$. It thus suffices to mute $\Var{x}{\mathbb{N}}$, adding to $M$. The \coreLang{} operational semantics is designed to automatically mute and unmute variables, like $\Var{x}{\mathbb{N}}$. 
+The $\textbf{\texttt{check}}_M$ primitive allows $\Var{x}{\mathbb{N}}$ to temporarily extrude its scope. $\textbf{\texttt{check}}_M$ checks for scope extrusion, but turns a blind eye to some set of muted variables $M$. It thus suffices to mute $\Var{x}{\mathbb{N}}$, adding to $M$. The \coreLang{} operational semantics mutes and unmutes variables, like $\Var{x}{\mathbb{N}}$, at key points. 
 
-When effects are performed, the variables which are no longer declared safe (like $\Var{x}{\mathbb{N}}$) are added to the set of muted variables (\textsc{Eff-Op}, \Cref{fig:corelang-opsem}, \Cpageref{fig:corelang-opsem})
+When effects are performed, the variables which are no longer declared safe (like $\Var{x}{\mathbb{N}}$) are added to the set of muted variables (\textsc{Eff-Op}, \Cref{fig:corelang-opsem}, \Cpageref{fig:corelang-opsem}):
 \[\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I} \to \coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{\textcolor{coreHighlight}{M \cup \projfvs{E_2}}}{I'}\]
 As an example, consider the reduction of:
 \[\begin{array}{l}
@@ -407,7 +407,7 @@ As an example, consider the following program, which builds the AST of the const
   \, \quad \textbf{\texttt{in}} \, {\checkm{\texttt{App}(f, a)}})\; \\
   \textbf{\texttt{in}} \; \return{\Lam{\Var{z}{\mathbb{N}}}{b}})) 
 \end{array}\]
-Note that the body of $f$, coloured in \textbf{\textcolor{comment}{grey}}, is the simplified version of \Cref{listing:eager-scope-extrusion-looks-unsafe}. The \textbf{\texttt{extrude}} operation is caught by the handler (also in \textbf{\textcolor{comment}{grey}}), and the surrounding context (in \textbf{black}) is never captured by the handling of any effect. This surrounding context, which must have no references to the captured continuation, $k$, is identified by $I$.
+Note that the body of $f$, coloured in \textbf{\textcolor{comment}{grey}}, is the simplified version of \Cref{listing:eager-scope-extrusion-looks-unsafe}. The \textbf{\texttt{extrude}} operation is caught by the handler (also in \textbf{\textcolor{comment}{grey}}), and the surrounding context (in \textbf{black}) is never captured by the handling of any effect. This surrounding context, which must have no references to the captured continuation $k$, is identified by $I$.
 
 If the stack was never captured by the handling of an effect (for example, no operations were performed), then $I$ is set to $\top$, $\forall n \in \mathbb{N}, \top \geq n$. Performing an effect can thus \textit{decrease} $I$, but never increase it. This is the side condition on \textsc{Eff-Op}.
 \[\begin{array}{ll}\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I} \to & \coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}} \\ &\textcolor{coreHighlight}{(I' = \textsf{min}(\textsf{len}(E_1), I)} \end{array}\]
@@ -430,7 +430,7 @@ However, altering the semantics in such a manner means that any transition could
 In the previous example, the transition from $\dlet{\Binder{z}{\mathbb{N}}}{\return{n}}$ unmutes variables. Therefore, $\Var{x}{\mathbb{N}}$ is still muted when the \texttt{App} constructor is checked, but unmuted when we check the constructor of the outer lambda. 
 This is the side-effect/side-condition in the \textsc{Sec-Dlt} rule (\Cref{fig:corelang-opsem}).
 
-Additionally, transitions from \textbf{\texttt{tls}} \textit{unconditionally} unmute variables, since the evaluation context beyond \textbf{\texttt{tls}} must be inert, and can never be captured by a handler
+Additionally, transitions from \textbf{\texttt{tls}} \textit{unconditionally} unmute variables, since the evaluation context beyond \textbf{\texttt{tls}} must be inert, and thus can never be captured by a handler
 \[\langle \tls{\return{n}}; E; U; M; I \rangle \to \langle \tls{\return{n}}; E; U; \emptyset; \top \rangle\]
 
 Since $\textbf{\texttt{check}}_M$s are at least as permissive as \textbf{\texttt{check}}s, the best-effort dynamic check is at least as expressive as the eager dynamic check. The implementation of the best-effort scope extrusion check allows the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}. 
@@ -449,10 +449,10 @@ Note that in the third condition we have to erase the checks in $t$, since addin
 \end{theorem}
 
 \subsection{Expressiveness of the Best-Effort Dynamic Check}\label{subsection:best-effort-expressive}
-The best-effort dynamic check occasionally misfires, reporting false positives. It is thus less expressive than the lazy dynamic check. In particular, it does not allow the program in \Cref{listing:best-effort-imperfect}. The program in \Cref{listing:best-effort-imperfect} attempts to build the (unsafe) AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of \texttt{1}. Critically, the effect never throws past the constructor of the outer lambda, $\lambda x. [-]$. Hence, the program will eventually reduce to a configuration 
+The best-effort dynamic check occasionally misfires, reporting false positives. It is thus less expressive than the lazy dynamic check. In particular, it does not allow the program in \Cref{listing:best-effort-imperfect}. The program in \Cref{listing:best-effort-imperfect} attempts to build the (unsafe) AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of \texttt{1}. Critically, the constructor of the outer lambda, $\lambda x. [-]$, is never captured by any effect. Hence, the program will eventually reduce to a configuration 
 
 \[\langle \dlet{\Binder{x}{\mathbb{N}}}{\return{\Lam{\Binder{x}{\mathbb{N}}}{\Var{y}{\mathbb{N}}}}}; E[\textbf{\texttt{check}}[-]]; U; \{\Var{y}{\mathbb{N}}\} ; I \rangle\]
-where $\textsf{len}(E[\checkfv{[-]}]) < I$. Thus, the transition from this configuration will unmute $\Var{y}{\mathbb{N}}$, and the surrounding \textbf{\texttt{check}} will fail, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe.
+where $\textsf{len}(E[\checkfv{[-]}]) < I$. The transition from this configuration will thus unmute $\Var{y}{\mathbb{N}}$, and the surrounding \textbf{\texttt{check}} will fail, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe.
 
 \begin{code}
   \begin{source}
@@ -464,11 +464,11 @@ where $\textsf{len}(E[\checkfv{[-]}]) < I$. Thus, the transition from this confi
     \end{array}
     $
   \end{source}
-  \captionof{listing}{The best-effort scope extrusion check reports false positives. This program attempts to build the (unsafe) AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of $\texttt{1}$. Critically, the program will eventually unmute $\Var{y}{\mathbb{N}}$, and the surrounding \textbf{\texttt{check}} will fail, as $\Var{y}{\mathbb{N}}$ is free, unbound, and unmuted.}%
+  \captionof{listing}{The best-effort scope extrusion check reports false positives. This program attempts to build the (unsafe) AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning instead the AST of $\texttt{1}$. Critically, the program will eventually unmute $\Var{y}{\mathbb{N}}$, and the surrounding \textbf{\texttt{check}} will fail, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe.}%
   \label{listing:best-effort-imperfect}
 \end{code}
 
-Rather than expressiveness, I prove a ``cause-for-concern'' property. Effectively, it states that if the best-effort check reports an error, \textbf{and the offending AST $n$ appears in the final result of compile-time computation}, then there must be lazy scope extrusion. Consequently, in cases like \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
+Rather than expressiveness, the best-effort dynamic check exhibits a ``Cause for Concern'' property. Effectively, if the best-effort check reports an error, \textbf{and the offending AST $n$ appears in the final result of compile-time computation}, then there must be lazy scope extrusion. Consequently, in cases like \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
 
 \begin{theorem}[Cause for Concern Property]{sourceHighlight}\label{thm:best-effort-cause-for-concern} If 
   \begin{enumerate}
@@ -825,7 +825,7 @@ The typing rules for refined environment classifiers forbid any program which at
 \begin{code}
 \begin{source}
 $\begin{array}{l}
-  \$ (\textbf{\texttt{handle}} \, \equote[{\lambda x. \return{\splice[({{\textbf{\texttt{extrude}}(\equote[x])}; \equote[\return{x}]})]}}] \\
+  \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, \return{\splice[(\, {{\textbf{\texttt{extrude}}(\equote[x])}} \, )]}} \, ] \\
   \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\underline{\textsf{any arbitrary program}}}\})
 \end{array}$
 \end{source}
@@ -837,7 +837,7 @@ $\begin{array}{l}
 \begin{code}
 \begin{source}
 $\begin{array}{l}
-  \$ \lambda z. (\textbf{\texttt{handle}} \, \equote[{\lambda x. \return{\splice[({{\textbf{\texttt{extrude}}(\equote[z])}; \equote[\return{x}]})]}}] \\
+  \$ \lambda z. (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, \return{\splice[( \, {{\textbf{\texttt{extrude}}(\equote[z])}} \, )]}} \,] \\
   \quad \quad \,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\continue{k}{()}}\})
 \end{array}$
 \end{source}

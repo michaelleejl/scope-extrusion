@@ -39,7 +39,7 @@ This thesis considers the interaction between homogenous, compile-time, two-stag
 
 Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to \coreLang{} (the ``core'' language).\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is necessary, since it is the point at which dynamic checks are inserted (\Cref{chapter:scope-extrusion}). 
 
-This chapter first introduces \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, \Cref{section:elaboration} describes the elaboration from \sourceLang{} to \coreLang{} (), and \Cref{section:metatheory} discusses the metatheoretic properties of \calculusName{}. 
+This chapter first introduces \sourceLang{} (\Cref{section:source-lang}), then \coreLang{} (\Cref{section:core-lang}). Following this, \Cref{section:elaboration} describes the elaboration from \sourceLang{} to \coreLang{}, and \Cref{section:metatheory} discusses the metatheoretic properties of \calculusName{}. 
 % At a high-level, however, the names are suggestive: \sourceLang{} extends \efflang{} with quotation $\equote$ and splicing $\splice$, and \coreLang{} extends \efflang{} with AST constructors. 
 
 \section{The Source Language: \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}}\label{section:source-lang}
@@ -48,14 +48,15 @@ This chapter first introduces \sourceLang{} (\Cref{section:source-lang}), then \
   {\large \textbf{Syntax}} \\
 
   $\begin{array}{@{}llll}
-    \textbf{Values} & v & ::= & \ldots \\
-    \textbf{Expressions} & e & ::= & \ldots \mid \equote \mid \splice
+    \textbf{Values} & v & ::= & \ldots (\text{no constructor for continuations})\\
+    \textbf{Expressions} & e & ::= & \ldots \mid \equote \mid \splice \\
+    \textbf{Handlers} & h & ::= & \ldots 
   \end{array}$
 \end{source-desc}
-\caption{\sourceLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of quotes and splices.}
+\caption{\sourceLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of quotes and splices, and the removal of the continuation term former $\kappa x.e$.}
 \label{fig:source-syntax}
 \end{figure}
-\sourceLang{} extends \efflang{} with quotes and splices. Recall that \efflang{} divides terms into two syntactic categories, values $v$ and computations $c$.\ \sourceLang{} is similar, dividing terms into values $v$ and expressions $e$ (\Cref{fig:source-syntax}).
+\sourceLang{} extends \efflang{} with quotes and splices, and removes the continuation term former $\kappa x. e$. Recall that \efflang{} divides terms into two syntactic categories, values ($v$), computations ($c$), and handlers ($h$).\ \sourceLang{} is similar, dividing terms into values ($v$), expressions ($e$), and handlers ($h$) (\Cref{fig:source-syntax}).
 
 Notice that values cannot be quoted: only effectful programs may be generated using quotes. For example, $\equote[\texttt{1}]$ is not valid syntax, instead, one must write $\equote[\return{\texttt{1}}]$. Similarly, $\equote[\return{\texttt{1}}]$ is a computation, not a value, so one must write 
 \[\bind{a}{\equote[\return{\texttt{1}}]}{\op{a}}\]
@@ -66,8 +67,8 @@ rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I abuse notation
   \begin{source-desc}
     $\begin{array}{lllr}
     {\textbf{\large {Effects Row}}}\\\\
-    \textbf{Run-Time} & \xi ::= \cdot \mid \xi \cup \{ \textsf{op}_i^{0}\} \\
-    \textbf{Compile-Time} & \Delta ::= \cdot \mid \Delta \cup \{ \textsf{op}_i^{-1}\} \\\\
+    \textbf{Run-Time} & \xi ::= \emptyset \mid \xi \cup \{ \textsf{op}_i^{0}\} \\
+    \textbf{Compile-Time} & \Delta ::= \emptyset \mid \Delta \cup \{ \textsf{op}_i^{-1}\} \\\\
     \end{array}$
 
 \vspace{5mm}
@@ -96,7 +97,7 @@ The \sourceLang{} types are summarised in \Cref{fig:source-types}. There are thr
 
 First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-1}$ (compile-time)}.
 
-  To motivate this stratification, consider the type of the number \texttt{3} in \sourceLang{}. Perhaps surprisingly, the type of \texttt{3} is not $\mathbb{N}$. Since \sourceLang{} is a two-stage system, it carefully disambiguates between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should \textbf{not} be well-typed, since \texttt{3} is a compile-time natural, whereas $x$ is a run-time natural. 
+  To motivate this stratification, consider the type of the number \texttt{3} in \sourceLang{}. Perhaps surprisingly, the type of \texttt{3} is not $\mathbb{N}$. Since \sourceLang{} is a two-stage system, it carefully disambiguates between run-time naturals and compile-time naturals, since these are not interchangeable. For example, the following program should \textbf{not} be well-typed, since \texttt{3} is a compile-time natural, whereas $x$ is a run-time natural: 
   \[\lambda x: \mathbb{N}. \; \$(\texttt{3} + x)\]
   However, removing the splice makes the program well-typed:
   \[\lambda x: \mathbb{N}. \; \texttt{3} + x\]
@@ -352,14 +353,14 @@ $\inferrule[(App)]{\cqtypejudge[\Gamma]{v_1}{\runtimecomptype{(\functionType[\xi
 \end{minipage}%
 \begin{minipage}[t]{0.5\textwidth}
   \centering
-  $\inferrule[(Handle)]{\cqtypejudge[\Gamma]{e}{\runtimecomptype{T_1}{\Delta;\xi_1}} \\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta} \\ \forall \texttt{op} \in \xi_1 \setminus \xi_2 \, . \, \texttt{op} \in \textsf{dom}(h)}{\cqtypejudge{\handleWith{e}{h}}{\runtimecomptype{T_2}{\Delta;\xi_2}}}$
+  $\inferrule[(Handle)]{\cqtypejudge[\Gamma]{e}{\runtimecomptype{T_1}{\Delta;\xi_1}} \\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})^0\,!\,\Delta} \\ \forall \texttt{op} \in \xi_1 \setminus \xi_2 \, . \, \texttt{op} \in \textsf{dom}(h)}{\cqtypejudge{\handleWith{e}{h}}{\runtimecomptype{T_2}{\Delta;\xi_2}}}$
 \end{minipage}
 
 \vspace{5mm}
 
 \begin{minipage}[t]{\textwidth}
   \centering
-$\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi_2}}}{\cqtypejudge{\returnHandler{x}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta}}$
+$\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_2}{\Delta;\xi_2}}}{\cqtypejudge{\returnHandler{x}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})^0\,!\,\Delta}}$
 \end{minipage}
 
 \vspace{5mm}
@@ -367,8 +368,8 @@ $\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: T_1^0]{e}{\runtimecomptype{T_
 \begin{minipage}[t]{1\linewidth}
   \centering
 $\inferrule[(Op-Handler)]{\texttt{op}: A^0 \to B^0 \in \Sigma 
-\\\\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta}
-\\\\ \cqtypejudge[\Gamma, x: A^0, k: {(\continuationType[\xi_2]{B^0}{T_2^0})^0} ]{e}{\runtimecomptype{T_2}{\Delta;\xi_2}} \\ \xi_2\ \subseteq \xi_1 \setminus \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})\,!\,\Delta}}$
+\\\\ \cqtypejudge{h}{(\handlerType{\runtimecomptype{T_1}{\xi}}{\runtimecomptype{T_2}{\xi_2}})^0\,!\,\Delta}
+\\\\ \cqtypejudge[\Gamma, x: A^0, k: {(\continuationType[\xi_2]{B^0}{T_2^0})^0} ]{e}{\runtimecomptype{T_2}{\Delta;\xi_2}} \\ \xi_2\ \subseteq \xi_1 \setminus \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{T_1}{\xi_1}}{\runtimecomptype{T_2}{\xi_2}})^0\,!\,\Delta}}$
 \end{minipage}
 
 \vspace{5mm}
@@ -536,7 +537,7 @@ A \sourceLang{} expression is well-typed if, under the empty context, and in \co
 \end{definition}
 
 \section{The Core Language: \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:core-lang}
-The core language, \coreLang{}, is a simple extension of \efflang{}. \coreLang{} normal forms ($n$), terms ($t$), and handlers ($h$) are extended versions of \efflang{} values ($v$), computations ($c$), and handlers ($h$) respectively.  
+The core language, \coreLang{}, is a simple extension of \efflang{}. \coreLang{} normal forms ($n$), terms ($t$), and handlers ($h$) are extended versions of \efflang{} values ($v$), computations ($c$), and handlers ($h$) respectively (\Cref{fig:core-syntax}).  
 
 \coreLang{} extends \efflang{} in two ways. First, it adds machinery for metaprogramming:
 
@@ -584,7 +585,7 @@ $\begin{array}{l}
 \textcolor{coreComment}{$\begin{array}{l}\return{\texttt{Lam}(\Binder{\alpha}{\mathbb{N}}, \Var{\alpha}{\mathbb{N}})}\end{array}$}
 \end{core}
 
-\item $\gensym{T}$, a primitive for generating fresh binders of type $T$, $\Binder{\alpha}{T}$ where $\alpha$ not previously used
+\item $\gensym{T}$, a primitive for generating fresh binders of type $T$, $\Binder{\alpha}{T}$ where $\alpha$ not previously used.
 
 To illustrate why \textbf{\texttt{mkvar}} is necessary, recall that \coreLang{} acts as an elaboration target for \sourceLang{}. Consider the following \sourceLang{} program, which should ideally generate the AST of $\lambda \alpha. \lambda \beta. \, \return{(\alpha, \beta)}$
 
@@ -614,7 +615,7 @@ Second, \coreLang{} extends \efflang{} with machinery for scope extrusion checki
 \item \textbf{\texttt{check}}, a guarded \textbf{\texttt{return}} that either detects scope extrusion, and transitions to \textbf{\texttt{err}}, or does not detect scope extrusion, and transitions to \textbf{\texttt{return}},
 \item \textbf{\texttt{check$_M$}}, which behaves similarly to \textbf{\texttt{check}}, but (as \Cref{section:best-effort-check} explains) allows a set of \textit{muted} variables $M$ to \textit{temporarily} extrude their scope,
 \item \textbf{\texttt{dlet}}, a primitive for tracking which variables are well-scoped and which have extruded their scope,
-\item \textbf{\texttt{tls}}, a marker for where top-level splices would have occurred in the source program. 
+\item \textbf{\texttt{tls}}, a marker representing an occurrence of a top-level splice in the source program. 
 \end{enumerate}
 
 \begin{figure}
@@ -630,7 +631,7 @@ Second, \coreLang{} extends \efflang{} with machinery for scope extrusion checki
   \end{array}$
 \end{core-desc}
 \caption{\coreLang{} syntax. The syntax is broadly the same as \efflang{}, except with the addition of AST constructors and scope extrusion checking machinery.}
-\label{fig:source-syntax}
+\label{fig:core-syntax}
 \end{figure}
 
 Notice that, while the calculus the \textit{machinery} for scope extrusion checking, it does not demand that one \textit{use} it, or use it \textit{properly}. Scope extrusion checking is not a language feature, but an algorithm one builds on top of the calculus. 
@@ -676,12 +677,12 @@ The semantics of \coreLang{} are made precise via an operational semantics. Many
 \secRule{Tls} & \transition{\coreConfiguration{\tls{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{\emptyset}}{\textcolor{coreHighlight}{\top}}}\\\vspace{1mm}
 \\
   \secRule{Dlt} & \transition{\coreConfiguration{\dlet{\Binder{\alpha}{T}}{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{M'}}{\textcolor{coreHighlight}{I'}}}\\
-   &&&\text{\textcolor{coreHighlight}{(if $ I < \textsf{len}(E)$ then $M' = M, I' = I$}}\\
+   &&&\text{\textcolor{coreHighlight}{(if $\textsf{len}(E) > I$ then $M' = M, I' = I$}}\\
    &&&\text{\textcolor{coreHighlight}{else $M' = \emptyset, I' = \top$)}}\\
    \effectRule{Op} & \transition{\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I}}\coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{\textcolor{coreHighlight}{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}}\\
   &&& \text{(where cont $=\kappa x. \, \handleWith{E_2[\return{x}]}{h}$}\\
   &&& \text{and $\opHandler{x}{k}{c} \in h$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$}\\
-  &&& \text{and \textcolor{coreHighlight}{$I' = \textsf{min}(\textsf{len}(E_1), I)$)}}
+  &&& \text{and \textcolor{coreHighlight}{$I' = \textsf{min}(\textsf{len}(E_1), I)$})}
   \end{array} \]
   }
 \end{core-desc}
@@ -692,7 +693,7 @@ The semantics of \coreLang{} are made precise via an operational semantics. Many
 \subsubsection{Configurations}
 Like \efflang{}, the operational semantics is defined over \textit{configurations}. In \coreLang{}, configurations have the form:
 \[\langle t; E; U; M; I \rangle\]
-At a high level, $t$ and $E$ are terms and evaluation contexts. $U$ acts as a source of freshness for name generation. $M$ is a set of muted variables, i.e. those that do not to trigger a scope extrusion error, even if they have extruded their scope. $I$ indicates the point at which variables in $M$ should be \textit{unmuted}, by setting $M$ to $\emptyset$. 
+At a high level, $t$ and $E$ are terms and evaluation contexts. $U$ acts as a source of freshness for name generation. $M$ is a set of muted variables, i.e. those that do not trigger a scope extrusion error, even if they have extruded their scope. $I$ indicates the point at which variables in $M$ should be \textit{unmuted}, by setting $M$ to $\emptyset$. 
 
 \subsubsection{AST Rules}
 The \textsc{Ast-Gen} rule describes the behaviour of \textbf{\texttt{mkvar}}: $\gensym{T}$ produces a \texttt{\underline{Var}} of type $T$ and some name $\alpha$. Recall that names should be \textbf{fresh}: that is, multiple calls to \textbf{\texttt{mkvar}} should always return variables with different names. This involves remembering names that have been previously generated, which are collected in $U$. To ensure determinacy of the semantics, names are chosen \textit{deterministically}.
@@ -714,12 +715,12 @@ More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder
 
 Given a term $E[t]$, I say variable $\Var{\alpha}{A}$ in $t$ is ``declared safe'' if $\Var{\alpha}{A} \in \projfvs{E}$ (\Cref{dfn:declared-safe})
 \begin{definition}[Declared Safe]{coreHighlight}\label{dfn:declared-safe}
-  Given a term $E[t]$, $\Var{\alpha}{A}$ in $t$ is ``declared safe'' if $\Var{\alpha}{A} \in \projfvs{E}$
+  Given a term $E[t]$, $\Var{\alpha}{A}$ in $t$ is declared safe if $\Var{\alpha}{A} \in \projfvs{E}$
 \end{definition}
 
-Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus checks that the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe, $\freevars{n} \subseteq \projfvs{E}$. 
+Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus succeeds if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe, $\freevars{n} \subseteq \projfvs{E}$. 
 
-It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}, and I define the elaboration. Therefore, the onus is on me to justify that any defined elaboration uses \textbf{\texttt{dlet}} and \textbf{\texttt{check}}appropriately. 
+It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}, and I define the elaboration. Therefore, the onus is on me to justify that any defined elaboration uses \textbf{\texttt{dlet}} and \textbf{\texttt{check}} appropriately. 
 
 \textbf{\texttt{check}}$_M$ is a variant of \textbf{\texttt{check}}. As \Cref{section:best-effort-check} explains, to design a good scope extrusion check, it is necessary to \textit{mute} some variables, pretending that they are properly scoped. \textbf{\texttt{check}}$_M$ behaves exactly like \textbf{\texttt{check}}, except that it pretends that the muted variables $M$ are properly scoped.
 
@@ -866,8 +867,8 @@ The core calculus \coreLang{} describes a concrete \texttt{OCaml} implementation
   
   \item $\dlet{\Binder{\alpha}{T}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{T}$ from the set of free variables, and either:
   \begin{enumerate}
-    \item Resumes the continuation, if the set of free variables is now empty (all free variables properly declared)
-    \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are properly declared. Following a successful such check, the continuation may be resumed.
+    \item Resumes the continuation, if the set of free variables is now empty (all free variables declared safe)
+    \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are declared safe. Following a successful such check, the continuation may be resumed.
   \end{enumerate}
   \item \textbf{\texttt{err}} is an unhandled \texttt{FreeVar} effect
 \end{enumerate}
@@ -1012,7 +1013,7 @@ The proof is by induction on the typing rules, as in the example in the previous
 Additionally, the core language \coreLang{} satisfies appropriate progress and preservation properties. 
 
 \begin{theorem}[Progress]{coreHighlight} 
-If $\type[\cdot]{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
+If $\cdot \vdash {E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
 \begin{enumerate}
 \item $t$ is of the form $\return{n}$ and $E = [-]$,
 \item $t$ is of the form $\op{v}$ for some $\textsf{op} \in \Delta$, and $\texttt{op} \notin \textsf{handled}(E)$
@@ -1116,7 +1117,7 @@ Finally, underneath a top-level splice, splice and quotation are duals. That is,
 \end{array}
 \]
 \end{theorem}
-Where, in this context, $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode affects the result of elaboration. Indeed, it is possible to prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
+Where $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode affects the result of elaboration. Indeed, it is possible to prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). Proof is by inspection of the definition of elaboration, where
 \[\begin{array}{rcl}  
   \elaborate{\splice[{\equote}]}_{\quotemode{}} = t & \iff & \elaborate{e}_{\quotemode{}} = t\\
   \elaborate{\equote[{\splice}]}_{\splicemode{}} = t & \iff & \elaborate{e}_{\splicemode{}} = t
