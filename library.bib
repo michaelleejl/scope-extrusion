@@ -1,3 +1,4 @@
+
 @article{rice-53,
   issn      = {00029947, 10886850},
   url       = {http://www.jstor.org/stable/1990888},
@@ -6,7 +7,7 @@
   number    = {2},
   pages     = {358--366},
   publisher = {American Mathematical Society},
-  title     = {Classes of Recursively Enumerable Sets and Their Decision Problems},
+  title     = {Classes of {Recursively Enumerable} Sets and Their Decision Problems},
   urldate   = {2025-04-11},
   volume    = {74},
   year      = {1953}
@@ -22,18 +23,18 @@
   address   = {New York, NY, USA},
   url       = {https://doi.org/10.1145/376656.376751},
   doi       = {10.1145/376656.376751},
-  abstract  = {Compile-time program optimizations are similar to poetry: more are written than are actually published in commercial compilers. Hard economic reality is that many interesting optimizations have too narrow an audience to justify their cost in a general-purpose compiler, and custom compilers are too expensive to write. An alternative is to allow programmers to define their own compile-time optimizations. This has already happened accidentally for C++, albeit imperfectly, in the form of template metaprogramming. This paper surveys the problems, the accidental success, and what directions future research might take to circumvent current economic limitations of monolithic compilers.},
-  booktitle = {Proceedings of the 2001 Joint ACM-ISCOPE Conference on Java Grande},
+  abstract  = {Compile-time program optimizations are similar to poetry: more are written than are actually published in commercial compilers. Hard economic reality is that many interesting optimizations have too narrow an audience to justify their cost in a general-purpose compiler, and custom compilers are too expensive to write. An alternative is to allow programmers to define their own compile-time optimizations. This has already happened accidentally for {C++}, albeit imperfectly, in the form of template metaprogramming. This paper surveys the problems, the accidental success, and what directions future research might take to circumvent current economic limitations of monolithic compilers.},
+  booktitle = {Proceedings of the 2001 Joint {ACM-ISCOPE} Conference on {Java Grande}},
   pages     = {1–10},
   numpages  = {10},
   keywords  = {optimization, economics, compilers},
   location  = {Palo Alto, California, USA},
-  series    = {JGI '01}
+  series    = {{JGI} '01}
 }
 
 @book{abrahams-04,
   author    = {Abrahams, David and Gurtovoy, Aleksey},
-  title     = {C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond (C++ in Depth Series)},
+  title     = {{C++} Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond ({C++} in Depth Series)},
   year      = {2004},
   isbn      = {0321227255},
   publisher = {Addison-Wesley Professional},
@@ -42,7 +43,7 @@
 
 @inproceedings{sheard-02,
   author    = {Sheard, Tim and Jones, Simon Peyton},
-  title     = {Template meta-programming for Haskell},
+  title     = {Template meta-programming for {Haskell}},
   year      = {2002},
   isbn      = {1581136056},
   publisher = {Association for Computing Machinery},
@@ -78,7 +79,7 @@
   url        = {https://doi.org/10.1145/182590.182483},
   doi        = {10.1145/182590.182483},
   abstract   = {Binding-time improvements aim at making partial evaluation (a.k.a. program specialization) yield a better result. They have been achieved so far mostly by hand-transforming the source program. We observe that as they are better understood, these hand-transformations are progressively integrated into partial evaluators, thereby alleviating the need for source-level binding-time improvements.Control-based binding-time improvements, for example, follow this pattern: they have evolved from ad-hoc source-level rewrites to a systematic source-level transformation into continuation-passing style (CPS). Recently, Bondorf has explicitly integrated the CPS transformation into the specializer, thus partly alleviating the need for source-level CPS transformation. This CPS integration is remarkably effective but very complex and goes beyond a simple CPS transformation. We show that it can be achieved directly by using the control operators shift and reset, which provide access to the current continuation as a composable procedure.We automate, reproduce, and extend Bondorf's results, and describe how this approach scales up to hand-writing partial-evaluation compilers. The first author has used this method to bootstrap the new release of Consel's partial evaluator Schism. The control operators not only allow the partial evaluator to remain in direct style, but also can speed up partial evaluation significantly.},
-  journal    = {SIGPLAN Lisp Pointers},
+  journal    = {{SIGPLAN} Lisp Pointers},
   month      = jul,
   pages      = {227–238},
   numpages   = {12}
@@ -90,7 +91,7 @@
   volume   = {319},
   pages    = {19-35},
   year     = {2015},
-  note     = {The 31st Conference on the Mathematical Foundations of Programming Semantics (MFPS XXXI).},
+  note     = {The 31st Conference on the Mathematical Foundations of Programming Semantics ({MFPS XXXI}).},
   issn     = {1571-0661},
   doi      = {https://doi.org/10.1016/j.entcs.2015.12.003},
   url      = {https://www.sciencedirect.com/science/article/pii/S1571066115000705},
@@ -101,7 +102,7 @@
 
 @inproceedings{sivaramakrishnan-21,
   author    = {Sivaramakrishnan, KC and Dolan, Stephen and White, Leo and Kelly, Tom and Jaffer, Sadiq and Madhavapeddy, Anil},
-  title     = {Retrofitting effect handlers onto OCaml},
+  title     = {Retrofitting effect handlers onto {OCaml}},
   year      = {2021},
   isbn      = {9781450383912},
   publisher = {Association for Computing Machinery},
@@ -114,14 +115,14 @@
   numpages  = {16},
   keywords  = {Backtraces, Backwards compatibility, Continuations, Effect handlers, Fibers},
   location  = {Virtual, Canada},
-  series    = {PLDI 2021}
+  series    = {{PLDI} 2021}
 }
 
 @inproceedings{kiselyov-14,
   author    = {Kiselyov, Oleg},
   editor    = {Codish, Michael
                and Sumii, Eijiro},
-  title     = {The Design and Implementation of BER MetaOCaml},
+  title     = {The Design and Implementation of {BER MetaOCaml}},
   booktitle = {Functional and Logic Programming},
   year      = {2014},
   publisher = {Springer International Publishing},
@@ -173,12 +174,12 @@
   url       = {https://doi.org/10.1145/3689484.3690731},
   doi       = {10.1145/3689484.3690731},
   abstract  = {Staged computation is a means to achieve maintainability and high performance simultaneously, by allowing a programmer to express domain-specific optimizations in a high-level programming language. Multi-stage programming languages such as MetaOCaml provide a static safety guarantee for generated programs by sophisticated type systems provided that program generators have no computational effects. Despite several studies, it remains a challenging problem to design a type-safe multi-stage programming language with advanced features for computational effects. This paper introduces a two-stage programming language with algebraic effects and handlers. Based on two novel principles 'handlers as future-stage binders' and 'handlers are universal', we design a type system and prove its soundness. We also show that our language is sufficiently expressive to write various effectful staged computations including multi-level let-insertion, which is a key technique to avoid code duplication in staged computation.},
-  booktitle = {Proceedings of the 23rd ACM SIGPLAN International Conference on Generative Programming: Concepts and Experiences},
+  booktitle = {Proceedings of the 23rd {ACM SIGPLAN} International Conference on Generative Programming: Concepts and Experiences},
   pages     = {53–65},
   numpages  = {13},
   keywords  = {Algebraic effects and handlers, Code generation, Scope extrusion, Type soundness},
   location  = {Pasadena, CA, USA},
-  series    = {GPCE '24}
+  series    = {{GPCE} '24}
 }
 
 @article{tratt-2008,
@@ -189,7 +190,7 @@
   number    = {6},
   pages     = {1--40},
   year      = {2008},
-  publisher = {ACM New York, NY, USA}
+  publisher = {{ACM} New York, NY, USA}
 }
 
 @article{yallop-2023,
@@ -204,7 +205,7 @@
   url        = {https://doi.org/10.1145/3591269},
   doi        = {10.1145/3591269},
   abstract   = {Lexers and parsers are typically defined separately and connected by a token stream. This separate definition is important for modularity and reduces the potential for parsing ambiguity. However, materializing tokens as data structures and case-switching on tokens comes with a cost. We show how to fuse separately-defined lexers and parsers, drastically improving performance without compromising modularity or increasing ambiguity. We propose a deterministic variant of Greibach Normal Form that ensures deterministic parsing with a single token of lookahead and makes fusion strikingly simple, and prove that normalizing context free expressions into the deterministic normal form is semantics-preserving. Our staged parser combinator library, flap, provides a standard interface, but generates specialized token-free code that runs two to six times faster than ocamlyacc on a range of benchmarks.},
-  journal    = {Proc. ACM Program. Lang.},
+  journal    = {Proc. {ACM} Program. Lang.},
   month      = jun,
   articleno  = {155},
   numpages   = {24},
@@ -226,19 +227,19 @@
   numpages  = {10},
   keywords  = {active libraries, java, meta-programming, nested classes},
   location  = {Rome, Italy},
-  series    = {PEPM '13}
+  series    = {{PEPM} '13}
 }
 
 @book{wickham-2019,
-  title     = {Advanced R},
+  title     = {Advanced {R}},
   author    = {Wickham, Hadley},
   year      = {2019},
-  publisher = {Chapman and Hall/CRC}
+  publisher = {Chapman and Hall/{CRC}}
 }
 
 @article{vandebon-2021,
   author   = {Vandebon, Jessica and Coutinho, Jose G. F. and Luk, Wayne and Nurvitadhi, Eriko},
-  journal  = {IEEE Transactions on Computers},
+  journal  = {{IEEE} Transactions on Computers},
   title    = {Enhancing High-Level Synthesis Using a Meta-Programming Approach},
   year     = {2021},
   volume   = {70},
@@ -255,7 +256,7 @@
 }
 
 @article{kiselyov-2012,
-  title    = {Delimited control in OCaml, abstractly and concretely},
+  title    = {Delimited control in {OCaml}, abstractly and concretely},
   journal  = {Theoretical Computer Science},
   volume   = {435},
   pages    = {56-76},
@@ -275,7 +276,7 @@
   volume   = {319},
   pages    = {19-35},
   year     = {2015},
-  note     = {The 31st Conference on the Mathematical Foundations of Programming Semantics (MFPS XXXI).},
+  note     = {The 31st Conference on the Mathematical Foundations of Programming Semantics ({MFPS XXXI}).},
   issn     = {1571-0661},
   doi      = {https://doi.org/10.1016/j.entcs.2015.12.003},
   url      = {https://www.sciencedirect.com/science/article/pii/S1571066115000705},
@@ -301,7 +302,7 @@
 }
 
 @article{kiselyov-2024,
-  title    = {Generating C: Heterogeneous metaprogramming system description},
+  title    = {Generating {C}: Heterogeneous metaprogramming system description},
   journal  = {Science of Computer Programming},
   volume   = {231},
   pages    = {103015},
@@ -314,27 +315,9 @@
   abstract = {Heterogeneous metaprogramming systems use a higher-level host language to generate code in a lower-level object language. Their appeal is taking advantage of the module system, higher-order functions, data types, type system and verification tools of the host language to quicker produce high-performant lower-level code with some correctness guarantees. We present two heterogeneous metaprogramming systems whose host language is OCaml and object language is C. The first relies on offshoring: treating a subset of (MetaOCaml-generated) OCaml as a different notation for (a subset of) C. The second embeds C in OCaml in tagless-final style. The systems have been used in several projects, including the generation of C supersets OpenCL and OpenMP. Generating C with some correctness guarantees is far less trivial than it may appear, with pitfalls abound: e.g., local variables may only be introduced in statement context; mutable variables are not first-class. Maintenance has challenges of its own, e.g., extensibility. On many examples, we expound the pitfalls we have come across in our experience, and describe the design and implementation to address them.}
 }
 
-@inproceedings{10.1145/2364527.2364572,
-  author    = {Mainland, Geoffrey},
-  title     = {Explicitly heterogeneous metaprogramming with MetaHaskell},
-  year      = {2012},
-  isbn      = {9781450310543},
-  publisher = {Association for Computing Machinery},
-  address   = {New York, NY, USA},
-  url       = {https://doi.org/10.1145/2364527.2364572},
-  doi       = {10.1145/2364527.2364572},
-  abstract  = {Languages with support for metaprogramming, like MetaOCaml, offer a principled approach to code generation by guaranteeing that well-typed metaprograms produce well-typed programs. However, many problem domains where metaprogramming can fruitfully be applied require generating code in languages like C, CUDA, or assembly. Rather than resorting to add-hoc code generation techniques, these applications should be directly supported by explicitly heterogeneous metaprogramming languages.We present MetaHaskell, an extension of Haskell 98 that provides modular syntactic and type system support for type safe metaprogramming with multiple object languages. Adding a new object language to MetaHaskell requires only minor modifications to the host language to support type-level quantification over object language types and propagation of type equality constraints. We demonstrate the flexibility of our approach through three object languages: a core ML language, a linear variant of the core ML language, and a subset of C. All three languages support metaprogramming with open terms and guarantee that well-typed MetaHaskell programs will only produce closed object terms that are well-typed. The essence of MetaHaskell is captured in a type system for a simplified metalanguage. MetaHaskell, as well as all three object languages, are fully implemented in the mhc bytecode compiler.},
-  booktitle = {Proceedings of the 17th ACM SIGPLAN International Conference on Functional Programming},
-  pages     = {311–322},
-  numpages  = {12},
-  keywords  = {type systems, quasiquotation, open terms, metaprogramming, linear languages},
-  location  = {Copenhagen, Denmark},
-  series    = {ICFP '12}
-}
-
 @article{mainland-2012,
   author     = {Mainland, Geoffrey},
-  title      = {Explicitly heterogeneous metaprogramming with MetaHaskell},
+  title      = {Explicitly heterogeneous metaprogramming with {MetaHaskell}},
   year       = {2012},
   issue_date = {September 2012},
   publisher  = {Association for Computing Machinery},
@@ -345,7 +328,7 @@
   url        = {https://doi.org/10.1145/2398856.2364572},
   doi        = {10.1145/2398856.2364572},
   abstract   = {Languages with support for metaprogramming, like MetaOCaml, offer a principled approach to code generation by guaranteeing that well-typed metaprograms produce well-typed programs. However, many problem domains where metaprogramming can fruitfully be applied require generating code in languages like C, CUDA, or assembly. Rather than resorting to add-hoc code generation techniques, these applications should be directly supported by explicitly heterogeneous metaprogramming languages.We present MetaHaskell, an extension of Haskell 98 that provides modular syntactic and type system support for type safe metaprogramming with multiple object languages. Adding a new object language to MetaHaskell requires only minor modifications to the host language to support type-level quantification over object language types and propagation of type equality constraints. We demonstrate the flexibility of our approach through three object languages: a core ML language, a linear variant of the core ML language, and a subset of C. All three languages support metaprogramming with open terms and guarantee that well-typed MetaHaskell programs will only produce closed object terms that are well-typed. The essence of MetaHaskell is captured in a type system for a simplified metalanguage. MetaHaskell, as well as all three object languages, are fully implemented in the mhc bytecode compiler.},
-  journal    = {SIGPLAN Not.},
+  journal    = {{SIGPLAN} Not.},
   month      = sep,
   pages      = {311–322},
   numpages   = {12},
@@ -354,7 +337,7 @@
 
 @article{xie-2023,
   author     = {Xie, Ningning and White, Leo and Nicole, Olivier and Yallop, Jeremy},
-  title      = {MacoCaml: Staging Composable and Compilable Macros},
+  title      = {{MacoCaml}: Staging Composable and Compilable Macros},
   year       = {2023},
   issue_date = {August 2023},
   publisher  = {Association for Computing Machinery},
@@ -364,7 +347,7 @@
   url        = {https://doi.org/10.1145/3607851},
   doi        = {10.1145/3607851},
   abstract   = {We introduce MacoCaml, a new design and implementation of compile-time code generation for the OCaml language. MacoCaml features a novel combination of macros with phase separation and quotation-based staging, where macros are considered as compile-time bindings, expression cross evaluation phases using staging annotations, and compile-time evaluation happens inside top-level splices. We provide a theoretical foundation for MacoCaml by formalizing a typed source calculus maco that supports interleaving typing and compile-time code generation, references with explicit compile-time heaps, and modules. We study various crucial properties including soundness and phase distinction. We have implemented MacoCaml in the OCaml compiler, and ported two substantial existing libraries to validate our implementation.},
-  journal    = {Proc. ACM Program. Lang.},
+  journal    = {Proc. {ACM} Program. Lang.},
   month      = aug,
   articleno  = {209},
   numpages   = {45},
@@ -383,7 +366,7 @@
   url        = {https://doi.org/10.1145/3674649},
   doi        = {10.1145/3674649},
   abstract   = {Multi-stage programming has been used in a wide variety of domains to  eliminate the tension between abstraction and performance. However, the  interaction of multi-stage programming features with features for  programming-in-the-large remains understudied, hindering the full integration  of multi-stage programming support into existing languages, and limiting the  effective use of staging in large programs.    We take steps to remedy the situation by studying the extension of MacoCaml, a  recent OCaml extension that supports compile-time code generation via  macros and quotations, with module functors, the key mechanism  in OCaml for assembling program components into larger units. We discuss design  choices related to evaluation order, formalize our calculus via elaboration, and  show that the design enjoys key metatheoretical properties: syntactic type  soundness, elaboration soundness, and phase distinction. We believe that this  study lays a foundation for the continued exploration and implementation of the  OCaml macro system.},
-  journal    = {Proc. ACM Program. Lang.},
+  journal    = {Proc. {ACM} Program. Lang.},
   month      = aug,
   articleno  = {260},
   numpages   = {35},
@@ -406,7 +389,7 @@
 
 @article{phipps-costin-2023,
   author     = {Phipps-Costin, Luna and Rossberg, Andreas and Guha, Arjun and Leijen, Daan and Hillerstr\"{o}m, Daniel and Sivaramakrishnan, KC and Pretnar, Matija and Lindley, Sam},
-  title      = {Continuing WebAssembly with Effect Handlers},
+  title      = {Continuing {WebAssembly} with Effect Handlers},
   year       = {2023},
   issue_date = {October 2023},
   publisher  = {Association for Computing Machinery},
@@ -439,7 +422,7 @@
                 on Wasmtime's existing fibers API. The preliminary performance  
                 results for our prototype are encouraging, and we outline future plans  
                 to realise a native implementation.},
-  journal    = {Proc. ACM Program. Lang.},
+  journal    = {Proc. {ACM} Program. Lang.},
   month      = oct,
   articleno  = {238},
   numpages   = {26},
@@ -472,7 +455,7 @@
   url        = {https://doi.org/10.1145/3563289},
   doi        = {10.1145/3563289},
   abstract   = {Algebraic effects and handlers are a promising technique for incorporating composable computational effects into functional programming languages. Effect handlers enable concisely programming with different effects, but they do not offer a convenient way to program with different instances of the same effect. As a solution to this inconvenience, previous studies have introduced _named effect handlers_, which allow the programmer to distinguish among different effect instances. However, existing formalizations of named handlers are both involved and restrictive, as they employ non-standard mechanisms to prevent the escaping of handler names. In this paper, we propose a simple and flexible design of named handlers. Specifically, we treat handler names as first-class values, and prevent their escaping while staying within the ordinary λ-calculus. Such a design is enabled by combining named handlers with _scoped effects_, a novel variation of effects that maintain a scope via rank-2 polymorphism. We formalize two combinations of named handlers and scoped effects, and implement them in the Koka programming language. We also present practical applications of named handlers, including a neural network and a unification algorithm.},
-  journal    = {Proc. ACM Program. Lang.},
+  journal    = {Proc. {ACM} Program. Lang.},
   month      = oct,
   articleno  = {126},
   numpages   = {30},
@@ -486,7 +469,7 @@
   url       = {http://dx.doi.org/10.2168/LMCS-10(4:9)2014},
   doi       = {10.2168/lmcs-10(4:9)2014},
   journal   = {Logical Methods in Computer Science},
-  publisher = {Centre pour la Communication Scientifique Directe (CCSD)},
+  publisher = {Centre pour la Communication Scientifique Directe ({CCSD})},
   author    = {Bauer, Andrej and Pretnar, Matija},
   year      = {2014},
   month     = dec
@@ -519,7 +502,7 @@
   url        = {https://doi.org/10.1145/3093333.3009901},
   doi        = {10.1145/3093333.3009901},
   abstract   = {The logical technique of focusing can be applied to the λ-calculus; in a simple type system with atomic types and negative type formers (functions, products, the unit type), its normal forms coincide with βη-normal forms. Introducing a saturation phase gives a notion of quasi-normal forms in presence of positive types (sum types and the empty type). This rich structure let us prove the decidability of βη-equivalence in presence of the empty type, the fact that it coincides with contextual equivalence, and with set-theoretic equality in all finite models.},
-  journal    = {SIGPLAN Not.},
+  journal    = {{SIGPLAN} Not.},
   month      = jan,
   pages      = {374–386},
   numpages   = {13},
@@ -541,12 +524,12 @@
   numpages  = {13},
   keywords  = {canonicity, empty type, equivalence, focusing, saturation, simply-typed lambda-calculus, sums},
   location  = {Paris, France},
-  series    = {POPL '17}
+  series    = {{POPL} '17}
 }
 
 @inproceedings{kiselyov-24,
   author    = {Kiselyov, Oleg},
-  title     = {MetaOCaml: Ten Years Later: System Description},
+  title     = {{MetaOCaml}: Ten Years Later: System Description},
   year      = {2024},
   isbn      = {978-981-97-2299-0},
   publisher = {Springer-Verlag},
@@ -554,7 +537,7 @@
   url       = {https://doi.org/10.1007/978-981-97-2300-3_12},
   doi       = {10.1007/978-981-97-2300-3_12},
   abstract  = {MetaOCaml is a superset of OCaml for convenient code generation with static guarantees: the generated code is well-formed, well-typed and well-scoped, by construction. Not only the completed generated code always compiles; code fragments with a variable escaping its scope are detected already during code generation. MetaOCaml has been employed for compiling domain-specific languages, generic programming, automating tedious specializations in high-performance computing, generating efficient computational kernels and embedded programming. It is used in education, and served as inspiration for several other metaprogramming systems.Most well-known in MetaOCaml are the types for values representing generated code and the template-based mechanism to produce such values, a.k.a., brackets and escapes. MetaOCaml also features cross-stage persistence, generating ordinary and mutually-recursive definitions, first-class pattern-matching and heterogeneous metaprogramming.The extant implementation of MetaOCaml, first presented at FLOPS 2014, has been continuously evolving. We describe the current design and implementation, stressing particularly notable additions. Among them is a new, efficient, the easiest to retrofit translation from typed code templates to code combinators. Scope extrusion detection unexpectedly brought let-insertion, and a conclusive solution to the 20-year–old vexing problem of cross-stage persistence.},
-  booktitle = {Functional and Logic Programming: 17th International Symposium, FLOPS 2024, Kumamoto, Japan, May 15–17, 2024, Proceedings},
+  booktitle = {Functional and Logic Programming: 17th International Symposium, {FLOPS} 2024, Kumamoto, Japan, May 15–17, 2024, Proceedings},
   pages     = {219–236},
   numpages  = {18},
   keywords  = {metaprogramming, staging, code generation},
@@ -574,7 +557,7 @@
   url        = {https://doi.org/10.1145/2544174.2500590},
   doi        = {10.1145/2544174.2500590},
   abstract   = {Plotkin and Pretnar's handlers for algebraic effects occupy a sweet spot in the design space of abstractions for effectful computation. By separating effect signatures from their implementation, algebraic effects provide a high degree of modularity, allowing programmers to express effectful programs independently of the concrete interpretation of their effects. A handler is an interpretation of the effects of an algebraic computation. The handler abstraction adapts well to multiple settings: pure or impure, strict or lazy, static types or dynamic types. This is a position paper whose main aim is to popularise the handler abstraction. We give a gentle introduction to its use, a collection of illustrative examples, and a straightforward operational semantics. We describe our Haskell implementation of handlers in detail, outline the ideas behind our OCaml, SML, and Racket implementations, and present experimental results comparing handlers with existing code.},
-  journal    = {SIGPLAN Not.},
+  journal    = {{SIGPLAN} Not.},
   month      = sep,
   pages      = {145–158},
   numpages   = {14},
@@ -596,7 +579,7 @@
   numpages  = {14},
   keywords  = {algebraic effects, continuations, effect handlers, effect typing, haskell, modularity, monads},
   location  = {Boston, Massachusetts, USA},
-  series    = {ICFP '13}
+  series    = {{ICFP} '13}
 }
 
 @article{10.1145/1631687.1596567,
@@ -629,12 +612,12 @@
   url       = {https://doi.org/10.1145/1596550.1596567},
   doi       = {10.1145/1596550.1596567},
   abstract  = {We define logical relations between the denotational semantics of a simply typed functional language with recursion and the operational behaviour of low-level programs in a variant SECD machine. The relations, which are defined using biorthogonality and stepindexing, capture what it means for a piece of low-level code to implement a mathematical, domain-theoretic function and are used to prove correctness of a simple compiler. The results have been formalized in the Coq proof assistant.},
-  booktitle = {Proceedings of the 14th ACM SIGPLAN International Conference on Functional Programming},
+  booktitle = {Proceedings of the 14th {ACM SIGPLAN} International Conference on Functional Programming},
   pages     = {97–108},
   numpages  = {12},
   keywords  = {biorthogonality, compiler verification, denotational semantics, proof assistants, step-indexing},
   location  = {Edinburgh, Scotland},
-  series    = {ICFP '09}
+  series    = {{ICFP} '09}
 }
 
 @article{tait-67,
@@ -661,12 +644,12 @@
   url       = {https://doi.org/10.1145/3294032.3294078},
   doi       = {10.1145/3294032.3294078},
   abstract  = {Many functional programs — state machines [Krishnamurthi 2006], top-down and bottom-up parsers [Hinze and Paterson 2003; Hutton and Meijer 1996], evaluators [Abelson et al. 1984], GUI initialization graphs [Syme 2006], &c. — are conveniently expressed as groups of mutually recursive bindings. One therefore expects program generators, such as those written in MetaOCaml, to be able to build programs with mutual recursion.  Unfortunately, currently MetaOCaml can only build recursive groups whose size is hard-coded in the generating program. The general case requires something other than quotation, and seemingly weakens static guarantees on the resulting code. We describe the challenges and propose a new language construct for assuredly generating binding groups of arbitrary size – illustrating with a collection of examples for mutual, n-ary, heterogeneous, value and polymorphic recursion.},
-  booktitle = {Proceedings of the 2019 ACM SIGPLAN Workshop on Partial Evaluation and Program Manipulation},
+  booktitle = {Proceedings of the 2019 {ACM SIGPLAN} Workshop on Partial Evaluation and Program Manipulation},
   pages     = {75–81},
   numpages  = {7},
   keywords  = {Recursion, fixed points, metaprogramming, multi-stage programming},
   location  = {Cascais, Portugal},
-  series    = {PEPM 2019}
+  series    = {{PEPM} 2019}
 }
 
 @misc{plotkin-2025,
@@ -700,7 +683,7 @@
   url        = {https://doi.org/10.1145/3158096},
   doi        = {10.1145/3158096},
   abstract   = {Algebraic effects and handlers have received a lot of attention recently, both from the theoretical point of view and in practical language design. This stems from the fact that algebraic effects give the programmer unprecedented freedom to define, combine, and interpret computational effects. This plenty-of-rope, however, demands not only a deep understanding of the underlying semantics, but also access to practical means of reasoning about effectful code, including correctness and program equivalence. In this paper we tackle this problem by constructing a step-indexed relational interpretation of a call-by-value calculus with algebraic effect handlers and a row-based polymorphic type-and-effect system. Our calculus, while striving for simplicity, enjoys desirable theoretical properties, and is close to the cores of programming languages with algebraic effects used in the wild, while the logical relation we build for it can be used to reason about non-trivial properties, such as contextual equivalence and contextual approximation of programs. Our development has been fully formalised in the Coq proof assistant.},
-  journal    = {Proc. ACM Program. Lang.},
+  journal    = {Proc. {ACM} Program. Lang.},
   month      = dec,
   articleno  = {8},
   numpages   = {30},

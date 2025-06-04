@@ -1,4 +1,4 @@
-\begin{thebibliography}{38}
+\begin{thebibliography}{37}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -7,7 +7,7 @@
 
 \bibitem[Abrahams and Gurtovoy(2004)]{abrahams-04}
 D.~Abrahams and A.~Gurtovoy.
-\newblock \emph{C++ Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond (C++ in Depth Series)}.
+\newblock \emph{{C++} Template Metaprogramming: Concepts, Tools, and Techniques from Boost and Beyond ({C++} in Depth Series)}.
 \newblock Addison-Wesley Professional, 2004.
 \newblock ISBN 0321227255.
 
@@ -22,7 +22,7 @@ A.~Bauer and M.~Pretnar.
 \bibitem[Benton and Hur(2009)]{benton-09}
 N.~Benton and C.-K. Hur.
 \newblock Biorthogonality, step-indexing and compiler correctness.
-\newblock In \emph{Proceedings of the 14th ACM SIGPLAN International Conference on Functional Programming}, ICFP '09, page 97–108, New York, NY, USA, 2009. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the 14th {ACM SIGPLAN} International Conference on Functional Programming}, {ICFP} '09, page 97–108, New York, NY, USA, 2009. Association for Computing Machinery.
 \newblock ISBN 9781605583327.
 \newblock \doi{10.1145/1596550.1596567}.
 \newblock URL \url{https://doi.org/10.1145/1596550.1596567}.
@@ -30,7 +30,7 @@ N.~Benton and C.-K. Hur.
 \bibitem[Biernacki et~al.(2017)Biernacki, Pir\'{o}g, Polesiuk, and Sieczkowski]{biernacki-2017}
 D.~Biernacki, M.~Pir\'{o}g, P.~Polesiuk, and F.~Sieczkowski.
 \newblock Handle with care: relational interpretation of algebraic effects and handlers.
-\newblock \emph{Proc. ACM Program. Lang.}, 2\penalty0 (POPL), Dec. 2017.
+\newblock \emph{Proc. {ACM} Program. Lang.}, 2\penalty0 (POPL), Dec. 2017.
 \newblock \doi{10.1145/3158096}.
 \newblock URL \url{https://doi.org/10.1145/3158096}.
 
@@ -43,7 +43,7 @@ C.~Calcagno, E.~Moggi, and W.~Taha.
 \bibitem[Chiang et~al.(2024)Chiang, Yallop, White, and Xie]{chiang-2024}
 T.-J. Chiang, J.~Yallop, L.~White, and N.~Xie.
 \newblock Staged compilation with module functors.
-\newblock \emph{Proc. ACM Program. Lang.}, 8\penalty0 (ICFP), Aug. 2024.
+\newblock \emph{Proc. {ACM} Program. Lang.}, 8\penalty0 (ICFP), Aug. 2024.
 \newblock \doi{10.1145/3674649}.
 \newblock URL \url{https://doi.org/10.1145/3674649}.
 
@@ -73,7 +73,7 @@ J.~Inoue and W.~Taha.
 \bibitem[Isoda et~al.(2024)Isoda, Yokoyama, and Kameyama]{isoda-24}
 K.~Isoda, A.~Yokoyama, and Y.~Kameyama.
 \newblock Type-safe code generation with algebraic effects and handlers.
-\newblock In \emph{Proceedings of the 23rd ACM SIGPLAN International Conference on Generative Programming: Concepts and Experiences}, GPCE '24, page 53–65, New York, NY, USA, 2024. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the 23rd {ACM SIGPLAN} International Conference on Generative Programming: Concepts and Experiences}, {GPCE} '24, page 53–65, New York, NY, USA, 2024. Association for Computing Machinery.
 \newblock ISBN 9798400712111.
 \newblock \doi{10.1145/3689484.3690731}.
 \newblock URL \url{https://doi.org/10.1145/3689484.3690731}.
@@ -86,14 +86,14 @@ Jax-Ml.
 \bibitem[Kammar et~al.(2013)Kammar, Lindley, and Oury]{kammar-2013}
 O.~Kammar, S.~Lindley, and N.~Oury.
 \newblock Handlers in action.
-\newblock In \emph{Proceedings of the 18th ACM SIGPLAN International Conference on Functional Programming}, ICFP '13, page 145–158, New York, NY, USA, 2013. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the 18th ACM SIGPLAN International Conference on Functional Programming}, {ICFP} '13, page 145–158, New York, NY, USA, 2013. Association for Computing Machinery.
 \newblock ISBN 9781450323260.
 \newblock \doi{10.1145/2500365.2500590}.
 \newblock URL \url{https://doi.org/10.1145/2500365.2500590}.
 
 \bibitem[Kiselyov(2012)]{kiselyov-2012}
 O.~Kiselyov.
-\newblock Delimited control in ocaml, abstractly and concretely.
+\newblock Delimited control in {OCaml}, abstractly and concretely.
 \newblock \emph{Theoretical Computer Science}, 435:\penalty0 56--76, 2012.
 \newblock ISSN 0304-3975.
 \newblock \doi{https://doi.org/10.1016/j.tcs.2012.02.025}.
@@ -102,13 +102,13 @@ O.~Kiselyov.
 
 \bibitem[Kiselyov(2014)]{kiselyov-14}
 O.~Kiselyov.
-\newblock The design and implementation of ber metaocaml.
+\newblock The design and implementation of {BER MetaOCaml}.
 \newblock In M.~Codish and E.~Sumii, editors, \emph{Functional and Logic Programming}, pages 86--102, Cham, 2014. Springer International Publishing.
 \newblock ISBN 978-3-319-07151-0.
 
 \bibitem[Kiselyov(2024{\natexlab{a}})]{kiselyov-2024}
 O.~Kiselyov.
-\newblock Generating c: Heterogeneous metaprogramming system description.
+\newblock Generating {C}: Heterogeneous metaprogramming system description.
 \newblock \emph{Science of Computer Programming}, 231:\penalty0 103015, 2024{\natexlab{a}}.
 \newblock ISSN 0167-6423.
 \newblock \doi{https://doi.org/10.1016/j.scico.2023.103015}.
@@ -116,8 +116,8 @@ O.~Kiselyov.
 
 \bibitem[Kiselyov(2024{\natexlab{b}})]{kiselyov-24}
 O.~Kiselyov.
-\newblock Metaocaml: Ten years later: System description.
-\newblock In \emph{Functional and Logic Programming: 17th International Symposium, FLOPS 2024, Kumamoto, Japan, May 15–17, 2024, Proceedings}, page 219–236, Berlin, Heidelberg, 2024{\natexlab{b}}. Springer-Verlag.
+\newblock {MetaOCaml}: Ten years later: System description.
+\newblock In \emph{Functional and Logic Programming: 17th International Symposium, {FLOPS} 2024, Kumamoto, Japan, May 15–17, 2024, Proceedings}, page 219–236, Berlin, Heidelberg, 2024{\natexlab{b}}. Springer-Verlag.
 \newblock ISBN 978-981-97-2299-0.
 \newblock \doi{10.1007/978-981-97-2300-3_12}.
 \newblock URL \url{https://doi.org/10.1007/978-981-97-2300-3_12}.
@@ -137,23 +137,15 @@ W.~Kuchta.
 \bibitem[Lawall and Danvy(1994)]{lawall-94}
 J.~L. Lawall and O.~Danvy.
 \newblock Continuation-based partial evaluation.
-\newblock \emph{SIGPLAN Lisp Pointers}, VII\penalty0 (3):\penalty0 227–238, July 1994.
+\newblock \emph{{SIGPLAN} Lisp Pointers}, VII\penalty0 (3):\penalty0 227–238, July 1994.
 \newblock ISSN 1045-3563.
 \newblock \doi{10.1145/182590.182483}.
 \newblock URL \url{https://doi.org/10.1145/182590.182483}.
 
-\bibitem[Mainland(2012)]{mainland-2012}
-G.~Mainland.
-\newblock Explicitly heterogeneous metaprogramming with metahaskell.
-\newblock \emph{SIGPLAN Not.}, 47\penalty0 (9):\penalty0 311–322, Sept. 2012.
-\newblock ISSN 0362-1340.
-\newblock \doi{10.1145/2398856.2364572}.
-\newblock URL \url{https://doi.org/10.1145/2398856.2364572}.
-
 \bibitem[Phipps-Costin et~al.(2023)Phipps-Costin, Rossberg, Guha, Leijen, Hillerstr\"{o}m, Sivaramakrishnan, Pretnar, and Lindley]{phipps-costin-2023}
 L.~Phipps-Costin, A.~Rossberg, A.~Guha, D.~Leijen, D.~Hillerstr\"{o}m, K.~Sivaramakrishnan, M.~Pretnar, and S.~Lindley.
-\newblock Continuing webassembly with effect handlers.
-\newblock \emph{Proc. ACM Program. Lang.}, 7\penalty0 (OOPSLA2), Oct. 2023.
+\newblock Continuing {WebAssembly} with effect handlers.
+\newblock \emph{Proc. {ACM} Program. Lang.}, 7\penalty0 (OOPSLA2), Oct. 2023.
 \newblock \doi{10.1145/3622814}.
 \newblock URL \url{https://doi.org/10.1145/3622814}.
 
@@ -169,11 +161,11 @@ M.~Pretnar.
 \newblock ISSN 1571-0661.
 \newblock \doi{https://doi.org/10.1016/j.entcs.2015.12.003}.
 \newblock URL \url{https://www.sciencedirect.com/science/article/pii/S1571066115000705}.
-\newblock The 31st Conference on the Mathematical Foundations of Programming Semantics (MFPS XXXI).
+\newblock The 31st Conference on the Mathematical Foundations of Programming Semantics ({MFPS XXXI}).
 
 \bibitem[Rice(1953)]{rice-53}
 H.~G. Rice.
-\newblock Classes of recursively enumerable sets and their decision problems.
+\newblock Classes of {Recursively Enumerable} sets and their decision problems.
 \newblock \emph{Transactions of the American Mathematical Society}, 74\penalty0 (2):\penalty0 358--366, 1953.
 \newblock ISSN 00029947, 10886850.
 \newblock URL \url{http://www.jstor.org/stable/1990888}.
@@ -181,7 +173,7 @@ H.~G. Rice.
 \bibitem[Robison(2001)]{robinson-01}
 A.~D. Robison.
 \newblock Impact of economics on compiler optimization.
-\newblock In \emph{Proceedings of the 2001 Joint ACM-ISCOPE Conference on Java Grande}, JGI '01, page 1–10, New York, NY, USA, 2001. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the 2001 Joint {ACM-ISCOPE} Conference on {Java Grande}}, {JGI} '01, page 1–10, New York, NY, USA, 2001. Association for Computing Machinery.
 \newblock ISBN 1581133596.
 \newblock \doi{10.1145/376656.376751}.
 \newblock URL \url{https://doi.org/10.1145/376656.376751}.
@@ -189,7 +181,7 @@ A.~D. Robison.
 \bibitem[Scherer(2017)]{scherer-2017}
 G.~Scherer.
 \newblock Deciding equivalence with sums and the empty type.
-\newblock In \emph{Proceedings of the 44th ACM SIGPLAN Symposium on Principles of Programming Languages}, POPL '17, page 374–386, New York, NY, USA, 2017. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the 44th ACM SIGPLAN Symposium on Principles of Programming Languages}, {POPL} '17, page 374–386, New York, NY, USA, 2017. Association for Computing Machinery.
 \newblock ISBN 9781450346603.
 \newblock \doi{10.1145/3009837.3009901}.
 \newblock URL \url{https://doi.org/10.1145/3009837.3009901}.
@@ -197,14 +189,14 @@ G.~Scherer.
 \bibitem[Servetto and Zucca(2013)]{servetto-2013}
 M.~Servetto and E.~Zucca.
 \newblock A meta-circular language for active libraries.
-\newblock In \emph{Proceedings of the ACM SIGPLAN 2013 Workshop on Partial Evaluation and Program Manipulation}, PEPM '13, page 117–126, New York, NY, USA, 2013. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the ACM SIGPLAN 2013 Workshop on Partial Evaluation and Program Manipulation}, {PEPM} '13, page 117–126, New York, NY, USA, 2013. Association for Computing Machinery.
 \newblock ISBN 9781450318426.
 \newblock \doi{10.1145/2426890.2426913}.
 \newblock URL \url{https://doi.org/10.1145/2426890.2426913}.
 
 \bibitem[Sheard and Jones(2002)]{sheard-02}
 T.~Sheard and S.~P. Jones.
-\newblock Template meta-programming for haskell.
+\newblock Template meta-programming for {Haskell}.
 \newblock In \emph{Proceedings of the 2002 ACM SIGPLAN Workshop on Haskell}, Haskell '02, page 1–16, New York, NY, USA, 2002. Association for Computing Machinery.
 \newblock ISBN 1581136056.
 \newblock \doi{10.1145/581690.581691}.
@@ -212,8 +204,8 @@ T.~Sheard and S.~P. Jones.
 
 \bibitem[Sivaramakrishnan et~al.(2021)Sivaramakrishnan, Dolan, White, Kelly, Jaffer, and Madhavapeddy]{sivaramakrishnan-21}
 K.~Sivaramakrishnan, S.~Dolan, L.~White, T.~Kelly, S.~Jaffer, and A.~Madhavapeddy.
-\newblock Retrofitting effect handlers onto ocaml.
-\newblock In \emph{Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation}, PLDI 2021, page 206–221, New York, NY, USA, 2021. Association for Computing Machinery.
+\newblock Retrofitting effect handlers onto {OCaml}.
+\newblock In \emph{Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation}, {PLDI} 2021, page 206–221, New York, NY, USA, 2021. Association for Computing Machinery.
 \newblock ISBN 9781450383912.
 \newblock \doi{10.1145/3453483.3454039}.
 \newblock URL \url{https://doi.org/10.1145/3453483.3454039}.
@@ -233,32 +225,32 @@ L.~Tratt.
 \bibitem[Vandebon et~al.(2021)Vandebon, Coutinho, Luk, and Nurvitadhi]{vandebon-2021}
 J.~Vandebon, J.~G.~F. Coutinho, W.~Luk, and E.~Nurvitadhi.
 \newblock Enhancing high-level synthesis using a meta-programming approach.
-\newblock \emph{IEEE Transactions on Computers}, 70\penalty0 (12):\penalty0 2043--2055, 2021.
+\newblock \emph{{IEEE} Transactions on Computers}, 70\penalty0 (12):\penalty0 2043--2055, 2021.
 \newblock \doi{10.1109/TC.2021.3096429}.
 
 \bibitem[Wickham(2019)]{wickham-2019}
 H.~Wickham.
-\newblock \emph{Advanced R}.
-\newblock Chapman and Hall/CRC, 2019.
+\newblock \emph{Advanced {R}}.
+\newblock Chapman and Hall/{CRC}, 2019.
 
 \bibitem[Xie et~al.(2022)Xie, Cong, Ikemori, and Leijen]{xie-2022}
 N.~Xie, Y.~Cong, K.~Ikemori, and D.~Leijen.
 \newblock First-class names for effect handlers.
-\newblock \emph{Proc. ACM Program. Lang.}, 6\penalty0 (OOPSLA2), Oct. 2022.
+\newblock \emph{Proc. {ACM} Program. Lang.}, 6\penalty0 (OOPSLA2), Oct. 2022.
 \newblock \doi{10.1145/3563289}.
 \newblock URL \url{https://doi.org/10.1145/3563289}.
 
 \bibitem[Xie et~al.(2023)Xie, White, Nicole, and Yallop]{xie-2023}
 N.~Xie, L.~White, O.~Nicole, and J.~Yallop.
-\newblock Macocaml: Staging composable and compilable macros.
-\newblock \emph{Proc. ACM Program. Lang.}, 7\penalty0 (ICFP), Aug. 2023.
+\newblock {MacoCaml}: Staging composable and compilable macros.
+\newblock \emph{Proc. {ACM} Program. Lang.}, 7\penalty0 (ICFP), Aug. 2023.
 \newblock \doi{10.1145/3607851}.
 \newblock URL \url{https://doi.org/10.1145/3607851}.
 
 \bibitem[Yallop and Kiselyov(2019)]{yallop-2019}
 J.~Yallop and O.~Kiselyov.
 \newblock Generating mutually recursive definitions.
-\newblock In \emph{Proceedings of the 2019 ACM SIGPLAN Workshop on Partial Evaluation and Program Manipulation}, PEPM 2019, page 75–81, New York, NY, USA, 2019. Association for Computing Machinery.
+\newblock In \emph{Proceedings of the 2019 {ACM SIGPLAN} Workshop on Partial Evaluation and Program Manipulation}, {PEPM} 2019, page 75–81, New York, NY, USA, 2019. Association for Computing Machinery.
 \newblock ISBN 9781450362269.
 \newblock \doi{10.1145/3294032.3294078}.
 \newblock URL \url{https://doi.org/10.1145/3294032.3294078}.
@@ -266,7 +258,7 @@ J.~Yallop and O.~Kiselyov.
 \bibitem[Yallop et~al.(2023)Yallop, Xie, and Krishnaswami]{yallop-2023}
 J.~Yallop, N.~Xie, and N.~Krishnaswami.
 \newblock flap: A deterministic parser with fused lexing.
-\newblock \emph{Proc. ACM Program. Lang.}, 7\penalty0 (PLDI), June 2023.
+\newblock \emph{Proc. {ACM} Program. Lang.}, 7\penalty0 (PLDI), June 2023.
 \newblock \doi{10.1145/3591269}.
 \newblock URL \url{https://doi.org/10.1145/3591269}.
 
