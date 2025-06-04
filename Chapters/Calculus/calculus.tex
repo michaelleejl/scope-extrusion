@@ -614,7 +614,7 @@ Second, \coreLang{} extends \efflang{} with machinery for scope extrusion checki
 \item \textbf{\texttt{check}}, a guarded \textbf{\texttt{return}} that either detects scope extrusion, and transitions to \textbf{\texttt{err}}, or does not detect scope extrusion, and transitions to \textbf{\texttt{return}},
 \item \textbf{\texttt{check$_M$}}, which behaves similarly to \textbf{\texttt{check}}, but (as \Cref{section:best-effort-check} explains) allows a set of \textit{muted} variables $M$ to \textit{temporarily} extrude their scope,
 \item \textbf{\texttt{dlet}}, a primitive for tracking which variables are well-scoped and which have extruded their scope,
-\item \textbf{\texttt{tls}}, a marker for where top-level splices would have occurred in the source program. This is for \textit{ease of reasoning only}. 
+\item \textbf{\texttt{tls}}, a marker for where top-level splices would have occurred in the source program. 
 \end{enumerate}
 
 \begin{figure}
@@ -673,7 +673,7 @@ The semantics of \coreLang{} are made precise via an operational semantics. Many
 \\ 
  \vspace{1mm}
 \\
-\secRule{Tls} & \transition{\coreConfiguration{\tls{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{M'}{I'}}\\\vspace{1mm}
+\secRule{Tls} & \transition{\coreConfiguration{\tls{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{\emptyset}}{\textcolor{coreHighlight}{\top}}}\\\vspace{1mm}
 \\
   \secRule{Dlt} & \transition{\coreConfiguration{\dlet{\Binder{\alpha}{T}}{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{M'}}{\textcolor{coreHighlight}{I'}}}\\
    &&&\text{\textcolor{coreHighlight}{(if $ I < \textsf{len}(E)$ then $M' = M, I' = I$}}\\
@@ -681,7 +681,7 @@ The semantics of \coreLang{} are made precise via an operational semantics. Many
    \effectRule{Op} & \transition{\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I}}\coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{\textcolor{coreHighlight}{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}}\\
   &&& \text{(where cont $=\kappa x. \, \handleWith{E_2[\return{x}]}{h}$}\\
   &&& \text{and $\opHandler{x}{k}{c} \in h$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$}\\
-  &&& \text{and \textcolor{coreHighlight}{$I' = \textsf{min}(\textsf{len}(E), I)$)}}
+  &&& \text{and \textcolor{coreHighlight}{$I' = \textsf{min}(\textsf{len}(E_1), I)$)}}
   \end{array} \]
   }
 \end{core-desc}
@@ -712,13 +712,18 @@ Should $\Var{\alpha}{\mathbb{N}}$ occur in $n$, it should be ``properly scoped''
 More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{A}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{A}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{A} \}\]
 
-Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus checks that the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been properly declared, or to be precise, a subset of $\projfvs{E}$. 
+Given a term $E[t]$, I say variable $\Var{\alpha}{A}$ in $t$ is ``declared safe'' if $\Var{\alpha}{A} \in \projfvs{E}$ (\Cref{dfn:declared-safe})
+\begin{definition}[Declared Safe]{coreHighlight}\label{dfn:declared-safe}
+  Given a term $E[t]$, $\Var{\alpha}{A}$ in $t$ is ``declared safe'' if $\Var{\alpha}{A} \in \projfvs{E}$
+\end{definition}
+
+Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus checks that the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe, $\freevars{n} \subseteq \projfvs{E}$. 
 
 It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}, and I define the elaboration. Therefore, the onus is on me to justify that any defined elaboration uses \textbf{\texttt{dlet}} and \textbf{\texttt{check}}appropriately. 
 
 \textbf{\texttt{check}}$_M$ is a variant of \textbf{\texttt{check}}. As \Cref{section:best-effort-check} explains, to design a good scope extrusion check, it is necessary to \textit{mute} some variables, pretending that they are properly scoped. \textbf{\texttt{check}}$_M$ behaves exactly like \textbf{\texttt{check}}, except that it pretends that the muted variables $M$ are properly scoped.
 
-Similarly, when justifying the correctness of scope extrusion checks, it is useful to remember the position of top-level splices in the \sourceLang{} source program. This is the purpose of \textbf{\texttt{tls}}. Since \textbf{\texttt{tls}} is only used for reasoning, it is interpreted as a no-op (\textsc{Sec-Tls}).
+Similarly, when justifying the correctness of scope extrusion checks, it is useful to remember the position of top-level splices in the \sourceLang{} source program. This is the purpose of \textbf{\texttt{tls}}. Beyond unmuting variables (\Cref{section:best-effort-check}), \textbf{\texttt{tls}} has no operational behaviour (\textsc{Sec-Tls}).
 
 The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, behave as normal, but additionally mute or unmute \texttt{Var}s. Muting and unmuting are explained in \Cref{section:best-effort-check}. For now, they are \textbf{\textcolor{coreHighlight}{highlighted}}, and can be ignored. 
 % At a high level, when an operation is performed, we mute some set of variables, and potentially update the point at which they should be unmuted. When we remove a declared variable, we additionally check if we ought to unmute variables (and do so if we should).
@@ -1007,19 +1012,19 @@ The proof is by induction on the typing rules, as in the example in the previous
 Additionally, the core language \coreLang{} satisfies appropriate progress and preservation properties. 
 
 \begin{theorem}[Progress]{coreHighlight} 
-If $\type{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
+If $\type[\cdot]{E[t]}{\effectType{T}}$ then for all $U, M, I$ either 
 \begin{enumerate}
-\item $t$ of the form $\return{n}$ and $E = [-]$,
-\item $t$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
-\item $t$ of the form $\err$
+\item $t$ is of the form $\return{n}$ and $E = [-]$,
+\item $t$ is of the form $\op{v}$ for some $\textsf{op} \in \Delta$, and $\texttt{op} \notin \textsf{handled}(E)$
+\item $t$ is of the form $\err$
 \item $\exists t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'\rangle$
 \end{enumerate}
 \end{theorem}
 Progress is proved by induction over the typing derivation. Since \coreLang{} is built by extending \efflang{}, the proof need only consider the augmented typing rules, all of which are extremely straightforward.
 
 \begin{theorem}[Reduction Preservation]{coreHighlight}
-If $\Gamma \vdash E[t]: \effectType{T}$ and $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
-then $\Gamma \vdash E'[t']: \effectType{T}$ 
+If $\cdot \vdash E[t]: \effectType{T}$ and $\langle t; E; U; M; I \rangle \to \langle t'; E'; U'; M'; I' \rangle$ 
+then $\cdot \vdash E'[t']: \effectType{T}$ 
 \end{theorem}
 Proof proceeds by induction over the operational semantics. Once again, one need only consider the augmented rules, which are very simple. 
 

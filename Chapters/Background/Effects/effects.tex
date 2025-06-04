@@ -244,7 +244,7 @@ The semantics of \efflang{} are made precise via an operational semantics (\Cref
   \vspace{1mm} \\
   \effectRule{Op} & \transition{\effconfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}}\effconfiguration{c[v/x, \kappa x. \, \handleWith{E_2[\return{x}]}{h} / k]}{E_1}\\
   &&& \text{(where $\textbf{\texttt{op}} \in \textsf{dom}(h)$ and $\textbf{\textsf{op}} \notin \textsf{handled}(E_2)$)}\\
-  \effectRule{Cnt} & \transition{\effconfiguration{\continue{\kappa x. E_2[\return{x}]}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1[E_2]}}
+  \effectRule{Cnt} & \transition{\effconfiguration{\continue{(\kappa x. E_2[\return{x}])}{v}}{E_1}}{\effconfiguration{\return{v}}{E_1[E_2]}}
 
 \end{array}
 \]
@@ -270,7 +270,7 @@ Several applications of \textsc{Cng-Psh} produces the configuration
   \]
 }
 
-Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op}, suspends the program, finds the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and gives the \textbf{\texttt{print}} effect the desired semantics
+Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op} suspends the program, finds the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and gives the \textbf{\texttt{print}} effect the desired semantics
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -520,16 +520,16 @@ with type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{
       (4)\,\Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
       (5)\, \opHandler{x'}{k'}{c'} \notin h}
     {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}\]
-The preconditions of the \textsc{Op-Handler} rule check, in turn that:
+It is therefore sufficient to show that:
 \begin{enumerate}
   \item[(1)] $\textbf{\texttt{print}}: \mathbb{N} \to 1 \in \Sigma$, which is true by assumption
-  \item[(2)] Recursively check the rest of the handler $h = \returnHandler{x}{\return{(x, \texttt{""})}}$, ensuring it has type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This follows from a trivial application of the \textsc{Ret-Handler} rule. 
-  \item[(3)] Assuming $x$ has type $\mathbb{N}$ and $k$ has type $\continuationType[\emptyset]{1}{(\mathbb{N} \times \textsf{String})}$, the body \[{\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\] has type $\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}$. This is easy to show.
-  \item[(4)] That the handler \textit{only} removes \textbf{\texttt{print}} from the effects row, and no other effects. This check passes, but would fail if we tried to type the handler with, for example, $\handlerType{\effectType[\{ \textbf{\texttt{print}}, \textbf{\texttt{get}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$
-  \item[(5)] That there are no other handlers for \textbf{\texttt{print}} in $h$.
+  \item[(2)] The rest of the handler $h = \returnHandler{x}{\return{(x, \texttt{""})}}$ has type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This follows from a trivial application of the \textsc{Ret-Handler} rule. 
+  \item[(3)] The body \[{\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\] has type $\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}$, assuming $x$ has type $\mathbb{N}$ and $k$ has type $\continuationType[\emptyset]{1}{(\mathbb{N} \times \textsf{String})}$. This is easy to show.
+  \item[(4)] The handler \textit{only} removes \textbf{\texttt{print}} from the effects row, and no other effects. This check passes, but would fail if we tried to type the handler with, for example, $\handlerType{\effectType[\{ \textbf{\texttt{print}}, \textbf{\texttt{get}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$
+  \item[(5)] There are no other handlers for \textbf{\texttt{print}} in $h$.
 \end{enumerate}
 
-Finally, I define a notion of well-typed computation. For a computation to be well-typed, one must prove that all of its effects will be handled.  
+Finally, I define a notion of well-typed computation. To show that a computation is well-typed, it is sufficient to prove that all of its effects will be handled.  
 \begin{definition}[Well-typed computation]{effHighlight}
   $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
 \end{definition}
@@ -541,16 +541,16 @@ Discussion around the interaction between effect handlers and metaprogramming wi
 \renewcommand{\transition}[2]{#1 \rightarrow #2}
 
 \begin{theorem}[Progress]{effHighlight}\label{thm:progress}
-If $\type{E[c]}{\effectType{T}}$ then either 
+If $\type[\cdot]{E[c]}{\effectType{T}}$ then either 
 \begin{enumerate}
-\item $c$ of the form $\return{v}$ and $E = [-]$,
-\item $c$ of the form $\op{v}$ for some $\textsf{op} \in \Delta$,
+\item $c$ is of the form $\return{v}$ and $E = [-]$,
+\item $c$ is of the form $\op{v}$ for some $\textsf{op} \in \Delta$, and $\texttt{op} \notin \textsf{handled}({E})$
 \item $\exists. E', c'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$
 \end{enumerate}
 \end{theorem}
 \vspace{-\baselineskip}
 \begin{theorem}[Preservation]{effHighlight}\label{thm:preservation}
-If $\type{E[c]}{\effectType{T}}$ and $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$, then $\type{E'[c']}{\effectType{T}}$
+If $\type[\cdot]{E[c]}{\effectType{T}}$ and $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$, then $\type[\cdot]{E'[c']}{\effectType{T}}$
 \end{theorem}
 \vspace{-\baselineskip}
 \begin{corollary}[Type Safety]{effHighlight}\label{thm:type-safety}
@@ -609,7 +609,7 @@ The design space of effect handlers is large. Different design decisions could i
 \begin{enumerate} 
 
  \item \textbf{\textsf{Named or Unnamed Handlers}}\\
-        \textit{Can an effect invoke a specific handler, rather than the ``latest''?}
+        \textit{Can an effect invoke a specific handler, rather than the latest?}
         
         In \efflang{}, when there are multiple handlers for the same effect, the ``latest'' handler for that effect is invoked. An alternative approach is \textbf{named handlers} \citep{xie-2022}, where, by associating each handler with a \textit{name}, the programmer can more easily specify which handler should be invoked. 
 
@@ -618,7 +618,7 @@ The design space of effect handlers is large. Different design decisions could i
   \item \textbf{\textsf{Deep, Shallow, or Sheep Handlers}}\\
          \textit{Are multiple instances of the same effect handled by the same handler?}
 
-         In \efflang{}, continuations reinstate handlers $\effectRule{Cnt}$ and thus multiple instances of the same effect are handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. These are known as \textbf{deep} handlers.
+         In \efflang{}, continuations reinstate handlers $\effectRule{Op}$ and thus multiple instances of the same effect are handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. These are known as \textbf{deep} handlers.
 
          \begin{efflst}
           $\begin{array}{l}
@@ -665,7 +665,7 @@ The design space of effect handlers is large. Different design decisions could i
         
         Such an effect system is said to permit \textbf{multi-shot continuations}. Multi-shot continuations are useful for simulating certain effects, like non-determinism \citep{phipps-costin-2023}. 
 
-        In \texttt{OCaml}, this is not allowed: continuations are only allowed to be resumed once. These systems permit \textbf{one-shot continuations}. 
+        In \texttt{OCaml}, multi-shot continuations are not allowed: continuations are only allowed to be resumed once. These systems permit only \textbf{one-shot continuations}. 
 
         Although continuations in \texttt{OCaml} are one-shot, this thesis studies effect systems with multi-shot continuations.
 \end{enumerate}

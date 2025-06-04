@@ -1,13 +1,14 @@
-\contentsline {mddefinition}{{Definition}{2.2.{1}}{Well-typed computation}}{18}{mddefinition.2.2.1}%
+\contentsline {mddefinition}{{Definition}{2.2.{1}}{Well-typed computation}}{17}{mddefinition.2.2.1}%
 \contentsline {mdtheorem}{{Theorem}{2.2.{1}}{Progress}}{18}{mdtheorem.2.2.1}%
 \contentsline {mdtheorem}{{Theorem}{2.2.{2}}{Preservation}}{18}{mdtheorem.2.2.2}%
 \contentsline {mdcorollary}{{Corollary}{2.2.{1}}{Type Safety}}{18}{mdcorollary.2.2.1}%
 \contentsline {mddefinition}{{Definition}{3.1.{1}}{Level}}{28}{mddefinition.3.1.1}%
 \contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed expression}}{31}{mddefinition.3.1.2}%
-\contentsline {mddefinition}{{Definition}{3.2.{1}}{Well-typed term}}{38}{mddefinition.3.2.1}%
+\contentsline {mddefinition}{{Definition}{3.2.{1}}{Declared Safe}}{37}{mddefinition.3.2.1}%
+\contentsline {mddefinition}{{Definition}{3.2.{2}}{Well-typed term}}{39}{mddefinition.3.2.2}%
 \contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{42}{mdtheorem.3.4.1}%
 \contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{42}{mdtheorem.3.4.2}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{42}{mdtheorem.3.4.3}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{43}{mdtheorem.3.4.3}%
 \contentsline {mdcorollary}{{Corollary}{3.4.{1}}{Type Safety}}{43}{mdcorollary.3.4.1}%
 \contentsline {mdtheorem}{{Theorem}{3.4.{4}}{Quote-Splice Duality}}{43}{mdtheorem.3.4.4}%
 \contentsline {mddefinition}{{Definition}{4.1.{1}}{Lazy Scope Extrusion}}{44}{mddefinition.4.1.1}%

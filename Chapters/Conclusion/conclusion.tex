@@ -1,15 +1,15 @@
 \chapter{Conclusion}
 
-In this thesis, I have made significant progress on four fronts. 
+This thesis makes significant progress on four fronts. 
 
 \begin{enumerate}
-\item I build a novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time. I prove standard metatheoretic results about \calculusName{}.
+\item It introduces a novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time.
 
-\item I formally describe and evaluate a range of scope extrusion solutions in \calculusName{}, including the existing MacoCaml check \citep{kiselyov-14} and the refined environment classifiers approach \citep{kiselyov-16}. Such comparison was facilitated by \calculusName{}, validating its design.
+\item It formally describes and evaluates a range of scope extrusion solutions in \calculusName{}, including the existing MacoCaml check \citep{kiselyov-14} and the refined environment classifiers approach \citep{kiselyov-16}. Such comparison was facilitated by \calculusName{}, validating its design.
 
-\item I formally describe and evaluate a novel Best-Effort check, which I prove is correct, and argue by comparison with other checks, occupies a goldilocks zone between expressiveness and efficiency.
+\item It formally describes and evaluates a novel Best-Effort check, which occupies a goldilocks zone between expressiveness and efficiency.
 
-\item I implement all three dynamic checks (lazy, eager, and best-effort) in MacoCaml. 
+\item It is supported by implementatopms of all three dynamic checks (lazy, eager, and best-effort) in MacoCaml. 
 \end{enumerate}
 
 \section{Limitations and Future Work}
@@ -20,10 +20,7 @@ In this thesis, I have made significant progress on four fronts.
   This thesis was primarily concern with the \textit{undesirable} interaction of metaprogramming and effects, rather than their \textit{desirable} interaction: the previously described let-insertion \citep{yallop-2019}. 
   \vspace{2mm}
 
-  I argue that \calculusName{} is an ideal target in which to study let-insertion. Let-insertion has typically been studied in calculi where only pure programs can be generated \citep{isoda-24}. Let-insertion is more interesting when one can generate effectful programs. Since the order of operation becomes more important, it can be more challenging to describe an ``optimal'' insertion point.
-  \vspace{2mm}
-
-  Additionally, I wish to extend my proof-of-correctness for refined environment classifiers to include polymorphism, and thus permit a form of let-insertion. 
+  I conjecture that \calculusName{} is an ideal target in which to study let-insertion. Let-insertion has typically been studied in calculi where only pure programs can be generated \citep{isoda-24}. Let-insertion is more interesting when one can generate effectful programs. Since the order of operation becomes more important, it can be more challenging to describe an ``optimal'' insertion point.
   \vspace{4mm}
 \end{minipage}\\
 
@@ -42,7 +39,7 @@ In this thesis, I have made significant progress on four fronts.
   \textbf{\textsf{Formalisation}}
 \end{minipage}%
 \begin{minipage}[t]{0.75\textwidth}
-  The proofs in this thesis are pen-and-paper proofs. However, several are quite intricate (for example, the fundamental lemma of the \textsf{Scoped} logical relation). To ensure correctness, these proofs ought to be formalised in a theorem prover.
+  The proofs in this thesis are pen-and-paper proofs. However, several are quite intricate (for example, the fundamental lemma of the \textsf{Scoped} logical relation). To ensure correctness, these proofs ought to be formalised in a theorem prover. Formalisation would additionally go further in operationalising \sourceLang{} as a testing bed for scope extrusion checks.
 \end{minipage}
 
 
