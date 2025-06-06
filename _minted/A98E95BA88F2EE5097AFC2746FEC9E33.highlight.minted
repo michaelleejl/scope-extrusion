@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let} \PYG{n+nb+bp}{()} \PYG{o}{=}  \PYG{n+nn}{Trx}\PYG{p}{.}\PYG{n}{set\PYGZus{}with\PYGZus{}stack\PYGZus{}mark}
+  \PYG{o}{\PYGZob{}}\PYG{n+nn}{Trx}\PYG{p}{.}\PYG{n}{stackmark\PYGZus{}region\PYGZus{}fn} \PYG{o}{=}
+      \PYG{k}{fun} \PYG{n}{body} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+        \PYG{k}{let} \PYG{k}{module} \PYG{n+nc}{M} \PYG{o}{=} \PYG{k}{struct} \PYG{k}{type} \PYG{o}{\PYGZus{}} \PYG{n+nn}{Effect}\PYG{p}{.}\PYG{n}{t} \PYG{o}{+}\PYG{o}{=} \PYG{n+nc}{E}\PYG{o}{:} \PYG{k+kt}{unit} \PYG{n}{t} \PYG{k}{end} \PYG{k}{in}
+        \PYG{k}{try} \PYG{n}{body} \PYG{o}{(}\PYG{k}{fun} \PYG{n+nb+bp}{()} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k}{try} \PYG{n}{perform} \PYG{n+nn}{M}\PYG{p}{.}\PYG{n+nc}{E}\PYG{o}{;} \PYG{n+nb+bp}{true} \PYG{k}{with} \PYG{n+nc}{Unhandled} \PYG{o}{\PYGZus{}} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb+bp}{false}\PYG{o}{)}
+        \PYG{k}{with} \PYG{n}{effect} \PYG{n+nn}{M}\PYG{p}{.}\PYG{n+nc}{E}\PYG{o}{,} \PYG{n}{k} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{continue} \PYG{n}{k} \PYG{n+nb+bp}{()}\PYG{o}{\PYGZcb{}}
+\end{MintedVerbatim}

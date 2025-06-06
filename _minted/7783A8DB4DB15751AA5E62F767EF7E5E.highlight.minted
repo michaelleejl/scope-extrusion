@@ -1,0 +1,5 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{n}{run} \PYG{o}{(}\PYG{k}{match} \PYG{o}{.}\PYG{o}{\PYGZlt{}}\PYG{k}{fun} \PYG{n}{x} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{.}\PYG{o}{\PYGZti{}}\PYG{o}{(}\PYG{n}{perform} \PYG{o}{(}\PYG{n+nn}{Extrude} \PYG{p}{.}\PYG{o}{\PYGZlt{}}\PYG{n}{x}\PYG{o}{\PYGZgt{}}\PYG{o}{.}\PYG{o}{)} \PYG{o}{)} \PYG{o}{\PYGZgt{}}\PYG{o}{.}
+             \PYG{k}{with} \PYG{n}{u} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{.}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{o}{\PYGZgt{}}\PYG{o}{.}
+                \PYG{o}{|} \PYG{n}{effect} \PYG{o}{(}\PYG{n+nc}{Extrude} \PYG{n}{y}\PYG{o}{)}\PYG{o}{,} \PYG{n}{k} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{continue} \PYG{n}{k} \PYG{o}{.}\PYG{o}{\PYGZlt{}} \PYG{o}{.}\PYG{o}{\PYGZti{}}\PYG{n}{y} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{o}{\PYGZgt{}}\PYG{o}{.} \PYG{o}{)}
+\end{MintedVerbatim}

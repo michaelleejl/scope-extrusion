@@ -1,0 +1,3 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{o}{\PYGZdl{}}\PYG{o}{(}\PYG{o}{\PYGZdl{}} \PYG{n}{grad\PYGZus{}gen} \PYG{n}{f} \PYG{o}{\PYGZlt{}}\PYG{o}{\PYGZlt{}}\PYG{n}{y}\PYG{o}{\PYGZgt{}}\PYG{o}{\PYGZgt{}} \PYG{o}{)}
+\end{MintedVerbatim}

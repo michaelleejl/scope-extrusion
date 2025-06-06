@@ -1,0 +1,10 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let} \PYG{k}{rec} \PYG{n}{grad\PYGZus{}main} \PYG{o}{(}\PYG{n}{f}\PYG{o}{:} \PYG{n}{diff}\PYG{o}{)} \PYG{o}{(}\PYG{n}{x}\PYG{o}{:} \PYG{k+kt}{int}\PYG{o}{)} \PYG{o}{=}
+  \PYG{k}{let} \PYG{n}{grad\PYGZus{}poly} \PYG{o}{(}\PYG{n}{cs}\PYG{o}{:} \PYG{k+kt}{int} \PYG{k+kt}{list}\PYG{o}{)} \PYG{o}{(}\PYG{n}{x}\PYG{o}{:} \PYG{k+kt}{int}\PYG{o}{)} \PYG{o}{=}
+    \PYG{k}{let} \PYG{n}{grad\PYGZus{}p} \PYG{n}{c} \PYG{o}{(}\PYG{n}{a}\PYG{o}{,} \PYG{n}{b}\PYG{o}{)} \PYG{o}{=} \PYG{o}{(}\PYG{n}{c} \PYG{o}{*} \PYG{n}{b} \PYG{o}{::} \PYG{n}{a}\PYG{o}{,} \PYG{n}{b} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{o}{)}
+    \PYG{k}{let} \PYG{o}{(}\PYG{n}{res}\PYG{o}{,} \PYG{o}{\PYGZus{}}\PYG{o}{)} \PYG{o}{=} \PYG{n+nn}{List}\PYG{p}{.}\PYG{n}{fold\PYGZus{}right} \PYG{n}{grad\PYGZus{}p} \PYG{n}{cs} \PYG{o}{(}\PYG{n+nb+bp}{[]}\PYG{o}{,} \PYG{l+m+mi}{0}\PYG{o}{)} \PYG{k}{in}
+    \PYG{n}{app} \PYG{n+nc}{Poly}\PYG{o}{(}\PYG{n}{remove\PYGZus{}last} \PYG{n}{res}\PYG{o}{)} \PYG{n}{x} \PYG{c}{(*}\PYG{c}{remove\PYGZus{}last removes the last element of a list}\PYG{c}{*)}
+  \PYG{k}{in} \PYG{k}{match} \PYG{n}{f} \PYG{k}{with}
+    \PYG{o}{|} \PYG{n+nc}{Poly}\PYG{o}{(}\PYG{n}{cs}\PYG{o}{)}      \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{grad\PYGZus{}poly} \PYG{n}{cs} \PYG{n}{x}
+    \PYG{o}{|} \PYG{n+nc}{Compose}\PYG{o}{(}\PYG{n}{g}\PYG{o}{,} \PYG{n}{h}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{grad\PYGZus{}main} \PYG{n}{g} \PYG{n}{x} \PYG{o}{*} \PYG{n}{grad\PYGZus{}main} \PYG{n}{h} \PYG{o}{(}\PYG{n}{app} \PYG{n}{g} \PYG{n}{x}\PYG{o}{)}
+\end{MintedVerbatim}

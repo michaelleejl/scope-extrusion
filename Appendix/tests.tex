@@ -1,0 +1,65 @@
+\chapter{Litmus Tests}
+
+\section{MetaOCaml}\label{section:metaocaml-litmustests}
+This section transcribes \Cref{listing:eager-scope-extrusion-check-eg,listing:eager-scope-extrusion-check-eg-tls,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue} in BER MetaOCaml N153. 
+
+To test these programs, as of 05 June 2025, one must first set up MetaOCaml to perform scope extrusion checking.
+
+\begin{metaocaml}
+let () =  Trx.set_with_stack_mark
+  {Trx.stackmark_region_fn =
+      fun body ->
+        let module M = struct type _ Effect.t += E: unit t end in
+        try body (fun () -> try perform M.E; true with Unhandled _ -> false)
+        with effect M.E, k -> continue k ()}
+\end{metaocaml}
+
+\begin{code}
+\begin{metaocaml}
+run (let z  = match .<fun x -> .~(perform (Extrude .<x>.) ) >. 
+             with u -> .<0>.
+                | effect (Extrude y), k -> y
+     in .< .~z + 1 >.)
+\end{metaocaml}
+\captionof{listing}{\Cref{listing:eager-scope-extrusion-check-eg}, transcribed in MetaOCaml}
+\label{}
+\end{code}
+
+\begin{code}
+\begin{metaocaml}
+let z = run (match .<fun x -> .~(perform (Extrude .<x>.) ) >. 
+             with u -> .<0>.
+                | effect (Extrude y), k -> y) 
+in z + 1
+\end{metaocaml}
+\captionof{listing}{\Cref{listing:eager-scope-extrusion-check-eg-tls}, transcribed in MetaOCaml}
+\end{code}
+
+\begin{code}
+\begin{metaocaml}
+run (match .<fun x -> .~(perform (Extrude .<x>.) ) >. 
+             with u -> .<0>.
+                | effect (Extrude y), k -> let _ = y in .<0>. )
+\end{metaocaml}
+\captionof{listing}{\Cref{listing:eager-scope-extrusion-unsafe-no-use}, transcribed in MetaOCaml}
+\end{code}
+
+
+\begin{code}
+\begin{metaocaml}
+run (match .<fun x -> .~(perform (Extrude .<x>.) ) >. 
+             with u -> .<0>.
+                | effect (Extrude y), k -> continue k y )
+\end{metaocaml}
+\captionof{listing}{\Cref{listing:eager-scope-extrusion-unsafe-continue}, transcribed in MetaOCaml}
+\end{code}
+
+
+\begin{code}
+\begin{metaocaml}
+run (match .<fun x -> .~(perform (Extrude .<x>.) ) >. 
+             with u -> .<0>.
+                | effect (Extrude y), k -> continue k .< .~y + 1>. )
+\end{metaocaml}
+\captionof{listing}{\Cref{listing:eager-scope-extrusion-looks-unsafe}, transcribed in MetaOCaml}
+\end{code}
