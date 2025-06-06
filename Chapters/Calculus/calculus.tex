@@ -77,8 +77,8 @@ rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I will abuse not
     \textbf{Level 0} & \text{Values} & S^0, T^0 ::= \mathbb{N}^0 & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     && \quad\quad\quad\,\,\,\; \mid {(\functionType[\xi]{S^0}{T^0})}^{0} & \text{\footnotesize{functions}} \\ \vspace{0.4mm}
     && \quad\quad\quad\,\,\,\; \mid {(\continuationType[\xi]{S^0}{T^0})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
-    & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.8mm}
-    & T^0 \, ! \, \Delta \\\vspace{0.8mm}
+    & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.4mm}
+    && \mid T^0 \, ! \, \Delta \\\vspace{0.4mm}
      && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.8mm}
     & \text{Handlers} & (\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0\, !\, \Delta\\ \\ 
 
@@ -131,7 +131,7 @@ Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{pr
   \item[$T^0 \, ! \, \Delta; \xi$] Compile and run-time computation \\
   \textit{Example}: $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$
 \end{enumerate}
-Further, the association between \textit{syntactic values} (resp. syntactic expressions) and \textit{value types} (resp. computation types) is looser than in \efflang{} (see \Cref{table:typing-judgements} or the third example). This stratification is thus subtle, and is best revisited after covering the typing rules (\Cref{subsection:sourcelang-type-system}), core language (\Cref{section:core-lang}), and type-directed elaboration (\Cref{section:elaboration}).
+Further, the association between \textit{syntactic values} (resp. syntactic expressions) and \textit{value types} (resp. computation types) is more complicated than in \efflang{} (see \Cref{table:typing-judgements}). This stratification is thus subtle, and is best revisited after covering the typing rules (\Cref{subsection:sourcelang-type-system}), core language (\Cref{section:core-lang}), and type-directed elaboration (\Cref{section:elaboration}).
 % As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
 Third, \textbf{there is a level $-1$ \textsf{Code} type, representing run-time ASTs}.\\ 
@@ -574,7 +574,7 @@ The core language, \coreLang{}, is a simple extension of \efflang{}. \coreLang{}
 \coreLang{} extends \efflang{} in two ways. First, it adds machinery for metaprogramming:
 
 \begin{enumerate}
-\item \textbf{AST} nodes (like \texttt{Nat} and \texttt{Var}) and \textit{type-annoted} \textbf{formal parameters} ($\alpha_R$, where $R$ is some run-time pre-type\footnote{see \Cref{fig:core-types}}).
+\item \textbf{AST} nodes (like \texttt{Nat} and \texttt{Var}) and \textit{type-annoted} \textbf{formal parameters} ($\alpha_R$, where $R$ is some run-time value pre-type\footnote{see \Cref{fig:core-types}}).
 
 Similarly to \citet{calcagno-2003}, the syntax explicitly disambiguates between formal parameters ($\alpha_R$) and AST nodes. The only difference is that \citeauthor{calcagno-2003} use untyped formal parameters ($\alpha$). For example, consider the AST of $\lambda\alpha{}$${:}\mathbb{N}. \,\alpha$, where the formal parameter (left subtree) is contrasted with its usage (right subtree):
 
@@ -614,7 +614,7 @@ This syntactic distinction is important because it keeps the typing rules syntax
 % \textcolor{coreComment}{$\begin{array}{l}\return{\texttt{Lam}(\Binder{\alpha}{\mathbb{N}}, \Var{\alpha}{\mathbb{N}})}\end{array}$}
 % \end{core}
 
-\item $\gensym{R}$, a primitive for generating fresh formal parameters of type $R$, $\Binder{\alpha}{R}$ where two different calls to \textbf{\texttt{mkvar}} should return two different formal parameters.
+\item $\gensym{R}$, a primitive for generating fresh formal parameters of type $R$, $\Binder{\alpha}{R}$, where two different calls to \textbf{\texttt{mkvar}} should return two different formal parameters.
 
 The need for \textbf{\texttt{mkvar}} arises from treating \coreLang{} as an elaboration target for \sourceLang{}. Consider \Cref{listing:source-gensym}, which should ideally generate the AST of $\lambda \alpha. \lambda \beta. \, \return{(\alpha, \beta)}$
 

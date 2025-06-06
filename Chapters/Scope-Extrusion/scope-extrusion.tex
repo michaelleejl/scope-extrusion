@@ -19,7 +19,7 @@ Recall that one definition of scope extrusion relates to the \textit{result} of 
 %   \textit{Detection of scope extrusion may appear straightforward: traverse the \textbf{result of a generator} looking for unbound identifiers.}
 % \end{quote}
 
-I call this lazy scope extrusion, and define it as a property on \coreLang{} configurations as follows 
+I call this lazy scope extrusion, and define it as a property on \coreLang{} configurations as follows: 
 \begin{definition}[Lazy Scope Extrusion]{coreHighlight}\label[definition]{def:lazy-scope-extrusion} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
 exhibits lazy scope extrusion if all of the following hold:
@@ -39,6 +39,7 @@ Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside t
   \footnotesize
 \[\elaborate{\lambda x: T^0. \, e}_{\compilemode{}}^{\textbf{Lazy}} = \bind{x}{\gensym{\erase{T^0}}}{ \dlet{x}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode{}}^\textbf{Lazy}}{\return{\Lam{x}{\texttt{body}}}}}}\]
 }
+
 For example, $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ elaborates into (changes from the elaboration in \Cref{section:elaboration} highlighted in \textbf{\textcolor{selected}{blue}}):
 {
 \[\begin{array}{@{}l}
@@ -63,6 +64,7 @@ For example, $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. 
 }
 % Second, I perform a check after a top-level splice:
 % \[\elaborate{\splice[e]}_{\compilemode{}}^{\textbf{Lazy}} \triangleq \bind{\texttt{res}}{\tls{\elaborate{e}_{\splicemode{}}^{\textbf{Lazy}}}}{\checkfv{\texttt{res}}}\]
+
 Due to the simplicity of the algorithm, verifying the correctness and expressiveness of the check is trivial: the check reports scope extrusion if, and only if, the program exhibits lazy scope extrusion.
 
 \begin{theorem}[Correctness and Expressiveness of the Lazy Dynamic Check]{sourceHighlight}
@@ -101,7 +103,7 @@ exhibits eager scope extrusion if all of the following hold:
 Notice that lazy scope extrusion is a special case of eager scope extrusion, where $E = E'[\tls{[-]}]$. 
 
 It is possible to define an eager dynamic check by extending the lazy dynamic check. In addition to the top-level splice check, and the \compilemode{}-mode \textbf{\texttt{dlet}}s, the eager dynamic check adds \textbf{\texttt{check}}s for ASTs constructed in \quotemode{}-mode, for example 
-\[\elaborate{v_1 v_2}_{\quotemode{}}^{\textbf{Eager}} = \bind{f}{\elaborate{v_1}{\quotemode{}}^{\textbf{Eager}}}{\bind{a}{\elaborate{v_2}_{\quotemode{}}^{\textbf{Eager}}}{\checkfv{\App{f}{a}}}}\]
+\[\elaborate{v_1 v_2}_{\quotemode{}}^{\textbf{Eager}} = \bind{f}{\elaborate{v_1}_{\quotemode{}}^{\textbf{Eager}}}{\bind{a}{\elaborate{v_2}_{\quotemode{}}^{\textbf{Eager}}}{\checkfv{\App{f}{a}}}}\]
 notice how $\return{\App{f}{a}}$ is replaced by $\checkfv{\App{f}{a}}$. 
 
 Consequently, to prevent false positives, variables bound in \quotemode{}-mode must also be declared safe via \textbf{\texttt{dlet}}:
@@ -343,7 +345,7 @@ As an example, consider the reduction of:
 \[\begin{array}{l}
   \textbf{\texttt{handle}} \\
   \quad {\dlet{\Binder{x}{\mathbb{N}}}{
-  \bind{\texttt{body}}{\textbf{\texttt{extrude}}(\Var{x}{\mathbb{N}})}{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}}} \\ 
+  \bind{\texttt{body}}{\textbf{\texttt{extrude}}(\Var{x}{\mathbb{N}})}{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{body}}}}} \\ 
   \textbf{\texttt{with}} \\ 
   \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \\ 
       \quad\;\, \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\checkm{\texttt{Plus}(y, \texttt{Nat}(\texttt{0}))}}{\continue{k}{w}}}\}
@@ -399,7 +401,7 @@ As an example, consider the following program, which builds the AST of the const
   \textbf{\texttt{check}}_M(\textbf{\texttt{dlet}}(\Binder{z}{\mathbb{N}}, \textbf{\texttt{do}} \; b \leftarrow \, \\ 
   \quad (\textbf{\texttt{do}} \; f \leftarrow \, \textcolor{comment}{\textbf{\texttt{handle}}} \\
   \textcolor{comment}{\;\;\;\,\quad \quad \quad\quad\quad {\dlet{\Binder{x}{\mathbb{N}}}{
-  \bind{\texttt{body}}{\textbf{\texttt{extrude}}(\Var{x}{\mathbb{N}})}{\Lam{\Var{x}{\mathbb{N}}}{\texttt{body}}}}}} \\ 
+  \bind{\texttt{body}}{\textbf{\texttt{extrude}}(\Var{x}{\mathbb{N}})}{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{body}}}}}} \\ 
   \textcolor{comment}{\;\;\;\,\quad \quad\quad\quad \textbf{\texttt{with}}} \\ 
   \textcolor{comment}{\;\;\;\,\quad \quad\quad\quad \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}};} \\ 
   \textcolor{comment}{\;\;\;\, \quad \quad\quad\quad \quad \;\, \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\checkm{\texttt{Plus}(y, \texttt{Nat}(\texttt{0}))}}{\continue{k}{w}}}\}} \\ 
@@ -529,20 +531,20 @@ An \textbf{extended} source type is either:
 
   $\begin{array}{@{}lllr}
     % \textbf{Level 0} & \text{Values} & T^0 ::= \mathbb{N}^0 & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
-    % && \quad\quad\,\, \mid {(\functionType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{functions}} \\ \vspace{0.4mm}
-    % && \quad\quad\,\, \mid {(\continuationType[\xi]{T_1^0}{T_2^{0}})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
+    % && \quad\quad\,\, \mid {(\functionType[\xi]{S^0}{T^{0}})}^{0} & \text{\footnotesize{functions}} \\ \vspace{0.4mm}
+    % && \quad\quad\,\, \mid {(\continuationType[\xi]{S^0}{T^{0}})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
     % & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.8mm}
     %  && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.8mm}
-    % & \text{Handlers} & (\handlerType{T_1^{0} \, ! \, \xi}{T_2^{0} \, ! \, \xi'})\, !\, \Delta\\ \\
+    % & \text{Handlers} & (\handlerType{S^{0} \, ! \, \xi}{T^{0} \, ! \, \xi'})\, !\, \Delta\\ \\
 
     \textbf{Level $-$1} & \text{Values} & T^{-1} ::= 
     % \mathbb{N}^{-1} & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
-    % && \quad\quad\quad \mid {(\functionType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
-    % && \quad\quad\quad \mid {(\continuationType{T_1^{-1}}{T_2^{-1}})}^{-1} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
+    % && \quad\quad\quad \mid {(\functionType{S^{-1}}{T^{-1}})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
+    % && \quad\quad\quad \mid {(\continuationType{S^{-1}}{T^{-1}})}^{-1} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
     \ldots \mid {({\textsf{Code}({T^{0} \, ! \, \xi})}^{\textbf{\textcolor{red}{$\gamma$}}})}^{-1} \\
     % \vspace{0.8mm}
     % & \text{Computations} & T^{-1} \, ! \, \Delta \\\vspace{0.8mm}
-    % & \text{Handlers} & \handlerType{T_1^{-1} \, ! \, \Delta}{T_2^{-1} \, ! \, \Delta'}
+    % & \text{Handlers} & \handlerType{S^{-1} \, ! \, \Delta}{T^{-1} \, ! \, \Delta'}
   \end{array}$
   \end{source-desc}
   \caption{Extending \sourceLang{} with refined environment classifiers. The only change is that \textsf{Code} types are now annotated with an environment classifier $\gamma$, highlighted in \textbf{\textcolor{red}{red}}.}
@@ -570,7 +572,7 @@ Most typing rules are straightforwardly adapted, with key rules listed in \Cref{
 \end{code}
 
 The \compilemode{}$\mid$\quotemode{}-\textsc{Lambda} rule corresponds to \textsc{C-Abs} in the refined environment classifier literature. Following \citeauthor{isoda-24}, handlers and continuations are restricted to \textsf{Code} types; However, types and typing rules are further simplified by eliminating polymorphism. To allow for let-insertion \citep{yallop-2019}, as in \Cref{listing:refined-environment-classifiers-let-insertion}, \citeauthor{isoda-24}'s typing rules for handlers and continuations are polymorphic over the classifier. In \Cref{listing:refined-environment-classifiers-let-insertion}, the \textbf{\texttt{genlet}} effect is used to generate more efficient code: $(\lambda z. z+z) e$, where $e$ is only evaluated once, rather than $e+e$. The continuation $k$ is resumed under a binder (which introduces a classifier). Thus, for the program to be well-typed, the continuation $k$ should be polymorphic over classifiers. Similarly, the type system demands that handlers are polymorphic over classifiers as well. For example, a more faithful transcription of their handler type would have the form:
-\[\forall \gamma. \compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{T_1})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T_2})^{\gamma})}}})}\]
+\[\forall \gamma. \compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{S})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T})^{\gamma})}}})}\]
 The polymorphism ($\forall \gamma$) is useful when proving that programs like the one in \Cref{listing:refined-environment-classifiers-let-insertion} will produce well-scoped ASTs. 
 
 
@@ -590,8 +592,8 @@ Proof of correctness will rely on a weakening lemma. As types are stratified int
 \begin{lemma}[Weakening for Level 0 Values]{sourceHighlight}
   If $\rcqtypejudge{\gamma}{e}{T^0}$ then
   \begin{enumerate}
-    \item $\rcqtypejudge[\Gamma, (x:T_1^0)^{\gamma'}]{\gamma}{e}{T^0}$ for arbitrary $\gamma' \in \Gamma$
-    \item $\rcqtypejudge[\Gamma, (x:T_1^{-1})]{\gamma}{e}{T^0}$ 
+    \item $\rcqtypejudge[\Gamma, (x:S^0)^{\gamma'}]{\gamma}{e}{T^0}$ for arbitrary $\gamma' \in \Gamma$
+    \item $\rcqtypejudge[\Gamma, (x:S^{-1})]{\gamma}{e}{T^0}$ 
     \item $\rcqtypejudge[\Gamma, \gamma']{\gamma}{e}{T^0}$, for arbitrary $\gamma' \notin \Gamma$
     \item $\rcqtypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{\gamma}{e}{T^0}$, for arbitrary $\gamma', \gamma'' \in \Gamma$
   \end{enumerate}
@@ -600,8 +602,8 @@ Proof of correctness will rely on a weakening lemma. As types are stratified int
 % \begin{lemma}[Weakening for Level $-1$ Values]{sourceHighlight}
 %   If $\stypejudge{e}{T^{-1}}$ then
 %   \begin{enumerate}
-%     \item $\stypejudge[\Gamma, (x:T_1^0)^{\gamma'}]{e}{T^0}$ for arbitrary $\gamma' \in \Gamma$
-%     \item $\stypejudge[\Gamma, (x:T_1^{-1})]{e}{T^{-1}}$ 
+%     \item $\stypejudge[\Gamma, (x:S^0)^{\gamma'}]{e}{T^0}$ for arbitrary $\gamma' \in \Gamma$
+%     \item $\stypejudge[\Gamma, (x:S^{-1})]{e}{T^{-1}}$ 
 %     \item $\stypejudge[\Gamma, \gamma']{e}{T^{-1}}$, for arbitrary $\gamma' \notin \Gamma$
 %     \item $\stypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{e}{T^{-1}}$, for arbitrary $\gamma', \gamma'' \in \Gamma$
 %   \end{enumerate}
@@ -627,14 +629,14 @@ To the best of my knowledge, this is the first explicit presentation of refined 
   \begin{center}
   \begin{minipage}[t]{0.3\textwidth}
     \centering
-    $\inferrule[(\compilemode{}$\mid$\quotemode{}-Var)]{(x: T^0)^\gamma \in \Gamma}{\rcqtypejudge{\gamma}{x}{\runtimecomptype{T}{\Delta}}}$
+    $\inferrule[(\compilemode{}$\mid$\quotemode{}-Var)]{(x: T^0)^\gamma \in \Gamma}{\rcqtypejudge{\gamma}{x}{\runtimecomptype{T^0}{\Delta}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.7\textwidth}
     \centering
-$\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \gamma', \gamma \sqsubseteq \gamma', (x: T_1^0)^{\gamma'}]{\gamma'}{e}{\runtimecomptype{T_2}{\Delta;\xi}} \\
+$\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \gamma', \gamma \sqsubseteq \gamma', (x: S)^{\gamma'}]{\gamma'}{e}{\runtimecomptype{T}{\Delta;\xi}} \\
 \gamma \in \Gamma \\
 \gamma' \notin \Gamma
-}{\rcqtypejudge{\gamma}{\lambda x.e}{\runtimecomptype{(\functionType[\xi]{T_1^0}{T_2^0})}{\Delta}}}$
+}{\rcqtypejudge{\gamma}{\lambda x.e}{\runtimecomptype{(\functionType[\xi]{S}{T})}{\Delta}}}$
 \end{minipage}
 
 \vspace{5mm}
@@ -642,8 +644,8 @@ $\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \ga
 \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Op)]
-    {\stypejudge{v}{\compiletimetype{T_1}} \\ \texttt{op}: \compiletimetype{T_1} \rightarrow \compiletimetype{(\textsf{Code}(\effectType[\xi]{T_2})^{\gamma})} \in \Sigma \\ \texttt{op} \in \Delta }
-    {\stypejudge{\op{v}}{\effectType{\compiletimetype{(\textsf{Code}(\effectType[\xi]{T_2})^{\gamma})}}}}$
+    {\stypejudge{v}{\compiletimetype{S}} \\ \texttt{op}: \compiletimetype{S} \rightarrow \compiletimetype{\textsf{Code}(\effectType[\xi]{T})^{\gamma}} \in \Sigma \\ \texttt{op} \in \Delta }
+    {\stypejudge{\op{v}}{\effectType{\compiletimetype{\textsf{Code}(\effectType[\xi]{T})^{\gamma}}}}}$
   \end{minipage}
 
 \vspace{5mm}
@@ -651,8 +653,8 @@ $\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \ga
   \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Continue)]
-    {\stypejudge{v_1}{\compiletimetype{(\continuationType{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{T_1})^{\gamma})}}{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T_2})^{\gamma'})}})}} \\ \stypejudge{v_2}{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{T_1})^{\gamma})}}}
-    {\stypejudge{\continue{v_1}{v_2}}{\effectType{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T_2})^{\gamma'})}}}}$
+    {\stypejudge{v_1}{\compiletimetype{\continuationType{\compiletimetype{\textsf{Code}(\effectType[\xi_1]{S})^{\gamma}}}{\compiletimetype{\textsf{Code}(\effectType[\xi_2]{T})^{\gamma'}}}}} \\ \stypejudge{v_2}{\compiletimetype{\textsf{Code}(\effectType[\xi_1]{S})^{\gamma}}}}
+    {\stypejudge{\continue{v_1}{v_2}}{\effectType{\compiletimetype{\textsf{Code}(\effectType[\xi_2]{T})^{\gamma'}}}}}$
   \end{minipage}
 
 \vspace{5mm}
@@ -660,15 +662,15 @@ $\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \ga
 \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Handle)]
-    {\stypejudge{e}{\effectType{\compiletimetype{(\textsf{Code}(\effectType[\xi]{T_1})^{\gamma})}}} \\ \stypejudge{h}{\compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{T_1})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T_2})^{\gamma})}}})}} \\ \forall \textsf{op} \in \Delta_1 \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
-    {\stypejudge{\handleWith{e}{h}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T_2})^{\gamma})}}}}$
+    {\stypejudge{e}{\effectType{\compiletimetype{\textsf{Code}(\effectType[\xi]{S})^{\gamma}}}} \\ \stypejudge{h}{\compiletimetype{\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{S})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T})^{\gamma})}}}}} \\ \forall \textsf{op} \in \Delta_1 \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
+    {\stypejudge{\handleWith{e}{h}}{\effectType[\Delta_2]{\compiletimetype{\textsf{Code}(\effectType[\xi_2]{T})^{\gamma}}}}}$
   \end{minipage}
 
   \vspace{5mm}
 
 \begin{minipage}[t]{0.5\textwidth}
   \centering
-  $\inferrule[(\compilemode{}$\mid$\quotemode{}-Splice)]{\stypejudge[\Gamma]{e}{(\textsf{Code}(T^0 \, ! \, \xi)^{\gamma})^{-1} \, ! \, \Delta}}{\rcqtypejudge{\gamma}{\splice}{\runtimecomptype{T}{\Delta ; \xi}}}$
+  $\inferrule[(\compilemode{}$\mid$\quotemode{}-Splice)]{\stypejudge[\Gamma]{e}{(\textsf{Code}(T^0 \, ! \, \xi)^{\gamma})^{-1} \, ! \, \Delta}}{\rcqtypejudge{\gamma}{\splice}{\runtimecomptype{T^0}{\Delta ; \xi}}}$
 \end{minipage}%
 \begin{minipage}[t]{0.5\textwidth}
   \centering
@@ -683,7 +685,7 @@ $\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \ga
 \end{minipage}%
 \begin{minipage}[t]{0.5\textwidth}
   \centering
-  $\inferrule[(\splicemode{}-Sub)]{\stypejudge[\Gamma]{e}{(\textsf{Code}(T^0 \, ! \, \xi)^{\gamma})^{-1} \, ! \, \Delta} \\ \Gamma \vDash \gamma \sqsubseteq \gamma'}{\stypejudge[\Gamma]{e}{(\textsf{Code}(T^0 \, ! \, \xi)^{\gamma'})^{-1} \, ! \, \Delta}}$
+  $\inferrule[(\splicemode{}-Sub)]{\stypejudge[\Gamma]{e}{\textsf{Code}(T \, ! \, \xi)^{\gamma} \, ! \, \Delta} \\ \Gamma \vDash \gamma \sqsubseteq \gamma'}{\stypejudge[\Gamma]{e}{\textsf{Code}(T \, ! \, \xi)^{\gamma'} \, ! \, \Delta}}$
 \end{minipage}
 
 \end{center}
@@ -762,15 +764,15 @@ It is now easy to show the fundamental lemma. Once again, because types are stra
 \end{lemma}
 
 Proof of \Cref{lemma:fundamental} is by induction on the source \sourceLang{} typing rules. I focus on an interesting case: the \textsc{\compilemode{}-Lambda} (\textsc{C-Abs}) case, where (handwaving the side-condition on $U$ for clarity) it suffices to show that for some arbitrary $\rho$, $\rho \vDash \Gamma$, 
-\[\bind{x}{\gensym{\erase{T_1^0 (\gamma')}}}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho})}{\return{\Lam{x}{\texttt{body}}}}}\]
-in $\scoped{\effectType{(\functionType[\xi]{T_1^0}{T_2^0})^0} (\gamma)}$. It is clear that this reduces to
-\[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x})}{\return{\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{\texttt{body}}}}}\]
+\[\bind{x}{\gensym{\erase{S^0 (\gamma')}}}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho})}{\return{\Lam{x}{\texttt{body}}}}}\]
+in $\scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}$. It is clear that this reduces to
+\[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x})}{\return{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}}}\]
  By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that the term above is in the logical relation. 
  
- By weakening, and the induction hypothesis, $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}}})$:
+ By weakening, and the induction hypothesis, $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}}})$:
 \begin{enumerate}
-  \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$ reduces to some $\return{n}$, then by the inductive hypothesis it is of AST type and all its free variables are permitted by $\gamma'$. The term $\bind{\texttt{body}}{\return{n}}{\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{\texttt{body}}}$ reduces to $\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{n}$, where $\Var{\alpha}{T_1^{\gamma'}}$ is bound. By the typing rules, of the free variables, $\alpha$ is the only variable tagged with classifier $\gamma'$. So under $\Theta$, we conclude that the free variables of $\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
-  \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{T_1^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T_2^{0}} (\gamma')}$ reduces to $E[\op{n}]$, then because the context $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha}{T_1^{\gamma'}}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from the inductive hypothesis.
+  \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to some $\return{n}$, then by the inductive hypothesis it is of AST type and all its free variables are permitted by $\gamma'$. The term $\bind{\texttt{body}}{\return{n}}{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}$ reduces to $\Lam{\Binder{\alpha}{S^{\gamma'}}}{n}$, where $\Var{\alpha}{S^{\gamma'}}$ is bound. By the typing rules, of the free variables, $\alpha$ is the only variable tagged with classifier $\gamma'$. So under $\Theta$, we conclude that the free variables of $\Lam{\Binder{\alpha}{S^{\gamma'}}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
+  \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to $E[\op{n}]$, then because the context $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from the inductive hypothesis.
 \end{enumerate}
 % \Cref{thm:refined-env-classifiers-correct} is an immediate corollary of \Cref{lemma:fundamental} and \Cref{dfn:well-typed-exp-rec}.
 
@@ -786,19 +788,19 @@ in $\scoped{\effectType{(\functionType[\xi]{T_1^0}{T_2^0})^0} (\gamma)}$. It is 
     n \in \scoped{{T}^{0}(\gamma)} & \triangleq & \cdot \vdash \elaborate{n} \in \elaborate{T^{0} (\gamma)} \text{ and } \Theta \vdash \freevars{n} \subseteq \textsf{permitted}(\gamma) \\\vspace{2mm}
     && \textit{(symmetric for $(\textsf{Code}(T^0)^{\gamma})^{-1}$, $\effectType[\xi]{T^{0}} (\gamma)$, etc) }\\\vspace{2mm}
     n \in \scoped{\underline{{T}^{0}(\gamma)}} & \triangleq & \varToAST{n} \in \scoped{\effectType{T^{0}} (\gamma)} \\ \vspace{2mm}
-    n \in \scoped{(\functionType{{T_1}^{-1}}{{T_2}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{T_1}^{-1}}, n \, n' \in \scoped{\effectType{T_2^{-1}}} \\ \vspace{2mm}
-    n \in \scoped{(\continuationType{{T_1}^{-1}}{{T_2}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{T_1}^{-1}}, \continue{n}{n'} \in \scoped{\effectType{T_2^{-1}}} \\\\ \vspace{2mm}
+    n \in \scoped{(\functionType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, n \, n' \in \scoped{\effectType{T^{-1}}} \\ \vspace{2mm}
+    n \in \scoped{(\continuationType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, \continue{n}{n'} \in \scoped{\effectType{T^{-1}}} \\\\ \vspace{2mm}
     \textbf{Handlers} \\
-    h \in \scoped{(\handlerType{\effectType[\Delta_1]{{T_1}^{-1}}}{\effectType[\Delta_2]{{T_2}^{-1}}})^{-1}} & \triangleq & \text{if } h = \returnHandler{x}{t_{\text{ret}}}\\ \vspace{2mm}
-    && \quad \forall n' \in \scoped{{T_1}^{-1}}, t_{\text{ret}}[n'/x] \in \scoped{\effectType[\Delta_2]{T_2^{-1}}} \\
+    h \in \scoped{(\handlerType{\effectType[\Delta_1]{{S}^{-1}}}{\effectType[\Delta_2]{{T}^{-1}}})^{-1}} & \triangleq & \text{if } h = \returnHandler{x}{t_{\text{ret}}}\\ \vspace{2mm}
+    && \quad \forall n' \in \scoped{{S}^{-1}}, t_{\text{ret}}[n'/x] \in \scoped{\effectType[\Delta_2]{T^{-1}}} \\
     && \text{else } h = h'; \opHandler{x}{k}{t_{\text{op}}}, \textsf{op}: A^{-1} \to B^{-1} \\
-    && \quad h' \in \scoped{(\handlerType{\effectType[\Delta_1]{{T_1}^{-1}}}{\effectType[\Delta_2]{{T_2}^{-1}}})^{-1}} \text{ and}\\ 
-    && \quad \forall n \in \scoped{{A}^{-1}}, n' \in \scoped{\continuationType[\Delta_2]{{B}^{-1}}{T_2^{-1}}}, \\ && \quad t_{\text{op}}[n/x, n'/k] \in \scoped{\effectType[\Delta_2]{T_2^{-1}}}\\\\
+    && \quad h' \in \scoped{(\handlerType{\effectType[\Delta_1]{{S}^{-1}}}{\effectType[\Delta_2]{{T}^{-1}}})^{-1}} \text{ and}\\ 
+    && \quad \forall n \in \scoped{{A}^{-1}}, n' \in \scoped{\continuationType[\Delta_2]{{B}^{-1}}{T^{-1}}}, \\ && \quad t_{\text{op}}[n/x, n'/k] \in \scoped{\effectType[\Delta_2]{T^{-1}}}\\\\
   \end{array}
 $
 
 \textbf{Terms}\\
-{\scriptsize{\textit{In the following, let $\effectType{\tau}$ be shorthand for any of $\effectType{T^{0}} (\gamma)$, $\effectType[\Delta; \xi]{T^{0}} (\gamma)$, $\effectType{(\handlerType{\effectType[\xi_1]{T_1^0}}{\effectType[\xi_2]{T_2^0}})^{0}} (\gamma)$, or $\effectType{T^{-1}}$}}}\\
+{\scriptsize{\textit{In the following, let $\effectType{\tau}$ be shorthand for any of $\effectType{T^{0}} (\gamma)$, $\effectType[\Delta; \xi]{T^{0}} (\gamma)$, $\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^{0}} (\gamma)$, or $\effectType{T^{-1}}$}}}\\
 
 $\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest property on terms $t$ such that 
 \begin{enumerate}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  6 JUN 2025 22:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  6 JUN 2025 23:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1463,10 +1463,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250606220319 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250606234853 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250606220319 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250606234853 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/E5FFBDD06E801C34D8594F1B6FF7F570.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1915,14 +1915,14 @@ Package mdframed Info: mdframed works in twoside mode on input line 23.
 [46
 
 ]
-Package mdframed Info: mdframed works in twoside mode on input line 68.
-Package mdframed Info: mdframed works in twoside mode on input line 91.
+Package mdframed Info: mdframed works in twoside mode on input line 70.
+Package mdframed Info: mdframed works in twoside mode on input line 93.
 
 
 [47]
-Package mdframed Info: Not enough space on this page on input line 99.
+Package mdframed Info: Not enough space on this page on input line 101.
 
-Overfull \hbox (6.51637pt too wide) detected at line 113
+Overfull \hbox (6.51637pt too wide) detected at line 115
 []
  []
 
@@ -1933,89 +1933,84 @@ Overfull \hbox (6.51637pt too wide) detected at line 113
 [49]
 
 [50]
-Package mdframed Info: mdframed works in twoside mode on input line 258.
+Package mdframed Info: mdframed works in twoside mode on input line 260.
 
 
 [51]
 
 [52]
-Overfull \hbox (3.56955pt too wide) in paragraph at lines 354--356
+Overfull \hbox (3.56955pt too wide) in paragraph at lines 356--358
 \OT1/qpl/m/n/12 Since the $[]\OT1/lmr/m/n/12 ([]\OML/lmm/m/it/12 ; []\OT1/lmr/m/n/12 )$ \OT1/qpl/m/n/12 frame is no longer on the stack, $[] []$ would
  []
 
 
 
 [53]
-Overfull \hbox (11.615pt too wide) in paragraph at lines 429--432
+Overfull \hbox (11.615pt too wide) in paragraph at lines 431--434
 \OT1/qpl/m/n/12 In the pre-vi-ous ex-am-ple, the tran-si-tion from $[]\OT1/lmr/m/n/12 ([]\OML/lmm/m/it/12 ; []\OT1/lmr/m/n/12 )$ \OT1/qpl/m/n/12 un-mutes vari-ables. There-
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 441.
+Package mdframed Info: mdframed works in twoside mode on input line 443.
 
 
 [54]
-Package mdframed Info: mdframed works in twoside mode on input line 473.
+Package mdframed Info: mdframed works in twoside mode on input line 475.
 
 
 [55]
-Package mdframed Info: mdframed works in twoside mode on input line 510.
+Package mdframed Info: mdframed works in twoside mode on input line 512.
 
 
 [56]
-Package mdframed Info: Not enough space on this page on input line 517.
+Package mdframed Info: Not enough space on this page on input line 519.
 
-Underfull \hbox (badness 10000) in paragraph at lines 528--529
+Underfull \hbox (badness 10000) in paragraph at lines 530--531
 
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 554.
+Package mdframed Info: mdframed works in twoside mode on input line 556.
 
 
 [57]
-Package mdframed Info: mdframed works in twoside mode on input line 590.
-Package hyperref Info: bookmark level for unknown mdlemma defaults to 0 on input line 590.
+Package mdframed Info: mdframed works in twoside mode on input line 592.
+Package hyperref Info: bookmark level for unknown mdlemma defaults to 0 on input line 592.
 
 
 [58]
 
 [59]
-Package mdframed Info: mdframed works in twoside mode on input line 699.
-Package mdframed Info: mdframed works in twoside mode on input line 724.
+Package mdframed Info: mdframed works in twoside mode on input line 701.
+Package mdframed Info: mdframed works in twoside mode on input line 726.
 
 
 Package mdframed Warning: You got a bad break
 (mdframed)                because the last box will be empty
 (mdframed)                you have to change it manually
 (mdframed)                by changing the text, the space
-(mdframed)                or something else on input line 732.
+(mdframed)                or something else on input line 734.
 
 
 
 [60]
-Package mdframed Info: mdframed works in twoside mode on input line 736.
-Package mdframed Info: mdframed works in twoside mode on input line 746.
-Package mdframed Info: mdframed works in twoside mode on input line 759.
+Package mdframed Info: mdframed works in twoside mode on input line 738.
+Package mdframed Info: mdframed works in twoside mode on input line 748.
+Package mdframed Info: mdframed works in twoside mode on input line 761.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <8> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 759.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 761.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <6> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 759.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 761.
 
 
 LaTeX Font Warning: Font shape `U/stmry/b/n' undefined
-(Font)              using `U/stmry/m/n' instead on input line 759.
+(Font)              using `U/stmry/m/n' instead on input line 761.
 
 
 
 [61]
 LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 787.
+(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 789.
 
-Overfull \hbox (9.19618pt too wide) in paragraph at lines 782--799
-[]$[]$ 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 800--802
+Underfull \hbox (badness 10000) in paragraph at lines 802--804
 
  []
 
@@ -2110,16 +2105,16 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 Here is how much of TeX's memory you used:
  48179 strings out of 469626
  1045572 string characters out of 5471004
- 1686434 words of memory out of 5000000
+ 1687434 words of memory out of 5000000
  73420 multiletter control sequences out of 15000+600000
  899503 words of font info for 227 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  122i,28n,134p,10944b,1528s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary6.pfb>
-Output written on main.pdf (77 pages, 1421115 bytes).
+Output written on main.pdf (77 pages, 1421246 bytes).
 PDF statistics:
- 1488 PDF objects out of 1728 (max. 8388607)
- 1295 compressed objects within 13 object streams
+ 1489 PDF objects out of 1728 (max. 8388607)
+ 1296 compressed objects within 13 object streams
  373 named destinations out of 1000 (max. 500000)
  370 words of extra memory for PDF output out of 10000 (max. 10000000)
 
