@@ -5,7 +5,7 @@ What is MacoCaml-style metaprogramming? This section provides an answer in two s
 
 Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
 
-To illustrate this tension, consider an example from the \texttt{JAX} machine learning library (adapted to \texttt{OCaml}): computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, comprising only polynomials and composition)
+To observe this tension, consider an example from the \texttt{JAX} machine learning library (adapted to \texttt{OCaml}): computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, comprising only polynomials and composition)
 
 \begin{ocaml}
 type diff = Poly of int list 

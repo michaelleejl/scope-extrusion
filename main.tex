@@ -34,6 +34,7 @@
 %TC:fileinclude \import dir,file
 %TC:fileinclude \subimport dir,file
 %TC:ignore
+
 \frontmatter
 {
 \import{}{coverpage}
@@ -62,7 +63,11 @@
 
 \bibliography{library}
 
+%TC:ignore
+\appendix
 
+\import{Appendix}{tests}
+%TC:endignore
 
 
 \end{document}

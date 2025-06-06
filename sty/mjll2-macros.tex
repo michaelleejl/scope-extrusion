@@ -3,7 +3,7 @@
 
 \newcommand{\Nat}[1]{\texttt{Nat}(#1)}
 \newcommand{\Var}[2]{\texttt{Var}(#1_{#2})}
-\newcommand{\Binder}[2]{\texttt{\underline{Var}}(#1_{#2})}
+\newcommand{\Binder}[2]{#1_{#2}}
 
 \newcommand{\Lam}[2]{\texttt{Lam}(#1, #2)}
 \newcommand{\App}[2]{\texttt{App}(#1, #2)}
@@ -23,7 +23,7 @@
 \newcommand{\continue}[2]{\textbf{\texttt{continue}} \, {#1} \, {#2}}
 
 \newcommand{\gensym}[1]{\textbf{\texttt{mkvar}} \, #1}
-\newcommand{\varToAST}[1]{\textbf{\texttt{binderToAST}} \, #1}
+\newcommand{\varToAST}[1]{{\texttt{Var}}({#1})}
 
 \newcommand{\dlet}[2]{\textbf{\texttt{dlet}}({#1}, {#2})}
 \newcommand{\checkfv}[1]{\textbf{\texttt{check}}\, {#1}}
@@ -95,45 +95,7 @@
 %     (a.south east) -- (a.south west);
 % \end{tikzpicture}}%
 % }
-\mdfsetup{%
-topline=false,
-rightline=false,
-bottomline=false,
-linewidth=3pt,
-innerleftmargin=15pt,
-innerrightmargin=0pt,
-skipabove=\baselineskip,
-skipabove=1.2\baselineskip,
-}
 
-% \newtheoremstyle{break}
-%   {\topsep}{\topsep}%
-%   {\itshape}{}%
-%   {\bfseries}{}%
-%   {\newline}{}%
-\theoremstyle{break}
-
-\renewtheorem{mdtheorem}{Theorem}[section]
-\newenvironment{theorem}[2][]%
-   {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdtheorem}[#1]}
-   {\end{mdtheorem}\end{mdframed}\par\vspace{\baselineskip}}
-
-\newtheorem{mdcorollary}{Corollary}[section]
-\newenvironment{corollary}[2][]%
-  {\par\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdcorollary}[#1]}
-  {\end{mdcorollary}\end{mdframed}\par\vspace{\baselineskip}}
-
-\newtheorem{mddefinition}{Definition}[section]
-\newenvironment{definition}[2][]%
-    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mddefinition}[#1]}
-    {\end{mddefinition}\end{mdframed}\par\vspace{\baselineskip}}
-
-
-    \newtheorem{mdlemma}{Lemma}[section]
-\newenvironment{lemma}[2][]%
-    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdlemma}[#1] 
-    }
-    {\end{mdlemma}\end{mdframed}\par\vspace{\baselineskip}}
   % \newenvironment{codeblock}[2][][]{
 %     \begin{tcblisting}[
 %         minted language=ocaml,
@@ -230,6 +192,31 @@ skipabove=1.2\baselineskip,
   minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
   overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
          anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MacoCaml};}
+%   skin=tile,
+ }
+
+
+ \newtcblisting{metaocaml}{
+  common,
+  minted language=ocaml,
+  colback=ocamlBackground,
+  listing engine=minted,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MetaOCaml};}
+%   skin=tile,
+ }
+ \newtcblisting{metaocamllst}{
+  common,
+  minted language=ocaml,
+  colback=ocamlBackground,
+  listing engine=minted,
+  % before={\par\vspace{0\baselineskip}\noindent},
+  after={\par\vspace{0\baselineskip}\noindent},
+  minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=``},
+  overlay={\node[fill=ocamlHighlight,yshift=-9pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){MetaOCaml};}
 %   skin=tile,
  }
 
@@ -358,3 +345,7 @@ borderline south={0.5mm}{0mm}{coreHighlight,line width=1pt},
 \newcommand\colorwave[1][blue]{\bgroup \markoverwith{\lower3.5\p@\hbox{\sixly \textcolor{#1}{\char58}}}\ULon}
 \font\sixly=lasy6 % does not re-load if already loaded, so no memory problem.
 \makeatother
+
+\DeclareFloatingEnvironment[name = {Typing Derivation}]{typederivation}
+\Crefname{typederivation}{Typing Derivation}{Typing Derivations}
+\crefname{typederivation}{typing derivation}{typing derivations}

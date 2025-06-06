@@ -20,7 +20,7 @@ Recall that one definition of scope extrusion relates to the \textit{result} of 
 % \end{quote}
 
 I call this lazy scope extrusion, and define it as a property on \coreLang{} configurations as follows 
-\begin{definition}[Lazy Scope Extrusion]{coreHighlight}\label{def:lazy-scope-extrusion} A \coreLang{} configuration of the form 
+\begin{definition}[Lazy Scope Extrusion]{coreHighlight}\label[definition]{def:lazy-scope-extrusion} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
 exhibits lazy scope extrusion if all of the following hold:
   \begin{enumerate}
@@ -168,7 +168,7 @@ The eager dynamic check also checks at top-level splices, like the lazy dynamic 
  \label{listing:eager-scope-extrusion-check-eg-tls}
 \end{code}
 
-To the best of my knowledge, the eager dynamic check is a faithful model of the MetaOCaml check, as described by \citet{kiselyov-24}. The description was verified by executing translations of \Cref{listing:eager-scope-extrusion-check-eg,listing:eager-scope-extrusion-check-eg-tls,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue} in BER MetaOCaml N153. 
+To the best of my knowledge, the eager dynamic check is a faithful model of the MetaOCaml check, as described by \citet{kiselyov-24}. The description was verified by executing translations of \Cref{listing:eager-scope-extrusion-check-eg,listing:eager-scope-extrusion-check-eg-tls,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue} in BER MetaOCaml N153 (\Cref{section:metaocaml-litmustests}). 
 
 \subsection{Correctness of the Eager Dynamic Check}\label{subsection:eager-dynamic-correctness}
 The eager dynamic check is incorrect: not every case of eager scope extrusion is reported (by transitioning to \textbf{\texttt{err}}). Evaluation may result in eager scope extrusion, but the offending AST $n$ may never be used in an unsafe way. Thus, the eager dynamic check will not report that scope extrusion occurred. 
@@ -207,7 +207,7 @@ Finally, in the most interesting example, the program may recover from scope ext
  \begin{source}
   $\begin{array}{l}
       \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \,\return{\splice[( \, {{\textbf{\texttt{extrude}}(\equote[x])}} \,)]}} \,] \\
-      \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\return{y}}{\continue{k}{w}}}\})
+      \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {{\continue{k}{y}}}\})
     \end{array}$
  \end{source}
  \captionof{listing}{The eager dynamic check will additionally not report cases where the offending AST is used, but only in safe ways. In this case, the continuation restores the context that permits $\Var{x}{\mathbb{N}}$ to be used.}%
@@ -226,7 +226,7 @@ The expressiveness of the eager dynamic check, however, is not without issues. F
  \begin{source}
   $\begin{array}{l}
       \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, {\splice[(\, {{\textbf{\texttt{extrude}}(\equote[x])}} \, )]}}\,] \\
-      \;\;\,\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{w}{\equote[{\splice[y]} + \texttt{0}]}{\continue{k}{w}}}\})
+      \;\;\,\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {{\continue{k}{\equote[{\splice[y]} + \texttt{0}]}}}\})
     \end{array}$
  \end{source}
  \captionof{listing}{A program which will fail the eager dynamic check. The offending AST ($\Var{x}{\mathbb{N}}$) is used to construct a larger AST in a way that appears to be unsafe $\equote[{\splice[y]+\texttt{0}}]$, but is actually not, since the unsafe AST is then only used in a safe way.}%
@@ -321,10 +321,10 @@ To understand the best-effort dynamic check, consider the program in \Cref{listi
     where $\Var{x}{\mathbb{N}}$ is \\declared safe};
   \end{scope}
 
-  \draw[draw=comment, line width = 0.3mm] ($(example.south east) + (-1cm, 0.36cm)$) circle[radius=2mm] node (annote-1) {};
+  \draw[draw=comment, line width = 0.3mm] ($(example.south east) + (-0.6cm, 0.36cm)$) circle[radius=2mm] node (annote-1) {};
 
   \begin{scope}[->,>=stealth']
-  \draw[line width = 0.3mm, dashed, draw=comment] ($(annote-1.north) + (0cm, 0.1cm)$) -- ($(annote-1.north) + (-0.5cm, 1.4cm)$);
+  \draw[line width = 0.3mm, dashed, draw=comment] ($(annote-1.north) + (0cm, 0.1cm)$) -- ($(annote-1.north) + (-2cm, 1.4cm)$);
   \end{scope}
 
   \end{tikzpicture}
@@ -507,7 +507,7 @@ The \sourceLang{} type system is augmented with a \textbf{simplified} version of
 \end{enumerate}
 
 For ease of reasoning, it is helpful to define the notion of an \textbf{extended} source type.
-\begin{definition}[Extended source type]{sourceHighlight}\label{dfn:extended-source-type}
+\begin{definition}[Extended source type]{sourceHighlight}\label[definition]{dfn:extended-source-type}
 An \textbf{extended} source type is either:
   \begin{enumerate}
     \item A level $-1$ type, for example, $(\textsf{Code}(\mathbb{N}^{0})^{\gamma})^{-1}$ or 
@@ -549,9 +549,9 @@ An \textbf{extended} source type is either:
   \label{fig:rec-source-types}
 \end{figure}
 
-Contexts $\Gamma$ must contain the least classifier $\gamma_{\bot}$ (so the empty context is no longer permitted), and the definition of well-typed expression is adapted to reflect this
+Contexts $\Gamma$ must contain the least classifier $\gamma_{\bot}$ (so the empty context is no longer permitted), and the definition of closed well-typed expression is adapted to reflect this
 
-\begin{definition}[Well-typed Expression, Refined Environment Classifiers]{sourceHighlight}\label{dfn:well-typed-exp-rec}
+\begin{definition}[Well-typed closed Expression, Refined Environment Classifiers]{sourceHighlight}\label[definition]{dfn:well-typed-exp-rec}
   $e$ is a well-typed expression if $\gamma_{\bot} \vdash_{\compilemode}^{\gamma_{\bot}} e : T^{0} \, ! \, \emptyset; \emptyset$
 \end{definition}
 
@@ -733,7 +733,7 @@ The logical relation on terms is defined as a least fixed point, following the d
 
 The proof additionally relies on a closure lemma \citep{kuchta-2023}
 
-\begin{lemma}[Closure under Anti-Reduction]{sourceHighlight}\label{lemma:closure-reduction}
+\begin{lemma}[Closure under Anti-Reduction]{sourceHighlight}\label[lemma]{lemma:closure-reduction}
   If $\langle t;E;U \rangle \to^{*} \langle t';E';U' \rangle$ and $E'[t'] \in \scoped{\effectType{\tau}}$ then $E[t] \in \scoped{\effectType{\tau}}$
 \end{lemma}
 % \vspace{-\baselineskip}
@@ -743,7 +743,7 @@ The proof additionally relies on a closure lemma \citep{kuchta-2023}
 
 Finally, the proof relies on a notion of closed substitution $\rho \vDash \Gamma$. Care must be taken with substitution of level-$0$ variables, since these should be in the logical relation for \textsf{Binder}s rather than \textsf{AST}s (note the second clause in \Cref{dfn:closed-substitution}).
 
-\begin{definition}[Closed substitution]{sourceHighlight}\label{dfn:closed-substitution}
+\begin{definition}[Closed substitution]{sourceHighlight}\label[definition]{dfn:closed-substitution}
   Given a context $\Gamma$, and assuming $\Theta = \pi_{\gamma}(\Gamma)$, the set of closed substitutions $\rho \vDash \Gamma$ are defined inductively as follows:
   \begin{enumerate}
     \item $() \vDash \gamma_{\bot}$
@@ -756,7 +756,7 @@ Finally, the proof relies on a notion of closed substitution $\rho \vDash \Gamma
 
 It is now easy to show the fundamental lemma. Once again, because types are stratified, and typing judgements are indexed by a mode, the fundamental lemma decomposes into many sub-lemmas. One such is stated in \Cref{lemma:fundamental}.
 
-\begin{lemma}[Fundamental Lemma {[\compilemode{}, {$\effectType[\Delta; \xi]{T^0}$}]} of the \textsf{Scoped} Logical Relation]{sourceHighlight} \label{lemma:fundamental}
+\begin{lemma}[Fundamental Lemma {[\compilemode{}, {$\effectType[\Delta; \xi]{T^0}$}]} of the \textsf{Scoped} Logical Relation]{sourceHighlight} \label[lemma]{lemma:fundamental}
   If $\Gamma \vdash_{\compilemode{}}^{\gamma} e: T^{0} \, ! \, \Delta ; \xi$ then for $\Theta = \pi_\gamma({\Gamma})$, and for all $\rho$ such that $\rho \vDash \Gamma$, 
   \[\elaborate{e}_{\compilemode{}}(\rho) \in \scoped[\Theta]{T^{0} \, ! \, \Delta ; \xi (\gamma)}\]
 \end{lemma}

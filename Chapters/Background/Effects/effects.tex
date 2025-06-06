@@ -256,7 +256,7 @@ The semantics of \efflang{} are made precise via an operational semantics (\Cref
 
 % For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. 
 
-To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, consider the evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
+To illustrate the operation of \textsc{Eff-Op} and \textsc{Eff-Cnt}, I consider the evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context. Let $h$ be the handler body 
 \[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
 \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\end{array}\]
 Several applications of \textsc{Cng-Psh} produces the configuration
@@ -335,14 +335,14 @@ such that $\textbf{\texttt{op}} \in \textsf{dom}(h)$ ($h$ handles $\textbf{\text
 
   $\begin{array}{@{}lllr}
     \text{Effects row} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
-    \text{Value type} & T ::= \mathbb{N} & \\
-                              &\quad\quad\,\,\, \mid \functionType{T_1}{T_2} & \text{functions}\\
-                              &\quad\quad\,\,\, \mid \continuationType{T_1}{T_2} & \text{continuations}\\ \\
+    \text{Value type} & S, T ::= \mathbb{N} & \\
+                              &\quad\quad\quad\,\mid \functionType{S}{T} & \text{functions}\\
+                              &\quad\quad\quad\,\mid \continuationType{S}{T} & \text{continuations}\\ \\
     \text{Computation type} & \effectType{T} \\
-    \text{Handler type} & \handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}
+    \text{Handler type} & \handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}
   \end{array}$
   \end{eff-desc}
-  \caption{\efflang{} types. Notice that, just as terms are divided into values, computations, and handlers, types are divided into value types ($T$), computation types ($\effectType{T}$), and handler types ($\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}$)}
+  \caption{\efflang{} types. Notice that, just as terms are divided into values, computations, and handlers, types are divided into value types ($S, T$), computation types ($\effectType{T}$), and handler types ($\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$)}
   \label{fig:efflang-type-syntax}
 \end{figure}
 
@@ -359,9 +359,9 @@ Functions are values, and are applied to other values, but produce computations 
 \[
 \function{x:\mathbb{N}}{\; \textbf{\texttt{print}}(x); \return{x}}
 \]
-is a value that accepts a value of type $\mathbb{N}$ and returns a computation of type $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$. Functions thus have suspended effects, which I write $\functionType{T_1}{T_2}$. In this case, the function has type $\functionType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}{\mathbb{N}}$. For technical reasons, continuations and functions need to be distinguished, but in most cases they may be treated equivalently. 
+is a value that accepts a value of type $\mathbb{N}$ and returns a computation of type $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$. Functions thus have suspended effects, which I write $\functionType{S}{T}$. In this case, the function has type $\functionType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}{\mathbb{N}}$. For technical reasons, continuations and functions need to be distinguished, but in most cases they may be treated equivalently. 
 
-Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects row. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}$. For example, a handler of the form  
+Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects row. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$. For example, a handler of the form  
 \[ \begin{array}{ll}
   \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
     \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
@@ -383,14 +383,22 @@ Thus, one may write programs which do not terminate, by ``tying the knot'', for 
 \end{eff}
 Note that for the program to be well-typed, the program fragment $\lambda \_. \textbf{\texttt{recursive}} ()$ must refer to \textbf{\texttt{recursive}} in its type: $\functionType[\{ \texttt{recursive} \}]{1}{1}$. Thus, the declared type of the \textbf{\texttt{recursive}} effect must be recursive. 
 
-The typing rules for terms are collated in \Cref{fig:efflang-type-system}. The key rules are \textsc{Return}, \textsc{Do}, \textsc{Op}, and the handler rules (\textsc{Ret-Handler}, \textsc{Op-Handler}).
+The typing rules for terms are collated in \Cref{fig:efflang-type-system}. Since types are stratified, so are typing judgements:
+\[
+\begin{array}{ll}
+  \text{Value Typing Judgment} & \Gamma \vdash v: T  \\
+  \text{Computation Typing Judgment} & \Gamma \vdash c: \effectType{T}  \\
+  \text{Handler Typing Judgement} & \Gamma \vdash h: \handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}} 
+\end{array}
+\]
+The key rules are \textsc{Return}, \textsc{Do}, \textsc{Op}, and the handler rules (\textsc{Ret-Handler}, \textsc{Op-Handler}).
 
 \begin{figure}
   \begin{eff-desc}
     {\large\textbf{Typing Rules}}\\
-    
-    {
-    \centering 
+    \vspace{2mm}\\
+    \fbox{$\Gamma \vdash v : T$}\\
+    \begin{center}
     \begin{minipage}[t]{0.2\textwidth}
       \centering
       $\inferrule[(Nat)]
@@ -406,29 +414,33 @@ The typing rules for terms are collated in \Cref{fig:efflang-type-system}. The k
   \begin{minipage}[t]{0.3\textwidth}
     \centering
   $\inferrule[(Lambda)]
-    {\type[, x:T_1]{c}{\effectType{T_2}}}
-    {\type{\function{x}{c}}{\functionType{T_1}{T_2}}}$
+    {\type[, x:S]{c}{\effectType{T}}}
+    {\type{\function{x}{c}}{\functionType{S}{T}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.3\textwidth}
   \centering
 $\inferrule[(Continuation)]
-  {\type[, x:T_1]{c}{\effectType{T_2}}}
-  {\type{\continuation{x}{c}}{\continuationType{T_1}{T_2}}}$
-\end{minipage}
-  
+  {\type[, x:S]{c}{\effectType{T}}}
+  {\type{\continuation{x}{c}}{\continuationType{S}{T}}}$
+\end{minipage}  
   \vspace{5mm}
+
+\end{center}
   
+  \fbox{$\Gamma \vdash c : \effectType{T}$}\\
+  \begin{center}
+    
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(App)]
-    {\type{v_1}{T_1 \oset{\text{\tiny{$\Delta$}}}\longrightarrow T_2} \\ \type{v_2}{T_1}}
-    {\type{v_1 \, v_2}{\effectType{T_2}}}$
+    {\type{v_1}{S \oset{\text{\tiny{$\Delta$}}}\longrightarrow T} \\ \type{v_2}{S}}
+    {\type{v_1 \, v_2}{\effectType{T}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Continue)]
-    {\type{v_1}{\continuationType{T_1}{T_2}} \\ \type{v_2}{T_1}}
-    {\type{\continue{v_1}{v_2}}{\effectType{T_2}}}$
+    {\type{v_1}{\continuationType{S}{T}} \\ \type{v_2}{S}}
+    {\type{\continue{v_1}{v_2}}{\effectType{T}}}$
   \end{minipage}
 
   \vspace{5mm}
@@ -442,59 +454,64 @@ $\inferrule[(Continuation)]
   \begin{minipage}[t]{0.55\textwidth}
     \centering
   $\inferrule[(Do)]
-    {\type{c_1}{\effectType[\Delta_1]{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
-    {\type{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
+    {\type{c_1}{\effectType[\Delta_1]{S}} \\ \type[, x: S]{c_2}{\effectType{T}}}
+    {\type{\bind{x}{c_1}{c_2}}{\effectType{T}}}$
   \end{minipage}
   
   \vspace{5mm}
   % \begin{minipage}[t]{0.5\textwidth}
   %   \centering
   % $\inferrule[(Do)]
-  %   {\type{c_1}{\effectType[\Delta_1]{T_1}} \\ \type[, x: T_1]{c_2}{\effectType{T_2}}}
-  %   {\type{\bind{x}{c_1}{c_2}}{\effectType{T_2}}}$
+  %   {\type{c_1}{\effectType[\Delta_1]{S}} \\ \type[, x: S]{c_2}{\effectType{T}}}
+  %   {\type{\bind{x}{c_1}{c_2}}{\effectType{T}}}$
   % \end{minipage}%
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Op)]
-    {  \\\\ \type{v}{T_1} \\ \texttt{op}: T_1 \rightarrow T_2 \in \Sigma \\ \texttt{op} \in \Delta}
-    {\type{\op{v}}{\effectType{T_2}}}$
+    {  \\\\ \type{v}{S} \\ \texttt{op}: S \rightarrow T \in \Sigma \\ \texttt{op} \in \Delta}
+    {\type{\op{v}}{\effectType{T}}}$
   \end{minipage}%
   \begin{minipage}[t]{0.5\textwidth}
     \centering
   $\inferrule[(Handle)]
-    {\type{c}{\effectType[\Delta_1]{T_1}} \\ \type{h}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
-    {\type{\handleWith{c}{h}}{\effectType[\Delta_2]{T_2}}}$
+    {\type{c}{\effectType[\Delta_1]{S}} \\ \type{h}{\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}} \\ \forall \textsf{op} \in \Delta \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
+    {\type{\handleWith{c}{h}}{\effectType[\Delta_2]{T}}}$
   \end{minipage}\\
 
   \vspace{5mm}
 
+\end{center}
+
+\fbox{$\Gamma \vdash h: \handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$}\\
+\begin{center}
+
   \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(Ret-Handler)]
-    {\type[, x:T_1]{c}{\effectType[\Delta_2]{T_2}}}
-    {\type{\returnHandler{x}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}$
+    {\type[, x:S]{c}{\effectType[\Delta_2]{T}}}
+    {\type{\returnHandler{x}{c}}{\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}}}$
   \end{minipage}
   
   \vspace{5mm}
   % \[\inferrule [(Lam)]
-  % {\type[, x:T_1]{t}{\sEffect{T_2}}}
-  % {\type{\function{x}{t}}{\sFunctionType{T_1}{T_2}}}\]
+  % {\type[, x:S]{t}{\sEffect{T}}}
+  % {\type{\function{x}{t}}{\sFunctionType{S}{T}}}\]
   
   % \[\inferrule[(App)]
-  % {\type{n_1}{\sFunctionType{T_1}{T_2}} \\
+  % {\type{n_1}{\sFunctionType{S}{T}} \\
   \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(Op-Handler)]
     { \texttt{op}: A \to B \in \Sigma \\\\ 
-      \type{h}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}\\
-      \type[, x:A, k:{\continuationType[\Delta_2]{B}{T_2}} ]{c}{\effectType[\Delta_2]{T_2}}\\
+      \type{h}{\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}}\\
+      \type[, x:A, k:{\continuationType[\Delta_2]{B}{T}} ]{c}{\effectType[\Delta_2]{T}}\\
       \Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
              \opHandler{x'}{k'}{c'} \notin h}
-    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}$
+    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}}}$
   \end{minipage}
-    }
+\end{center}
   \end{eff-desc}
-  \caption{Typing rules for \efflang{} terms}
+  \caption{Typing rules for \efflang{} terms. Typing judgements are stratified into value, computation, and handler judgments.}
   \label{fig:efflang-type-system}
   \end{figure}
 
@@ -515,11 +532,11 @@ Following the approach by \citet{biernacki-2017}, handlers are typed clause-by-c
 with type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This involves applying the \textsc{Op-Handler} rule, which is transcribed below. Preconditions are numbered for reference. 
 \[\inferrule[(Op-Handler)]
     { (1)\,  \texttt{op}: A \to B \in \Sigma \\\\
-     (2)\, \type{h}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}\\
-      (3)\,\type[, x:A, k:{\continuationType[\Delta_2]{B}{T_2}} ]{c}{\effectType[\Delta_2]{T_2}}\\
+     (2)\, \type{h}{\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}}\\
+      (3)\,\type[, x:A, k:{\continuationType[\Delta_2]{B}{T}} ]{c}{\effectType[\Delta_2]{T}}\\
       (4)\,\Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
       (5)\, \opHandler{x'}{k'}{c'} \notin h}
-    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{T_1}}{\effectType[\Delta_2]{T_2}}}}\]
+    {\type{h ; \opHandler{x}{k}{c}}{\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}}}\]
 It is therefore sufficient to show that:
 \begin{enumerate}
   \item[(1)] $\textbf{\texttt{print}}: \mathbb{N} \to 1 \in \Sigma$, which is true by assumption
@@ -529,8 +546,8 @@ It is therefore sufficient to show that:
   \item[(5)] There are no other handlers for \textbf{\texttt{print}} in $h$.
 \end{enumerate}
 
-Finally, I define a notion of well-typed computation. To show that a computation is well-typed, it is sufficient to prove that all of its effects will be handled.  
-\begin{definition}[Well-typed computation]{effHighlight}
+Finally, I define a notion of well-typed closed computation. To show that a closed computation is well-typed, it is sufficient to type it with an empty effects row.  
+\begin{definition}[Well-typed closed computation]{effHighlight}
   $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
 \end{definition}
 

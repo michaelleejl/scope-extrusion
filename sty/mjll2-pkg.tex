@@ -3,6 +3,7 @@
 \usepackage{latexsym}
 % \usepackage{catchfile}
 \usepackage[export]{adjustbox}
+\usepackage{newfloat}
 
 % MATH
 \usepackage{amsmath, amssymb, amsfonts, mathtools}
@@ -30,9 +31,6 @@
 % CITATIONS
 \usepackage[square, numbers]{natbib}
 \usepackage{booktabs}
-
-% CROSS-REFERENCES
-\usepackage[nameinlink]{cleveref}
 
 % FIGURES
 
@@ -88,6 +86,50 @@
 \tikzset{snake it/.style={decorate, decoration=snake}}
 
 \usepackage{import}
+
+% CROSS-REFERENCES
+\usepackage[nameinlink]{cleveref}
+
+\mdfsetup{%
+topline=false,
+rightline=false,
+bottomline=false,
+linewidth=3pt,
+innerleftmargin=15pt,
+innerrightmargin=0pt,
+skipabove=\baselineskip,
+skipabove=1.2\baselineskip,
+}
+
+% \newtheoremstyle{break}
+%   {\topsep}{\topsep}%
+%   {\itshape}{}%
+%   {\bfseries}{}%
+%   {\newline}{}%
+\theoremstyle{break}
+
+\renewtheorem{mdtheorem}{Theorem}[section]
+\newenvironment{theorem}[2][]%
+   {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdtheorem}[#1]}
+   {\end{mdtheorem}\end{mdframed}\par\vspace{\baselineskip}}
+
+\newtheorem{mdcorollary}[mdtheorem]{Corollary}
+\newenvironment{corollary}[2][]%
+  {\par\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdcorollary}[#1]}
+  {\end{mdcorollary}\end{mdframed}\par\vspace{\baselineskip}}
+
+\newtheorem{mddefinition}[mdtheorem]{Definition}
+\newenvironment{definition}[2][]%
+    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mddefinition}[#1]}
+    {\end{mddefinition}\end{mdframed}\par\vspace{\baselineskip}}
+
+
+    \newtheorem{mdlemma}[mdtheorem]{Lemma}
+\newenvironment{lemma}[2][]%
+    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdlemma}[#1] 
+    }
+    {\end{mdlemma}\end{mdframed}\par\vspace{\baselineskip}}
+
 % % \usepackage{pgfplots, pgfplotstable}
 
 % \usepackage{minted}

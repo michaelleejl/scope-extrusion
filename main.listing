@@ -1,1 +1,3 @@
-type _ Effect.t += Op: A -> B
+run (match .<fun x -> .~(perform (Extrude .<x>.) ) >.
+             with u -> .<0>.
+                | effect (Extrude y), k -> continue k .< .~y + 1>. )

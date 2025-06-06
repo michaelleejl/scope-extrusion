@@ -1,4 +1,4 @@
-\begin{thebibliography}{37}
+\begin{thebibliography}{40}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -39,6 +39,12 @@ C.~Calcagno, E.~Moggi, and W.~Taha.
 \newblock Closed types as a simple approach to safe imperative multi-stage programming.
 \newblock In U.~Montanari, J.~D.~P. Rolim, and E.~Welzl, editors, \emph{Automata, Languages and Programming}, pages 25--36, Berlin, Heidelberg, 2000. Springer Berlin Heidelberg.
 \newblock ISBN 978-3-540-45022-1.
+
+\bibitem[Calcagno et~al.(2003)Calcagno, Taha, Huang, and Leroy]{calcagno-2003}
+C.~Calcagno, W.~Taha, L.~Huang, and X.~Leroy.
+\newblock Implementing multi-stage languages using {AST}s, gensym, and reflection.
+\newblock In F.~Pfenning and Y.~Smaragdakis, editors, \emph{Generative Programming and Component Engineering}, pages 57--76, Berlin, Heidelberg, 2003. Springer Berlin Heidelberg.
+\newblock ISBN 978-3-540-39815-8.
 
 \bibitem[Chiang et~al.(2024)Chiang, Yallop, White, and Xie]{chiang-2024}
 T.-J. Chiang, J.~Yallop, L.~White, and N.~Xie.
@@ -142,6 +148,11 @@ J.~L. Lawall and O.~Danvy.
 \newblock \doi{10.1145/182590.182483}.
 \newblock URL \url{https://doi.org/10.1145/182590.182483}.
 
+\bibitem[Li(2024)]{li-2024}
+K.~W. Li.
+\newblock Toward mechanized proof of macocaml with staging inference.
+\newblock Mphil thesis, University of Cambridge, 2024.
+
 \bibitem[Phipps-Costin et~al.(2023)Phipps-Costin, Rossberg, Guha, Leijen, Hillerstr\"{o}m, Sivaramakrishnan, Pretnar, and Lindley]{phipps-costin-2023}
 L.~Phipps-Costin, A.~Rossberg, A.~Guha, D.~Leijen, D.~Hillerstr\"{o}m, K.~Sivaramakrishnan, M.~Pretnar, and S.~Lindley.
 \newblock Continuing {WebAssembly} with effect handlers.
@@ -227,6 +238,11 @@ J.~Vandebon, J.~G.~F. Coutinho, W.~Luk, and E.~Nurvitadhi.
 \newblock Enhancing high-level synthesis using a meta-programming approach.
 \newblock \emph{{IEEE} Transactions on Computers}, 70\penalty0 (12):\penalty0 2043--2055, 2021.
 \newblock \doi{10.1109/TC.2021.3096429}.
+
+\bibitem[Walid(1999)]{taha-1999}
+T.~Walid.
+\newblock Multi-stage programming: Its theory and applications.
+\newblock Technical report, 1999.
 
 \bibitem[Wickham(2019)]{wickham-2019}
 H.~Wickham.
