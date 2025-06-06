@@ -426,8 +426,8 @@ Where $[-]$ separates the evaluation context (outside) and the term (inside). At
 
 However, altering the semantics in such a manner means that any transition could potentially have a side effect: unmuting variables. To keep the semantics standard, and to more closely model the implementation of the check, I associate the act of unmuting with \textbf{\texttt{dlet}} and \textbf{\texttt{tls}}. A transition from \textbf{\texttt{dlet}} conditionally unmutes variables: 
 \[\begin{array}{@{}ll}
-  \langle \dlet{\Binder{\alpha}{T}}{\return{n}}; E; U; M; I \rangle \to \langle \return{n}; E; U; \emptyset; \top\rangle & \text{if} \; \textsf{len}(E) \leq I\\
-  \langle \dlet{\Binder{\alpha}{T}}{\return{n}}; E; U; M; I \rangle \to \langle \return{n}; E; U; M; I \rangle & \text{if} \; \textsf{len}(E) > I
+  \langle \dlet{\Binder{\alpha}{R}}{\return{n}}; E; U; M; I \rangle \to \langle \return{n}; E; U; \emptyset; \top\rangle & \text{if} \; \textsf{len}(E) \leq I\\
+  \langle \dlet{\Binder{\alpha}{R}}{\return{n}}; E; U; M; I \rangle \to \langle \return{n}; E; U; M; I \rangle & \text{if} \; \textsf{len}(E) > I
 \end{array}\] 
 In the previous example, the transition from $\dlet{\Binder{z}{\mathbb{N}}}{\return{n}}$ unmutes variables. Therefore, $\Var{x}{\mathbb{N}}$ is still muted when the \texttt{App} constructor is checked, but unmuted when we check the constructor of the outer lambda. 
 This is the side-effect/side-condition in the \textsc{Sec-Dlt} rule (\Cref{fig:corelang-opsem}).
@@ -813,7 +813,7 @@ $\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest p
   \end{enumerate}
   % \item $t = E[t']$, $E[t']$ not stuck, and for all $U$, there exists $t'', E', U'$ such that $\langle t';E;U \rangle \to \langle t'';E';U' \rangle$ 
 \end{enumerate}
-Where, in this context, consistent with $t$ means that for all $\Var{\alpha}{T}$ or $\Binder{\alpha}{T} \in t$, $\alpha \in U$. This side condition ensures that we use \textbf{\texttt{mkvar}} correctly.
+Where, in this context, consistent with $t$ means that for all $\Var{\alpha}{R}$ or $\Binder{\alpha}{R} \in t$, $\alpha \in U$. This side condition ensures that we use \textbf{\texttt{mkvar}} correctly.
 \end{source-desc}
 \caption{The definition of the \textsf{Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}, where the well-foundedness of the definition is additionally justified.}
 \label{fig:logical-relation-defn}

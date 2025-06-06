@@ -712,7 +712,7 @@ The semantics of \coreLang{} are made precise via an operational semantics. Many
 \\
 \secRule{Tls} & \transition{\coreConfiguration{\tls{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{\emptyset}}{\textcolor{coreHighlight}{\top}}}\\\vspace{1mm}
 \\
-  \secRule{Dlt} & \transition{\coreConfiguration{\dlet{\Binder{\alpha}{T}}{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{M'}}{\textcolor{coreHighlight}{I'}}}\\
+  \secRule{Dlt} & \transition{\coreConfiguration{\dlet{\Binder{\alpha}{R}}{\return{n}}}{E}{U}{M}{I}}{\coreConfiguration{\return{n}}{E}{U}{\textcolor{coreHighlight}{M'}}{\textcolor{coreHighlight}{I'}}}\\
    &&&\text{\textcolor{coreHighlight}{(if $\textsf{len}(E) > I$ then $M' = M, I' = I$}}\\
    &&&\text{\textcolor{coreHighlight}{else $M' = \emptyset, I' = \top$)}}\\
    \effectRule{Op} & \transition{\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I}}\coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{\textcolor{coreHighlight}{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}}\\
@@ -734,7 +734,7 @@ At a high level, $t$ and $E$ are terms and evaluation contexts respectively. $U$
 \subsubsection{AST Rule}
 The \textsc{Ast-Gen} rule describes the behaviour of \textbf{\texttt{mkvar}}: $\gensym{R}$ produces a formal parameter of type $R$ and some name $\alpha$. Recall that names should be \textbf{fresh}: that is, multiple calls to \textbf{\texttt{mkvar}} should always return variables with different names. This involves remembering names that have been previously generated, which are collected in $U$. To ensure determinacy of the semantics, names are chosen \textit{deterministically}.
 
-% The other primitive, \textbf{\texttt{binderToAST}}, turns binders $\Binder{\alpha}{T}$ into usages of the binder $\Var{\alpha}{T}$ (\textsc{Ast-Use}). 
+% The other primitive, \textbf{\texttt{binderToAST}}, turns binders $\Binder{\alpha}{R}$ into usages of the binder $\Var{\alpha}{R}$ (\textsc{Ast-Use}). 
 
 \subsubsection{Scope Extrusion Checking Rules}
 The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return}}, which can catch occurrences of scope extrusion. For some arbitrary normal form $n$ of AST type, either:
@@ -907,7 +907,7 @@ The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implement
   \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that are passed the free variables of $n$\\ 
   $\checkm{n}$ is similar, except there are also \texttt{Mute} and \texttt{Unmute} effects
   
-  \item $\dlet{\Binder{\alpha}{T}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{T}$ from the set of free variables, and either:
+  \item $\dlet{\Binder{\alpha}{R}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{R}$ from the set of free variables, and either:
   \begin{enumerate}
     \item Resumes the continuation, if the set of free variables is now empty (all free variables declared safe)
     \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are declared safe. Following a successful such check, the continuation may be resumed.
