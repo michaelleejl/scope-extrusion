@@ -20,8 +20,8 @@
 \contentsline {mddefinition}{{Definition}{4.4.{1}}{Extended source type}}{57}{mdtheorem.4.4.1}%
 \contentsline {mddefinition}{{Definition}{4.4.{2}}{Well-typed closed Expression, Refined Environment Classifiers}}{57}{mdtheorem.4.4.2}%
 \contentsline {mdlemma}{{Lemma}{4.4.{3}}{Weakening for Level 0 Values}}{58}{mdtheorem.4.4.3}%
-\contentsline {mdtheorem}{{Theorem}{4.4.{4}}{Correctness of Refined Environment Classifiers}}{60}{mdtheorem.4.4.4}%
-\contentsline {mddefinition}{{Definition}{4.4.{5}}{\textsf {Scoped}-Induction}}{60}{mdtheorem.4.4.5}%
+\contentsline {mdtheorem}{{Theorem}{4.4.{4}}{Correctness of Refined Environment Classifiers}}{59}{mdtheorem.4.4.4}%
+\contentsline {mddefinition}{{Definition}{4.4.{5}}{\textsf {Scoped}-Induction}}{59}{mdtheorem.4.4.5}%
 \contentsline {mdlemma}{{Lemma}{4.4.{6}}{Closure under Anti-Reduction}}{61}{mdtheorem.4.4.6}%
 \contentsline {mddefinition}{{Definition}{4.4.{7}}{Closed substitution}}{61}{mdtheorem.4.4.7}%
 \contentsline {mdlemma}{{Lemma}{4.4.{8}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{61}{mdtheorem.4.4.8}%

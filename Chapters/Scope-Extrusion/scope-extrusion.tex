@@ -417,12 +417,12 @@ If the stack was never captured by the handling of an effect (for example, no op
 During reduction, when the length of the stack is less than, or equals to, $I$, there must not be any remaining references to any continuations $k$, and thus $I$ may be reset to $\top$, and all muted variables may be unmuted. In the previous example, the program eventually reduces to 
 \[\begin{array}{l}
   \textbf{\texttt{check}}_M(\textbf{\texttt{dlet}}(\Binder{z}{\mathbb{N}}, \textbf{\texttt{do}} \; b \leftarrow \, \\ 
-  \quad (\textbf{\texttt{do}} \; f \leftarrow \textcolor{red}{[}\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \Nat{\texttt{0}})}}\textcolor{red}{]} \\ 
+  \quad (\textbf{\texttt{do}} \; f \leftarrow \hl{[}\; \return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \Nat{\texttt{0}})}}\; \hl{]} \\ 
   \, \quad \textbf{\texttt{in}} \; \textbf{\texttt{do}} \; {a}\leftarrow {\return{\texttt{Nat}(\texttt{1})}}\\
   \, \quad \textbf{\texttt{in}} \, {\checkm{\texttt{App}(f, a)}})\; \\
   \textbf{\texttt{in}} \; \return{\Lam{\Var{z}{\mathbb{N}}}{b}})) 
 \end{array}\]
-Where $[-]$ separates the evaluation context (outside) and the term (inside). At this point, since the length of the stack is less than or equals to $I$, it is safe to unmute all muted variables. When there are no muted variables, $\textbf{\texttt{check}}_M$ and \textbf{\texttt{check}} have the same behaviour.
+Where $\hl{[}-\hl{]}$ separates the evaluation context (outside) and the term (inside). At this point, since the length of the stack is less than or equals to $I$, it is safe to unmute all muted variables. When there are no muted variables, $\textbf{\texttt{check}}_M$ and \textbf{\texttt{check}} have the same behaviour.
 
 However, altering the semantics in such a manner means that any transition could potentially have a side effect: unmuting variables. To keep the semantics standard, and to more closely model the implementation of the check, I associate the act of unmuting with \textbf{\texttt{dlet}} and \textbf{\texttt{tls}}. A transition from \textbf{\texttt{dlet}} conditionally unmutes variables: 
 \[\begin{array}{@{}ll}
@@ -541,13 +541,13 @@ An \textbf{extended} source type is either:
     % \mathbb{N}^{-1} & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     % && \quad\quad\quad \mid {(\functionType{S^{-1}}{T^{-1}})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
     % && \quad\quad\quad \mid {(\continuationType{S^{-1}}{T^{-1}})}^{-1} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
-    \ldots \mid {({\textsf{Code}({T^{0} \, ! \, \xi})}^{\textbf{\textcolor{red}{$\gamma$}}})}^{-1} \\
+    \ldots \mid {({\textsf{Code}({T^{0} \, ! \, \xi})}^{\textbf{\hl{$\gamma$}}})}^{-1} \\
     % \vspace{0.8mm}
     % & \text{Computations} & T^{-1} \, ! \, \Delta \\\vspace{0.8mm}
     % & \text{Handlers} & \handlerType{S^{-1} \, ! \, \Delta}{T^{-1} \, ! \, \Delta'}
   \end{array}$
   \end{source-desc}
-  \caption{Extending \sourceLang{} with refined environment classifiers. The only change is that \textsf{Code} types are now annotated with an environment classifier $\gamma$, highlighted in \textbf{\textcolor{red}{red}}.}
+  \caption{Extending \sourceLang{} with refined environment classifiers. The only change is that \textsf{Code} types are now annotated with an environment classifier $\gamma$, \textbf{\hl{highlighted}}.}
   \label{fig:rec-source-types}
 \end{figure}
 

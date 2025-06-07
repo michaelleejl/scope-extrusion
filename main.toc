@@ -49,11 +49,13 @@
 \contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Best-Effort Dynamic Check}{55}{subsection.4.3.2}%
 \contentsline {subsection}{\numberline {4.3.3}Efficiency of the Best-Effort Dynamic Check}{56}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{56}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{60}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{59}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{62}{subsection.4.4.2}%
 \contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{62}{section.4.5}%
 \contentsline {chapter}{\numberline {5}Conclusion}{65}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Limitations and Future Work}{65}{section.5.1}%
-\contentsline {chapter}{\numberline {A}Litmus Tests}{70}{appendix.A}%
-\contentsline {section}{\numberline {A.1}MetaOCaml}{70}{section.A.1}%
+\contentsline {chapter}{\numberline {A}Auxiliary Definitions}{70}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Erase}{70}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Litmus Tests}{71}{appendix.B}%
+\contentsline {section}{\numberline {B.1}MetaOCaml}{71}{section.B.1}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
