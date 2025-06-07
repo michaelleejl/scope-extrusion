@@ -1,3 +1,5 @@
+\newcommand{\scoped}[2][\Theta]{\textsf{Scoped}_{{#1}, {#2}}}
+
 \chapter{Scope Extrusion}\label{chapter:scope-extrusion}
 This chapter uses \calculusName{} to formulate precise definitions of scope extrusion, and additionally evaluates four scope extrusion checks: 
 \begin{enumerate}
@@ -703,6 +705,49 @@ If $\gamma_\bot \vdash ^{\gamma_\bot}_{\compilemode{}} e: T^0 \, ! \, \emptyset 
 
 The proof of \Cref{thm:refined-env-classifiers-correct} is via a Tait-style logical relation. A logical relation is useful to show that typing guarantees are maintained by elaboration \citep{benton-09}.
 
+\begin{figure}
+\begin{source-desc}
+  {\large\textbf{The $\scoped{T}$ Logical Relation}}
+  \vspace{5mm}
+
+  $
+  \begin{array}{@{}lllr}
+    \textbf{Normal Forms} \\\vspace{2mm}
+    n \in \scoped{\mathbb{N}^{-1}} & \triangleq & n \in \mathbb{N} \\ 
+    n \in \scoped{{T}^{0}(\gamma)} & \triangleq & \cdot \vdash \elaborate{n} \in \elaborate{T^{0} (\gamma)} \text{ and } \Theta \vdash \freevars{n} \subseteq \textsf{permitted}(\gamma) \\\vspace{2mm}
+    && \textit{(symmetric for $(\textsf{Code}(T^0)^{\gamma})^{-1}$, $\effectType[\xi]{T^{0}} (\gamma)$, etc) }\\\vspace{2mm}
+    n \in \scoped{\underline{{T}^{0}(\gamma)}} & \triangleq & \varToAST{n} \in \scoped{\effectType{T^{0}} (\gamma)} \\ \vspace{2mm}
+    n \in \scoped{(\functionType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, n \, n' \in \scoped{\effectType{T^{-1}}} \\ \vspace{2mm}
+    n \in \scoped{(\continuationType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, \continue{n}{n'} \in \scoped{\effectType{T^{-1}}} \\\\ \vspace{2mm}
+    \textbf{Handlers} \\
+    h \in \scoped{(\handlerType{\effectType[\Delta_1]{{S}^{-1}}}{\effectType[\Delta_2]{{T}^{-1}}})^{-1}} & \triangleq & \text{if } h = \returnHandler{x}{t_{\text{ret}}}\\ \vspace{2mm}
+    && \quad \forall n' \in \scoped{{S}^{-1}}, t_{\text{ret}}[n'/x] \in \scoped{\effectType[\Delta_2]{T^{-1}}} \\
+    && \text{else } h = h'; \opHandler{x}{k}{t_{\text{op}}}, \textsf{op}: A^{-1} \to B^{-1} \\
+    && \quad h' \in \scoped{(\handlerType{\effectType[\Delta_1]{{S}^{-1}}}{\effectType[\Delta_2]{{T}^{-1}}})^{-1}} \text{ and}\\ 
+    && \quad \forall n \in \scoped{{A}^{-1}}, n' \in \scoped{\continuationType[\Delta_2]{{B}^{-1}}{T^{-1}}}, \\ && \quad t_{\text{op}}[n/x, n'/k] \in \scoped{\effectType[\Delta_2]{T^{-1}}}\\\\
+  \end{array}
+$
+
+\textbf{Terms}\\
+{\scriptsize{\textit{In the following, let $\effectType{\tau}$ be shorthand for any of $\effectType{T^{0}} (\gamma)$, $\effectType[\Delta; \xi]{T^{0}} (\gamma)$, $\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^{0}} (\gamma)$, or $\effectType{T^{-1}}$}}}\\
+
+$\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest property on terms $t$ such that 
+\begin{enumerate}
+  \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \return{n}; [-]; U' \rangle$, such that $U'$ consistent with $n$, and $n \in \scoped{\tau}$ 
+  \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \op{n}; E; U' \rangle \not\to$, $U'$ consistent with $E[\op{n}]$, and 
+  \begin{enumerate}
+    \item $\textsf{op}: A^{-1} \to B^{-1}$,
+    \item $n \in \scoped{A^{-1}}$, and 
+    \item for all $n' \in \scoped{B^{-1}}$, $E[n'] \in \scoped{\effectType{\tau}}$
+  \end{enumerate}
+  % \item $t = E[t']$, $E[t']$ not stuck, and for all $U$, there exists $t'', E', U'$ such that $\langle t';E;U \rangle \to \langle t'';E';U' \rangle$ 
+\end{enumerate}
+Where, in this context, consistent with $t$ means that for all $\Var{\alpha}{R}$ or $\Binder{\alpha}{R} \in t$, $\alpha \in U$. This side condition ensures that we use \textbf{\texttt{mkvar}} correctly.
+\end{source-desc}
+\caption{The definition of the \textsf{Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}, where the well-foundedness of the definition is additionally justified.}
+\label{fig:logical-relation-defn}
+\end{figure}
+
 The definition of the logical relation, \textsf{Scoped}, is presented in \Cref{fig:logical-relation-defn}. \textsf{Scoped} is defined on core language (\coreLang{}) terms, and is indexed by:
 \begin{enumerate}
   \item A context of proof-theoretic terms $\Theta$. Given a context of proof theoretic terms and variables $\Gamma$, one can project out only the proof theoretic terms $\pi_{\gamma}({\Gamma})$. For example, given 
@@ -718,8 +763,6 @@ The two important definitions are the logical relation on the $T^{0} (\gamma)$ v
 For a normal form $n$ to be in the relation of the $T^{0} (\gamma)$ type, $n$ must be an AST of the right type \textbf{and} the free variables of $n$ need to be permitted by $\gamma$ (permissibility was previously defined in \Cref{subsubsection:refined-environment-classifiers}, \Cpageref{subsubsection:refined-environment-classifiers}). Recall that the definition of permissibility assumes some known partial order on classifiers, e.g. $\gamma' \sqsubseteq \gamma$. The partial order is carried by the index $\Theta$. 
 
 The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}, where the well-foundedness of the definition is additionally justified. Defining the logical relation as a fixed point gives rise to the principle of \textsf{Scoped}-Induction:
-
-\newcommand{\scoped}[2][\Theta]{\textsf{Scoped}_{{#1}, {#2}}}
 
 \begin{definition}[\textsf{Scoped}-Induction]{sourceHighlight}
   For some property $\Phi$ on closed terms of type $\elaborate{\effectType{\tau}}$, if
@@ -773,49 +816,6 @@ in $\scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}$. It is clea
   \item If $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to $E[\op{n}]$, then because the context $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from the inductive hypothesis.
 \end{enumerate}
 % \Cref{thm:refined-env-classifiers-correct} is an immediate corollary of \Cref{lemma:fundamental} and \Cref{dfn:well-typed-exp-rec}.
-
-\begin{figure}
-\begin{source-desc}
-  {\large\textbf{The $\scoped{T}$ Logical Relation}}
-  \vspace{5mm}
-
-  $
-  \begin{array}{@{}lllr}
-    \textbf{Normal Forms} \\\vspace{2mm}
-    n \in \scoped{\mathbb{N}^{-1}} & \triangleq & n \in \mathbb{N} \\ 
-    n \in \scoped{{T}^{0}(\gamma)} & \triangleq & \cdot \vdash \elaborate{n} \in \elaborate{T^{0} (\gamma)} \text{ and } \Theta \vdash \freevars{n} \subseteq \textsf{permitted}(\gamma) \\\vspace{2mm}
-    && \textit{(symmetric for $(\textsf{Code}(T^0)^{\gamma})^{-1}$, $\effectType[\xi]{T^{0}} (\gamma)$, etc) }\\\vspace{2mm}
-    n \in \scoped{\underline{{T}^{0}(\gamma)}} & \triangleq & \varToAST{n} \in \scoped{\effectType{T^{0}} (\gamma)} \\ \vspace{2mm}
-    n \in \scoped{(\functionType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, n \, n' \in \scoped{\effectType{T^{-1}}} \\ \vspace{2mm}
-    n \in \scoped{(\continuationType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, \continue{n}{n'} \in \scoped{\effectType{T^{-1}}} \\\\ \vspace{2mm}
-    \textbf{Handlers} \\
-    h \in \scoped{(\handlerType{\effectType[\Delta_1]{{S}^{-1}}}{\effectType[\Delta_2]{{T}^{-1}}})^{-1}} & \triangleq & \text{if } h = \returnHandler{x}{t_{\text{ret}}}\\ \vspace{2mm}
-    && \quad \forall n' \in \scoped{{S}^{-1}}, t_{\text{ret}}[n'/x] \in \scoped{\effectType[\Delta_2]{T^{-1}}} \\
-    && \text{else } h = h'; \opHandler{x}{k}{t_{\text{op}}}, \textsf{op}: A^{-1} \to B^{-1} \\
-    && \quad h' \in \scoped{(\handlerType{\effectType[\Delta_1]{{S}^{-1}}}{\effectType[\Delta_2]{{T}^{-1}}})^{-1}} \text{ and}\\ 
-    && \quad \forall n \in \scoped{{A}^{-1}}, n' \in \scoped{\continuationType[\Delta_2]{{B}^{-1}}{T^{-1}}}, \\ && \quad t_{\text{op}}[n/x, n'/k] \in \scoped{\effectType[\Delta_2]{T^{-1}}}\\\\
-  \end{array}
-$
-
-\textbf{Terms}\\
-{\scriptsize{\textit{In the following, let $\effectType{\tau}$ be shorthand for any of $\effectType{T^{0}} (\gamma)$, $\effectType[\Delta; \xi]{T^{0}} (\gamma)$, $\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^{0}} (\gamma)$, or $\effectType{T^{-1}}$}}}\\
-
-$\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest property on terms $t$ such that 
-\begin{enumerate}
-  \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \return{n}; [-]; U' \rangle$, such that $U'$ consistent with $n$, and $n \in \scoped{\tau}$ 
-  \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \op{n}; E; U' \rangle \not\to$, $U'$ consistent with $E[\op{n}]$, and 
-  \begin{enumerate}
-    \item $\textsf{op}: A^{-1} \to B^{-1}$,
-    \item $n \in \scoped{A^{-1}}$, and 
-    \item for all $n' \in \scoped{B^{-1}}$, $E[n'] \in \scoped{\effectType{\tau}}$
-  \end{enumerate}
-  % \item $t = E[t']$, $E[t']$ not stuck, and for all $U$, there exists $t'', E', U'$ such that $\langle t';E;U \rangle \to \langle t'';E';U' \rangle$ 
-\end{enumerate}
-Where, in this context, consistent with $t$ means that for all $\Var{\alpha}{R}$ or $\Binder{\alpha}{R} \in t$, $\alpha \in U$. This side condition ensures that we use \textbf{\texttt{mkvar}} correctly.
-\end{source-desc}
-\caption{The definition of the \textsf{Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}, where the well-foundedness of the definition is additionally justified.}
-\label{fig:logical-relation-defn}
-\end{figure}
 
 I conjecture that this proof may be extended to support non-termination by incorporating the techniques of step-indexing and biorthogonality, as demonstrated by \citet{biernacki-2017}.
 

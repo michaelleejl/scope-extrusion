@@ -50,7 +50,7 @@
 \contentsline {subsection}{\numberline {4.3.3}Efficiency of the Best-Effort Dynamic Check}{55}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{55}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{58}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{61}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{62}{subsection.4.4.2}%
 \contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{63}{section.4.5}%
 \contentsline {chapter}{\numberline {5}Conclusion}{64}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Limitations and Future Work}{64}{section.5.1}%
