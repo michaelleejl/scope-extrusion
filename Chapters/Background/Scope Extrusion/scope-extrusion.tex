@@ -1,22 +1,14 @@
 \section{Scope Extrusion}\label{section:scope-extrusion-technical}
 Scope extrusion is an undesirable consequence of unrestricted interaction between effect handlers and metaprogramming. To illustrate scope extrusion, I first extend \efflang{} (\Cref{subsection:effect-handler-calculus}) with quotes $\equote$ and splices $\splice$. 
 
-Scope extrusion is observed when programs are evaluated. To evaluate quotes and splices, I rely on the conceptual model introduced in \Cref{section:metaprogramming-technical}, where quotes convert terms to ASTs, and splices under quotes suspend this conversion (made precise in \Cref{section:elaboration}). Additionally, in this section, I assume all computation implicitly takes place under a top-level splice. For example, extending \efflang{} with \textbf{\texttt{skip}}, the following program:
-\begin{eff}
-$\equote[{\lambda x: \mathbb{N}. \; \splice[{(\textbf{\texttt{skip}}; \equote[x])}] + \texttt{0}}]$
-\end{eff}
-is desugared into:
-\begin{eff}
-$\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\textbf{\texttt{skip}};\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}$
-\end{eff}
-and thus evaluates to:
-\begin{eff}
-$\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}$
-\end{eff}
+Scope extrusion is observed when programs are evaluated. To evaluate quotes and splices, I rely on the conceptual model introduced in \Cref{section:metaprogramming-technical}, where quotes convert terms to ASTs, and splices under quotes suspend this conversion (\Cref{section:elaboration} makes this precise). Additionally, in this section, I assume all computation implicitly takes place under a top-level splice. For example, extending \efflang{} with \textbf{\texttt{skip}}, the following program:
+\[\equote[{\lambda x: \mathbb{N}. \; \splice[{(\textbf{\texttt{skip}}; \equote[x])}] + \texttt{0}}]\]
+elaborates into
+\[\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\textbf{\texttt{skip}};\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}\]
+and thus evaluates to 
+\[\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}\]
 % constructs the AST of $\lambda x: \mathbb{N}. \, x + \texttt{0}$
 % constructors $\Var{x}{T}$, $\texttt{Nat}(m)$, $\texttt{Lam}$, and $\texttt{Plus}$.
-
-\Cref{listing:efflang-scope-extrusion} illustrates the problem of scope extrusion. The program performs an effect, \textbf{\texttt{extrude}}, with type $\mathbb{N} \,  \texttt{expr} \to \mathbb{N} \, \texttt{expr}$. The handler for \textbf{\texttt{extrude}} discards the continuation, returning the value it was given: $\Var{x}{\mathbb{N}}$. The program evaluates to $\Var{x}{\mathbb{N}}$, and the generated AST is ill-scoped. The result of evaluation demonstrates scope extrusion.
 
 \begin{code}
   \begin{efflst}
@@ -24,8 +16,7 @@ $\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt
       \textbf{\texttt{handle}} \\
       \quad \equote[\, {\lambda x:\mathbb{N}.\; \splice[\, {(\textbf{\texttt{extrude}}(\, \equote[x] \, ))}\, ]} \, ] \\
       \textbf{\texttt{with}} \\
-      \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{\equote[\texttt{0}]}}; \\
-      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{\equote[\texttt{0}]}}; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
     \end{array}$
   
     \vspace{2mm} 
@@ -39,14 +30,17 @@ $\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt
   \label{listing:efflang-scope-extrusion}
   \end{code}
 
+  \Cref{listing:efflang-scope-extrusion} illustrates the problem of scope extrusion. The program performs an effect, \textbf{\texttt{extrude}}, with type $\mathbb{N} \,  \texttt{expr} \to \mathbb{N} \, \texttt{expr}$. The handler for \textbf{\texttt{extrude}} discards the continuation, returning the value it was given: $\Var{x}{\mathbb{N}}$. The program evaluates to $\Var{x}{\mathbb{N}}$, and the generated AST is ill-scoped. The result of evaluation demonstrates scope extrusion.
+
+It is difficult to give a precise definition to scope extrusion, because there are multiple competing definitions \citep{kiselyov-14,kiselyov-16}, and many are given informally. For example, is scope extrusion a property of the \textit{result} of evaluation \citep{kiselyov-16}, as in \Cref{listing:efflang-scope-extrusion}, or is it a property of \textit{intermediate} configurations \citep{kiselyov-14}? It is possible to build ASTs with extruded variables that are bound at some future point in the execution. The program in \Cref{listing:efflang-maybe-scope-extrusion} produces, during its evaluation, the intermediate AST $\Var{x}{\mathbb{N}}$, which is not well scoped. However, the result of evaluation, $\Lam{\Binder{x}{\mathbb{N}}}{\Var{x}{\mathbb{N}}}$, is well scoped. \Cref{listing:efflang-maybe-scope-extrusion} exhibits scope extrusion under \textit{some}, but not \textit{all}, definitions of scope extrusion.
+
   \begin{code}
   \begin{efflst}
     $\begin{array}{l}
       \textbf{\texttt{handle}} \\
       \quad \equote[\, {\lambda x:\mathbb{N}.\; \splice[\, {(\textbf{\texttt{extrude}}(\, \equote[x] \, ))}\, ]} \, ] \\
       \textbf{\texttt{with}} \\
-      \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \\
-      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\continue{k}{y}}\}\\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\continue{k}{y}}\}\\
     \end{array}$
 
     \vspace{2mm} 
@@ -59,8 +53,6 @@ $\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt
 \captionof{listing}{A \efflang{} program where the result of the program is well-scoped, but not all intermediate results are well-scoped.}%
 \label{listing:efflang-maybe-scope-extrusion}
 \end{code}
-
-It is difficult to give a precise definition to scope extrusion, because there are multiple competing definitions \citep{kiselyov-14,kiselyov-16}, and many are given informally. For example, is scope extrusion a property of the \textit{result} of evaluation \citep{kiselyov-16}, as in \Cref{listing:efflang-scope-extrusion}, or is it a property of \textit{intermediate} configurations \citep{kiselyov-14}? It is possible to build ASTs with extruded variables that are bound at some future point in the execution. The program in \Cref{listing:efflang-maybe-scope-extrusion} produces, during its evaluation, the intermediate AST $\Var{x}{\mathbb{N}}$, which is not well scoped. However, the result of evaluation, $\Lam{\Var{x}{\mathbb{N}}}{\Var{x}{\mathbb{N}}}$, is well scoped. Whether \Cref{listing:efflang-maybe-scope-extrusion} exhibits scope extrusion depends on the definition of scope extrusion.
 
 Nevertheless, both definitions agree on the example in \Cref{listing:efflang-scope-extrusion}. Making precise the competing definitions of scope extrusion is a contribution of this dissertation. 
 
@@ -76,8 +68,7 @@ Scope extrusion of the kind in \Cref{listing:efflang-scope-extrusion} may seem t
       \textbf{\texttt{do}} \,  x \leftarrow \textbf{\texttt{handle}} \\
       \quad \quad \quad \quad \,\, \equote[\, {\lambda x:\mathbb{N}.\; \splice[\, {(\textbf{\texttt{extrude}}(\, \equote[x] \, ))}\, ]} \, ] \\
       \quad \quad \quad \,\, \textbf{\texttt{with}} \\
-      \quad \quad \quad \quad \, \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{\equote[\texttt{0}]}}; \\
-      \quad \quad \quad \quad \, \, \; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
+      \quad \quad \quad \quad \, \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{\equote[\texttt{0}]}}; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
       \textbf{\texttt{in}} \text{ some very long program}; \return{x}
     \end{array}$
 
@@ -101,7 +92,7 @@ Motivated by the problems with the lazy dynamic check, the \textbf{eager dynamic
 
 However, the eager dynamic check is not without issues. First, even by its own definition, the eager dynamic check does not catch all occurrences of scope extrusion: while the program in \Cref{listing:efflang-maybe-scope-extrusion} is theoretically scope extrusion, scope extrusion is not actually reported by the check. 
 
-Second, the check is unpredictable. The problem relates to \textit{when} the checking is performed, which will be made precise in \Cref{section:eager-dynamic-check-formal}. To illustrate the problem, consider \Cref{listing:efflang-maybe-not-scope-extrusion}, a slight variation of \Cref{listing:efflang-maybe-scope-extrusion} in which the program fragment $y$ in $\continue{k}{y}$ is replaced with $\continue{k}{\equote[{\splice[y] + \texttt{0}}]}$. In contrast to \Cref{listing:efflang-maybe-scope-extrusion}, \Cref{listing:efflang-maybe-not-scope-extrusion} will fail the check: scope extrusion will be reported. 
+Second, the check is unpredictable. The problem relates to \textit{when} the checking is performed, which \Cref{section:eager-dynamic-check-formal} makes precise. To illustrate the problem, consider \Cref{listing:efflang-maybe-not-scope-extrusion}, a slight variation of \Cref{listing:efflang-maybe-scope-extrusion} in which the program fragment $y$ in $\continue{k}{y}$ is replaced with $\continue{k}{\equote[{\splice[y] + \texttt{0}}]}$. In contrast to \Cref{listing:efflang-maybe-scope-extrusion}, \Cref{listing:efflang-maybe-not-scope-extrusion} will fail the check: scope extrusion will be reported. 
 
 \begin{code}
   \begin{efflst}
@@ -109,8 +100,7 @@ Second, the check is unpredictable. The problem relates to \textit{when} the che
       \textbf{\texttt{handle}} \\
       \quad \equote[\, {\lambda x:\mathbb{N}.\; \splice[\, {(\textbf{\texttt{extrude}}(\, \equote[x] \, ))}\, ]} \, ] \\
       \textbf{\texttt{with}} \\
-      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \\
-      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { {\continue{k}{\equote[{\splice[y]+\texttt{0}}]}}} \}\\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{u}; \, \textbf{\texttt{extrude}}(y, k) \mapsto { {\continue{k}{\equote[{\splice[y]+\texttt{0}}]}}} \}\\
     \end{array}$
 
     \vspace{2mm} 
@@ -136,7 +126,7 @@ Refined environment classifiers are a static check that uses the type system to 
 
 First, ignoring the ability to manipulate ASTs, how do refined environment classifiers ensure \textit{created} ASTs are well-scoped? What does it mean to be well-scoped? Consider \Cref{fig:refined-enviroment-classifiers-basic}, the AST of the following term: 
 \[(\lambda f. \lambda x. f x) (\lambda y. y)\]
-Informally, a scope represents a set of variables that are permitted to be free. In the example, there are four scopes: one where no variables are free, one where only $f$ is free, one where $f$ and $x$ are free, and one where $y$ is free. An AST is well-scoped \textit{at a scope} if it is well-typed, and where the only free variables are those permitted by the scope. 
+Informally, a scope represents a set of variables that are permitted to be free. In the example, there are four scopes: one where no variables are free, one where only $f$ is free, one where $f$ and $x$ are free, and one where $y$ is free. An AST is well-scoped \textit{at a scope} if it is well-typed, and where all free variables are permitted by the scope. 
 
 Refined environment classifiers make this notion precise. Each classifier represents a scope. The AST has four scopes, corresponding to four classifiers:
 \begin{itemize}
@@ -213,19 +203,19 @@ An AST $n$ is well-scoped at type $T$ and scope $\gamma$ if it is well-typed at 
 \[\Gamma \vdash^{\gamma} n : T \]
 % \[ \textsf{permitted}(\texttt{Var}(\alpha)) \triangleq \{ \gamma \mid \textsf{classifier}(\texttt{Var}(\alpha)) \sqsubseteq \gamma \} \]
 
-Ensuring that created ASTs are well-scoped is the responsibility of the type system. The key rule is the \textsc{C-Abs} rule, which, \textbf{assuming we know that we are creating an AST}, has roughly the following shape\footnote{I revisit this assumption in \Cref{subsection:sourcelang-type-system}}: 
+Ensuring that created ASTs are well-scoped is the responsibility of the type system. The key rule is the \textsc{C-Abs} rule, which, \textbf{assuming we know that we are creating an AST} (this assumption is revisited in \Cref{subsection:sourcelang-type-system}), has roughly the following shape: 
 \[\inferrule[(C-Abs)]{\, \gamma \in \Gamma \\ (2) \, \gamma' \; \text{fresh} \\ (3) \, \Gamma, \gamma', \gamma \sqsubseteq \gamma', {(x: T_1)}^{\gamma'} \vdash^{\gamma'} c: T_2}{(1) \, \Gamma \vdash^{\gamma} \lambda x. c: T_1 \longrightarrow T_2}\]
 The premises and conclusions have been numbered for reference, and many  technical details have been simplified for clarity. \Cref{fig:cref-typing-rule} visually depicts the typing rule. 
 
 \begin{enumerate}
-  \item[(1)] The goal of the typing rule is to ensure the function is well-scoped at type $T_1 \to T_2$ and scope $\gamma$.
-  \item[(2)] Since the function introduces a new variable binder, $\texttt{Var}(x)$, one has to create a new scope. This is achieved by picking a fresh classifier $\gamma'$.
+  \item[(1)] The goal of the typing rule is to ensure $\lambda x.c$ is well-scoped at type $T_1 \to T_2$ and scope $\gamma$.
+  \item[(2)] Since the function introduces a new variable binder, $\lambda x.\_$, one has to create a new scope. This is achieved by picking a fresh classifier $\gamma'$.
   \item[(3)] We record the following:
   \begin{enumerate}
     \item[(a)] Since $\gamma'$ is created within the scope of $\gamma$, $\gamma \sqsubseteq \gamma'$.
-    \item[(b)] $\textsf{classifier}(\Lam{\texttt{Var}(x)}{-}) = \gamma'$ (as a shorthand ${(x: T_1)}^{\gamma'}$)
+    \item[(b)] $\textsf{classifier}(\Lam{x}{-}) = \gamma'$ (as a shorthand ${(x: T_1)}^{\gamma'}$)
   \end{enumerate}
-  With this added knowledge, we ensure that the function body is well-scoped at type $T_2$ and $\gamma'$.
+  With this added knowledge, we ensure that the body $c$ is well-scoped at type $T_2$ and $\gamma'$.
 \end{enumerate}
 
 \begin{figure}
@@ -260,7 +250,7 @@ The premises and conclusions have been numbered for reference, and many  technic
   \label{fig:cref-typing-rule}
   \end{figure}
 
-The above example focused on \textbf{creating} ASTs, and had no compile-time executable code. Refined environment classifiers additionally ensure well-scopedness is maintained while \textbf{manipulating} ASTs. Consider \Cref{fig:classifier-ast-scope-extrusion}, the ``AST'' of the scope extrusion example in \Cref{listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable programs that \textit{evaluate} to AST nodes. Thus, both programs and AST nodes reside within scopes. We have two classifiers: $\gamma_{\bot}$ and $\gamma_{\alpha}$, with $\textsf{classifier}(\texttt{Var}(\alpha)) = \gamma_{\alpha}$.
+The above example focused on \textbf{creating} ASTs, and had no compile-time executable code. Refined environment classifiers additionally ensure well-scopedness is maintained while \textbf{manipulating} ASTs. Consider \Cref{fig:classifier-ast-scope-extrusion}, the ``AST'' of the scope extrusion example in \Cref{listing:efflang-scope-extrusion}. In place of AST nodes, we may now have compile-time executable programs that \textit{evaluate} to AST nodes. Thus, both programs and AST nodes reside within scopes. We have two classifiers: $\gamma_{\bot}$ and $\gamma_{\alpha}$, with $\textsf{classifier}(\lambda \alpha. \_) = \gamma_{\alpha}$.
 
 \begin{figure}
 \centering
@@ -296,26 +286,23 @@ The above example focused on \textbf{creating} ASTs, and had no compile-time exe
   
 \end{tikzpicture}
 
-\caption{The ``AST'' of the scope extrusion example, \Cref{listing:efflang-scope-extrusion}. Notice that in place of AST nodes, we may now have compile-time executable programs that \textit{evaluate} to AST nodes.}%
+\caption{The ``AST'' of the scope extrusion example, \Cref{listing:efflang-scope-extrusion}. In place of AST nodes, we may now have compile-time executable programs that \textit{evaluate} to AST nodes.}%
 \label{fig:classifier-ast-scope-extrusion}
 \end{figure}
 
-Key to the prevention of scope extrusion is the typing of handlers and operations, like \textbf{\texttt{extrude}}, that manipulate ASTs. Since these rules are complex, I describe them informally. The handle expression
-\[\handleWith{e}{h}\]
-is in scope $\gamma_{\bot}$. Therefore, for each operation handled by $h$ (e.g.\ \textbf{\texttt{extrude}}), the argument to the operation must either not be an AST, or be an AST that is well-scoped at some $\gamma \sqsubseteq \gamma_{\bot}$. 
+Key to the prevention of scope extrusion is the typing of handlers and operations, like \textbf{\texttt{extrude}}, that manipulate ASTs. As these rules are complex, I describe them informally. The handle expression $\handleWith{e}{h}$ is in scope $\gamma_{\bot}$. Therefore, for each operation handled by $h$ (e.g.\ \textbf{\texttt{extrude}}), the argument to the operation must either not be an AST, or be an AST that is well-scoped at some $\gamma \sqsubseteq \gamma_{\bot}$. 
 % We 
 % \[\textbf{\texttt{extrude}}: \texttt{AST}(\mathbb{N})^{\gamma_{\bot}} \to 1^{\gamma_{\bot}}\]
 However, $\texttt{Var}(\alpha)$ is typed at $\gamma_{\alpha}$, and clearly, $\gamma_{\alpha} \not\sqsubseteq \gamma_{\bot}$. There is thus no way to type the scope extrusion example in \Cref{listing:efflang-scope-extrusion}.
 
-Note that the analysis was independent of the \textit{body} of the handler. Therefore, the examples in \Cref{listing:efflang-maybe-not-scope-extrusion,listing:efflang-maybe-scope-extrusion} are \textit{also} not well-typed. Perhaps somewhat surprisingly, so too is \Cref{listing:efflang-no-scope-extrusion} (which would pass both the eager and lazy dynamic checks). Refined environment classifiers statically prevent variables ($\texttt{Var}(\alpha)$) from becoming \textit{available} in program fragments ($\texttt{\textbf{op}}(y, k) \mapsto \ldots$) where, \textit{if misused}, \textit{might} result in scope extrusion. This is, of course, an over-approximation that rejects benign programs such as \Cref{listing:efflang-no-scope-extrusion}.
+This analysis was independent of the \textit{body} of the handler. Therefore, the examples in \Cref{listing:efflang-maybe-not-scope-extrusion,listing:efflang-maybe-scope-extrusion} are \textit{also} not well-typed. Perhaps somewhat surprisingly, so too is \Cref{listing:efflang-no-scope-extrusion} (which would pass both the eager and lazy dynamic checks). Refined environment classifiers statically prevent variables ($\texttt{Var}(\alpha)$) from becoming \textit{available} in program fragments ($\texttt{\textbf{op}}(y, k) \mapsto \ldots$) where, \textit{if misused}, \textit{might} result in scope extrusion. This is, of course, an over-approximation that rejects benign programs such as \Cref{listing:efflang-no-scope-extrusion}.
 
 \begin{code}
   \begin{efflst}
     $\begin{array}{l}
       \textbf{\texttt{handle}} \\
       \quad \equote[\, {\lambda x:\mathbb{N}.\; \splice[\, {(\textbf{\texttt{extrude}}(\, \equote[x] \, ))}\, ]} \, ]  \\
-      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{\equote[{1}]}; \\
-      \quad \; \, \textbf{\texttt{extrude}}(y, k) \mapsto { \return{\equote[\texttt{0}]}} \}\\
+      \quad \{ \textbf{\texttt{return}}(u) \mapsto \return{\equote[{\texttt{1}}]};  \, \textbf{\texttt{extrude}}(y, k) \mapsto { \return{\equote[\texttt{0}]}} \}\\
     \end{array}$
 
     \vspace{2mm} 
@@ -329,4 +316,4 @@ Note that the analysis was independent of the \textit{body} of the handler. Ther
 \label{listing:efflang-no-scope-extrusion}
 \end{code}
 
-\Cref{listing:efflang-no-scope-extrusion} thus illustrates one of the key drawbacks of refined environment classifiers: the check is too stringent, and restricts expressiveness. 
+Refined environment classifiers are thus very stringent, and restrict expressiveness. 

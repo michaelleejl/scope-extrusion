@@ -43,7 +43,7 @@ $(memcpy <<source>> <<target>> <<n>>)
 \end{macocaml}
 Importantly, the \texttt{memcpy} macro is executed by the compiler, guaranteeing that the branches will be eliminated. This process of using metaprogramming to select the most performant \texttt{memcpy} on any given system is used in practice, for instance, by the \texttt{xine} media player \citep{huceke-memcpy}.
 
-To support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These suspended programs are best thought of as abstract syntax trees. The following code constructs the program $(\lambda x. x) 1$.
+To support metaprogramming, languages have to provide the ability to build programs \textit{to be run later}. These suspended programs are best thought of as abstract syntax trees (ASTs). The following code constructs the program $(\lambda x. x) 1$.
 \begin{ocaml}
 if (architecture == AArch64) then 
   let build_app (f: (int -> int) expr) (v: int expr) = App(f, v) in
@@ -58,7 +58,7 @@ else
 
 Metaprogramming is known to interact unexpectedly with effects. This interaction can be extremely desirable, for example, allowing programmers to manually perform loop-invariant code-motion \citep{kiselyov-14} without making major modifications to their existing code \citep{lawall-94}. 
 
-Unfortunately, the interaction can also be undesirable. One problem is \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally generates code with unbound variables. In the following program, effects and metaprogramming combine to extrude \mintinline{ocaml}{Var(x)} beyond its scope. The program stores \mintinline{ocaml}{Var(x)} in a heap cell (\mintinline{ocaml}{l}), and subsequently retrieves it outside its scope. The program thus evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
+Unfortunately, this interaction can also be undesirable. One problem is \textit{scope extrusion} \citep{kiselyov-14}. Scope extrusion occurs when the programmer accidentally generates code with unbound variables. In the following program, effects and metaprogramming combine to extrude \mintinline{ocaml}{Var(x)} beyond its scope. The program stores \mintinline{ocaml}{Var(x)} in a heap cell (\mintinline{ocaml}{l}), and subsequently retrieves it outside its scope. The program evaluates to \mintinline{ocaml}{Var(x)}, which is unbound.
 
 \begin{ocaml}
 let l: int expr ref = new(Int(1)) in 
@@ -66,13 +66,13 @@ let id_ast : (int -> int) expr = Lam(Var(x), l := Var(x); Int(1)) in
 !l
 \end{ocaml} 
 
-The aforementioned example illustrated how the state effect could cause scope extrusion. The choice of effect is arbitrary. Scope extrusion could be caused by many other effects, like resumable exceptions.
+This example illustrates how the state effect could cause scope extrusion. The choice of effect is arbitrary. Scope extrusion could be caused by many other effects, like resumable exceptions.
 
 To parameterise over the specific effect, I turn to effect handlers. Effect handlers, which have recently been added to \texttt{OCaml} \citep{sivaramakrishnan-21}, are a powerful language construct that can simulate many effects (state, I/O, greenthreading) \citep{pretnar-15}. It is thus strategic, and timely, to study scope extrusion in the context of effect handlers. 
 
 The problem of scope extrusion has been widely studied, resulting in multitudinous mechanisms for managing the interaction between metaprogramming and effects. Some solutions adapt the type system (Refined Environment Classifiers \citep{kiselyov-16,isoda-24}, Closed Types \citep{calcagno-00}), others insert dynamic checks into the generated code \citep{kiselyov-14}. However, there are two issues.
 
-First, I am not studying scope extrusion abstractly. The MacoCaml \citep{xie-2022} project aims to extend the \texttt{OCaml} programming language, which has effect handlers, with compile-time metaprogramming. However, until now, the MacoCaml project has had no clear policy on how metaprogramming and effect handlers should interact. In this setting, the options become more limited. Type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurs, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
+First, I am not studying scope extrusion abstractly. The MacoCaml \citep{xie-2022} project aims to extend the \texttt{OCaml} programming language, which has effect handlers, with compile-time metaprogramming. However, until now, the MacoCaml project has had no clear policy on how metaprogramming and effect handlers should interact. The context adds constraints: type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurs, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
 
 Second, and more importantly, I lacked a way to evaluate solutions fairly and holistically. My evaluation criterion is three-pronged: correctness, efficiency, and expressiveness. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its own definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
 

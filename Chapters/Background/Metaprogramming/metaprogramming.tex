@@ -1,11 +1,11 @@
 \section{Metaprogramming}\label{section:metaprogramming-technical}
-What is MacoCaml-style metaprogramming? This section provides an answer in two steps. \Cref{subsection:metaprogramming-motivation} motivates metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable. \Cref{subsection:metaprogramming-design} considers the design space of metaprogramming, highlighting decisions made by the MacoCaml designers.
+What is MacoCaml-style metaprogramming? \Cref{subsection:metaprogramming-motivation} first motivates metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable. Following this, \Cref{subsection:metaprogramming-design} considers the design space of metaprogramming, highlighting decisions made by the MacoCaml designers.
 
 \subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
 
-Metaprogramming helps programmers write fast and maintainable code. How does one write fast and maintainable code? Programmer skill is insufficient, because maintainability and efficiency are in constant tension. 
+Metaprogramming helps programmers write fast and maintainable code. Maintainability and efficiency are in constant tension; Resolving this tension may require more than programmer skill. 
 
-To observe this tension, consider an example from the \texttt{JAX} machine learning library (adapted to \texttt{OCaml}): computing the gradient of a differentiable function as part of backpropagation over a neural network. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, comprising only polynomials and composition)
+To observe this tension, consider an example from the \texttt{JAX} machine learning library (adapted to \texttt{OCaml}): computing the gradient of a differentiable function. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, comprising only polynomials and composition)
 
 \begin{ocaml}
 type diff = Poly of int list 
@@ -55,7 +55,7 @@ let rec grad_main (f: diff) (x: int) =
 % \end{ocaml}
 % may not be the most efficient implementation. Performing a \mintinline{ocaml}{match} on every recursive call might result in expensive branches. If \mintinline{ocaml}{x} is a vector, and the weights of a Poly are vectors, then \mintinline{ocaml}{grad_main} could hide opportunities for cache prefetching.
 
-If the function to be differentiated (\mintinline{ocaml}{f}) is known in advance, for example, \mintinline{ocaml}{f} $= 2(x^2 + 2x) + 4$, then this approach is inefficient. Instead, \mintinline{ocaml}{grad} could be specialised to a more efficient \mintinline{ocaml}{grad_spec} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
+If the function to be differentiated (\mintinline{ocaml}{f}) is known in advance \footnote{e.g.\ \texttt{f} is the computation graph of a neural network}, for example, \mintinline{ocaml}{f} $= 2(x^2 + 2x) + 4$, then this approach is inefficient. Instead, \mintinline{ocaml}{grad} could be specialised to a more efficient \mintinline{ocaml}{grad_spec} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
 
 \begin{code}
 \begin{ocamllst}
@@ -65,11 +65,11 @@ let grad_spec x = 4 * x + 4
 \label{listing:ocaml-grad-fast}
 \end{code}    
 
-What if there were multiple such \mintinline{ocaml}{f}s? We could use \mintinline{ocaml}{grad_main} to parameterise over the possible \mintinline{ocaml}{f}s, relying on one implementation. Abstraction centralises implementations, reducing maintenance costs, but resulting in inefficiency. Alternatively, we could hardcode one variant of \mintinline{ocaml}{grad_spec} for each \mintinline{ocaml}{f}, creating an army of efficient functions. Specialisation applies known arguments in advance, creating opportunities for optimisation, but at the cost of maintainability. 
+What if there were multiple such \mintinline{ocaml}{f}s? We could use \mintinline{ocaml}{grad_main} to parameterise over the possible \mintinline{ocaml}{f}s, relying on one implementation. Abstraction centralises implementations, reducing maintenance costs, but results in inefficiency. Alternatively, we could hardcode one variant of \mintinline{ocaml}{grad_spec} for each \mintinline{ocaml}{f}, creating an army of efficient functions. Specialisation applies known arguments in advance, creating opportunities for optimisation, but at the cost of maintainability. 
 
-The tension between maintainability (abstraction) and efficiency (specialisation) has also been observed in other works on metaprogramming, in domains such as regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
+The tension between maintainability (abstraction) and efficiency (specialisation) has been observed in other works on metaprogramming, in domains such as regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
-A better approach might therefore be to write maintainable code, delegating the responsibility of optimisation to the compiler. While this suffices for many cases, relying solely on compiler optimisation can be insufficient. The compiler may not implement the desired optimisations. While compiler engineers might have an economic incentive to write optimisations for the machine learning community, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations. Further, even if the compiler does implement the optimisation, the programmer has little control over the optimisation process: the compiler may not optimise as frequently as desired, or optimise in ways that do not meet all of the programmer's desiderata (for example, by inflating binary sizes). Moreover, the optimisation process may be sensitive to small changes in the source code.
+A better approach might therefore be to write maintainable code, delegating the responsibility of optimisation to the compiler. While this suffices for many cases, relying solely on compiler optimisation can be insufficient. The compiler may not implement the desired optimisations. While compiler engineers might have an economic incentive to write optimisations for machine learning, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations. Further, even if the compiler does implement the optimisation, the programmer has little control over the optimisation process: the compiler may not optimise as frequently as desired, or optimise in ways that do not meet all of the programmer's desiderata (for example, by inflating binary sizes). Moreover, the optimisation process may be sensitive to small changes in the source code.
 
 How does one write maintainable and efficient code, \textbf{when one is not certain that the compiler will optimise one's code exactly as desired}?
 
@@ -79,7 +79,7 @@ One answer, and the approach taken by \texttt{JAX} \citep{jax-grad-metaprogrammi
 \subsubsection{The Mechanics of Metaprogramming}
 Metaprogramming allows for code that, when executed, generates code. Thus, it can be utilised to write a function, \mintinline{ocaml}{grad_gen}, which resembles \mintinline{ocaml}{grad_main} (inheriting its maintainability), but that generates a program which resembles \mintinline{ocaml}{grad_spec} (inheriting its efficiency). 
 
-\Cref{listing:ocaml-pow-gen} presents the metaprogrammed \mintinline{ocaml}{grad_gen} function. Notice that it is exactly \mintinline{ocaml}{grad_main}, but extended with annotations: \mintinline{\macocamlLexer}{macro}, \mintinline{ocaml}{<<->>}, and \mintinline{ocaml}{$-}. Further, the type of \mintinline{ocaml}{x} on line 1 (for example) is now \mintinline{ocaml}{int expr}, rather than \mintinline{ocaml}{int}. These changes provide the necessary mechanisms for code generation: on line 20, \mintinline{ocaml}{grad_gen} is used to generate \mintinline{ocaml}{(2 + (y*2)) * 2} (notice the resemblance to \mintinline{ocaml}{grad_spec}). 
+\Cref{listing:ocaml-pow-gen} presents the metaprogrammed \mintinline{ocaml}{grad_gen} function. Notice that it is exactly \mintinline{ocaml}{grad_main}, but extended with annotations: \mintinline{\macocamlLexer}{macro}, \mintinline{ocaml}{<<->>}, and \mintinline{ocaml}{$-}. Further, the type of \mintinline{ocaml}{x} (e.g.\ on line 1) is now \mintinline{ocaml}{int expr}, rather than \mintinline{ocaml}{int}. These changes provide the necessary mechanisms for code generation: on line 20, \mintinline{ocaml}{grad_gen} is used to generate \mintinline{ocaml}{(2 + (y*2)) * 2}. 
 % I now explain the \mintinline{ocaml}{expr} type constructor and annotations.
 
 \begin{code}
@@ -133,7 +133,7 @@ In MacoCaml, the \mintinline{ocaml}{<<->>} (``quote'') annotation converts expre
 
 \noindent prints \mintinline{ocaml}{3} and evaluates to \mintinline{ocaml}{<<1+2+0>>}.
 
-While not an accurate description of MacoCaml, it can be useful to think of elements of type \mintinline{ocaml}{'a expr} as abstract syntax trees (ASTs). In this conceptual model, quotation creates ASTs, by converting a program into its AST representation. For example,
+While not an accurate description of MacoCaml, it can be useful to think of elements of type \mintinline{ocaml}{'a expr} as ASTs. In this conceptual model, quotation creates ASTs, by converting a program into its AST representation. For example,
 \begin{center}
 \text{\mintinline{ocaml}{<< x + 0 >>}} \text{ can be thought of as } \text{\mintinline{ocaml}{Plus(Var(x), Int(0))}}
 \end{center}
@@ -172,7 +172,7 @@ let grad_spec' y = $(let grad_gen = ... in
                      grad_gen Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8])) <<y>>) 
 \end{macocaml}
 
-To allow compile-time functions, like \mintinline{ocaml}{grad_gen}, to be re-used across multiple top-level splices, MacoCaml introduces the \mintinline{\macocamlLexer}{macro} keyword, giving us:
+To allow compile-time functions, like \mintinline{ocaml}{grad_gen}, to be re-used across multiple top-level splices, MacoCaml introduces the \mintinline{\macocamlLexer}{macro} keyword:
 
 \begin{macocaml}
 macro grad_gen = ...  

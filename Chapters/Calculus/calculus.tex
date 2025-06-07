@@ -90,7 +90,7 @@ rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I will abuse not
     & \text{Handlers} & (\handlerType{S^{-1} \, ! \, \Delta_1}{T^{-1} \, ! \, \Delta_2})^{-1}
   \end{array}$
   \end{source-desc}
-  \caption{\sourceLang{} types. Types are stratified into two levels, $0$ and $-1$. Similarly, effects are stratified into two levels, $\xi$ (for run-time effects) and $\Delta$ (for compile-time effects). The \textsf{Code} type allows compile-time programs to manipulate ASTs of run-time code.}
+  \caption{\sourceLang{} types. Types are stratified into two levels, $0$ and $-1$. Similarly, effects are stratified into two levels, $\xi$ (run-time) and $\Delta$ (compile-time). The \textsf{Code} type allows compile-time programs to manipulate ASTs of run-time code.}
   \label{fig:source-types}
 \end{figure}
 
@@ -618,7 +618,7 @@ This syntactic distinction is important because it keeps the typing rules syntax
 
 The need for \textbf{\texttt{mkvar}} arises from treating \coreLang{} as an elaboration target for \sourceLang{}. Consider \Cref{listing:source-gensym}, which should generate the AST of $\lambda \alpha. \lambda \beta. \, \return{(\alpha, \beta)}$.
 
-\begin{code}
+\begin{minipage}[t]{\linewidth}
 \begin{sourcelst}
 $\begin{array}{l}
 \$(\textbf{\texttt{do}} \, \, \texttt{mkfun} \leftarrow {\lambda k. \, {\langle\langle\,\, \lambda x: \mathbb{N}^0. \,\, \splice[(k \, {\equote[x]})]\,\, \rangle\rangle}} \, \, \textbf{\texttt{in}} \\
@@ -633,8 +633,8 @@ $\begin{array}{l}
 \end{sourcelst}
 \captionof{listing}{An example \sourceLang{} program which illustrates the need for \textbf{\texttt{mkvar}}}%
 \label{listing:source-gensym}
-\end{code}
-
+\end{minipage}
+\par\vspace{0.6\baselineskip}
 The compile-time function \texttt{mkfun} (\citeauthor{taha-1999}'s \citep{taha-1999} \texttt{back}) is a higher-order function that accepts some compile-time function $k$. \texttt{mkfun} creates a binder ($\lambda x. \_$) and passes the formal parameter $x$ to $k$. $k$ uses $x$ to construct the \textsf{body} of a function $\lambda x. \textsf{body}$. For example, $\texttt{mkfun} \,  (\lambda y. \equote[{\splice[(y)]} + \texttt{1}])$ generates the body $x + \texttt{1}$.
 
 In \Cref{listing:source-gensym}, $k$ calls \texttt{mkfun}. This constructs a \textit{nested} function, whose formal parameters are bound to $a$ and $b$ respectively. If $x$ was not renamed, and simply elaborated into $\Binder{x}{\mathbb{N}}$, both $a$ and $b$ would be bound to $\Binder{x}{\mathbb{N}}$, generating the following (incorrect) AST: 
@@ -1083,6 +1083,7 @@ then $\cdot \vdash E'[t']: \effectType{T}$
 The proof of reduction preservation proceeds by induction over the operational semantics. Once again, one need only consider the augmented rules, which are simple. 
 
 As a corollary, we obtain a notion of type safety.
+
 \begin{corollary}[Type Safety]{sourceHighlight}\label[corollary]{cor:core-type-safety}
   If $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$ then either
   \begin{enumerate}
@@ -1163,6 +1164,7 @@ Importantly, this notion of type safety is weak. A semantics which always report
 % We can now prove the equational theory of \sourceLang{}. 
 
 Finally, underneath a top-level splice, quotation and splice are duals (\Cref{thm:quote-splice-duality})
+
 \begin{theorem}[Quote-Splice Duality]{sourceHighlight}\label{thm:quote-splice-duality}
   Under a top-level splice, quotation and splice are duals
   \[\begin{array}{rcl}
