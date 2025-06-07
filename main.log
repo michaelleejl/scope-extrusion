@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  7 JUN 2025 13:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  7 JUN 2025 14:13
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1463,10 +1463,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250607134551 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250607141305 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250607134551 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250607141305 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/E5FFBDD06E801C34D8594F1B6FF7F570.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1619,23 +1619,23 @@ LaTeX Font Warning: Font shape `OMS/qpl/m/n' undefined
 (Font)              for symbol `textbraceleft' on input line 173.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 212--213
+Underfull \hbox (badness 10000) in paragraph at lines 223--224
 
  []
 
 LaTeX Font Info:    Font shape `OT1/lmss/b/n' in size <8> not available
-(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 227.
+(Font)              Font shape `OT1/lmss/bx/n' tried instead on input line 238.
 
 
 [12]
 
 [13]
-Overfull \hbox (1.14732pt too wide) in paragraph at lines 321--324
+Overfull \hbox (1.14732pt too wide) in paragraph at lines 332--335
 \OT1/qpl/m/n/12 is $\OMS/lmsy/m/n/12 f[]\OML/lmm/m/it/12 ; []\OMS/lmsy/m/n/12 g$ \OT1/qpl/m/n/12 (even though the re-spon-si-bil-ity for han-dling the \OT1/zi4/b/n/12 shirk \OT1/qpl/m/n/12 ef-fect is shirked).
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 334--335
+Underfull \hbox (badness 10000) in paragraph at lines 345--346
 
  []
 
@@ -1647,17 +1647,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 334--335
  (./_minted/F054FDA90CBCF4F92CFE4D605526A07D.highlight.minted)
 
 [15]
-Underfull \hbox (badness 10000) in paragraph at lines 398--401
+Underfull \hbox (badness 10000) in paragraph at lines 409--412
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--431
+Underfull \hbox (badness 10000) in paragraph at lines 441--442
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 485--486
+Underfull \hbox (badness 10000) in paragraph at lines 496--497
 
  []
 
@@ -1666,22 +1666,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 485--486
 [16]
 
 [17]
-Package mdframed Info: mdframed works in twoside mode on input line 550.
-Package hyperref Info: bookmark level for unknown mddefinition defaults to 0 on input line 550.
-Package mdframed Info: mdframed works in twoside mode on input line 560.
-Package hyperref Info: bookmark level for unknown mdtheorem defaults to 0 on input line 560.
+Package mdframed Info: mdframed works in twoside mode on input line 561.
+Package hyperref Info: bookmark level for unknown mddefinition defaults to 0 on input line 561.
+Package mdframed Info: mdframed works in twoside mode on input line 571.
+Package hyperref Info: bookmark level for unknown mdtheorem defaults to 0 on input line 571.
 LaTeX Font Info:    Font shape `OT1/zi4/m/it' will be
-(Font)              scaled to size 12.0pt on input line 563.
+(Font)              scaled to size 12.0pt on input line 574.
 
 
 LaTeX Font Warning: Font shape `OT1/zi4/b/it' undefined
-(Font)              using `OT1/zi4/b/n' instead on input line 563.
+(Font)              using `OT1/zi4/b/n' instead on input line 574.
 
 LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <12> not available
-(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 564.
-Package mdframed Info: mdframed works in twoside mode on input line 569.
-Package mdframed Info: mdframed works in twoside mode on input line 573.
-Package hyperref Info: bookmark level for unknown mdcorollary defaults to 0 on input line 573.
+(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 575.
+Package mdframed Info: mdframed works in twoside mode on input line 580.
+Package mdframed Info: mdframed works in twoside mode on input line 584.
+Package hyperref Info: bookmark level for unknown mdcorollary defaults to 0 on input line 584.
 
 
 [18]
@@ -1701,11 +1701,6 @@ Overfull \hbox (2.36963pt too wide) in paragraph at lines 97--98
 
 
 [22]
-Overfull \hbox (4.03215pt too wide) in paragraph at lines 148--149
-\OT1/qpl/m/n/12 binder $[]\OT1/lmr/m/n/12 ([](\OML/lmm/m/it/12 \OT1/lmr/m/n/12 )\OML/lmm/m/it/12 ; \OMS/lmsy/m/n/12 ^^@\OT1/lmr/m/n/12 )$\OT1/qpl/m/n/12 , $[]\OT1/lmr/m/n/12 ([]([](\OML/lmm/m/it/12 \OT1/lmr/m/n/12 )\OML/lmm/m/it/12 ; \OMS/lmsy/m/n/12 ^^@\OT1/lmr/m/n/12 ))$\OT1/qpl/m/n/12 . For ex-am-ple, $[]\OT1/lmr/m/n/12 ([]([](\OML/lmm/m/it/12 x\OT1/lmr/m/n/12 )\OML/lmm/m/it/12 ; \OMS/lmsy/m/n/12 ^^@\OT1/lmr/m/n/12 )) =
- []
-
-
 
 [23]
 
@@ -2099,15 +2094,15 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 48197 strings out of 469626
- 1045935 string characters out of 5471004
+ 48213 strings out of 469626
+ 1046217 string characters out of 5471004
  1686434 words of memory out of 5000000
- 73432 multiletter control sequences out of 15000+600000
+ 73448 multiletter control sequences out of 15000+600000
  899503 words of font info for 227 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  122i,28n,134p,10944b,1528s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary6.pfb>
-Output written on main.pdf (78 pages, 1423444 bytes).
+Output written on main.pdf (78 pages, 1423605 bytes).
 PDF statistics:
  1504 PDF objects out of 1728 (max. 8388607)
  1309 compressed objects within 14 object streams

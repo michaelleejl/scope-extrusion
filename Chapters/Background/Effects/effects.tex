@@ -162,7 +162,7 @@ Concretely, one instance of $c$ is
 In the definition of $c$, the programmer may refer to $x$, the argument passed to \textbf{\texttt{print}}, and $k$, a delimited continuation from the point the effect was performed to the point it was handled. The delimited continuation can be thought of as a suspended program, awaiting a value from its environment. Effects allow programs to receive data from their environments, as in
 \begin{center}
   \begin{tikzpicture}
-   \node[] (example) {\textcolor{white}{$\handleWith{\textcolor{black}{\;\;\;\; \textcolor{selected}{\textbf{\texttt{get\_int\_from\_user}}()} + \texttt{1}}\;\;\;\; }{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \ldots}$}};
+   \node[] (example) {\textcolor{white}{$\handleWith{\textcolor{black}{\;\;\;\; \textcolor{selected}{\textbf{\texttt{get\_int\_from\_user}} \;\; () \;\;} + \texttt{1}}\;\;\;\; }{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \ldots}$}};
 
    \begin{scope}[on background layer]
     \draw[draw=fade, fill=selectedTarget, rounded corners=1mm] ($(example.north west) + (-0.1, 0.04)$) rectangle ($(example.south west) + (1.64, 0)$);
@@ -170,19 +170,30 @@ In the definition of $c$, the programmer may refer to $x$, the argument passed t
     \draw[draw=fade, fill=selectedTarget, rounded corners=1mm] ($(example.north east) + (0.1, 0.04)$) rectangle ($(example.south east) + (-7.3, 0)$);
    \end{scope}
 
-   \node[rotate = 90, text=comment] (brace) at ($(example.south) + (-0.9, -0.1)$) {\Large \{ };
+   \node[rotate = 90, text=comment] (brace) at ($(example.south) + (-0.7, -0.1)$) {\Large \{ };
 
-   \node[text=comment, anchor = north, align=center] (comment) at ($(brace.south)$) {\footnotesize The delimited continuation $\kappa y. y+\texttt{1}$,\\
-   \footnotesize captured from the point the effect was \\ 
-   \footnotesize performed to the point it was handled.};
+   \node[text=comment, anchor = north, align=center] (comment) at ($(brace.south)$) {\footnotesize The delimited continuation \textcolor{black}{$\kappa y. y+\texttt{1}$},\\
+   \footnotesize captured from \textcolor{selected}{\textbf{the point the effect was}} \\ 
+   \footnotesize \textcolor{selected}{\textbf{performed}} to \colorbox{selectedTarget}{\textcolor{white}{\textbf{the point it was handled}}}};
+
+   \draw[->,>=stealth'] ($(comment.east) + (-0.3, 0.6)$) -| ($(example.south) + (5.55, -0.1)$);
+
+   \node[rotate = -90, text=comment] (brace2) at ($(example.north) + (-1.5, 0.1)$) {\Large \{ };
+
+
+   \node[text=comment, anchor = south, align=center] (comment2) at ($(brace2.north)$) {\footnotesize Effect raises {unit value} \textcolor{black}{$()$}};
+
+      
+   \draw[->,>=stealth'] ($(comment2.east)$) -| ($(example.south) + (5.1, 0.8)$);
+
 
   \end{tikzpicture}
 \end{center}
 \noindent where the program that adds one is suspended until the value is received. I write the suspended program as $\kappa y. \; y+\texttt{1}$, where the variable $y$ indicates the as-yet-unknown value. $\kappa y. \; y+\texttt{1}$ is the continuation bound to $k$. The syntax is evocative: continuations can be thought of as being \textit{like}  functions $\lambda y. \; y+\texttt{1}$ (in \citeauthor{pretnar-15}'s calculus, functions and continuations share a type). However, for technical reasons relating to scope extrusion (\Cref{section:best-effort-check,section:refined-environment-classifiers-formal}), in \efflang{}, continuations and functions are disambiguated both syntactically and at the type-level (mirroring the approach by \citet{isoda-24}). The expression 
 \[\continue{k}{v}\] 
 is used to resume the suspended program, substiting value $v$ for $y$. For example,  
-\[\handleWith{\texttt{1} + \textbf{\texttt{get\_int\_from\_user}}()}{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \continue{k}{\texttt{2}}}\]
-steps to $\texttt{1} + \texttt{2}$ (and thus evaluates to \texttt{3}).
+\[\handleWith{\textbf{\texttt{get\_int\_from\_user}}() + 1}{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \continue{k}{\texttt{2}}}\]
+steps to $\texttt{2} + \texttt{1}$ (and thus evaluates to \texttt{3}).
 
 In \efflang{}, the continuation to be bound to $k$ is calculated. In contrast, in \citeauthor{pretnar-15}'s calculus, it is explicitly written by the programmer, using the syntax 
 \[\op{v; y.c}\]

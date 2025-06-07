@@ -3,15 +3,15 @@ Scope extrusion is an undesirable consequence of unrestricted interaction betwee
 
 Scope extrusion is observed when programs are evaluated. To evaluate quotes and splices, I rely on the conceptual model introduced in \Cref{section:metaprogramming-technical}, where quotes convert terms to ASTs, and splices under quotes suspend this conversion (made precise in \Cref{section:elaboration}). Additionally, in this section, I assume all computation implicitly takes place under a top-level splice. For example, extending \efflang{} with \textbf{\texttt{skip}}, the following program:
 \begin{eff}
-$\equote[{\lambda x: \mathbb{N}. \; \splice[{(\textbf{\texttt{skip}}; \equote[x])}] + 0}]$
+$\equote[{\lambda x: \mathbb{N}. \; \splice[{(\textbf{\texttt{skip}}; \equote[x])}] + \texttt{0}}]$
 \end{eff}
 is desugared into:
 \begin{eff}
-$\return{\Lam{\textbf{\texttt{skip}}; \Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}$
+$\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\textbf{\texttt{skip}};\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}$
 \end{eff}
 and thus evaluates to:
 \begin{eff}
-$\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}$
+$\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}$
 \end{eff}
 % constructs the AST of $\lambda x: \mathbb{N}. \, x + \texttt{0}$
 % constructors $\Var{x}{T}$, $\texttt{Nat}(m)$, $\texttt{Lam}$, and $\texttt{Plus}$.
@@ -53,7 +53,7 @@ $\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Na
 \textcolor{effComment}{\hrule height 0.2mm \relax}
 \vspace{2mm} 
 
-\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\Var{x}{\mathbb{N}}}}\end{array}$}
+\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Binder{x}{\mathbb{N}}}{\Var{x}{\mathbb{N}}}}\end{array}$}
 
 \end{efflst}
 \captionof{listing}{A \efflang{} program where the result of the program is well-scoped, but not all intermediate results are well-scoped.}%
@@ -117,7 +117,7 @@ Second, the check is unpredictable. The problem relates to \textit{when} the che
 \textcolor{effComment}{\hrule height 0.2mm \relax}
 \vspace{2mm} 
 
-\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Var{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}\end{array}$}
+\textcolor{effComment}{$\begin{array}{l}\return{\Lam{\Binder{x}{\mathbb{N}}}{\texttt{Plus}(\Var{x}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}\end{array}$}
 
 \end{efflst}
 \captionof{listing}{A \efflang{} program that is a slight variation of \Cref{listing:efflang-maybe-scope-extrusion}, but that (unlike \Cref{listing:efflang-maybe-scope-extrusion}) fails the eager dynamic check.}%
@@ -145,7 +145,7 @@ Refined environment classifiers make this notion precise. Each classifier repres
 \item[$\gamma_{fx}$] Only $\texttt{Var}(f)$ and $\texttt{Var}(x)$ permitted to be free 
 \item[$\gamma_{y}$\;\,] Only $\texttt{Var}(y)$ permitted to be free
 \end{itemize}
-As every variable binder creates a scope, we may refer to the classifier created by the binder $\Lam{\texttt{Var}(\alpha)}{-}$, $\textsf{classifier}(\Lam{\texttt{Var}(\alpha)}{-})$. For example, $\textsf{classifier}(\Lam{\texttt{Var}(x)}{-}) = \gamma_{fx}$.
+As every variable binder creates a scope, we may refer to the classifier created by the binder $\Lam{\alpha}{-}$, $\textsf{classifier}(\Lam{\alpha}{-})$. For example, $\textsf{classifier}(\Lam{x}{-}) = \gamma_{fx}$.
 
 \begin{figure}
   \centering
@@ -157,18 +157,18 @@ As every variable binder creates a scope, we may refer to the classifier created
     \begin{scope}[every node/.style={font=\ttfamily}]
     \node (app) {App}
     child {node (lam-1) {Lam}
-      child {node (var-1) {Var($f$)}}
+      child {node (var-1) {$f$}}
       child {node (lam-2) {Lam}
-             child {node (var-2) {Var($x$)}}
+             child {node (var-2) {$x$}}
              child {node (app-2) {App}
-                    child {node (var-1-use) {Var($f$)} }
-                    child {node (var-2-use) {Var($x$)} }
+                    child {node (var-1-use) {Var$(f)$} }
+                    child {node (var-2-use) {Var$(x)$} }
              }
             }
     }
     child {node (lam-3) {Lam}
-    child {node (var-3) {Var($y$)}}
-    child {node (var-3-use) {Var($y$)}}};
+    child {node (var-3) {$y$}}
+    child {node (var-3-use) {Var$(y)$}}};
     \end{scope}
   
   
@@ -206,7 +206,7 @@ and transitivity accounts for nestings within nestings
 $\gamma_{\bot}$ acts as the least element of this partial order, and captures the notion of ``top-level''
 \[\forall \gamma. \, \gamma_{\bot} \sqsubseteq \gamma \] 
 A classifier $\gamma$ thus defines a set of variables which are permitted to be free, written $\textsf{permitted}(\gamma)$:
-\[\textsf{permitted}(\gamma) \triangleq \{ \texttt{Var}(\alpha) \mid \textsf{classifier}(\Lam{\texttt{Var}(\alpha)}{-}) \sqsubseteq \gamma \}\]
+\[\textsf{permitted}(\gamma) \triangleq \{ \texttt{Var}(\alpha) \mid \textsf{classifier}(\Lam{\alpha}{-}) \sqsubseteq \gamma \}\]
 For example, $\textsf{permitted}(\gamma_{fx}) = \{ \texttt{Var}(f), \texttt{Var}(x)\}$ 
 
 An AST $n$ is well-scoped at type $T$ and scope $\gamma$ if it is well-typed at $T$, and all free variables in $n$ are in $\textsf{permitted}(\gamma)$, written: 
@@ -234,7 +234,7 @@ The premises and conclusions have been numbered for reference, and many  technic
   
     \begin{scope}[every node/.style={font=\ttfamily}]
     \node (lam) {Lam}
-    child {node (binder) {Var$(x)$}}
+    child {node (binder) {$x$}}
     child {node (body) {$c$}};
     \end{scope}
   
@@ -269,13 +269,13 @@ The above example focused on \textbf{creating} ASTs, and had no compile-time exe
 
   \begin{scope}[every node/.style={font=\ttfamily}]
   \node (handler) {Lam}
-  child {node (var) {Var($\alpha$)}}
-  child {node (body) {\textbf{extrude}(\texttt{Var}($\alpha$)); $\return(\texttt{Var}(\alpha))$}};
+  child {node (var) {$\alpha$}}
+  child {node (body) {\textbf{extrude}$($\texttt{Var}$(\alpha)$$)$; $\return(\texttt{Var}(\alpha))$}};
   \end{scope}
 
   \begin{scope}
     \node[anchor=east] (lam-left) at ($(handler.west) + (-0.1cm, 0cm)$) {\textbf{\texttt{handle}}};
-    \node[anchor=west] (lam-right) at ($(handler.east) + (0.1cm, 0cm)$) {\texttt{\textbf{with} \{$\ldots$,\textbf{extrude}($y, k$)$\mapsto\ldots$\} }};
+    \node[anchor=west] (lam-right) at ($(handler.east) + (0.1cm, 0cm)$) {\texttt{\textbf{with} \{$\ldots$,\textbf{extrude}$(y, k)\mapsto\ldots$\} }};
   \end{scope}
 
 
