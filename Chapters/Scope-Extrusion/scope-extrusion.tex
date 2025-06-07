@@ -19,7 +19,8 @@ Recall that one definition of scope extrusion relates to the \textit{result} of 
 %   \textit{Detection of scope extrusion may appear straightforward: traverse the \textbf{result of a generator} looking for unbound identifiers.}
 % \end{quote}
 
-I call this lazy scope extrusion, and define it as a property on \coreLang{} configurations as follows: 
+I call this lazy scope extrusion, and define it as a predicate on \coreLang{} configurations: 
+
 \begin{definition}[Lazy Scope Extrusion]{coreHighlight}\label[definition]{def:lazy-scope-extrusion} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
 exhibits lazy scope extrusion if all of the following hold:
@@ -39,27 +40,24 @@ Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside t
   \footnotesize
 \[\elaborate{\lambda x: T^0. \, e}_{\compilemode{}}^{\textbf{Lazy}} = \bind{x}{\gensym{\erase{T^0}}}{ \dlet{x}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode{}}^\textbf{Lazy}}{\return{\Lam{x}{\texttt{body}}}}}}\]
 }
-
-For example, $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ elaborates into (changes from the elaboration in \Cref{section:elaboration} highlighted in \textbf{\textcolor{selected}{blue}}):
+\newcommand{\indentone}{\quad\quad\quad\quad\quad\quad\quad\quad
+    \quad\quad\quad\quad\quad\quad\;\;\;}
+    \newcommand{\indenttwo}{\quad\quad\quad\quad\quad\;\,\,}
+    \newcommand{\indentthree}{\quad\quad\quad\quad}
+For example, $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ elaborates into (changes from the elaboration in \Cref{section:elaboration} are \hl{highlighted}:
 {
 \[\begin{array}{@{}l}
   \bind{x}{\gensym{\mathbb{N}}}{} \\
-  \textcolor{selected}{\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow \textcolor{selected}{\textbf{\texttt{check}}(}\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{}} \\
-    \quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\,\,
+  \hl{\textbf{\texttt{dlet}}(}\, {x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow \hl{\textbf{\texttt{check}}(}\,\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{}} \\
+    \indentone
     \textbf{\texttt{do}}\;{\texttt{body}_2} \leftarrow {(\bind{a}{\varToAST{x}}{}}\\
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad
+    \indentone\indenttwo
     \bind{b}{\varToAST{y}}{}\\
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad
-    \return{\texttt{Plus}(a, b)})\\
-    \quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\,\,
-    \return{\Lam{y}{\texttt{body}_2}})\textcolor{selected}{)}\\
-  {\return{\Lam{x}{\texttt{body}_1}}}\textcolor{selected}{)}
+    \indentone\indenttwo
+    \return{\texttt{Plus}(a, b)}) \, \textbf{\texttt{in}}\\
+    \indentone
+    \return{\Lam{y}{\texttt{body}_2}})\,\hl{)}\,\textbf{\texttt{in}}\\
+  \indentthree{\return{\Lam{x}{\texttt{body}_1}}}\,\hl{)}
 \end{array}\]
 }
 % Second, I perform a check after a top-level splice:
@@ -89,7 +87,7 @@ Another definition of scope extrusion relates to \textit{intermediate results} d
   \textit{At \textbf{any point during the evaluation}, an occurrence of an open-code value with a free variable whose name is not dynamically bound.}
 \end{quote}
 
-I call this eager scope extrusion, and define it as a property on \coreLang{} configurations as follows: 
+I call this eager scope extrusion, and define it as a predicate on \coreLang{} configurations: 
 \begin{definition}[Eager Scope Extrusion]{coreHighlight} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
 exhibits eager scope extrusion if all of the following hold:
@@ -115,11 +113,11 @@ Consequently, to prevent false positives, variables bound in \quotemode{}-mode m
 \end{array}\]
 }
 
-The elaboration of $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ thus changes to (changes from the lazy dynamic check highlighted in \textbf{\textcolor{selected}{blue}}):
+The elaboration of $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ thus changes to (changes from the lazy dynamic check are \textbf{\hl{highlighted}}):
 {
 \[\begin{array}{@{}l}
   \bind{x}{\gensym{\mathbb{N}}}{} \\
-  {\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow {\textbf{\texttt{check}}(}\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{\textcolor{selected}{\textbf{\texttt{check}}(\textbf{\texttt{dlet}}(y,}}} \\
+  {\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow {\textbf{\texttt{check}}(}\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{\hl{\textbf{\texttt{check}}(\textbf{\texttt{dlet}}($y$,}}} \\
     \quad\quad\quad\quad\quad\quad\quad
     \quad\quad\quad\quad\quad\quad\,\,
     \textbf{\texttt{do}}\;{\texttt{body}_2} \leftarrow {(\bind{a}{\varToAST{x}}{}}\\
@@ -130,17 +128,19 @@ The elaboration of $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathb
     \quad\quad\quad\quad\quad\quad\quad\quad
     \quad\quad\quad\quad\quad\quad\quad\quad
     \quad\quad\quad
-    \textbf{\texttt{\textcolor{selected}{check}}}\;{\texttt{Plus}(a, b)})\\
+    \textbf{\texttt{\hl{check}}}\;{\texttt{Plus}(a, b)}) \, \textbf{\texttt{in}}\\
     \quad\quad\quad\quad\quad\quad\quad
     \quad\quad\quad\quad\quad\quad\,\,
-    \return{\Lam{y}{\texttt{body}_2}}{\textcolor{selected}{))}}))\\
-  {\return{\Lam{x}{\texttt{body}_1}}})
+    \return{\Lam{y}{\texttt{body}_2}}{\hl{))}\,})) \, \textbf{\texttt{in}}\\
+  \quad\quad\quad\;\, {\return{\Lam{x}{\texttt{body}_1}}})
 \end{array}\]
 }
 
 If \textbf{\texttt{dlet}}s were not inserted for binders in \quotemode{}-mode (e.g. $y$), then $\textbf{\texttt{check}}\; \texttt{Plus}(a, b)$ would fail, as $y$ would not be declared safe. 
 
 Intuitively, the eager dynamic check performs a check whenever an AST is built. Hence, assume that evaluation reduces to a configuration that exhibits eager scope extrusion. Let the offending AST be $n$. The error will be detected and reported the next time $n$ is used to build a bigger AST $n'$ in an unsafe way (not all free variables in $n'$ are declared safe). 
+
+As an example, consider \Cref{listing:eager-scope-extrusion-check-eg}. Eager scope extrusion is caused by the $\return{y}$ program fragment, where $y$ refers to the unbound variable $\Var{x}{\mathbb{N}}$\footnote{Technically, the variable should be renamed. For clarity, I do not rename the variables in this example}. Eager scope extrusion is not caught immediately. Rather, $y$ is bound to $z$, and scope extrusion is caught when $z$ is used to build a larger AST, $\equote[{\splice[z]+1}]$, where $y$ is not declared safe. 
 
 \begin{code} 
  \begin{source}
@@ -153,8 +153,6 @@ Intuitively, the eager dynamic check performs a check whenever an AST is built. 
  \captionof{listing}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return{y}$ expression. Scope extrusion is not immediately detected. Rather, $y$ is bound to $z$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote[{\splice[z]} + 1]$, where $y$ is not declared safe}%
  \label{listing:eager-scope-extrusion-check-eg}
 \end{code}
-
-As an example, consider \Cref{listing:eager-scope-extrusion-check-eg}. Eager scope extrusion is caused by the $\return{y}$ program fragment, where $y$ refers to the unbound variable $\Var{x}{\mathbb{N}}$\footnote{Technically, the variable should be renamed. For clarity, I do not rename the variables in this example}. Eager scope extrusion is not caught immediately. Rather, $y$ is bound to $z$, and scope extrusion is caught when $z$ is used to build a larger AST, $\equote[{\splice[z]+1}]$, where $y$ is not declared safe. 
 
 The eager dynamic check also checks at top-level splices, like the lazy dynamic check. Conceptually, a top-level splice builds a larger, ambient and inert, AST (\Cref{listing:eager-scope-extrusion-check-eg-tls}):
 
@@ -255,7 +253,7 @@ since the \textbf{\texttt{return}} is elaborated into a \textbf{\texttt{check}},
 Additionally, the eager dynamic check is not, in the worst case, more efficient than the lazy dynamic check, since there exist pathological examples (\Cref{listing:eager-scope-extrusion-check-eg-tls}). Further, the overhead of the checks cannot be bound: multi-shot continuations may be replayed an unbounded number of times. Multi-shot continuations may capture checks. Thus, the overhead of checking is unbounded. However, I conjecture that in the \textit{common case}, the eager dynamic check detects scope extrusion sufficiently early as to outweigh the checking overhead. This argument is an empirical one, and would require further research, outside the scope of the dissertation, to support. 
 
 \section{Best-Effort Dynamic Check}\label{section:best-effort-check}
-The lazy dynamic check is too inefficient, and the eager dynamic check too unpredictable. Might it be possible to find a ``goldilocks'' solution? Such a check should allow the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, and be permissive in a predictable way. For example, a check that eagerly detects programs that \textit{must} cause lazy scope extrusion. I call this best-effort scope extrusion.
+The lazy dynamic check is too inefficient, and the eager dynamic check too unpredictable. Might it be possible to find a ``goldilocks'' solution? Such a check should allow the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, and be permissive in a predictable way. For example, a check that eagerly detects programs that \textit{must} cause lazy scope extrusion (best-effort scope extrusion).
 
 \begin{definition}[Best-Effort Scope Extrusion]{coreHighlight} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
@@ -274,30 +272,30 @@ The best-effort dynamic check is simple: change all \textbf{\texttt{check}}s to 
 \elaborate{\lambda x: T^0. \, e}_{\quotemode{}}^{\textbf{BE}} = \bind{x}{\gensym{\erase{T^0}}}{\checkm{(\dlet{x}{\bind{\texttt{body}}{\elaborate{e}_{\quotemode{}}^\textbf{BE}}{\return{\Lam{x}{\texttt{body}}}}})}}
 \end{array}\]
 }
-The $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ program elaborates into (changes from the eager dynamic check highlighted in \textbf{\textcolor{selected}{blue}}):
+The $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$ program elaborates into (changes from the eager dynamic check are\textbf{\hl{highlighted}}):
 {
 \[\begin{array}{@{}l}
   \bind{x}{\gensym{\mathbb{N}}}{} \\
-  {\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow {{\textcolor{selected}{\textbf{{\texttt{check}$_M$}}}}}(\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{{\textcolor{selected}{\textbf{{\texttt{check}$_M$}}}(\textbf{\texttt{dlet}}(y,}}} \\
+  {\textbf{\texttt{dlet}}(}{x}, \textbf{\texttt{do}} \; {\texttt{body}_1} \leftarrow {{\hl{\textbf{{\texttt{check}$_M$}}}}}\,(\textbf{\texttt{tls}}({\bind{y}{\gensym{\mathbb{N}}}{{\hl{\textbf{{\texttt{check}$_M$}}}\,(\textbf{\texttt{dlet}}(y,}}} \\
     \quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\,\,
+    \quad\quad\quad\quad\quad\quad\quad\;\;\,\,
     \textbf{\texttt{do}}\;{\texttt{body}_2} \leftarrow {(\bind{a}{\varToAST{x}}{}}\\
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad
-    \bind{b}{\varToAST{y}}{}\\
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad
-    \textcolor{selected}{\textbf{\texttt{check}$_M$}}\;{\texttt{Plus}(a, b)})\\
     \quad\quad\quad\quad\quad\quad\quad
-    \quad\quad\quad\quad\quad\quad\,\,
-    \return{\Lam{y}{\texttt{body}_2}}{{))}}))\\
-  {\return{\Lam{x}{\texttt{body}_1}}})
+    \quad\quad\quad\quad\quad\quad\quad
+    \quad\quad\quad\quad\quad\quad\,\,\,
+    \bind{b}{\varToAST{y}}{}\\
+     \quad\quad\quad\quad\quad\quad\quad
+    \quad\quad\quad\quad\quad\quad\quad
+    \quad\quad\quad\quad\quad\quad\,\,\,
+    \hl{\textbf{\texttt{check}$_M$}}\;{\texttt{Plus}(a, b)}) \, \textbf{\texttt{in}}\\
+    \quad\quad\quad\quad\quad\quad\quad
+    \quad\quad\quad\quad\quad\quad\quad\;\;\,\,
+    \return{\Lam{y}{\texttt{body}_2}}{{))}})) \, \textbf{\texttt{in}}\\
+  \quad\quad\quad\;\, {\return{\Lam{x}{\texttt{body}_1}}})
 \end{array}\]
 }
 
-To understand the best-effort dynamic check, consider the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, which is elaborated into \coreLang{}\footnote{The program has been somewhat simplified}. The failing check is \colorwave[quote]{underlined}. 
+To understand the best-effort dynamic check, consider the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, which is elaborated into \coreLang{} and simplified for readability. The failing check is \colorwave[quote]{underlined}. 
 \begin{center}
   \begin{tikzpicture}
   \begin{scope}[every node/.style={font=\ttfamily\footnotesize}]
@@ -433,7 +431,7 @@ In the previous example, the transition from $\dlet{\Binder{z}{\mathbb{N}}}{\ret
 This is the side-effect/side-condition in the \textsc{Sec-Dlt} rule (\Cref{fig:corelang-opsem}).
 
 Additionally, transitions from \textbf{\texttt{tls}} \textit{unconditionally} unmute variables, since the evaluation context beyond \textbf{\texttt{tls}} must be inert, and thus can never be captured by a handler
-\[\langle \tls{\return{n}}; E; U; M; I \rangle \to \langle \tls{\return{n}}; E; U; \emptyset; \top \rangle\]
+\[\langle \tls{\return{n}}; E; U; M; I \rangle \to \langle {\return{n}}; E; U; \textcolor{coreHighlight}{\emptyset}; \textcolor{coreHighlight}{\top} \rangle\]
 
 Since $\textbf{\texttt{check}}_M$s are at least as permissive as \textbf{\texttt{check}}s, the best-effort dynamic check is at least as expressive as the eager dynamic check. The implementation of the best-effort scope extrusion check allows the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}. 
 
@@ -487,7 +485,7 @@ Then for all $i \in \mathbb{N}$, if
 then $\freevars{m} \not\subseteq \projfvs{E'}$  
 \end{theorem}
 
-The proof of \Cref{thm:best-effort-cause-for-concern} is by contradiction. By assumption (3) there must be at least one variable, call it $\Var{x}{T}$, that is free in $n$ and not declared safe in $E$. Assume for the sake of contradiction that $\freevars{m} \subseteq \projfvs{E'}$. Then, by assumption (5), the frame $\dlet{\Binder{x}{T}}{[-]}$ must be in $E'$. By assumptions (1) and (2), we only have to consider terms that are the target of elaboration. By definition of elaboration, the only way to push the frame $\dlet{\Binder{x}{T}}{[-]}$ on $E'$ is by resuming a continuation containing $\dlet{\Binder{x}{T}}{[-]}$. But then we must have had access to the resumed continuation in $E$. In turn, this implies $I < \textsf{len}(E)$, and thus $\Var{x}{T}$ would not have been unmuted. Consequently, $\checkm{n}$ would not have failed because of $\Var{x}{T}$. This contradicts assumption (3). 
+The proof of \Cref{thm:best-effort-cause-for-concern} is by contradiction. By assumption (3) there must be at least one variable, call it $\Var{x}{R}$, that is free in $n$ and not declared safe in $E$. Assume for the sake of contradiction that $\freevars{m} \subseteq \projfvs{E'}$. Then, by assumption (5), the frame $\dlet{\Binder{x}{R}}{[-]}$ must be in $E'$. By assumptions (1) and (2), we only have to consider terms that are the target of elaboration. By definition of elaboration, the only way to push the frame $\dlet{\Binder{x}{R}}{[-]}$ on $E'$ is by resuming a continuation containing $\dlet{\Binder{x}{R}}{[-]}$. But then we must have had access to the resumed continuation in $E$. In turn, this implies $I < \textsf{len}(E)$, and thus $\Var{x}{R}$ would not have been unmuted. Consequently, $\checkm{n}$ would not have failed because of $\Var{x}{R}$. This contradicts assumption (3). 
 
 Note that the eager dynamic check does not have the Cause for Concern property, with \Cref{listing:eager-scope-extrusion-looks-unsafe} being a counter-example. Hence, the best-effort dynamic check is \textbf{more} expressive, and more \textbf{predictably} expressive, than the eager dynamic check. 
 
@@ -547,7 +545,7 @@ An \textbf{extended} source type is either:
     % & \text{Handlers} & \handlerType{S^{-1} \, ! \, \Delta}{T^{-1} \, ! \, \Delta'}
   \end{array}$
   \end{source-desc}
-  \caption{Extending \sourceLang{} with refined environment classifiers. The only change is that \textsf{Code} types are now annotated with an environment classifier $\gamma$, \textbf{\hl{highlighted}}.}
+  \caption{Extending \sourceLang{} with refined environment classifiers. The only change is that \textsf{Code} types are now annotated with an environment classifier $\gamma$, which is \textbf{\hl{highlighted}}.}
   \label{fig:rec-source-types}
 \end{figure}
 
@@ -582,7 +580,7 @@ Given that the focus of this evaluation is on \sourceLang{}, rather than refined
 
 It is unclear whether \citeauthor{isoda-24}'s system allows for non-termination. Once again, to simplify reasoning, I force effect signatures to be well-founded and, in particular, not recursive. As proven by \citet{kammar-2013}, all well-typed programs must thus terminate. 
 
-Proof of correctness will rely on a weakening lemma. As types are stratified into two levels, and into value, computation, and handler types, there are 6 sub-lemmas. One is listed as an example.
+Proof of correctness will rely on a weakening lemma. As types are stratified into two levels, and into value, computation, and handler types, there are various sub-lemmas. One is listed as an example.
 
 \newcommand{\rcqtypejudge}[4][\Gamma]{{#1} \vdash_{\compilemode \mid \quotemode}^{#2} {#3} : {#4}}
 \newcommand{\rctypejudge}[4][\Gamma]{{#1} \vdash_{\compilemode}^{#2} {#3} : {#4}}
@@ -613,7 +611,7 @@ Proof of the weakening lemma is by induction on the typing derivation.
 Refined environment classifiers additionally require modification of the elaboration, and the reduction of \coreLang{} terms:
 
 \begin{enumerate}
-  \item Elaboration of types is defined on \textbf{extended} source types (\Cref{dfn:extended-source-type}). This allows elaboration to carry classifiers. For example, rather than elaborationg $\mathbb{N}^0$, $\mathbb{N}^0(\gamma)$ is elaborated into $\textsf{AST}(\mathbb{N})^{\gamma}$.
+  \item Elaboration of types is defined on \textbf{extended} source types (\Cref{dfn:extended-source-type}). This allows elaboration to carry classifiers. For example, rather than elaborating $\mathbb{N}^0$, $\mathbb{N}^0(\gamma)$ is elaborated into $\textsf{AST}(\mathbb{N})^{\gamma}$.
   \item Elaboration of contexts is extended to carry proof-theoretic terms e.g. $\gamma$ and $\gamma \sqsubseteq \gamma'$.
   \item Elaboration of top-level splice $\elaborate{\splice}_{\compilemode{}}$ is adapted to not insert \textbf{\texttt{tls}}.
   \item For simplicity, since refined environment classifiers do not require any of the machinery for dynamic scope extrusion checks, I consider the subset of \coreLang{} without \textbf{\texttt{check}} (and $\textbf{\texttt{check}}_M$), \textbf{\texttt{dlet}}, \textbf{\texttt{tls}}, and \textbf{\texttt{err}}.\ \coreLang{} configurations can thus be shortened to $\langle t;E;U\rangle$.
@@ -670,11 +668,11 @@ $\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \ga
 
 \begin{minipage}[t]{0.5\textwidth}
   \centering
-  $\inferrule[(\compilemode{}$\mid$\quotemode{}-Splice)]{\stypejudge[\Gamma]{e}{(\textsf{Code}(T^0 \, ! \, \xi)^{\gamma})^{-1} \, ! \, \Delta}}{\rcqtypejudge{\gamma}{\splice}{\runtimecomptype{T^0}{\Delta ; \xi}}}$
+  $\inferrule[(\compilemode{}$\mid$\quotemode{}-Splice)]{\stypejudge[\Gamma]{e}{\effectType{\textsf{Code}(T \, ! \, \xi)^{\gamma}}}}{\rcqtypejudge{\gamma}{\splice}{\runtimecomptype{T}{\Delta ; \xi}}}$
 \end{minipage}%
 \begin{minipage}[t]{0.5\textwidth}
   \centering
-  $\inferrule[(\splicemode{}-Quote)]{\rqtypejudge{\gamma}{e}{\runtimecomptype{T}{\Delta ; \xi}}}{\stypejudge[\Gamma]{\equote}{(\textsf{Code}(T^0 \, ! \, \xi)^{\gamma})^{-1} \, ! \, \Delta}}$
+  $\inferrule[(\splicemode{}-Quote)]{\rqtypejudge{\gamma}{e}{\runtimecomptype{T}{\Delta ; \xi}}}{\stypejudge[\Gamma]{\equote}{\textsf{Code}(T \, ! \, \xi)^{\gamma} \, ! \, \Delta}}$
 \end{minipage}
 
   \vspace{5mm}
@@ -711,7 +709,7 @@ The definition of the logical relation, \textsf{Scoped}, is presented in \Cref{f
   \[\Gamma = \gamma_\bot, \gamma_1, \gamma_\bot \sqsubseteq \gamma_1, \textcolor{comment}{(x:\mathbb{N}^0)^{\gamma_1}}, \gamma_2, \gamma_1 \sqsubseteq \gamma_2,  \textcolor{comment}{y:(\textsf{Code}(\mathbb{N}^0 \, ! \, \emptyset)^{\gamma_2})^{-1}}\]
   the proof theoretic part of the context is
   \[\pi_{\gamma}({\Gamma}) = \gamma_\bot, \gamma_1, \gamma_\bot \sqsubseteq \gamma_1, \gamma_2, \gamma_1 \sqsubseteq \gamma_2 \]
-  which serves as our $\Theta$.
+  which is an instance of $\Theta$.
   \item An \textbf{extended} \textit{source}-level type (\Cref{dfn:extended-source-type}). 
 \end{enumerate}
 
