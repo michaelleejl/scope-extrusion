@@ -768,7 +768,7 @@ The proof of \Cref{thm:refined-env-classifiers-correct} is via a Tait-style logi
     n \in \scoped{\mathbb{N}^{-1}} & \triangleq & n \in \mathbb{N} \\ 
     n \in \scoped{{T}^{0}(\gamma)} & \triangleq & \cdot \vdash \elaborate{n} \in \elaborate{T^{0} (\gamma)} \text{ and } \Theta \vdash \freevars{n} \subseteq \textsf{permitted}(\gamma) \\\vspace{2mm}
     && \textit{(symmetric for $(\textsf{Code}(T^0)^{\gamma})^{-1}$, $\effectType[\xi]{T^{0}} (\gamma)$, etc) }\\\vspace{2mm}
-    n \in \scoped{\underline{{T}^{0}(\gamma)}} & \triangleq & \varToAST{n} \in \scoped{\effectType{T^{0}} (\gamma)} \\ \vspace{2mm}
+    n \in \scoped{\underline{{T}^{0}(\gamma)}} & \triangleq & \texttt{Var}({n}) \in \scoped{{T^{0}} (\gamma)} \\ \vspace{2mm}
     n \in \scoped{(\functionType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, n \, n' \in \scoped{\effectType{T^{-1}}} \\ \vspace{2mm}
     n \in \scoped{(\continuationType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, \continue{n}{n'} \in \scoped{\effectType{T^{-1}}} \\\\ \vspace{2mm}
     \textbf{Handlers} \\
