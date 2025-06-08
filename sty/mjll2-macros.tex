@@ -23,7 +23,7 @@
 \newcommand{\continue}[2]{\textbf{\texttt{continue}} \, {#1} \, {#2}}
 
 \newcommand{\gensym}[1]{\textbf{\texttt{mkvar}} \, #1}
-\newcommand{\varToAST}[1]{{\texttt{Var}}({#1})}
+\newcommand{\varToAST}[1]{\return{{\texttt{Var}}({#1})}}
 
 \newcommand{\dlet}[2]{\textbf{\texttt{dlet}}({#1}, {#2})}
 \newcommand{\checkfv}[1]{\textbf{\texttt{check}}\, {#1}}
@@ -224,6 +224,8 @@
  \newcommand{\sourceLang}{$\lambda_{\equote[\texttt{op}]}$}
  \newcommand{\calculusName}{\sourceLang}
  \newcommand{\coreLang}{$\lambda_{\texttt{AST}(\texttt{op})}$}
+ \newcommand{\recLang}{\sourceLang$^{\gamma}$}
+
  \newtcolorbox{eff-desc}{
   common,
   % minted language=lexers/macocaml.py:MacocamlLexer,
@@ -313,6 +315,18 @@ borderline south={0.5mm}{0mm}{coreHighlight,line width=1pt},
 %   skin=tile,
  }
 
+ \newtcolorbox{rec-desc}{
+  common,
+  % minted language=lexers/macocaml.py:MacocamlLexer,
+  colback=white,
+  fontupper=\small,
+  borderline north={0.5mm}{0mm}{recHighlight,line width=1pt},
+borderline south={0.5mm}{0mm}{recHighlight,line width=1pt},
+  overlay={\node[fill=recHighlight,yshift=-10pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\recLang{}};}
+%   skin=tile,
+ }
+
  \newtcolorbox{core}{
   common,
   % minted language=ocaml,
@@ -339,6 +353,31 @@ borderline south={0.5mm}{0mm}{coreHighlight,line width=1pt},
 %   skin=tile,
  }
 
+ \newtcolorbox{rec}{
+  common,
+  % minted language=ocaml,
+  colback=recBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0.2\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=recHighlight,yshift=-10.7pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\recLang{}};}
+%   skin=tile,
+ }
+
+  \newtcolorbox{reclst}{
+  common,
+  % minted language=ocaml,
+  colback=recBackground,
+  fontupper=\linespread{1.1}\footnotesize,
+  after={\par\vspace{0\baselineskip}\noindent},
+  % listing engine=minted,
+  % minted options = {linenos, fontsize=\footnotesize, numbersep=15pt, baselinestretch=1.1, escapeinside=!!},
+  overlay={\node[fill=recHighlight,yshift=-10.7pt,xshift=-10pt,left,text=white,
+         anchor=east,font=\footnotesize\ttfamily\bfseries] at (frame.north east){\recLang{}};}
+%   skin=tile,
+ }
  \newenvironment{code}{\centering}{\par\vspace{0.6\baselineskip}}
 
  \makeatletter

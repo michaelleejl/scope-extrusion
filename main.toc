@@ -39,23 +39,24 @@
 \contentsline {subsection}{\numberline {3.3.5}Elaborating Typing Judgements}{42}{subsection.3.3.5}%
 \contentsline {section}{\numberline {3.4}Metatheory}{43}{section.3.4}%
 \contentsline {chapter}{\numberline {4}Scope Extrusion}{45}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Lazy Dynamic Check}{45}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Eager Dynamic Check}{46}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Correctness of the Eager Dynamic Check}{48}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Expressiveness of the Eager Dynamic Check}{49}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Efficiency of the Eager Dynamic Check}{50}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Best-Effort Dynamic Check}{50}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Correctness of the Best-Effort Dynamic Check}{53}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Best-Effort Dynamic Check}{54}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Efficiency of the Best-Effort Dynamic Check}{55}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Refined Environment Classifiers}{55}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Correctness of Refined Environment Classifiers}{58}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Expressiveness of Refined Environment Classifiers}{62}{subsection.4.4.2}%
-\contentsline {section}{\numberline {4.5}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{63}{section.4.5}%
-\contentsline {chapter}{\numberline {5}Conclusion}{64}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Limitations and Future Work}{64}{section.5.1}%
-\contentsline {chapter}{\numberline {A}Auxiliary Definitions}{69}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Erase}{69}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Litmus Tests}{70}{appendix.B}%
-\contentsline {section}{\numberline {B.1}MetaOCaml}{70}{section.B.1}%
+\contentsline {section}{\numberline {4.1}Properties of Dynamic Scope Extrusion Checks}{45}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Lazy Dynamic Check}{46}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Eager Dynamic Check}{48}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Correctness of the Eager Dynamic Check}{49}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Eager Dynamic Check}{50}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Efficiency of the Eager Dynamic Check}{51}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Best-Effort Dynamic Check}{51}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Correctness of the Best-Effort Dynamic Check}{55}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Expressiveness of the Best-Effort Dynamic Check}{55}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Efficiency of the Best-Effort Dynamic Check}{56}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Refined Environment Classifiers}{57}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Correctness of Refined Environment Classifiers}{59}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Expressiveness of Refined Environment Classifiers}{63}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{64}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Conclusion}{65}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Limitations and Future Work}{65}{section.5.1}%
+\contentsline {chapter}{\numberline {A}Auxiliary Definitions}{70}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Erase}{70}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Litmus Tests}{71}{appendix.B}%
+\contentsline {section}{\numberline {B.1}MetaOCaml}{71}{section.B.1}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

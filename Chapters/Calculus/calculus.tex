@@ -832,7 +832,7 @@ and \textsc{Eff-Op} behaves as it does in \efflang{} (\Cref{fig:efflang-opsem}):
 % The aforementioned malformed AST should be ill-typed. To do so, it is insufficient to require that the left sub-tree is of type $\textsf{AST($\mathbb{N}$)}$. It must specifically be a \underline{\textsf{Var}} AST node. That is the purpose of the \textsf{FParam} type. 
 
 \subsubsection{Typing Rules}
-The \sourceLang{} typing rules are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a computation that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST. 
+The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a computation that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST. 
 
 Notice that this type system does not guarantee that the resulting AST is \textit{well-scoped}, for example, the following is well-typed:
 \[\cdot \vdash {\Var{\alpha}{R}}: {\textsf{AST}(R)}\]
