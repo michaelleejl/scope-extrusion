@@ -1,7 +1,7 @@
 \section{Effect Handlers}\label{section:effects-technical}
 What is an effect handler? \Cref{subsection:effect-handler-motivation} first motivates effect handlers, as a way to build composable and customisable effects. \Cref{subsection:effect-handler-calculus} introduces a calculus for studying the operational behaviour of effect handlers, à la \citet{pretnar-15}. This calculus is useful both for precise description of effect handlers, and as a basis for investigating the interaction between metaprogramming and effect handlers. Finally, since different design decisions for effect handlers could affect the nature of their interaction with metaprogramming, \Cref{subsection:effect-handler-design} considers the design space of effect handlers.
 
-\subsection{Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
+\subsection{Effect Handlers: Composable and Customisable Effects}\label{subsection:effect-handler-motivation}
 Effects are a mechanism by which a program interacts with its environment. Examples of effects include state, (resumable) exceptions, non-determinism, and I/O. Different effects are typically defined and understood separately from each other, meaning they are not easily composable. They are also typically implemented by compiler engineers rather than programmers, meaning they are not customisable. In contrast, effect handlers provide a unifying (composable) and programmable (customisable) framework that may be instantiated into different effects \citep{kiselyov-2012}.
 
 % To illustrate the need for effect handlers, consider the following problem, by \citet{kiselyov-2012}. Assume a binary search tree of (key, value) pairs. The following code provides two functions. The first \mintinline{ocaml}{find}s a value \mintinline{ocaml}{v} associated with key \mintinline{ocaml}{k}, raising a \mintinline{ocaml}{NotFound} exception if \mintinline{ocaml}{k} is not in the tree. The second \mintinline{ocaml}{update}s the dictionary with a fresh key value pair, overwriting old values.
@@ -64,7 +64,7 @@ Since effect handlers may be instantiated into a range of different effects, con
 This section presents a calculus, \efflang{}, for reasoning about the operational behaviour of effect handlers.\ \efflang{} is broadly similar to the calculus described by \citet{pretnar-15} \footnote{Differences will be clarified as they arise}, and will be used in later sections to study the interaction between effect handlers and metaprogramming. 
 
 
-\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In this section, I additionally assume \efflang{} additionally supports a unit value (), pairs with pattern matching, strings with concatenation and \texttt{Python}-style format strings. 
+\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In this section, I additionally assume \efflang{} supports a unit value (), pairs with pattern matching, strings with concatenation and \texttt{Python}-style format strings. 
 
 For example, treating $\bind{x}{c_1}{c_2}$ as a let-binding (and ignoring \textbf{\texttt{return}}, which is explained shortly), the following code evaluates to \texttt{"Revolution 9"}:
 
@@ -108,7 +108,7 @@ This section explains key language constructs in turn, with reference to a runni
 \vspace{2mm}
 
   $\begin{array}{@{}llll}
-  \text{Values} & v & := & x \mid n \mid \lambda x. c \mid \kappa x.c\\
+  \text{Values} & v & := & x \mid m \in \mathbb{N} \mid \lambda x. c \mid \kappa x.c\\
 
   \text{Computations} & c & := & v_1 v_2 \mid \return{v} \mid \bind{x}{c_1}{c_2} \\
                              &&& \mid \op{v} \mid \handleWith{c}{h} \mid \continue{v_1}{v_2} \\ 
@@ -134,7 +134,7 @@ For example, extending \efflang{} with a \texttt{plus} function, what is the ord
 \begin{eff}
 $\bind{x}{c_1}{(\bind{y}{c_2}{(\bind{f}{\texttt{plus} \, x}{f y})})}$
 \end{eff}
-or alternatively, evaluate $c_1$, apply it, then evaluate $c_2$:
+or alternatively, interleave evaluation and application:
 \begin{eff}
 $\bind{x}{c_1}{(\bind{f}{\texttt{plus} \, x}{(\bind{y}{c_2}{f y})})}$
 \end{eff}
@@ -192,7 +192,7 @@ In the definition of $c$, the programmer may refer to $x$, the argument passed t
 \noindent where the program that adds one is suspended until the value is received. I write the suspended program as $\kappa y. \; y+\texttt{1}$, where the variable $y$ represents the as-yet-unknown value. $\kappa y. \; y+\texttt{1}$ is the continuation bound to $k$. The syntax is evocative: continuations can be thought of as being \textit{like}  functions $\lambda y. \; y+\texttt{1}$ (in \citeauthor{pretnar-15}'s calculus, functions and continuations share a type). However, for technical reasons relating to scope extrusion (\Cref{section:best-effort-check,section:refined-environment-classifiers-formal}), in \efflang{}, continuations and functions are disambiguated both syntactically and at the type-level (mirroring the approach by \citet{isoda-24}). The expression 
 \[\continue{k}{v}\] 
 is used to resume the suspended program, substituting value $v$ for $y$. For example,  
-\[\handleWith{\textbf{\texttt{get\_int\_from\_user}}() + 1}{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \continue{k}{\texttt{2}}}\]
+\[\handleWith{\textbf{\texttt{get\_int\_from\_user}}() + \texttt{1}}{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \continue{k}{\texttt{2}}}\]
 steps to $\texttt{2} + \texttt{1}$ (and thus evaluates to \texttt{3}).
 
 In \efflang{}, the continuation to be bound to $k$ is calculated. In contrast, in \citeauthor{pretnar-15}'s calculus, it is explicitly written by the programmer, using the syntax 
@@ -269,7 +269,7 @@ The operational semantics of \efflang{} (\Cref{fig:efflang-opsem}) is given on c
 The evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context, illustrates the operaton of  \textsc{Eff-Op} and \textsc{Eff-Cnt}. Let $h$ be the handler body 
 \[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
 \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\end{array}\]
-Several applications of \textsc{Cng-Psh} produces the configuration
+Several applications of \textsc{Cng-Psh} produces the configuration:
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -280,7 +280,7 @@ Several applications of \textsc{Cng-Psh} produces the configuration
   \]
 }
 
-Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op} suspends the program, finds the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and gives the \textbf{\texttt{print}} effect the desired semantics
+Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}}{\, x + y}}}$. Applying \textsc{Eff-Op} suspends the program, finds the handler $h$ with the user's semantics for \textbf{\texttt{print}}, and gives the \textbf{\texttt{print}} effect the desired semantics:
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -288,7 +288,7 @@ Let $E = \bind{x}{\return{u};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\t
 \end{array}
   \]
 }
-Applying \textsc{Cng-Psh},
+Applying \textsc{Cng-Psh}, we obtain the configuration:
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -296,7 +296,7 @@ Applying \textsc{Cng-Psh},
 \end{array}
   \]
 }
-Applying \textsc{Eff-Cnt} resumes the program that was suspended
+Applying \textsc{Eff-Cnt} resumes the program that was suspended:
 {  \arraycolsep=3pt
 \small
 \[\begin{array}{rcl}
@@ -310,7 +310,8 @@ Applying \textsc{Eff-Cnt} resumes the program that was suspended
 \end{array}
   \]
 }
-The side-condition on \textsc{Eff-Op} is needed because the user may define multiple handlers with different semantics for the same effect. The side-condition resolves any ambiguity by using the \textit{latest} handler. For example, the following program has a \textbf{\texttt{read}} effect that is given two definitions: it could read either \texttt{1} or \texttt{2}. The ambiguity is resolved by choosing the latest handler: in this case, the program reads \texttt{1}.
+
+The side-condition on \textsc{Eff-Op} is needed because the user may define multiple handlers with different semantics for a single instance of the same effect. The side-condition resolves any ambiguity by using the \textit{latest} handler. For example, the following program has a \textbf{\texttt{read}} effect that is given two definitions: it could read either \texttt{1} or \texttt{2}. The ambiguity is resolved by choosing the latest handler: in this case, the program reads \texttt{1}.
 \begin{eff}
 $\begin{array}{l}
   \textbf{\texttt{handle}} \\
@@ -414,7 +415,7 @@ The key rules are \textsc{Return}, \textsc{Do}, \textsc{Op}, and the handler rul
       \centering
       $\inferrule[(Nat)]
       { \\ }
-      {\type{n}{\mathbb{N}}}$
+      {\type{m}{\mathbb{N}}}$
       \end{minipage}% 
   \begin{minipage}[t]{0.2\textwidth}
     \centering
@@ -532,7 +533,7 @@ This flexibility is important, because to type $\bind{x}{c_1}{c_2}$, the \textsc
 \[\inferrule{\vdots}{\type[]{\bind{x}{\print{0}}{\return{\texttt{0}}}}{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}}\] 
 A valid alternative would be to add explicit subtyping. However, such an approach would no longer be syntax directed. 
 
-The \textsc{Op} rule forces the performed operation to be tracked by the effects set ($\texttt{op} \in \Delta$): flexibility allows the type system to over-approximate the effects in a term, but not to underapproximate them. 
+The \textsc{Op} rule forces the performed operation to be tracked by the effects set ($\texttt{op} \in \Delta$): flexibility allows the type system to over-approximate the effects in a computation, but not to underapproximate them. 
 
 Following the approach by \citet{biernacki-2017}, handlers are typed clause-by-clause, using the \textsc{Ret-Handler} and \textsc{Op-Handler} rules. In contrast, \citeauthor{pretnar-15} types a handler with a single rule that checks all clauses at once. Consider typing the handler:
 \[ \begin{array}{ll}
@@ -557,7 +558,7 @@ It is sufficient to show that:
   \item[(5)] There are no other handlers for \textbf{\texttt{print}} in $h$.
 \end{enumerate}
 
-Finally, a closed computation is well-typed if it can be typed with an empty effects set.  
+A closed computation is well-typed if it can be typed with an empty effects set.  
 \begin{definition}[Well-typed closed computation]{effHighlight}
   $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
 \end{definition}
@@ -573,7 +574,7 @@ If $\cdot \vdash {E[c]}: {\effectType{T}}$ then either
 \begin{enumerate}
 \item $c$ is of the form $\return{v}$ and $E = [-]$,
 \item $c$ is of the form $\op{v}$ for some $\textsf{op} \in \Delta$, and $\texttt{op} \notin \textsf{handled}({E})$
-\item $\exists. E', c'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$
+\item $\exists. \, c', E'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$
 \end{enumerate}
 \end{theorem}
 \vspace{-\baselineskip}
@@ -653,7 +654,7 @@ The design space of effect handlers is large. Different design decisions could i
          \begin{efflst}
           $\begin{array}{l}
             \textbf{\texttt{handle}} \\
-            \quad \textbf{\textsf{addn}}(\texttt{1}) + \textbf{\textsf{addn}}(\texttt{2}) \\
+            \quad \textbf{\texttt{addn}}(\texttt{1}) + \textbf{\texttt{addn}}(\texttt{2}) \\
             \textbf{\texttt{with}} \\
             \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{x}}; \, \textbf{\texttt{addn}}(y, k) \mapsto \continue{k}{(y+\texttt{1})} \}\\
           \end{array}$
@@ -686,7 +687,7 @@ The design space of effect handlers is large. Different design decisions could i
         \begin{efflst}
           $\begin{array}{l}
             \textbf{\texttt{handle}} \\
-            \quad \textbf{\textsf{performTwice}}(\texttt{1}) \\
+            \quad \textbf{\texttt{performTwice}}(\texttt{1}) \\
             \textbf{\texttt{with}} \\
             \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{x}};  \, \textbf{\texttt{performTwice}}(y, k) \mapsto (\continue{k}{y}) + (\continue{k}{y}) \}\\
           \end{array}$

@@ -177,7 +177,7 @@ As every variable binder creates a scope, we may refer to the classifier created
       \node (gammabot) at ($(var-3.north east) + (2cm,3.3cm)$) {$\gamma_{\bot}$};
       \node (gammaf) at ($(lam-2.north west) + (2.7cm,0.2cm)$) {$\gamma_{f}$};
       \node (gammafx) at ($(app-2.north west) + (1.3cm,0.1cm)$) {$\gamma_{fx}$};
-      \node (gammafx) at ($(var-3-use.north west) + (1.2cm,0.2cm)$) {$\gamma_{fx}$};
+      \node (gammay) at ($(var-3-use.north west) + (1.2cm,0.2cm)$) {$\gamma_{y}$};
     \end{scope}
     
   \end{tikzpicture}
@@ -250,7 +250,7 @@ The premises and conclusions have been numbered for reference, and many  technic
   \label{fig:cref-typing-rule}
   \end{figure}
 
-The above example focused on \textbf{creating} ASTs, and had no compile-time executable code. Refined environment classifiers additionally ensure well-scopedness is maintained while \textbf{manipulating} ASTs. Consider \Cref{fig:classifier-ast-scope-extrusion}, the ``AST'' of the scope extrusion example in \Cref{listing:efflang-scope-extrusion}. In place of AST nodes, we may now have compile-time executable programs that \textit{evaluate} to AST nodes. Thus, both programs and AST nodes reside within scopes. We have two classifiers: $\gamma_{\bot}$ and $\gamma_{\alpha}$, with $\textsf{classifier}(\texttt{Lam}(\alpha, -)) = \gamma_{\alpha}$.
+The example above focused on \textbf{creating} ASTs, and had no compile-time executable code. Refined environment classifiers additionally ensure well-scopedness is maintained while \textbf{manipulating} ASTs. Consider \Cref{fig:classifier-ast-scope-extrusion}, the ``AST'' of the scope extrusion example in \Cref{listing:efflang-scope-extrusion}. In place of AST nodes, we may now have compile-time executable programs that \textit{evaluate} to AST nodes. Thus, both programs and AST nodes reside within scopes. We have two classifiers: $\gamma_{\bot}$ and $\gamma_{\alpha}$, with $\textsf{classifier}(\texttt{Lam}(\alpha, -)) = \gamma_{\alpha}$.
 
 \begin{figure}
 \centering

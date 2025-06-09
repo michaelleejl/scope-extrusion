@@ -65,22 +65,23 @@ rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I will abuse not
 \subsection{Type System}\label{subsection:sourcelang-type-system}
 \begin{figure}
   \begin{source-desc}
-    $\begin{array}{lllr}
+    $\begin{array}{@{}lllr}
     {\textbf{\large {Effects set}}}\\\\
     \textbf{Run-Time} & \xi ::= \emptyset \mid \xi \cup \{ \textsf{op}_i^{0}\} \\
     \textbf{Compile-Time} & \Delta ::= \emptyset \mid \Delta \cup \{ \textsf{op}_i^{-1}\} \\\\
     \end{array}$
 
 \vspace{5mm}
-  $\begin{array}{lllr}
-    {\textbf{\large {Types}}}\\\\ \vspace{0.4mm}
-    \textbf{Level 0} & \text{Values} & S^0, T^0 ::= \mathbb{N}^0 & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
+    {\textbf{\large {Types}}}\\\\ 
+  $\begin{array}{@{}lllr}
+    \vspace{0.4mm}\textbf{Level 0} & \text{Values} & S^0, T^0 ::= \mathbb{N}^0 & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     && \quad\quad\quad\,\,\,\; \mid {(\functionType[\xi]{S^0}{T^0})}^{0} & \text{\footnotesize{functions}} \\ \vspace{0.4mm}
     && \quad\quad\quad\,\,\,\; \mid {(\continuationType[\xi]{S^0}{T^0})}^{0} & \text{\footnotesize{continuations}} \\\vspace{0.4mm}
-    & \text{Computations} & T^0 \, ! \, \xi \\\vspace{0.4mm}
+    & \text{Computations} &\mid T^0 \, ! \, \xi &  (\text{\footnotesize{\textbf{uninhabited}}})\\
     && \mid T^0 \, ! \, \Delta \\\vspace{0.4mm}
-     && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.8mm}
-    & \text{Handlers} & (\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0\, !\, \Delta\\ \\ 
+     && \mid T^0 \, ! \,  \Delta;\xi & \\\vspace{0.4mm}
+     &&\mid (\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0\, !\, \Delta\\\vspace{0.4mm}
+    & \text{Handlers} & (\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0 &  (\text{\footnotesize{\textbf{uninhabited}}})\\\\[4mm]
 
     \textbf{Level $-$1} & \text{Values} & S^{-1}, T^{-1} ::= \mathbb{N}^{-1} & \text{\footnotesize{naturals}} \\ \vspace{0.4mm}
     && \quad\quad\quad\quad\quad \mid {(\functionType{S}{T})}^{-1} & \text{\footnotesize{functions}} \\\vspace{0.4mm}
@@ -120,22 +121,30 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
   Second, \textbf{effect sets are stratified into $\xi$ (run-time) and $\Delta$ (compile-time)}.\\
   The following example prints \texttt{1} at compile-time, and \texttt{2} at run-time. Further, it reads an integer at run-time.
 \[\splice[{(\textbf{\texttt{print}}(\texttt{1}); \equote[\textbf{\texttt{print}}(\texttt{2}); \textbf{\texttt{readInt}}()])}]\]
-Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. Disambiguating run-time and compile-time effects stratifies types. Unlike in \efflang{}, where a term is either of value or computation type, in \sourceLang{}, the stratification of types is thus more granular:
-\begin{enumerate}[leftmargin=5.8\parindent]
-  \item[$T^0 \quad\quad\,\,$] Compile-time value, run-time value (value types) \\
-  \textit{Example}: The type of $x$ in $\lambda x. \return{x}$
-  \item[$T^0 \, ! \, \xi \quad\;$] Compile-time value, run-time computation  \\
-  \textit{Example}: The type of $x$ in $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$
-  \item[$T^0 \, ! \, \Delta \quad$] Compile-time computation, run-time value \\
-  \textit{Example}: $\lambda x. \return{x}$ 
-  \item[$T^0 \, ! \, \Delta; \xi$] Compile and run-time computation \\
-  \textit{Example}: $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$
-\end{enumerate}
-Further, the relationship between syntax and types is more complicated than in \efflang{}. For example, level $0$ \sourceLang{} values ($v$) do not have value type ($T^0$). Rather, since level $0$ values are elaborated into compile-time computations  that produce ASTs of run-time values, they have computation type $\effectType{T^{0}}$ (\Cref{table:typing-judgements}). As the stratification is subtle, it is best revisited after covering the typing rules (\Cref{subsection:sourcelang-type-system}), core language (\Cref{section:core-lang}), and elaboration (\Cref{section:elaboration}).
+Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. Disambiguating run-time and compile-time effects stratifies types. Unlike in \efflang{}, where a term is either of value or computation type, in \sourceLang{}, the stratification of types is more complex:
+\[\begin{array}{ll}
+  T^0 & \text{Compile-time and run-time value (value type)} \\
+  & \textit{Example: } \text{The type of $x$ in $\lambda x. \return{x}$}\\[2mm]
+  % \item[$T^0 \, ! \, \xi \quad\;$] Compile-time value, run-time computation  \\
+  % \textit{Example}: No inhabitants type of $x$ in $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$
+  T^0 \, ! \, \Delta  & \text{Compile-time computation, run-time value} \\
+  &\textit{Example: } \lambda x. \return{x} \\[2mm]
+  T^0 \, ! \, \Delta; \xi & \text{Compile and run-time computation} \\
+  &\textit{Example: } \splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})] \\[2mm]
+  (\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0\, !\, \Delta & \text{Compile-time computation, run-time handler} \\
+  &\textit{Example: } \{ \returnHandler{x}{\return{x}} \}
+\end{array}
+\]
+Compile-time values that are run-time computations cannot be created at level $0$ ($T^0 \, ! \, \xi$ has no inhabitants in \sourceLang{}). They can only be created at level $-1$, with type $\textsf{Code}(\effectType[\xi]{T^0})^{-1}$, e.g.\ $x$ in $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$. Intuitively, constructing a run-time computation \textit{requires} compile-time computation. Additionally, compile-time values that are run-time handlers cannot be created in \sourceLang{} ($(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0$ has no inhabitants). 
+
+The relationship between syntax and types is more complicated than in \efflang{}. For example, level $0$ values ($v$) do not have value type ($T^0$). Rather, since level $0$ values are elaborated into compile-time computations  that produce ASTs of run-time values, they have computation type $\effectType{T^{0}}$ (\Cref{table:typing-judgements}). 
+
+As the stratification is subtle, it is best revisited after covering the typing rules (\Cref{subsection:sourcelang-type-system}), core language (\Cref{section:core-lang}), and elaboration (\Cref{section:elaboration}).
 % As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
-Third, \textbf{there is a level $-1$ \textsf{Code} type, representing run-time ASTs}.\\ 
-  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable metaprogramming, run-time terms should be available at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, which makes ASTs of level $0$ terms available to level $-1$ programs.
+Third, \textbf{there is a level $-1$ \textsf{Code} type, representing run-time ASTs}.
+
+  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable metaprogramming, run-time terms should be available at compile-time as ASTs. This is the role of the \textsf{Code} type, which makes ASTs of level $0$ terms available to level $-1$ programs.
 % Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
 
 Putting it all together, we can now interpret complex \sourceLang{} types, like the following:
@@ -196,7 +205,7 @@ Putting it all together, we can now interpret complex \sourceLang{} types, like 
   \label{table:typing-judgements}
 \end{table}
 
-The \sourceLang{} typing rules are collated in \Cref{fig:source-cq-typing-rules,fig:source-s-typing-rules}. As in \citet{xie-2023}, typing judgements are indexed by a level and a compiler mode:
+The \sourceLang{} typing rules are collated in \Cref{fig:source-cq-typing-rules,fig:source-s-typing-rules}. Following \citet{xie-2023}, typing judgements are indexed by a level and a compiler mode:
 \[\Gamma \vdash^{\textbf{Level}}_{\textbf{Mode}} -: \; =\]
 For each (level, mode) pair, similarly to \efflang{}, there are three typing judgements: one for values ($v$), expressions ($e$), and handlers ($h$). This section shows that each compiler mode uniquely determines a level (once shown, I drop the level from the typing judgement). As there are three compiler modes -- \textbf{Compile} (\compilemode{}), \textbf{Quote} (\quotemode{}), and \textbf{Splice} (\splicemode{}) -- there are nine typing judgements in total, three for each mode (\Cref{table:typing-judgements}).
 
@@ -747,7 +756,7 @@ The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return
 \end{enumerate}
 What does it mean to be ``properly scoped'' (the side condition on \textsc{Sec-Chs})? The answer is slightly subtle. Consider the following program: 
 \[\bind{\texttt{body}}{\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
-$\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': $\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}$ should succeed. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
+$\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': $\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}$ should succeed. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword: 
 \[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
 More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{R}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{R}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{R} \}\]
@@ -757,7 +766,7 @@ Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is ``declared safe'' in $E$ if $\V
   Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is \emph{\textbf{declared safe}} in $E$ if $\Var{\alpha}{R} \in \projfvs{E}$
 \end{definition}
 
-Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus succeeds if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe in $E$, $\freevars{n} \subseteq \projfvs{E}$. 
+Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, $\textbf{\texttt{check}} \, n$ succeeds ($n$ is ``properly scoped'' in $E$) if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe in $E$, $\freevars{n} \subseteq \projfvs{E}$. 
 
 It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}. Therefore, the onus is on the person defining the elaboration to justify that \textbf{\texttt{dlet}} and \textbf{\texttt{check}} are used appropriately. 
 
@@ -832,7 +841,7 @@ and \textsc{Eff-Op} behaves as it does in \efflang{} (\Cref{fig:efflang-opsem}):
 % The aforementioned malformed AST should be ill-typed. To do so, it is insufficient to require that the left sub-tree is of type $\textsf{AST($\mathbb{N}$)}$. It must specifically be a \underline{\textsf{Var}} AST node. That is the purpose of the \textsf{FParam} type. 
 
 \subsubsection{Typing Rules}
-The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a computation that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST of computation type. 
+The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a term that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST of some run-time computation type. 
 
 Notice that this type system does not guarantee that the resulting AST is \textit{well-scoped}, for example, the following is well-typed:
 \[\cdot \vdash {\Var{\alpha}{R}}: {\textsf{AST}(R)}\]
@@ -905,15 +914,15 @@ A closed term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \end{figure}
  
 \subsection{Implementation}
-The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implementation. In the implementation, \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} are not primitives. Rather, they are encoded as a \textit{mode of use} of effects and handlers. 
+The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implementation (\Cref{appendix:implementation}). In the implementation, \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} are not primitives. Rather, they are encoded as a \textit{mode of use} of effects and handlers. 
 \begin{enumerate}
   \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that are passed the free variables of $n$\\ 
-  $\checkm{n}$ is similar, except there are also \texttt{Mute} and \texttt{Unmute} effects
+  $\checkm{n}$ is similar, except there is also a \texttt{Mute} effect
   
   \item $\dlet{\Binder{\alpha}{R}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{R}$ from the set of free variables, and either:
   \begin{enumerate}
     \item Resumes the continuation, if the set of free variables is now empty (all free variables declared safe)
-    \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are declared safe. Following a successful such check, the continuation may be resumed.
+    \item Performs another \texttt{FreeVar} effect, to check that the remaining free variables are declared safe. If the check returns successfully, the continuation may be resumed.
   \end{enumerate}
   \item \textbf{\texttt{err}} is an unhandled \texttt{FreeVar} effect
 \end{enumerate}
@@ -937,20 +946,20 @@ Elaboration of effect sets is the identity, that is
 \end{array}\]
 
 \subsection{Elaborating Types}
-To define the elaboration of types, it is convenient to refer to a helper function, \textsf{erase} (\Cref{appendix:auxiliary-erase}), that, given a level $0$ type, \textit{erases} all of the level annotations (and elaborates effect sets), producing a run-time pre-type. For example: 
+To define the elaboration of types, it is convenient to refer to a helper function, \textsf{erase} (\Cref{appendix:auxiliary-erase}). Given a level $0$ type, \textsf{erase} \textit{erases} all of the level annotations (and elaborates effect sets). For example: 
 \[\textsf{erase}((\functionType[\xi]{S^0}{T^0})^0) = \functionType[\elaborate{\xi}]{S}{T}\]
-In a nutshell, level $0$ types elaborate into \textsf{AST} types, and level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types ($\elaborate{\textsf{Code}(\effectType{T^0})^{-1}} = \elaborate{\effectType{T^0}}$).
+In a nutshell, level $0$ types elaborate into \textsf{AST} types, and level $-1$ types elaborate into themselves (sans level annotations), except for \textsf{Code} types, which elaborate into \textsf{AST} types. Only the elaboration for inhabited types is shown:
 \[
 \begin{array}{rcl}
   \elaborate{T^0} & = & \AST{\erase{T^0}}\\
-  \elaborate{\effectType[\xi]{T^0}} & = & \AST{\erase{\effectType[\xi]{T^0}}}\\
+  % \elaborate{\effectType[\xi]{T^0}} & = & \AST{\erase{\effectType[\xi]{T^0}}}\\
   \elaborate{\effectType[\Delta]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{T^0}}}\\
   \elaborate{\effectType[\Delta ; \xi]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{\effectType[\xi]{T^0}}}}\\
-  \elaborate{{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})}^0} & = & {\AST{\erase{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0}}}\\\\
+  \elaborate{{\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})}^0}} & = & {\effectType[\elaborate{\Delta}]{\AST{\erase{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0}}}}\\\\
   \elaborate{\mathbb{N}^{-1}} & = & \mathbb{N} \\
   \elaborate{(\functionType{S^{-1}}{T^{-1}})^{-1}} & = & \functionType[\elaborate{\Delta}]{\elaborate{S^{-1}}}{\elaborate{T^{-1}}} \\
   \elaborate{(\continuationType{S^{-1}}{T^{-1}})^{-1}} & = & \continuationType[\elaborate{\Delta}]{\elaborate{S^{-1}}}{\elaborate{T^{-1}}} \\
-  \elaborate{\textsf{Code}({\effectType[\xi]{T^{0}}})^{{-1}}} & = & {\textsf{AST}(\erase{{\effectType[\xi]{T^{0}}}})}\\[2mm]
+  \elaborate{\textsf{Code}({\effectType[\xi]{T^{0}}})^{{-1}}} & = & {\textsf{AST}(\effectType[\elaborate{\xi}]{\erase{{{T^{0}}}}})}\\[2mm]
   \elaborate{\effectType{T^{-1}}} & = & \effectType[\elaborate{\Delta}]{\elaborate{T^{-1}}}\\[2mm]
   \elaborate{(\handlerType{\effectType[\Delta_1]{S^{-1}}}{\effectType[\Delta_2]{T^{-1}}})^{-1}} & = & \handlerType{\effectType[\elaborate{\Delta_1}]{\elaborate{S^{-1}}}}{\effectType[\elaborate{\Delta_2}]{\elaborate{T^{-1}}}}\\
   % \text{if} \, T \neq \Code{\effectType[\xi]{T^0}} \, \text{then} \, \erase{T^{-1}} \\ && \text{else}\, \AST{\erase{\effectType[\xi]{T^0}}}\\

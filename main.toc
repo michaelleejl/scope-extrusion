@@ -6,7 +6,7 @@
 \contentsline {subsubsection}{\nonumberline The Mechanics of Metaprogramming}{6}{subsubsection*.7}%
 \contentsline {subsection}{\numberline {2.1.2}The Design Space of Metalanguages}{8}{subsection.2.1.2}%
 \contentsline {section}{\numberline {2.2}Effect Handlers}{9}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Composable and Customisable Effects}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.1}Effect Handlers: Composable and Customisable Effects}{9}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}$\lambda _{\texttt {op}}${}: A Calculus for Effect Handlers}{9}{subsection.2.2.2}%
 \contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt {do} and \texttt {return}}{10}{subsubsection*.9}%
 \contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{11}{subsubsection*.11}%
@@ -59,4 +59,6 @@
 \contentsline {section}{\numberline {A.1}Erase}{70}{section.A.1}%
 \contentsline {chapter}{\numberline {B}Litmus Tests}{71}{appendix.B}%
 \contentsline {section}{\numberline {B.1}MetaOCaml}{71}{section.B.1}%
+\contentsline {chapter}{\numberline {C}Implementation}{73}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Implementation of the $\lambda _{\texttt {AST}(\texttt {op})}${} Primitives}{73}{section.C.1}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

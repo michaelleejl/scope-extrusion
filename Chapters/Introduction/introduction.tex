@@ -84,9 +84,9 @@ Concretely, the contributions of this work are:
 \begin{enumerate}
     \item A novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time (\Cref{chapter:calculus}). \calculusName{} is well-typed, has the expected metatheoretic properties (\Cref{section:metatheory}), and is designed to facilitate comparative evaluation of different scope extrusion checks (\Cref{chapter:scope-extrusion}).
     \item In \calculusName{}, a formal description of the MetaOCaml check described by \citet{kiselyov-14} (\Cref{subsubsection:eager-dynamic-check}), as well as an evaluation of its correctness (\Cref{subsection:eager-dynamic-correctness}), expressiveness (\Cref{subsection:eager-dynamic-expressiveness}), and efficiency (\Cref{subsection:eager-dynamic-efficiency}).
-    \item In \calculusName{}, a formal description of a novel Dynamic Best-Effort check (\Cref{section:best-effort-check}), which I prove correct (\Cref{subsection:best-effort-correct}), and argue, by comparison with other checks, lands in a goldilocks zone between expressiveness (\Cref{subsection:best-effort-expressive}) and efficiency (\Cref{subsection:best-effort-efficient}). 
+    \item In \calculusName{}, a formal description of a novel dynamic best-effort check (\Cref{section:best-effort-check}), which I prove correct (\Cref{subsection:best-effort-correct}), and argue, by comparison with other checks, lands in a goldilocks zone between expressiveness (\Cref{subsection:best-effort-expressive}) and efficiency (\Cref{subsection:best-effort-efficient}). 
     \item An extension of \calculusName{} with refined environment classifiers \citep{kiselyov-16}, with a proof of correctness via logical relation (\Cref{subsection:rec-formal-correctness}), and an evaluation of its expressiveness compared to other checks (\Cref{subsection:rec-formal-expressiveness}).
-    \item Implementations of the three dynamic checks in MacoCaml.
+    \item Implementations of the three dynamic checks in MacoCaml. The best-effort check has been merged into MacoCaml.
 \end{enumerate}
 
 % The scope of this dissertation thus extends to effect systems with \textbf{deep} (but \textbf{unnamed}) handlers and \textbf{multi-shot continuations}.

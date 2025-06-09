@@ -21,13 +21,13 @@ The \mintinline{ocaml}{app: diff -> int -> int} function evaluates elements of t
 
 \begin{ocaml}
 let rec app (f: diff) (x: int) = 
-  let rec app_poly (cs: int list) (x : int) (acc: int) = match cs with 
+  let rec app_poly (cs: int list) (x : int) (acc: int) = (match cs with 
     | [] -> acc 
-    | c::cs -> app_poly cs x (c + (x * acc)) 
+    | c::cs -> app_poly cs x (c + (x * acc)))
   in match f with 
-    | Poly(cs)      -> match cs with 
-                      | [] -> 0
-                      | c::cs -> app_poly cs x c
+    | Poly(cs)      -> (match cs with 
+                        | [] -> 0
+                        | c::cs -> app_poly cs x c)
     | Compose(g, h) -> app h (app g x)
 \end{ocaml}
 
@@ -39,7 +39,7 @@ let rec grad_main (f: diff) (x: int) =
   let grad_poly (cs: int list) (x: int) = 
     let grad_p c (a, b) = (c * b :: a, b + 1) in
     let (res, _) = List.fold_right grad_p cs ([], 0) in 
-    app Poly(remove_last res) x (*remove_last removes the last element of a list*)
+    app (Poly(remove_last res)) x (*remove_last removes the last element of a list*)
   in match f with
     | Poly(cs)      -> grad_poly cs x
     | Compose(g, h) -> grad_main g x * grad_main h (app g x)
@@ -85,13 +85,13 @@ Metaprogramming allows for code that, when executed, generates code. Thus, it ca
 \begin{code}
 \begin{macocamllst}
 macro rec app_gen (f: diff) (x: int expr) = 
-  let rec app_poly_gen (cs: int list) (x : int expr) (acc: int expr) = match cs with 
+  let rec app_poly_gen (cs: int list) (x : int expr) (acc: int expr) = (match cs with 
     | [] -> acc 
-    | c::cs -> app_poly_gen cs x <<c + ($x * $acc)>>
+    | c::cs -> app_poly_gen cs x <<c + ($x * $acc)>>)
   in match f with 
-    | Poly(cs)      -> match cs with 
-                      | [] -> <<0>>
-                      | c::cs -> app_poly cs x <<c>>
+    | Poly(cs)      -> (match cs with 
+                        | [] -> <<0>>
+                        | c::cs -> app_poly cs x <<c>>)
     | Compose(g, h) -> app_gen h (app_gen g x)
 
 macro rec grad_gen (f: diff) (x: int expr) = 
@@ -103,7 +103,7 @@ macro rec grad_gen (f: diff) (x: int expr) =
     | Poly(cs)      -> grad_poly_gen cs x
     | Compose(g, h) -> << $(grad_main g <<x>>) * $(grad_main h (app_gen g <<x>>)) >>
 
-let grad_spec y = $(grad_gen Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4])) <<y>>)
+let grad_spec y = $(grad_gen (Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4]))) <<y>>)
                    (* generates (2 + (y * 2)) * 2 *)
 \end{macocamllst}
 \captionof{listing}{A metaprogrammed \mintinline{ocaml}{grad_gen} function, which resembles \mintinline{ocaml}{grad_main} but generates a function resembling \mintinline{ocaml}{grad_spec}}
@@ -114,7 +114,7 @@ let grad_spec y = $(grad_gen Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4])) <<y>>)
 In MacoCaml, the programmer is able to generate code at compile-time, for use at run-time. I separate this into two language features:
 \begin{enumerate}
   \item A type for code (\mintinline{ocaml}{'a expr}), with mechanisms (\mintinline{ocaml}{<<->>}, \mintinline{ocaml}{$-}) for creating and manipulating values of this type. Expressions that return values of code type serve as code generators.
-  \item A mechanism for executing expressions \textit{at compile-time}. By using the type-system, MacoCaml ensures only code generators can be executed at compile-time. Thus compile-time evaluation will always produce code values that can be evaluated at run-time (as opposed to \mintinline{ocaml}{int}s, for example, which cannot). 
+  \item A mechanism for executing expressions \textit{at compile-time}. By using the type-system, MacoCaml ensures only code generators can be executed at compile-time. Thus, compile-time evaluation will always produce code values that can be evaluated at run-time (as opposed to \mintinline{ocaml}{int}s, for example, which cannot). 
 \end{enumerate}
 
 First, in MacoCaml, code of type \mintinline{ocaml}{'a} has type \mintinline{ocaml}{'a expr}. For example, code of type \mintinline{ocaml}{int} has type \mintinline{ocaml}{int expr}. 
@@ -127,7 +127,7 @@ First, in MacoCaml, code of type \mintinline{ocaml}{'a} has type \mintinline{oca
 % pow_gen 2 Var(y) (*Mul(Var(y), Mul(Var(y), Int(1)))*)
 % pow_gen 3 Var(y) (*Mul(Var(y), Mul(Var(y), Mul(Var(y), Int(1))))*)
 % \end{ocaml}
-In MacoCaml, the \mintinline{ocaml}{<<->>} (``quote'') annotation converts expressions to code values (similar to how \mintinline{ocaml}{[-]} converts expressions to list values). For example, \mintinline{ocaml}{<<1>>} has type \mintinline{ocaml}{int expr}. Under a quotation, the \mintinline{ocaml}{$-} (``splice'') annotation stops this conversion, allowing for evaluation under a quotation. For example, 
+In MacoCaml, the \mintinline{ocaml}{<<->>} (``quote'') annotation converts expressions to code values. For example, \mintinline{ocaml}{<<1>>} has type \mintinline{ocaml}{int expr}. Under a quotation, the \mintinline{ocaml}{$-} (``splice'') annotation stops this conversion, allowing for evaluation under a quotation. For example, 
 
 \begin{center}\mintinline{ocaml}{<<$(print_int 1+2; <<1+2>>) + 0 >>}\end{center} 
 
@@ -167,17 +167,17 @@ Note that to access \mintinline{ocaml}{grad_gen} at compile-time, we must also m
 
 \begin{macocaml}
 let grad_spec y  = $(let grad_gen = ... in 
-                     grad_gen Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4])) <<y>>) 
+                     grad_gen (Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4]))) <<y>>) 
 let grad_spec' y = $(let grad_gen = ... in 
-                     grad_gen Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8])) <<y>>) 
+                     grad_gen (Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8]))) <<y>>) 
 \end{macocaml}
 
 To allow compile-time functions, like \mintinline{ocaml}{grad_gen}, to be re-used across multiple top-level splices, MacoCaml introduces the \mintinline{\macocamlLexer}{macro} keyword:
 
 \begin{macocaml}
 macro grad_gen = ...  
-let grad_spec y  = $(grad_gen Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4])) <<y>>) 
-let grad_spec' y = $(grad_gen Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8])) <<y>>) 
+let grad_spec y  = $(grad_gen (Compose(Poly([1 ; 2 ; 0]), Poly([2 ; 4]))) <<y>>) 
+let grad_spec' y = $(grad_gen (Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8]))) <<y>>) 
 \end{macocaml}
 % To allow definitions to
 
@@ -207,7 +207,7 @@ Different metalanguages provide slightly different variants of metaprogramming t
         The metaprogramming supported by MacoCaml is homogenous, where \texttt{OCaml} code generates \texttt{OCaml} code. I focus on homogenous metaprogramming.
         %  In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 
 
-  \item \textbf{\textsf{Run-time or Compile-Time}} \\
+  \item \textbf{\textsf{Compile-time or Run-Time}} \\
         \textit{When does the generation take place?}
 
         Code generation could take place at compile-time or at run-time.
@@ -215,7 +215,7 @@ Different metalanguages provide slightly different variants of metaprogramming t
 
         % Run-time code generation may still be used to write fast and maintainable code, by adding a phase after the traditional compilation pipeline where the compiled code is executed. 
         
-        Run-time and compile-time metaprogramming differ non-trivially. For example, with run-time metaprogramming, generated and generating programs may share a heap. 
+        Compile-time and run-time metaprogramming differ non-trivially. For example, with run-time metaprogramming, generated and generating programs may share a heap. 
         % The former requires a language construct (\mintinline{ocaml}{!}, or ``run'') for explicit invocation of the compiler. 
 
         In MacoCaml, code generation occurs at compile-time, and I pay no further attention to run-time metaprogramming.
@@ -223,7 +223,7 @@ Different metalanguages provide slightly different variants of metaprogramming t
   \item \textbf{\textsf{Two-stage or Multi-stage}} \\
   \textit{How many stages of code generation are allowed?}
 
-  When introducing MacoCaml, I illustrated how one uses top-level splices to shift computation from run-time (``level $0$'') to compile-time (``level $-1$''). I describe levels formally in \Cref{subsection:sourcelang-type-system} (\Cref{dfn:level}, \Cpageref{dfn:level}). For now, it suffices to think of a level as a phase of evaluation: everything at level $-1$ must be fully evaluated before anything at level $0$ is evaluated. Might it be possible to shift computation from compile-time to a pre-compile-time (``level $-2$'') phase, for example, via a nested splice?
+  In MacoCaml, top-level splices shift computation from run-time (``level $0$'') to compile-time (``level $-1$''). I describe levels formally in \Cref{subsection:sourcelang-type-system} (\Cref{dfn:level}, \Cpageref{dfn:level}). For now, it suffices to think of a level as a phase of evaluation: everything at level $-1$ must be fully evaluated before anything at level $0$ is evaluated. Might it be possible to shift computation from compile-time to a pre-compile-time (``level $-2$'') phase, for example, via a nested splice?
   \begin{macocaml}
 $($ grad_gen f <<y>> )
   \end{macocaml}
