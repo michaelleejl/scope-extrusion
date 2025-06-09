@@ -135,6 +135,7 @@
 \newlabel{thm:type-safety@cref}{{[mdtheorem][4][2,2]2.2.{4}}{[1][18][]18}{}{}{}}
 \citation{xie-2022}
 \citation{xie-2022}
+\citation{isoda-24}
 \citation{hillestrom-2018}
 \citation{phipps-costin-2023}
 \citation{isoda-24}
@@ -342,6 +343,8 @@
 \newlabel{chapter:scope-extrusion}{{4}{45}{Scope Extrusion}{chapter.4}{}}
 \newlabel{chapter:scope-extrusion@cref}{{[chapter][4][]4}{[1][45][]45}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Properties of Dynamic Scope Extrusion Checks}{45}{section.4.1}\protected@file@percent }
+\newlabel{section:properties}{{4.1}{45}{Properties of Dynamic Scope Extrusion Checks}{section.4.1}{}}
+\newlabel{section:properties@cref}{{[section][1][4]4.1}{[1][45][]45}{}{}{}}
 \zref@newlabel{mdf@pagelabel-14}{\default{4.1}\page{45}\abspage{51}\mdf@pagevalue{45}}
 \@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.1.{1}}{Correctness of a Dynamic Scope Extrusion Check}}{45}{mdtheorem.4.1.1}\protected@file@percent }
 \BKM@entry{id=29,dest={73656374696F6E2E342E32},srcline={39}}{5C3337365C3337375C3030304C5C303030615C3030307A5C303030795C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
@@ -373,8 +376,8 @@
 \newlabel{dfn:eager-scope-extrusion@cref}{{[definition][1][4,3]4.3.{1}}{[1][48][]48}{}{}{}}
 \citation{kiselyov-24}
 \BKM@entry{id=31,dest={73756273656374696F6E2E342E332E31},srcline={212}}{5C3337365C3337375C303030435C3030306F5C303030725C303030725C303030655C303030635C303030745C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030455C303030615C303030675C303030655C303030725C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
-\@writefile{lol}{\contentsline {listing}{\numberline {13}{\ignorespaces Illustrating the eager dynamic check: eager scope extrusion is caused by the $\texttt  {\textbf  {return}} \,\, {y}$ expression. Scope extrusion is not immediately detected. Rather, $z$ is bound to $\texttt  {Var}(x_{\mathbb  {N}})$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote [{\splice [z]} + 1]$, in a context where $\texttt  {Var}(x_{\mathbb  {N}})$ is not declared safe}}{49}{listing.13}\protected@file@percent }
-\newlabel{listing:eager-scope-extrusion-check-eg}{{13}{49}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return {y}$ expression. Scope extrusion is not immediately detected. Rather, $z$ is bound to $\Var {x}{\mathbb {N}}$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote [{\splice [z]} + 1]$, in a context where $\Var {x}{\mathbb {N}}$ is not declared safe}{listing.13}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {13}{\ignorespaces Eager scope extrusion is caused by the $\texttt  {\textbf  {return}} \,\, {y}$ expression. $z$ is bound to $\texttt  {Var}(x_{\mathbb  {N}})$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote [{\splice [z]} + 1]$, in a context where $\texttt  {Var}(x_{\mathbb  {N}})$ is not declared safe}}{49}{listing.13}\protected@file@percent }
+\newlabel{listing:eager-scope-extrusion-check-eg}{{13}{49}{Eager scope extrusion is caused by the $\return {y}$ expression. $z$ is bound to $\Var {x}{\mathbb {N}}$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote [{\splice [z]} + 1]$, in a context where $\Var {x}{\mathbb {N}}$ is not declared safe}{listing.13}{}}
 \newlabel{listing:eager-scope-extrusion-check-eg@cref}{{[listing][13][]13}{[1][49][]49}{}{}{}}
 \@writefile{lol}{\contentsline {listing}{\numberline {14}{\ignorespaces The eager dynamic check additionally checks at top-level splices.}}{49}{listing.14}\protected@file@percent }
 \newlabel{listing:eager-scope-extrusion-check-eg-tls}{{14}{49}{The eager dynamic check additionally checks at top-level splices}{listing.14}{}}
@@ -435,8 +438,8 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Expressiveness of the Best-Effort Dynamic Check}{55}{subsection.4.4.2}\protected@file@percent }
 \newlabel{subsection:best-effort-expressive}{{4.4.2}{55}{Expressiveness of the Best-Effort Dynamic Check}{subsection.4.4.2}{}}
 \newlabel{subsection:best-effort-expressive@cref}{{[subsection][2][4,4]4.4.2}{[1][55][]55}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {19}{\ignorespaces The best-effort scope extrusion check reports false positives. This program attempts to build the AST $\lambda x.\texttt  {\textbf  {return}} \,\, {y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of $\texttt  {1}$.}}{55}{listing.19}\protected@file@percent }
-\newlabel{listing:best-effort-imperfect}{{19}{55}{The best-effort scope extrusion check reports false positives. This program attempts to build the AST $\lambda x.\return {y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of $\texttt {1}$}{listing.19}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {19}{\ignorespaces The best-effort check reports false positives. This program attempts to build the AST $\lambda x.\texttt  {\textbf  {return}} \,\, {y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of $\texttt  {1}$.}}{55}{listing.19}\protected@file@percent }
+\newlabel{listing:best-effort-imperfect}{{19}{55}{The best-effort check reports false positives. This program attempts to build the AST $\lambda x.\return {y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of $\texttt {1}$}{listing.19}{}}
 \newlabel{listing:best-effort-imperfect@cref}{{[listing][19][]19}{[1][55][]55}{}{}{}}
 \BKM@entry{id=37,dest={73756273656374696F6E2E342E342E33},srcline={538}}{5C3337365C3337375C303030455C303030665C303030665C303030695C303030635C303030695C303030655C3030306E5C303030635C303030795C3030305C3034305C3030306F5C303030665C3030305C3034305C303030745C303030685C303030655C3030305C3034305C303030425C303030655C303030735C303030745C3030302D5C303030455C303030665C303030665C3030306F5C303030725C303030745C3030305C3034305C303030445C303030795C3030306E5C303030615C3030306D5C303030695C303030635C3030305C3034305C303030435C303030685C303030655C303030635C3030306B}
 \BKM@entry{id=38,dest={73656374696F6E2E342E35},srcline={543}}{5C3337365C3337375C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
@@ -467,78 +470,87 @@
 \citation{isoda-24}
 \citation{isoda-24}
 \citation{tait-67}
-\citation{isoda-24}
-\citation{kammar-2013}
 \zref@newlabel{mdf@pagelabel-25}{\default{4.5}\page{58}\abspage{64}\mdf@pagevalue{58}}
 \@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.5.{2}}{Well-typed closed expression}}{58}{mdtheorem.4.5.2}\protected@file@percent }
 \newlabel{dfn:well-typed-exp-rec}{{4.5.{2}}{58}{Refined Environment Classifiers}{mdtheorem.4.5.2}{}}
 \newlabel{dfn:well-typed-exp-rec@cref}{{[definition][2][4,5]4.5.{2}}{[1][57][]58}{}{}{}}
+\zref@newlabel{mdf@pagelabel-26}{\default{4.5}\page{58}\abspage{64}\mdf@pagevalue{58}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.5.{3}}{Well-Formed Level $-1$ Type}}{58}{mdtheorem.4.5.3}\protected@file@percent }
+\newlabel{dfn:well-typed-exp-rec}{{4.5.{3}}{58}{Refined Environment Classifiers}{mdtheorem.4.5.3}{}}
+\newlabel{dfn:well-typed-exp-rec@cref}{{[definition][3][4,5]4.5.{3}}{[1][58][]58}{}{}{}}
 \@writefile{lol}{\contentsline {listing}{\numberline {20}{\ignorespaces The program uses handlers to perform let-insertion, generating $(\lambda z. z + z)(e)$ rather than $e + e$. It is hard to type this in $\lambda _{\equote [\texttt  {op}]}$$^{\gamma }${} without polymorphism.}}{58}{listing.20}\protected@file@percent }
 \newlabel{listing:refined-environment-classifiers-let-insertion}{{20}{58}{The program uses handlers to perform let-insertion, generating $(\lambda z. z + z)(e)$ rather than $e + e$. It is hard to type this in \recLang {} without polymorphism}{listing.20}{}}
 \newlabel{listing:refined-environment-classifiers-let-insertion@cref}{{[listing][20][]20}{[1][58][]58}{}{}{}}
 \citation{isoda-24}
+\citation{kammar-2013}
 \citation{isoda-24}
 \citation{isoda-24}
 \citation{isoda-24}
-\BKM@entry{id=39,dest={73756273656374696F6E2E342E352E31},srcline={750}}{5C3337365C3337375C303030435C3030306F5C303030725C303030725C303030655C303030635C303030745C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
+\citation{isoda-24}
+\BKM@entry{id=39,dest={73756273656374696F6E2E342E352E31},srcline={757}}{5C3337365C3337375C303030435C3030306F5C303030725C303030725C303030655C303030635C303030745C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
 \citation{benton-09}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
-\zref@newlabel{mdf@pagelabel-26}{\default{4.5}\page{59}\abspage{65}\mdf@pagevalue{59}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.5.{3}}{Weakening for Level 0 Values}}{59}{mdtheorem.4.5.3}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-27}{\default{4.5}\page{59}\abspage{65}\mdf@pagevalue{59}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.5.{4}}{Weakening for Level 0 Values}}{59}{mdtheorem.4.5.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Correctness of Refined Environment Classifiers}{59}{subsection.4.5.1}\protected@file@percent }
 \newlabel{subsection:rec-formal-correctness}{{4.5.1}{59}{Correctness of Refined Environment Classifiers}{subsection.4.5.1}{}}
 \newlabel{subsection:rec-formal-correctness@cref}{{[subsection][1][4,5]4.5.1}{[1][59][]59}{}{}{}}
-\zref@newlabel{mdf@pagelabel-27}{\default{4.5.1}\page{59}\abspage{65}\mdf@pagevalue{59}}
-\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.5.{4}}{Correctness of Refined Environment Classifiers}}{59}{mdtheorem.4.5.4}\protected@file@percent }
-\newlabel{thm:refined-env-classifiers-correct}{{4.5.{4}}{59}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.4}{}}
-\newlabel{thm:refined-env-classifiers-correct@cref}{{[mdtheorem][4][4,5]4.5.{4}}{[1][59][]59}{}{}{}}
+\zref@newlabel{mdf@pagelabel-28}{\default{4.5.1}\page{59}\abspage{65}\mdf@pagevalue{59}}
+\@writefile{thm}{\contentsline {mdtheorem}{{Theorem}{4.5.{5}}{Correctness of Refined Environment Classifiers}}{59}{mdtheorem.4.5.5}\protected@file@percent }
+\newlabel{thm:refined-env-classifiers-correct}{{4.5.{5}}{59}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.5}{}}
+\newlabel{thm:refined-env-classifiers-correct@cref}{{[mdtheorem][5][4,5]4.5.{5}}{[1][59][]59}{}{}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Selected typing rules for refined environment classifiers. The \textbf  {\textsf  {\textcolor {compile}{c}}}{}$\mid $\textbf  {\textsf  {\textcolor {quote}{q}}}{}-\textsc  {Lambda} rule corresponds to \textsc  {C-Abs} in the refined environment classifier literature. Following \citeauthor  {isoda-24}, handlers and continuations are restricted to \textsf  {Code} types; However, unlike \citeauthor  {isoda-24}'s system, typing rules are not polymorphic over classifiers.}}{60}{figure.4.7}\protected@file@percent }
 \newlabel{fig:refined-env-classifiers-source-typing-rules}{{4.7}{60}{Selected typing rules for refined environment classifiers. The \compilemode {}$\mid $\quotemode {}-\textsc {Lambda} rule corresponds to \textsc {C-Abs} in the refined environment classifier literature. Following \citeauthor {isoda-24}, handlers and continuations are restricted to \textsf {Code} types; However, unlike \citeauthor {isoda-24}'s system, typing rules are not polymorphic over classifiers}{figure.4.7}{}}
 \newlabel{fig:refined-env-classifiers-source-typing-rules@cref}{{[figure][7][4]4.7}{[1][59][]60}{}{}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces The definition of the \textsf  {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet  {plotkin-2025} and \citet  {kuchta-2023}.}}{61}{figure.4.8}\protected@file@percent }
-\newlabel{fig:logical-relation-defn}{{4.8}{61}{The definition of the \textsf {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet {plotkin-2025} and \citet {kuchta-2023}}{figure.4.8}{}}
-\newlabel{fig:logical-relation-defn@cref}{{[figure][8][4]4.8}{[1][59][]61}{}{}{}}
 \citation{plotkin-2025}
 \citation{kuchta-2023}
 \citation{kuchta-2023}
-\zref@newlabel{mdf@pagelabel-28}{\default{4.5.1}\page{62}\abspage{68}\mdf@pagevalue{62}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.5.{5}}{\textsf {Scoped}-Induction}}{62}{mdtheorem.4.5.5}\protected@file@percent }
-\zref@newlabel{mdf@pagelabel-29}{\default{4.5.1}\page{62}\abspage{68}\mdf@pagevalue{62}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.5.{6}}{Closure under Anti-Reduction}}{62}{mdtheorem.4.5.6}\protected@file@percent }
-\newlabel{lemma:closure-reduction}{{4.5.{6}}{62}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.6}{}}
-\newlabel{lemma:closure-reduction@cref}{{[lemma][6][4,5]4.5.{6}}{[1][62][]62}{}{}{}}
-\zref@newlabel{mdf@pagelabel-30}{\default{4.5.1}\page{62}\abspage{68}\mdf@pagevalue{62}}
-\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.5.{7}}{Closed substitution}}{62}{mdtheorem.4.5.7}\protected@file@percent }
-\newlabel{dfn:closed-substitution}{{4.5.{7}}{62}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.7}{}}
-\newlabel{dfn:closed-substitution@cref}{{[definition][7][4,5]4.5.{7}}{[1][62][]62}{}{}{}}
-\BKM@entry{id=40,dest={73756273656374696F6E2E342E352E32},srcline={872}}{5C3337365C3337375C303030455C303030785C303030705C303030725C303030655C303030735C303030735C303030695C303030765C303030655C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
-\BKM@entry{id=41,dest={73656374696F6E2E342E36},srcline={900}}{5C3337365C3337375C303030455C303030765C303030615C3030306C5C303030755C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C30303065}
-\zref@newlabel{mdf@pagelabel-31}{\default{4.5.1}\page{63}\abspage{69}\mdf@pagevalue{63}}
-\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.5.{8}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{63}{mdtheorem.4.5.8}\protected@file@percent }
-\newlabel{lemma:fundamental}{{4.5.{8}}{63}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.8}{}}
-\newlabel{lemma:fundamental@cref}{{[lemma][8][4,5]4.5.{8}}{[1][62][]63}{}{}{}}
+\zref@newlabel{mdf@pagelabel-29}{\default{4.5.1}\page{61}\abspage{67}\mdf@pagevalue{61}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.5.{6}}{\textsf {Scoped}-Induction}}{61}{mdtheorem.4.5.6}\protected@file@percent }
+\zref@newlabel{mdf@pagelabel-30}{\default{4.5.1}\page{61}\abspage{67}\mdf@pagevalue{61}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.5.{7}}{Closure under Anti-Reduction}}{61}{mdtheorem.4.5.7}\protected@file@percent }
+\newlabel{lemma:closure-reduction}{{4.5.{7}}{61}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.7}{}}
+\newlabel{lemma:closure-reduction@cref}{{[lemma][7][4,5]4.5.{7}}{[1][61][]61}{}{}{}}
+\zref@newlabel{mdf@pagelabel-31}{\default{4.5.1}\page{61}\abspage{67}\mdf@pagevalue{61}}
+\@writefile{thm}{\contentsline {mddefinition}{{Definition}{4.5.{8}}{Closed substitution}}{61}{mdtheorem.4.5.8}\protected@file@percent }
+\newlabel{dfn:closed-substitution}{{4.5.{8}}{61}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.8}{}}
+\newlabel{dfn:closed-substitution@cref}{{[definition][8][4,5]4.5.{8}}{[1][61][]61}{}{}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces The definition of the \textsf  {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet  {plotkin-2025} and \citet  {kuchta-2023}.}}{62}{figure.4.8}\protected@file@percent }
+\newlabel{fig:logical-relation-defn}{{4.8}{62}{The definition of the \textsf {Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet {plotkin-2025} and \citet {kuchta-2023}}{figure.4.8}{}}
+\newlabel{fig:logical-relation-defn@cref}{{[figure][8][4]4.8}{[1][59][]62}{}{}{}}
+\BKM@entry{id=40,dest={73756273656374696F6E2E342E352E32},srcline={881}}{5C3337365C3337375C303030455C303030785C303030705C303030725C303030655C303030735C303030735C303030695C303030765C303030655C3030306E5C303030655C303030735C303030735C3030305C3034305C3030306F5C303030665C3030305C3034305C303030525C303030655C303030665C303030695C3030306E5C303030655C303030645C3030305C3034305C303030455C3030306E5C303030765C303030695C303030725C3030306F5C3030306E5C3030306D5C303030655C3030306E5C303030745C3030305C3034305C303030435C3030306C5C303030615C303030735C303030735C303030695C303030665C303030695C303030655C303030725C30303073}
+\zref@newlabel{mdf@pagelabel-32}{\default{4.5.1}\page{63}\abspage{69}\mdf@pagevalue{63}}
+\zref@newlabel{mdf@pagelabel-33}{\default{4.5.1}\page{63}\abspage{69}\mdf@pagevalue{63}}
+\@writefile{thm}{\contentsline {mdlemma}{{Lemma}{4.5.{9}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{63}{mdtheorem.4.5.9}\protected@file@percent }
+\newlabel{lemma:fundamental}{{4.5.{9}}{63}{Correctness of Refined Environment Classifiers}{mdtheorem.4.5.9}{}}
+\newlabel{lemma:fundamental@cref}{{[lemma][9][4,5]4.5.{9}}{[1][63][]63}{}{}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Expressiveness of Refined Environment Classifiers}{63}{subsection.4.5.2}\protected@file@percent }
 \newlabel{subsection:rec-formal-expressiveness}{{4.5.2}{63}{Expressiveness of Refined Environment Classifiers}{subsection.4.5.2}{}}
 \newlabel{subsection:rec-formal-expressiveness@cref}{{[subsection][2][4,5]4.5.2}{[1][63][]63}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {21}{\ignorespaces The typing rules for refined environment classifiers forbid any program which attempts to extrude some potentially unsafe variable $x$ to a handler.}}{63}{listing.21}\protected@file@percent }
-\newlabel{listing:refined-environment-classifiers-expressiveness}{{21}{63}{The typing rules for refined environment classifiers forbid any program which attempts to extrude some potentially unsafe variable $x$ to a handler}{listing.21}{}}
-\newlabel{listing:refined-environment-classifiers-expressiveness@cref}{{[listing][21][]21}{[1][63][]63}{}{}{}}
-\@writefile{lol}{\contentsline {listing}{\numberline {22}{\ignorespaces Refined environment classifiers allow variables to be passed to an effects, so long as the variable can never cause a scope extrusion error (e.g. $z$).}}{63}{listing.22}\protected@file@percent }
-\newlabel{listing:refined-environment-classifiers-safe}{{22}{63}{Refined environment classifiers allow variables to be passed to an effects, so long as the variable can never cause a scope extrusion error (e.g. $z$)}{listing.22}{}}
-\newlabel{listing:refined-environment-classifiers-safe@cref}{{[listing][22][]22}{[1][63][]63}{}{}{}}
+\BKM@entry{id=41,dest={73656374696F6E2E342E36},srcline={908}}{5C3337365C3337375C303030455C303030765C303030615C3030306C5C303030755C303030615C303030745C303030695C3030306F5C3030306E5C3030305C3034305C3030306F5C303030665C3030305C3034305C3030304C5C303030615C3030306D5C303030625C303030645C303030615C3030302D5C3030304F5C303030705C3030302D5C303030515C303030755C3030306F5C303030745C303030655C3030302D5C303030535C303030705C3030306C5C303030695C303030635C30303065}
+\citation{isoda-24}
+\citation{isoda-24}
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Summarising expressiveness w.r.t litmus tests. \citeauthor  {isoda-24}'s system should be able to express \Cref  {listing:refined-environment-classifiers-let-insertion}, but $\lambda _{\equote [\texttt  {op}]}$$^{\gamma }${} cannot, and thus it is marked with a \textbf  {\textcolor {compile}{\sffamily  ?}}.}}{64}{table.4.1}\protected@file@percent }
+\newlabel{table:expressiveness-comparison}{{4.1}{64}{Summarising expressiveness w.r.t litmus tests. \citeauthor {isoda-24}'s system should be able to express \Cref {listing:refined-environment-classifiers-let-insertion}, but \recLang {} cannot, and thus it is marked with a \maybe }{table.4.1}{}}
+\newlabel{table:expressiveness-comparison@cref}{{[table][1][4]4.1}{[1][64][]64}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {21}{\ignorespaces The typing rules for refined environment classifiers forbid any program which attempts to extrude some potentially unsafe variable $x$ to a handler.}}{64}{listing.21}\protected@file@percent }
+\newlabel{listing:refined-environment-classifiers-expressiveness}{{21}{64}{The typing rules for refined environment classifiers forbid any program which attempts to extrude some potentially unsafe variable $x$ to a handler}{listing.21}{}}
+\newlabel{listing:refined-environment-classifiers-expressiveness@cref}{{[listing][21][]21}{[1][64][]64}{}{}{}}
+\@writefile{lol}{\contentsline {listing}{\numberline {22}{\ignorespaces Refined environment classifiers allow variables to be passed to an effects, so long as the variable can never cause a scope extrusion error (e.g. $z$).}}{64}{listing.22}\protected@file@percent }
+\newlabel{listing:refined-environment-classifiers-safe}{{22}{64}{Refined environment classifiers allow variables to be passed to an effects, so long as the variable can never cause a scope extrusion error (e.g. $z$)}{listing.22}{}}
+\newlabel{listing:refined-environment-classifiers-safe@cref}{{[listing][22][]22}{[1][64][]64}{}{}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.6}Evaluation of $\lambda _{\equote [\texttt  {op}]}${}}{64}{section.4.6}\protected@file@percent }
 \newlabel{section:evaluation}{{4.6}{64}{Evaluation of \texorpdfstring {\sourceLang {}}{Lambda-Op-Quote-Splice}}{section.4.6}{}}
-\newlabel{section:evaluation@cref}{{[section][6][4]4.6}{[1][63][]64}{}{}{}}
+\newlabel{section:evaluation@cref}{{[section][6][4]4.6}{[1][64][]64}{}{}{}}
 \BKM@entry{id=42,dest={636861707465722E35},srcline={1}}{5C3337365C3337375C303030435C3030306F5C3030306E5C303030635C3030306C5C303030755C303030735C303030695C3030306F5C3030306E}
 \citation{kiselyov-14}
 \citation{kiselyov-16}
 \BKM@entry{id=43,dest={73656374696F6E2E352E31},srcline={15}}{5C3337365C3337375C3030304C5C303030695C3030306D5C303030695C303030745C303030615C303030745C303030695C3030306F5C3030306E5C303030735C3030305C3034305C303030615C3030306E5C303030645C3030305C3034305C303030465C303030755C303030745C303030755C303030725C303030655C3030305C3034305C303030575C3030306F5C303030725C3030306B}
 \citation{yallop-2019}
 \citation{isoda-24}
-\citation{kiselyov-14}
 \bibdata{library}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusion}{65}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -567,7 +579,7 @@
 \bibcite{kiselyov-16}{{19}{2016}{{Kiselyov et~al.}}{{Kiselyov, Kameyama, and Sudo}}}
 \bibcite{kuchta-2023}{{20}{2023}{{Kuchta}}{{}}}
 \bibcite{lawall-94}{{21}{1994}{{Lawall and Danvy}}{{}}}
-\bibcite{li-2024}{{22}{2024}{{Li}}{{}}}
+\bibcite{levy-2003}{{22}{2003}{{Levy et~al.}}{{Levy, Power, and Thielecke}}}
 \bibcite{phipps-costin-2023}{{23}{2023}{{Phipps-Costin et~al.}}{{Phipps-Costin, Rossberg, Guha, Leijen, Hillerstr\"{o}m, Sivaramakrishnan, Pretnar, and Lindley}}}
 \bibcite{plotkin-2025}{{24}{2025}{{Plotkin and Xie}}{{}}}
 \bibcite{pretnar-15}{{25}{2015}{{Pretnar}}{{}}}

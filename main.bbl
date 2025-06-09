@@ -148,10 +148,13 @@ J.~L. Lawall and O.~Danvy.
 \newblock \doi{10.1145/182590.182483}.
 \newblock URL \url{https://doi.org/10.1145/182590.182483}.
 
-\bibitem[Li(2024)]{li-2024}
-K.~W. Li.
-\newblock Toward mechanized proof of macocaml with staging inference.
-\newblock Mphil thesis, University of Cambridge, 2024.
+\bibitem[Levy et~al.(2003)Levy, Power, and Thielecke]{levy-2003}
+P.~Levy, J.~Power, and H.~Thielecke.
+\newblock Modelling environments in call-by-value programming languages.
+\newblock \emph{Information and Computation}, 185\penalty0 (2):\penalty0 182--210, 2003.
+\newblock ISSN 0890-5401.
+\newblock \doi{https://doi.org/10.1016/S0890-5401(03)00088-9}.
+\newblock URL \url{https://www.sciencedirect.com/science/article/pii/S0890540103000889}.
 
 \bibitem[Phipps-Costin et~al.(2023)Phipps-Costin, Rossberg, Guha, Leijen, Hillerstr\"{o}m, Sivaramakrishnan, Pretnar, and Lindley]{phipps-costin-2023}
 L.~Phipps-Costin, A.~Rossberg, A.~Guha, D.~Leijen, D.~Hillerstr\"{o}m, K.~Sivaramakrishnan, M.~Pretnar, and S.~Lindley.

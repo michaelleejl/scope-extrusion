@@ -8,10 +8,10 @@ This chapter uses \calculusName{} to formulate precise definitions of scope extr
   \item A novel best-effort dynamic check, which I argue occupies a goldilocks zone between expressiveness and efficiency (\Cref{section:best-effort-check}).
   \item Refined environment classifiers, a static approach first described by \citet{kiselyov-16}, and considered in the context of effect handlers by \citet{isoda-24} (\Cref{section:refined-environment-classifiers-formal}).
 \end{enumerate}
-I have implemented the three dynamic checks in MacoCaml. The implementations closely mirror the descriptions in this chapter, and were useful for building an understanding of the correctness and expressiveness of the various checks. 
+I have implemented the three dynamic checks in MacoCaml. The implementations closely mirror the descriptions in this chapter, and were useful for building an understanding of the properties (\Cref{section:properties}) of the various checks. 
 
 \Cref{section:evaluation} evaluates \calculusName{}'s ability to facilitate comparative evaluation of different scope extrusion checks. 
-\section{Properties of Dynamic Scope Extrusion Checks}
+\section{Properties of Dynamic Scope Extrusion Checks}\label{section:properties}
 This chapter refers to the correctness and permissiveness of dynamic scope extrusion checks. Since dynamic checks are defined as term elaborations, I use $\elaborate{-}^{\textbf{Check}}$ to indicate an arbitrary dynamic check. I refer to the term elaboration in \Cref{section:elaboration} as naïve elaboration.
 
 Given a definition of scope extrusion $\Phi$ (a predicate on configurations), a dynamic check is correct if, for all well-typed \sourceLang{} expressions $e$, if elaborating $e$ with the check ($\elaborate{e}^{\textbf{Check}}$) would detect scope extrusion (transition to $\err{}$), assuming naïvely elaborating $e$ ($\elaborate{e}$) reduces to a configuration exhibiting scope extrusion ($\Phi(\langle t;E;U;M;I\rangle)$).
@@ -136,7 +136,7 @@ exhibits eager scope extrusion if all of the following hold:
 \begin{quote}
   \textit{At \textbf{any point during the evaluation}, an occurrence of an open-code value with a free variable whose name is not dynamically bound.}
 \end{quote}
-The third clause, $\freevars{n} \not\subseteq \projfvs{E}$, formally describes free variables whose ``[names are] not dynamically bound''.
+The condition $\freevars{n} \not\subseteq \projfvs{E}$, formally describes free variables whose ``[names are] not dynamically bound''.
 
 It is possible to define an eager dynamic check by extending the lazy dynamic check. In addition to the top-level splice $\textbf{\texttt{check}}$, and the \compilemode{}-mode \textbf{\texttt{dlet}}s, the eager dynamic check adds \textbf{\texttt{check}}s for ASTs constructed in \quotemode{}-mode, for example 
 \[\elaborate{v_1 v_2}_{\quotemode{}}^{\textbf{Eager}} = \bind{f}{\elaborate{v_1}_{\quotemode{}}^{\textbf{Eager}}}{\bind{a}{\elaborate{v_2}_{\quotemode{}}^{\textbf{Eager}}}{\checkfv{\App{f}{a}}}}\]
@@ -187,7 +187,7 @@ Intuitively, the eager dynamic check performs a check whenever an AST is built. 
       \quad \textbf{\texttt{in}} \, \equote[{\splice[z] + 1}])
     \end{array}$
  \end{source}
- \captionof{listing}{Illustrating the eager dynamic check: eager scope extrusion is caused by the $\return{y}$ expression. Scope extrusion is not immediately detected. Rather, $z$ is bound to $\Var{x}{\mathbb{N}}$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote[{\splice[z]} + 1]$, in a context where $\Var{x}{\mathbb{N}}$ is not declared safe}%
+ \captionof{listing}{Eager scope extrusion is caused by the $\return{y}$ expression. $z$ is bound to $\Var{x}{\mathbb{N}}$. Scope extrusion is reported when $z$ is used to build a larger AST $\equote[{\splice[z]} + 1]$, in a context where $\Var{x}{\mathbb{N}}$ is not declared safe}%
  \label{listing:eager-scope-extrusion-check-eg}
 \end{code}
 
@@ -283,7 +283,7 @@ One has to appeal to the operational behaviour of the eager dynamic check to exp
 
 One possible attempt to make the eager dynamic check more predictable is to change the \splicemode{}-mode elaboration of \textbf{\texttt{return}}, such that each \textbf{\texttt{return}} elaborates into a \textbf{\texttt{check}}:
 \[\elaborate{\return{v}}_{\splicemode{}} = \checkfv{\elaborate{v}_{\splicemode{}}}\]
-While this restores certain equations (for example, \Cref{listing:eager-scope-extrusion-unsafe-no-use} now reports a scope extrusion error), it breaks others. For example, the following equation (\citep{levy-2003}, Fig.\ 1) no longer holds:
+While this restores certain equations (for example, \Cref{listing:eager-scope-extrusion-unsafe-no-use} now reports a scope extrusion error), it breaks others. For example, the following equation \citep{levy-2003} no longer holds:
 \[\bind{\_}{\return{v}}{e} =_{\splicemode{}} e\]
 since the \textbf{\texttt{return}} is elaborated into a \textbf{\texttt{check}}, which $v$ may fail.
 
@@ -458,7 +458,7 @@ As an example, consider the program in \Cref{fig:core-unmute-example}, which bui
 \caption{A \coreLang{} program that generates the AST of $\lambda z. \, (\lambda x. \, x + \texttt{0}) (\texttt{1})$. It is coloured using the convention of \Cref{fig:unmute-variables-algo}.}
 \label{fig:core-unmute-example}
 \end{figure}
-Note that the body of $f$ is the simplified version of \Cref{listing:eager-scope-extrusion-looks-unsafe}. It is coloured using the convention of \Cref{fig:unmute-variables-algo}: \textbf{\textcolor{lightgrey}{light grey}} for the captured stack, \textbf{\textcolor{darkgrey}{dark grey}} for the handler, and \textbf{\textcolor{selected}{blue}} for the effect. The surrounding context (in \textbf{black}) is never captured by the handling of any effect. This context must have no references to the captured continuation $k$, and is identified by $I$.
+Note that the body of $f$ is the simplified version of \Cref{listing:eager-scope-extrusion-looks-unsafe}. It is coloured using the convention of \Cref{fig:unmute-variables-algo}: \textbf{\textcolor{lightgrey}{light grey}} for the captured stack, \textbf{\textcolor{darkgrey}{dark grey}} for the handler, and \textbf{\textcolor{selected}{blue}} for the effect. The surrounding context (in \textbf{black}) is identified by $I$: it is never captured by the handling of any effect, and thus must have no references to the captured continuation $k$.
 
 If the stack was never captured by the handling of an effect (for example, no operations were performed), then $I$ is set to $\top$, $\forall n \in \mathbb{N}, \top \geq n$. Performing an effect can thus \textit{decrease} $I$, but never increase it. This is the side condition on \textsc{Eff-Op}.
 \[\begin{array}{ll}\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I} \to & \coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}} \\ &\textcolor{coreHighlight}{(I' = \textsf{min}(\textsf{len}(E_1), I)} \end{array}\]
@@ -508,13 +508,13 @@ The best-effort dynamic check is not maximally expressive. In particular, it doe
     \end{array}
     $
   \end{source}
-  \captionof{listing}{The best-effort scope extrusion check reports false positives. This program attempts to build the AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of $\texttt{1}$.}%
+  \captionof{listing}{The best-effort check reports false positives. This program attempts to build the AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of $\texttt{1}$.}%
   \label{listing:best-effort-imperfect}
 \end{code}
 
-The program in \Cref{listing:best-effort-imperfect} attempts to build the AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of \texttt{1}. Critically, the constructor of the outer lambda, $\lambda x. [-]$, is never captured by any effect. Hence, the program eventually reduces to a configuration: 
+\Cref{listing:best-effort-imperfect} attempts to build the AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of \texttt{1}. Critically, the constructor of the outer lambda, $\lambda x. [-]$, is never captured by any effect. Hence, \Cref{listing:best-effort-imperfect} eventually reduces to a configuration: 
 \[\langle \dlet{\Binder{x}{\mathbb{N}}}{\return{\Lam{\Binder{x}{\mathbb{N}}}{\Var{y}{\mathbb{N}}}}}; E[\textbf{\texttt{check}}[-]]; U; \{\Var{y}{\mathbb{N}}\} ; I \rangle\]
-where $\textsf{len}(E[\checkm{[-]}]) < I$. The transition from this configuration unmutes $\Var{y}{\mathbb{N}}$, and the surrounding $\textbf{\texttt{check}}_M$ fails, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe in $E$.
+where $\textsf{len}(E[\checkm{[-]}]) < I$. The subsequent transition unmutes $\Var{y}{\mathbb{N}}$, and the surrounding $\textbf{\texttt{check}}_M$ fails, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe in $E$.
 
 It is possible to characterise the expressiveness of the best-effort check, via a ``Cause for Concern'' property. Informally, assume the best-effort check reports an error, and let the offending AST be $n$. Now re-wind to the point of the failing check, and consider an alternative execution where all the $\textbf{\texttt{check}}_M$s are erased (turned into $\textbf{\texttt{return}}$s). In this counter-factual execution, all ASTs $m$ that are constructed from $n$ have at least one variable that is not declared safe in its evaluation context. Consequently, in \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
 
@@ -549,12 +549,12 @@ The method of refined environment classifiers (\Cref{subsubsection:refined-envir
 
 \begin{enumerate} 
   \item \sourceLang{} types are straightforwardly extended, by annotating all level $-1$ \textsf{Code} types with a classifier (\Cref{fig:rec-source-types}).
-  \item Similarly, level $0$ types are associated with a classifier. However, following \citet{isoda-24}, this association is indirect: for level $0$ types, classifiers are associated with the judgement rather than annotated onto the type (\Cref{fig:refined-env-classifiers-source-typing-rules}). 
+  \item Similarly, level $0$ types are associated with a classifier. However, following \citet{isoda-24}, for level $0$ types, classifiers are associated with the judgement rather than annotated onto the type (\Cref{fig:refined-env-classifiers-source-typing-rules}). 
 \end{enumerate}
 \newcommand{\recCoreLang}{\coreLang{}$^\gamma$}
-\recLang{} elaborates into \recCoreLang{}, which is a simple extension of \coreLang{}. Classifiers show up in the syntax, not the types:
+\recLang{} elaborates into \recCoreLang{}, which is a simple extension of \coreLang{}. Classifiers show up only in the formal parameters, and are invisible to the types:
 \begin{enumerate}
-  \item \recCoreLang{} formal parameters are annotated with classifiers $\alpha_R^{\gamma}$ 
+  \item \recCoreLang{} formal parameters are annotated with classifiers (e.g.\ $\alpha_R^{\gamma}$ )
   \item Since elaboration does not require any dynamic scope extrusion checking machinery, \recCoreLang{} does not have \textbf{\texttt{check}} (and $\textbf{\texttt{check}}_M$), \textbf{\texttt{dlet}}, \textbf{\texttt{tls}}, and \textbf{\texttt{err}}.\ Consequently, \recCoreLang{} configurations are of the form $\langle t;E;U\rangle$.
 \end{enumerate}
 
@@ -564,7 +564,7 @@ An \textbf{extended} source type is either:
   \begin{enumerate}
     \item A level $-1$ type, for example, $(\textsf{Code}(\mathbb{N}^{0})^{\gamma})^{-1}$ or 
     \item A level $0$ type annotated with a classifier, for example, $\mathbb{N}^{0} (\gamma)$. 
-    \item A level $0$ formal parameter type, which is a level $0$ value type (like $\mathbb{N}^{0} (\gamma)$) annotated with an \underline{underline} to indicate that it is elaborated into an \textsf{FParam} type, (\underline{$\mathbb{N}^{0} (\gamma)$})
+    \item A level $0$ formal parameter type, which is a level $0$ value type (like $\mathbb{N}^{0}$) annotated with a classifier $\gamma$, and an \underline{underline}, to indicate that it is elaborated into an \textsf{FParam} type, (\underline{$\mathbb{N}^{0} (\gamma)$})
   \end{enumerate}
 \end{definition}
 
@@ -601,15 +601,22 @@ An \textbf{extended} source type is either:
   \label{fig:rec-source-types}
 \end{figure}
 
-Contexts $\Gamma$ must be well-formed (\citep{isoda-24}, Fig. 8), and a well-formed context must contain the least classifier $\gamma_{\bot}$. The definition of closed well-typed expression is adapted to reflect this:
+Contexts $\Gamma$ must be well-formed \citep{isoda-24}, and a well-formed context must contain the least classifier $\gamma_{\bot}$. The definition of closed well-typed expression is adapted to reflect this:
 
 \begin{definition}[Well-typed closed expression]{recHighlight}\label[definition]{dfn:well-typed-exp-rec}
   $e$ is a well-typed expression if $\gamma_{\bot} \vdash_{\compilemode}^{\gamma_{\bot}} e : T^{0} \, ! \, \emptyset; \emptyset$
 \end{definition}
 
+Since level $-1$ types can refer to classifiers $\gamma$, level $-1$ types should be well-formed under a context $\Gamma$ (only refer to classifiers in $\Gamma$): 
+\begin{definition}[Well-Formed Level $-1$ Type]{recHighlight}\label[definition]{dfn:well-typed-exp-rec}
+  $T^{-1}$ is well-formed under context $\Gamma$ written 
+  \[\Gamma \vdash T^{-1}\] 
+  if for all classifiers $\gamma \in T^{-1}$, $\gamma \in \Gamma$
+\end{definition}
+
 Most typing rules are straightforwardly adapted, with key rules listed in \Cref{fig:refined-env-classifiers-source-typing-rules}. 
 
-The \compilemode{}$\mid$\quotemode{}-\textsc{Lambda} rule corresponds to \textsc{C-Abs} in the refined environment classifier literature. Recall that classifiers formalise the notion of scope (\Cref{section:refined-environment-classifiers-formal}) The $\gamma' \notin \Gamma$ constraint ensures that introducing a binder $\lambda x.\_$ introduces a new scope, via a \textbf{fresh} classifier. This is necessary for correctness. The \compilemode{}$\mid$\quotemode{}\textsc{-Sub} and $\splicemode{}\textsc{-Sub}$ subtyping rules capture the intuition that, to show a term is well-scoped in some nested scope ($\gamma$, where $\gamma' \sqsubseteq \gamma$), it suffices to show that it is well-scoped in any of its parents ($\gamma'$), see \Cref{fig:refined-enviroment-classifiers-basic}, \Cpageref{fig:refined-env-classifiers-source-typing-rules}.
+The \compilemode{}$\mid$\quotemode{}-\textsc{Lambda} rule corresponds to \textsc{C-Abs} in the refined environment classifier literature. Recall that classifiers formalise the notion of scope (\Cref{section:refined-environment-classifiers-formal}) The $\gamma' \notin \Gamma$ constraint ensures that introducing a binder $\lambda x.\_$ introduces a new scope, via a \textbf{fresh} classifier. This is necessary for correctness. The \compilemode{}$\mid$\quotemode{}\textsc{-Sub} and $\splicemode{}\textsc{-Sub}$ subtyping rules formalise the nesting of scopes: to show a term is well-scoped in some nested scope ($\gamma$, where $\gamma' \sqsubseteq \gamma$), it suffices to show that it is well-scoped in any of its parents ($\gamma'$), see \Cref{fig:refined-enviroment-classifiers-basic}, \Cpageref{fig:refined-env-classifiers-source-typing-rules}.
 
 Following \citeauthor{isoda-24}, handlers and continuations are restricted to \textsf{Code} types; However, types and typing rules are further simplified by eliminating polymorphism. 
 
@@ -624,14 +631,14 @@ Following \citeauthor{isoda-24}, handlers and continuations are restricted to \t
  \label{listing:refined-environment-classifiers-let-insertion}
 \end{code}
 
-\citeauthor{isoda-24}'s typing rules for handlers and continuations are polymorphic over the classifier, to allow for \textit{let-insertion} \citep{yallop-2019}. Let-insertion aims to reduce duplication in the generated code. Rather than generating the same AST multiple times (e.g.\ $\texttt{Plus$(n, n)$}$), let-insertion generates a let-binding, duplicating the variable rather than the AST (e.g.\ $\texttt{Do$(x_\mathbb{N}, n, \texttt{Plus$(\Var{x}{\mathbb{N}}, \Var{x}{\mathbb{N}})$})$}$). This generates more compact code. Let-insertion can be easily implemented with effects. For example, in \Cref{listing:refined-environment-classifiers-let-insertion}, the \textbf{\texttt{genlet}} effect is used to generate $(\lambda z. z+z) e$, rather than $e + e$. Since \efflang{} is a call-by-value calculus (\Cref{fig:efflang-opsem}), let-insertion ensures $e$ is only evaluated once. Polymorphism helps to prove that \Cref{listing:refined-environment-classifiers-let-insertion} is safe. The continuation $k$ is resumed under a binder (which introduces a classifier). Thus, the continuation $k$ should be polymorphic over classifiers. For similar reasons, \citeauthor{isoda-24}'s type system demands that handlers are polymorphic over classifiers. For example, a more faithful transcription of \citeauthor{isoda-24}'s handler type would have the form:
+\citeauthor{isoda-24}'s typing rules for handlers and continuations are polymorphic over the classifier, to allow for \textit{let-insertion} \citep{yallop-2019}. Let-insertion aims to reduce duplication in the generated code. Rather than generating the same AST multiple times (e.g.\ $\texttt{Plus$(n, n)$}$), let-insertion generates a let-binding, duplicating the variable rather than the AST (e.g.\ $\texttt{Do$(x_\mathbb{N}, n, \texttt{Plus$(\Var{x}{\mathbb{N}}, \Var{x}{\mathbb{N}})$})$}$). This generates more compact code. Let-insertion can be easily implemented with effects. For example, in \Cref{listing:refined-environment-classifiers-let-insertion}, the \textbf{\texttt{genlet}} effect is used to generate $(\lambda z. z+z) e$, rather than $e + e$. Since \efflang{} is a call-by-value calculus (\Cref{fig:efflang-opsem}), let-insertion ensures $e$ is only evaluated once. Polymorphism helps to prove that \Cref{listing:refined-environment-classifiers-let-insertion} is safe. In \Cref{listing:refined-environment-classifiers-let-insertion}, the continuation $k$ is resumed under a binder $\lambda z.\_$ (which introduces a classifier). Thus, the continuation $k$ should be polymorphic over classifiers. For similar reasons, \citeauthor{isoda-24}'s type system demands that handlers are polymorphic over classifiers. For example, a more faithful transcription of \citeauthor{isoda-24}'s handler type would have the form:
 \[\forall \gamma. \compiletimetype{(\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{S})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T})^{\gamma})}}})}\]
 
 Reasoning about the correctness of polymorphic typing rules, however, is complex. It is even more complex in \recLang{}. Like \sourceLang{}, \recLang{} does not have an operational semantics, but is elaborated into \recCoreLang{} terms. Thus, it is difficult to reason directly about the \recLang{} type system via progress and preservation. One has to appeal to alternative techniques, like Tait-style logical relations \citep{tait-67}, increasing the complexity of reasoning.
 
 This evaluation focuses on extending \calculusName{}, not on refined environment classifiers. Thus, I choose to simplify the type system, and minimise the complexity of reasoning. 
 
-It is unclear whether \citeauthor{isoda-24}'s system allows for non-termination. Once again, to simplify reasoning, I force effect signatures to be well-founded and, in particular, not recursive. Thus, all well-typed programs must thus terminate \citep{kammar-2013}. 
+It is unclear whether \citeauthor{isoda-24}'s system allows for non-termination. Once again, to simplify reasoning, I force effect signatures to be well-founded (not recursive). Thus, all well-typed programs must thus terminate \citep{kammar-2013}. 
 
 Proof of correctness relies on a weakening lemma. As types are stratified into two levels, and into value, computation, and handler types, there are various sub-lemmas, for example:
 
@@ -644,11 +651,11 @@ Proof of correctness relies on a weakening lemma. As types are stratified into t
   If $\rcqtypejudge{\gamma}{e}{T^0}$ then
   \begin{enumerate}
     \item $\rcqtypejudge[\Gamma, (x:S^0)^{\gamma'}]{\gamma}{e}{T^0}$, for arbitrary $\gamma' \in \Gamma$
-    \item $\rcqtypejudge[\Gamma, (x:S^{-1})]{\gamma}{e}{T^0}$, where $S$ only refers to classifiers $\gamma \in \Gamma$
+    \item $\rcqtypejudge[\Gamma, (x:S^{-1})]{\gamma}{e}{T^0}$, where $\Gamma \vdash S^{-1}$
     \item $\rcqtypejudge[\Gamma, \gamma']{\gamma}{e}{T^0}$, for arbitrary $\gamma' \notin \Gamma$
     \item $\rcqtypejudge[\Gamma, \gamma' \sqsubseteq \gamma'']{\gamma}{e}{T^0}$, for arbitrary $\gamma', \gamma'' \in \Gamma$
   \end{enumerate}
-  The side conditions ensure weakening produces a well-formed context
+  The side conditions ensure well-formed contexts are weakened into well-formed contexts
 \end{lemma}
 % \vspace{-\baselineskip}
 % \begin{lemma}[Weakening for Level $-1$ Values]{recHighlight}
@@ -664,10 +671,10 @@ The proof of the weakening lemma is by induction on the typing derivation.
 
 \recLang{} elaborates into \recCoreLang{}. Elaboration is similar to \Cref{section:elaboration}, with the following changes:
 \begin{enumerate}
-  \item Elaboration of types erases classifiers. For example,  $\elaborate{\mathbb{N}^0(\gamma)} = \textsf{AST}(\mathbb{N})$.
-  \item Elaboration of context entries is extended to carry proof-theoretic terms e.g. $\gamma$ and $\gamma \sqsubseteq \gamma'$.
+  \item Elaboration of types erases classifiers. For example,  $\elaborate{(\textsf{Code}(\mathbb{N}^{0})^{-1})^{\gamma}} = \mathbb{\textsf{AST}(\mathbb{N})}$.
+  \item Elaboration of context entries erases proof-theoretic terms e.g. $\gamma$ and $\gamma \sqsubseteq \gamma'$.
   \item Elaboration of terms assumes binders have been annotated with an extended source type, and does \textit{not} erase classifiers. \\
-  For example, $\elaborate{\lambda x: {\mathbb{N}^0({\gamma})}. \; e}_{\compilemode{}} = \bind{x}{\gensym{\mathbb{N}^{\gamma}}}{\ldots}$
+  For example, $\elaborate{\lambda x: {\mathbb{N}^0({\gamma})}. \; e}_{\compilemode{}} = \bind{x}{\gensym{\mathbb{N}^{\gamma}}}{(\bind{\texttt{b}}{\elaborate{e}}{\return{\texttt{Lam}(x, \texttt{b})}})}$
   \item Elaboration of top-level splice $\elaborate{\splice}_{\compilemode{}}$ does not insert \textbf{\texttt{tls}}.
 \end{enumerate}
 
@@ -755,7 +762,7 @@ If $\gamma_\bot \vdash ^{\gamma_\bot}_{\compilemode{}} e: T^0 \, ! \, \emptyset 
 \noindent{}then for some $U$, $\langle t;[-]; \emptyset \rangle \to^{*} \langle \return{n}; [-] ; U \rangle$, and $\freevars{n} = \emptyset$
 \end{theorem}
 
-The proof of \Cref{thm:refined-env-classifiers-correct} is via a Tait-style logical relation. A logical relation is useful to show that typing guarantees are maintained by elaboration \citep{benton-09}.
+The proof of \Cref{thm:refined-env-classifiers-correct} is via a Tait-style logical relation. Logical relations help to show that typing guarantees are maintained by elaboration \citep{benton-09}.
 
 \begin{figure}
 \begin{rec-desc}
@@ -766,8 +773,10 @@ The proof of \Cref{thm:refined-env-classifiers-correct} is via a Tait-style logi
   \begin{array}{@{}lllr}
     \textbf{Normal Forms} \\\vspace{2mm}
     n \in \scoped{\mathbb{N}^{-1}} & \triangleq & n \in \mathbb{N} \\ 
-    n \in \scoped{{T}^{0}(\gamma)} & \triangleq & \cdot \vdash \elaborate{n} \in \elaborate{T^{0} (\gamma)} \text{ and } \Theta \vdash \freevars{n} \subseteq \textsf{permitted}(\gamma) \\\vspace{2mm}
-    && \textit{(symmetric for $(\textsf{Code}(T^0)^{\gamma})^{-1}$, $\effectType[\xi]{T^{0}} (\gamma)$, etc) }\\\vspace{2mm}
+    n \in \scoped{{T}^{0}(\gamma)} & \triangleq & \cdot \vdash \elaborate{n} \in \elaborate{T^{0} (\gamma)} \text{ and } \Theta \vdash \freevars{n} \subseteq \textsf{permitted}(\gamma) \\
+    && \textit{(while defined for $T^{0} {(\gamma)}$, this definition applies for all types}\\
+    && \textit{that elaborate to some} \text{ {\textsf{AST}}$($value $\mid$ computation $\mid$ handler$)$} \\ 
+    && \textit{type, e.g.\ $(\textsf{Code}(T^0)^{\gamma})^{-1}$, $\effectType[\xi]{T^{0}} (\gamma)$, etc) }\\\vspace{2mm}
     n \in \scoped{\underline{{T}^{0}(\gamma)}} & \triangleq & \texttt{Var}({n}) \in \scoped{{T^{0}} (\gamma)} \\ \vspace{2mm}
     n \in \scoped{(\functionType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, n \, n' \in \scoped{\effectType{T^{-1}}} \\ \vspace{2mm}
     n \in \scoped{(\continuationType{{S}^{-1}}{{T}^{-1}})^{-1}} & \triangleq & \forall n' \in \scoped{{S}^{-1}}, \continue{n}{n'} \in \scoped{\effectType{T^{-1}}} \\\\ \vspace{2mm}
@@ -794,13 +803,13 @@ $\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest p
   \end{enumerate}
   % \item $t = E[t']$, $E[t']$ not stuck, and for all $U$, there exists $t'', E', U'$ such that $\langle t';E;U \rangle \to \langle t'';E';U' \rangle$ 
 \end{enumerate}
-Where, in this context, consistent with $t$ means that for all $\Var{\alpha}{R}$ or $\Binder{\alpha}{R} \in t$, $\alpha \in U$. This side condition ensures that we use \textbf{\texttt{mkvar}} correctly.
+Where, in this context, consistent with $t$ means that for all $\Var{\alpha^\gamma}{R}$ or $\Binder{\alpha^\gamma}{R} \in t$, $\alpha \in U$. This side condition ensures that we use \textbf{\texttt{mkvar}} correctly.
 \end{rec-desc}
 \caption{The definition of the \textsf{Scoped} logical relation. Most definitions are standard. The logical relation on terms is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}.}
 \label{fig:logical-relation-defn}
 \end{figure}
 
-The definition of the logical relation, \textsf{Scoped}, is presented in \Cref{fig:logical-relation-defn}. \textsf{Scoped} is defined on core language (\coreLang{}) terms, and is indexed by:
+\Cref{fig:logical-relation-defn} defines the logical relation, \textsf{Scoped}. \textsf{Scoped} is defined on core language (\coreLang{}) terms, and is indexed by:
 \begin{enumerate}
   \item A context of proof-theoretic terms $\Theta$. Given a context $\Gamma$, one can project out only the proof theoretic terms $\pi_{\gamma}({\Gamma})$. For example, given 
   \[\Gamma = \gamma_\bot, \gamma_1, \gamma_\bot \sqsubseteq \gamma_1, \textcolor{comment}{(x:\mathbb{N}^0)^{\gamma_1}}, \gamma_2, \gamma_1 \sqsubseteq \gamma_2,  \textcolor{comment}{y:(\textsf{Code}(\mathbb{N}^0 \, ! \, \emptyset)^{\gamma_2})^{-1}}\]
@@ -840,10 +849,10 @@ The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a noti
   Given a context $\Gamma$, and assuming $\Theta = \pi_{\gamma}(\Gamma)$, the set of closed substitutions $\rho \vDash \Gamma$ are defined inductively as follows:
   \begin{enumerate}
     \item $() \vDash \gamma_{\bot}$
-    \item If $\rho \vDash \Gamma$ and $n \in \scoped{\underline{T^{0} (\gamma)}}$ then $(\rho, n/x) \vDash \Gamma, (x:T^0)^{\gamma}$ 
-    \item If $\rho \vDash \Gamma$ and $n \in \scoped{T^{-1}}$ then $(\rho, n/x) \vDash \Gamma, (x:T^{-1})$
-    \item If $\rho \vDash \Gamma$ then $\rho \vDash \Gamma, \gamma$
-    \item If $\rho \vDash \Gamma$ then $\rho \vDash \Gamma, \gamma \sqsubseteq \gamma'$
+    \item If $\rho \vDash \Gamma$, then for arbitrary $\gamma \in \Gamma$, $n \in \scoped{\underline{T^{0} (\gamma)}}$, $(\rho, n/x) \vDash \Gamma, (x:T^0)^{\gamma}$ 
+    \item If $\rho \vDash \Gamma$, $\Gamma \vdash T^{-1}$, and $n \in \scoped{T^{-1}}$, then $(\rho, n/x) \vDash \Gamma, (x:T^{-1})$
+    \item If $\rho \vDash \Gamma$ then $\rho \vDash \Gamma, \gamma$, for arbitrary $\gamma \not\in \Gamma$
+    \item If $\rho \vDash \Gamma$ then $\rho \vDash \Gamma, \gamma \sqsubseteq \gamma'$, for arbitrary $\gamma, \gamma' \in \Gamma$
   \end{enumerate}
 \end{definition}
 
@@ -857,20 +866,22 @@ Stratification of types and mode-indexing decomposes the fundamental lemma into 
 Proof of \Cref{lemma:fundamental} is by induction on the \recLang{} typing rules. I focus on the \textsc{\compilemode{}-Lambda} (\textsc{C-Abs}) case, where (handwaving the side-condition on $U$ for clarity) it suffices to show that for some arbitrary $\rho$, $\rho \vDash \Gamma$, 
 \[\bind{x}{\gensym{\erase{S^0 (\gamma')}}}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho})}{\return{\Lam{x}{\texttt{body}}}}}\]
 in $\scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}$. It is clear that this reduces to
-\[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x})}{\return{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}}}\]
- By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that this term is in the logical relation. By weakening, and the induction hypothesis (IH), $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}}})$:
+\[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x})}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}}\]
+ By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that this term is in the logical relation. By weakening, and the induction hypothesis (IH), $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S}})$:
 \begin{enumerate}
-  \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to some $\return{n}$\\
-   $\bind{\texttt{body}}{\return{n}}{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}$ reduces to $\Lam{\Binder{\alpha}{S^{\gamma'}}}{n}$, where $\Var{\alpha}{S^{\gamma'}}$ is bound. By IH, all the free variables in $n$ are permitted by $\gamma'$. By the typing rules, only $\alpha$ is annotated with classifier $\gamma'$. Hence, under $\Theta$, the free variables of $\Lam{\Binder{\alpha}{S^{\gamma'}}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
-  \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha}{S^{\gamma'}} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to $E[\op{n}]$ \\
-  As $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha}{S^{\gamma'}}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from IH.
+  \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to some $\return{n}$\\
+   $\bind{\texttt{body}}{\return{n}}{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}$ reduces to $\Lam{\Binder{\alpha^{\gamma'}}{S}}{n}$, where $\Var{\alpha^{\gamma'}}{S}$ is bound. By IH, all the free variables in $n$ are permitted by $\gamma'$. By the typing rules, only $\alpha$ is annotated with classifier $\gamma'$. Hence, under $\Theta$, the free variables of $\Lam{\Binder{\alpha^{\gamma'}}{S}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
+  \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to $E[\op{n}]$ \\
+  As $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from IH.
 \end{enumerate}
 % \Cref{thm:refined-env-classifiers-correct} is an immediate corollary of \Cref{lemma:fundamental} and \Cref{dfn:well-typed-exp-rec}.
 
 % I conjecture that this proof may be extended to support non-termination by incorporating the techniques of step-indexing and biorthogonality, as demonstrated by \citet{biernacki-2017}.
 
 \subsection{Expressiveness of Refined Environment Classifiers}\label{subsection:rec-formal-expressiveness}
-The typing rules for refined environment classifiers do not depend on the effect handler.\ \Cref{listing:refined-environment-classifiers-expressiveness} is never well-typed.
+The typing rules for refined environment classifiers depend only on the effect, not on the body of effect handler.\ \Cref{listing:refined-environment-classifiers-expressiveness} is never well-typed.
+
+Consequently, \Cref{listing:eager-scope-extrusion-unsafe,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue,listing:eager-scope-extrusion-looks-unsafe} do not type check. Refined environment classifiers are less expressive than the eager dynamic check. In a well-typed \recLang{} program, the only variables that may be passed to an effect $\textbf{\texttt{op}}$ are those that are in scope when the handler for $\textbf{\texttt{op}}$ is defined, for example, the variable $z$ in \Cref{listing:refined-environment-classifiers-safe}.
 
 \begin{code}
 \begin{rec}
@@ -883,12 +894,10 @@ $\begin{array}{l}
 \label{listing:refined-environment-classifiers-expressiveness}
 \end{code}
 
-Consequently, \Cref{listing:eager-scope-extrusion-unsafe,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue,listing:eager-scope-extrusion-looks-unsafe} do not type check. Refined environment classifiers are less expressive than the eager dynamic check. In a well-typed \recLang{} program, the only variables that may be passed to an effect are those that never cause scope extrusion, for example, the variable $z$ in \Cref{listing:refined-environment-classifiers-safe}.
-
 \begin{code}
 \begin{rec}
 $\begin{array}{l}
-  \$ \lambda z. (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, \return{\splice[( \, {{\textbf{\texttt{extrude}}(\equote[z])}} \, )]}} \,] \\
+  \lambda z. \$(\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, \return{\splice[( \, {{\textbf{\texttt{extrude}}(\equote[z])}} \, )]}} \,] \\
   \quad \quad \,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\continue{k}{()}}\})
 \end{array}$
 \end{rec}
@@ -896,11 +905,41 @@ $\begin{array}{l}
 \label{listing:refined-environment-classifiers-safe}
 \end{code}
 
-
 \section{Evaluation of \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}} \label{section:evaluation}
-The results in this chapter support the idea that \sourceLang{} is an appropriate language in which to encode, and evaluate, scope extrusion checks. Formalising scope extrusion in \sourceLang{} provided clarity, aiding development of a novel best-effort dynamic check, which finds a sweet spot between the eager and dynamic checks. Additionally, unifying checks under a common language allows for comparative evaluation with reference to a bank of \sourceLang{} programs, which serve as litmus tests of expressiveness.
+The results in this chapter suggest that \sourceLang{} is an appropriate language in which to encode, and evaluate, scope extrusion checks. Formalising scope extrusion in \sourceLang{} aided development of a novel best-effort check, which finds a sweet spot between the eager and checks. Unifying checks under \sourceLang{} facilitated comparative evaluation with reference to a set of \sourceLang{} programs that served as litmus tests (\Cref{table:expressiveness-comparison}).
 
-The cost of encoding static and dynamic checks into the same language is that reasoning about the correctness of static checks becomes more complicated, since one can no longer prove correctness via progress and preservation. It is difficult to reduce the complexity of reasoning, since dynamic checks are defined via elaboration. I hypothesise that the added complexity of reasoning is a reasonable cost to pay for a comprehensive and comparative evaluation.
+The cost of encoding static and dynamic checks into the same language is that reasoning about the correctness of static checks becomes more complicated (\Cref{section:refined-environment-classifiers-formal}). It is difficult to reduce the complexity of reasoning, since dynamic checks are defined via elaboration. I hypothesise that the added complexity of reasoning is a reasonable cost to pay for a comprehensive and comparative evaluation.
 
+
+\definecolor{yes}{HTML}{046052}
+\definecolor{no}{HTML}{8A0630}
+
+\newcommand{\yes}{\textbf{\textcolor{splice}{\sffamily Y}}}
+\newcommand{\no}{\textbf{\textcolor{quote}{\sffamily N}}}
+\newcommand{\maybe}{\textbf{\textcolor{compile}{\sffamily ?}}}
+
+
+\begin{table}
+  \newcommand\T{\rule{0pt}{2.6ex}}       % Top strut
+\newcommand\B{\rule[-1.2ex]{0pt}{0pt}} 
+  \centering
+  \begin{tabular}{l|c|c|c|c|c|c|c}
+    & \multicolumn{7}{c}{\textbf{Listings}}
+    \\[2mm] &
+    \ref{listing:eager-scope-extrusion-unsafe}&
+    \ref{listing:eager-scope-extrusion-unsafe-no-use} &
+    \ref{listing:eager-scope-extrusion-unsafe-continue} &
+    \ref{listing:eager-scope-extrusion-looks-unsafe} &
+    \ref{listing:best-effort-imperfect} & 
+    \ref{listing:refined-environment-classifiers-let-insertion} & 
+    \ref{listing:refined-environment-classifiers-safe} \T\B\\ \hline 
+    \textbf{Lazy} & \yes & \yes & \yes & \yes & \yes & \yes & \yes \T\B\\ 
+    \textbf{Eager} & \yes & \yes & \yes & \no & \no & \yes & \yes  \T\B\\
+    \textbf{Best-Effort} & \yes & \yes & \yes & \yes & \no & \yes & \yes \T\B\\
+    \textbf{Ref.\ Env.\ Classifiers}& \no & \no & \no & \no & \no & \maybe & \yes \T\B\\ \hline
+  \end{tabular}
+  \caption{Summarising expressiveness w.r.t litmus tests. \citeauthor{isoda-24}'s system should be able to express \Cref{listing:refined-environment-classifiers-let-insertion}, but \recLang{} cannot, and thus it is marked with a \maybe.}
+  \label{table:expressiveness-comparison}
+\end{table}
 
 % \section{Let Insertion}

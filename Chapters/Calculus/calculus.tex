@@ -409,7 +409,7 @@ $\inferrule[(Ret-Handler)]{\cqtypejudge[\Gamma, x: S]{e}{\runtimecomptype{T}{\De
   \centering
 $\inferrule[(Op-Handler)]{\texttt{op}: A \to B \in \Sigma 
 \\\\ \cqtypejudge{h}{\handlerType{\runtimecomptype{S}{\xi}}{\runtimecomptype{T}{\xi_2}}\,!\,\Delta}
-\\\\ \cqtypejudge[\Gamma, x: A, k: {\continuationType[\xi_2]{B}{T}} ]{e}{\runtimecomptype{T}{\Delta;\xi_2}} \\ \xi_2\ \subseteq \xi_1 \setminus \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{S}{\xi_1}}{\runtimecomptype{T}{\xi_2}})\,!\,\Delta}}$
+\\\\ \cqtypejudge[\Gamma, x: A, k: {\continuationType[\xi_2]{B}{T}} ]{e}{\runtimecomptype{T}{\Delta;\xi_2}} \\ \xi_1 \subseteq \xi_2 \cup \{ \texttt{op} \} \\ \opHandler{x'}{k'}{e'} \notin h} {\cqtypejudge{h;\opHandler{x}{k}{e}}{(\handlerType{\runtimecomptype{S}{\xi_1}}{\runtimecomptype{T}{\xi_2}})\,!\,\Delta}}$
 \end{minipage}
 
 \end{center}
@@ -535,7 +535,7 @@ $\inferrule[(\splicemode{}-Continuation)]
     { \texttt{op}: {A} \to B \in \Sigma \\\\ 
       \stypejudge{h}{\compiletimetype{\handlerType{\effectType[\Delta_1]{\compiletimetype{S}}}{\effectType[\Delta_2]{\compiletimetype{T}}}}}\\
       \stypejudge[\Gamma, x:\compiletimetype{A}, k:{\compiletimetype{(\continuationType[\Delta_2]{\compiletimetype{B}}{\compiletimetype{T}})}} ]{e}{\effectType[\Delta_2]{\compiletimetype{T}}}\\
-      \Delta_2 \subseteq \Delta_1 \setminus \{ \texttt{op} \} \\
+      \Delta_1 \subseteq \Delta_2 \cup \{ \texttt{op} \} \\
              \opHandler{x'}{k'}{e'} \notin h}
     {\stypejudge{h ; \opHandler{x}{k}{e}}{\compiletimetype{\handlerType{\effectType[\Delta_1]{\compiletimetype{S}}}{\effectType[\Delta_2]{\compiletimetype{T}}}}}}$
   \end{minipage}
@@ -698,7 +698,7 @@ The semantics of \coreLang{} are made precise via an operational semantics. Many
  {\textbf{Operational Semantics}}\\
 \[
   \begin{array}{@{}rrcl}
-  \astRule{Sym} & \transition{\coreConfiguration{\gensym{R}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Binder{\alpha}{R}}}{E}{U\cup\{\alpha\}}{M}{I}}\\
+  \astRule{Gen} & \transition{\coreConfiguration{\gensym{R}}{E}{U}{M}{I}}{\coreConfiguration{\return{\Binder{\alpha}{R}}}{E}{U\cup\{\alpha\}}{M}{I}}\\
   &&&\text{(where $\alpha = \textsf{next}(U), \; \textsf{next}(U) \notin U, \; \text{\textsf{next} deterministic}$)}\\
   \vspace{1mm}
   \\ 
@@ -746,9 +746,9 @@ The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return
   \item Some free variables of $n$ are not properly scoped, so $\checkfv{n}$ reduces to $\err$ (\textsc{Sec-Chf})
 \end{enumerate}
 What does it mean to be ``properly scoped'' (the side condition on \textsc{Sec-Chs})? The answer is slightly subtle. Consider the following program 
-\[\bind{\texttt{body}}{\checkfv{n}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
-Should $\Var{\alpha}{\mathbb{N}}$ occur in $n$, it should be ``properly scoped'': it should not cause a transition to $\err$. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
-\[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{n}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
+\[\bind{\texttt{body}}{\checkfv{\Var{\alpha}{\mathbb{N}}}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
+$\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': it should not cause a transition to $\err$. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
+\[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{\Var{\alpha}{\mathbb{N}}}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
 More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{R}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{R}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{R} \}\]
 

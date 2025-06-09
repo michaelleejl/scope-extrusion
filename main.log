@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  8 JUN 2025 21:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  9 JUN 2025 11:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1252,7 +1252,14 @@ Package newfloat Info: New float `typederivation' with options `name = {Typing D
 Package newfloat Info: float type `typederivation'=16 on input line 388.
 Package tocbasic Info: omitting babel extension for `lotypederivation'
 (tocbasic)             because of missing \bbl@set@language on input line 388.
-)) (./main.aux)
+)) (./main.aux
+
+LaTeX Warning: Label `dfn:well-typed-exp-rec' multiply defined.
+
+
+LaTeX Warning: Label `dfn:well-typed-exp-rec@cref' multiply defined.
+
+)
 \openout1 = `main.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
@@ -1463,10 +1470,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250608210953 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250609111129 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250608210953 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250609111129 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/E5FFBDD06E801C34D8594F1B6FF7F570.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1912,13 +1919,13 @@ Overfull \hbox (6.51637pt too wide) detected at line 151
 
 
 [48]
+Underfull \vbox (badness 1565) has occurred while \output is active []
+
+
 
 [49]
 
 [50]
-
-Package natbib Warning: Citation `levy-2003' on page 51 undefined on input line 286.
-
 Package mdframed Info: mdframed works in twoside mode on input line 296.
 Package mdframed Info: Not enough space on this page on input line 301.
 
@@ -1973,22 +1980,32 @@ Package mdframed Info: mdframed works in twoside mode on input line 606.
 
 [57]
 Package mdframed Info: Not enough space on this page on input line 608.
+Package mdframed Info: mdframed works in twoside mode on input line 611.
 
 
 [58]
-Package mdframed Info: mdframed works in twoside mode on input line 643.
-Package hyperref Info: bookmark level for unknown mdlemma defaults to 0 on input line 643.
-Package mdframed Info: Not enough space on this page on input line 652.
+Package mdframed Info: mdframed works in twoside mode on input line 650.
+Package hyperref Info: bookmark level for unknown mdlemma defaults to 0 on input line 650.
 
-Overfull \hbox (7.37823pt too wide) in paragraph at lines 669--671
+Overfull \hbox (7.37823pt too wide) in paragraph at lines 676--678
 []\OT1/qpl/m/n/12 Elaboration of terms as-sumes binders have been an-no-tated with an ex-tended source
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 753.
-LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 770.
 
-Underfull \hbox (badness 10000) in paragraph at lines 783--785
+Overfull \hbox (13.13135pt too wide) in paragraph at lines 676--678
+\OT1/qpl/m/n/12 For ex-am-ple, $\U/stmry/b/n/12 J\OML/lmm/m/it/12 ^^Ux \OT1/lmr/m/n/12 : []\OML/lmm/m/it/12 : e\U/stmry/b/n/12 K[] \OT1/lmr/m/n/12 = []  \OML/lmm/m/it/12 x \OMS/lmsy/m/n/12   [] [] []$ 
+ []
+
+Package mdframed Info: mdframed works in twoside mode on input line 760.
+LaTeX Font Info:    Font shape `OT1/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `OT1/lmss/m/sl' tried instead on input line 779.
+
+Overfull \hbox (29.1692pt too wide) in paragraph at lines 772--791
+[]$[]$ 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 792--794
 
  []
 
@@ -1997,21 +2014,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 783--785
 [59]
 
 [60]
+Package mdframed Info: mdframed works in twoside mode on input line 828.
+Package mdframed Info: mdframed works in twoside mode on input line 840.
+Package mdframed Info: mdframed works in twoside mode on input line 848.
+Package mdframed Info: Box was splittet wrong
+ starting loop to iterate the splitting point
+(mdframed)              on input line 857.
+
 
 [61]
-Package mdframed Info: mdframed works in twoside mode on input line 819.
-Package mdframed Info: mdframed works in twoside mode on input line 831.
-Package mdframed Info: mdframed works in twoside mode on input line 839.
-Package mdframed Info: mdframed works in twoside mode on input line 852.
-
-Underfull \vbox (badness 7451) has occurred while \output is active []
-
-
 
 [62]
-Package mdframed Info: Not enough space on this page on input line 855.
+Package mdframed Info: mdframed works in twoside mode on input line 861.
 
-Overfull \hbox (16.62172pt too wide) in paragraph at lines 860--863
+Overfull \hbox (11.13084pt too wide) in paragraph at lines 869--872
 \OT1/qpl/m/n/12 tion. By weak-en-ing, and the in-duc-tion hy-poth-e-sis (IH), $\U/stmry/b/n/12 J\OML/lmm/m/it/12 e\U/stmry/b/n/12 K[]\OT1/lmr/m/n/12 ([]) \OMS/lmsy/m/n/12 2 [][]$\OT1/qpl/m/n/12 ,
  []
 
@@ -2052,13 +2068,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 138--142
 
 
 [67]
-Underfull \hbox (badness 4193) in paragraph at lines 232--235
+
+[68]
+Underfull \hbox (badness 4193) in paragraph at lines 235--238
 \OT1/qpl/m/n/12 programming.  \OT1/qpl/m/it/12 ACM Trans-ac-tions on Pro-gram-ming Lan-guages and Sys-tems
  []
 
-
-
-[68]) (./Appendix/auxiliary.tex
+) (./Appendix/auxiliary.tex
 
 [69]
 chapter A.
@@ -2095,10 +2111,6 @@ chapter B.
 
 
 
-Package natbib Warning: There were undefined citations.
-
-
-
 [72] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
@@ -2108,22 +2120,25 @@ L3 programming layer <2025-03-26>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 48255 strings out of 469626
- 1046964 string characters out of 5471004
+ 48268 strings out of 469626
+ 1047181 string characters out of 5471004
  1686434 words of memory out of 5000000
- 73485 multiletter control sequences out of 15000+600000
+ 73496 multiletter control sequences out of 15000+600000
  906051 words of font info for 229 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  122i,28n,134p,10944b,1528s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary6.pfb>
-Output written on main.pdf (78 pages, 1431864 bytes).
+Output written on main.pdf (78 pages, 1435504 bytes).
 PDF statistics:
- 1541 PDF objects out of 1728 (max. 8388607)
- 1340 compressed objects within 14 object streams
- 383 named destinations out of 1000 (max. 500000)
+ 1564 PDF objects out of 1728 (max. 8388607)
+ 1361 compressed objects within 14 object streams
+ 385 named destinations out of 1000 (max. 500000)
  394 words of extra memory for PDF output out of 10000 (max. 10000000)
 
