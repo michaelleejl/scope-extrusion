@@ -1,0 +1,16 @@
+
+\chapter{Auxiliary Definitions}
+
+\section{Erase}\label[appendix]{appendix:auxiliary-erase}
+The \textsf{erase} function takes a level $0$ type and erases all level annotations, and elaborates effect rows. It is defined by straightforward induction on \sourceLang{} types.
+
+  \[\begin{array}{rclr}
+      \erase{\mathbb{N}^0} & = & \mathbb{N}\\
+      \erase{(\functionType[\xi]{S^{0}}{T^{0}})^0} & = & \functionType[\elaborate{\xi}]{\erase{S^{0}}}{\erase{T^{0}}} \\
+      \erase{(\continuationType[\xi]{S^{0}}{T^{0}})^0} & = & \continuationType[\elaborate{\xi}]{\erase{S^{0}}}{\erase{T^{0}}} \\[2mm]
+      \erase{\effectType[\xi]{T^0}} & = & \effectType[\elaborate{\xi}]{\erase{T^0}}\\
+      \erase{\effectType{T^0}} & = & \effectType[\elaborate{\Delta}]{\erase{T^0}}\\\
+      \erase{\effectType[\Delta; \xi]{T^0}} & = & \effectType[\elaborate{\Delta}; \elaborate{\xi}]{\erase{T^0}}\\[2mm]
+      \erase{\effectType{(\handlerType{\effectType[\xi_1]{S^{0}}}{\effectType[\xi_2]{T^{0}}})^0}} & = & \effectType[\elaborate{\Delta}]{(\handlerType{\effectType[\elaborate{\xi_1}]{\erase{S^{0}}}}{\effectType[\elaborate{\xi_2}]{\erase{T^{0}}}})}
+  \end{array}
+  \]
