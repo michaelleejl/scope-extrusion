@@ -35,7 +35,7 @@
   \label{fig:elaboration-then-execution}
 \end{figure}
 
-This thesis considers the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and deep, unnamed \textbf{effect handlers} with multi-shot continuations (\Cpageref{section:effects-technical}). This chapter describes a calculus, \calculusName{}, for studying said interaction.\ \calculusName{} has both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which both the generating and generated code may use effect handlers. However, \calculusName{} does not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim is to extend \calculusName{} with various scope extrusion checks, and evaluate these checks in a comparative fashion. 
+This thesis considers the interaction between homogenous, compile-time, two-stage \textbf{metaprogramming} (\Cpageref{section:metaprogramming-technical}), and deep, unnamed \textbf{effect handlers} with multi-shot continuations (\Cpageref{section:effects-technical}). This chapter describes a calculus, \calculusName{}, for studying said interaction.\ \calculusName{} has both metaprogramming and effect handlers. To the best of my knowledge, this is the first calculus in which both the generating and generated code may contain effect handlers. However, \calculusName{} does not mediate the interaction between metaprogramming and effects: scope extrusion prevention is not a language feature. Rather, the aim is to extend \calculusName{} with various scope extrusion checks, and evaluate these checks in a comparative fashion. 
 
 Programs written in \calculusName{} cannot be directly executed. Rather, following the style of \citet{xie-2023}, one must first elaborate (or compile) from \calculusName{} (the ``source'' language) to \coreLang{} (the ``core'' language).\, Programs written in \coreLang{} may then be executed, to obtain the AST of a run-time \efflang{} program. This process, which mirrors the approach by \citet{calcagno-2003}, is summarised in \Cref{fig:elaboration-then-execution}. Elaboration is useful, since it simplifies the operational semantics, and is a convenient mechanism for inserting dynamic checks (\Cref{chapter:scope-extrusion}). 
 
@@ -135,7 +135,7 @@ Further, the relationship between syntax and types is more complicated than in \
 % As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
 Third, \textbf{there is a level $-1$ \textsf{Code} type, representing run-time ASTs}.\\ 
-  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable metaprogramming, run-time terms should be available at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, thus allowing level $-1$ programs to manipulate ASTs of level $0$ terms.
+  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable metaprogramming, run-time terms should be available at compile-time as ASTs. This is exactly the role of the \textsf{Code} type, which makes ASTs of level $0$ terms available to level $-1$ programs.
 % Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
 
 Putting it all together, we can now interpret complex \sourceLang{} types, like the following:
@@ -250,7 +250,7 @@ For each (level, mode) pair, similarly to \efflang{}, there are three typing jud
   \draw[fill = compile, draw=compile, anchor = north west] ($(example.south west) + (9.95cm, 0.06cm)$) rectangle ($(example.south west) + (10.65cm, -0cm)$);
   \end{tikzpicture}
   \end{center}
-  \item[\splicemode] Identifies code that can be executed at compile-time to \textcolor{splice}{\textbf{manipulate ASTs}}. Will be fully reduced at compile-time, and will not appear at run-time. 
+  \item[\splicemode] Identifies code that can be executed at compile-time to \textcolor{splice}{\textbf{manipulate ASTs}}. This code is fully reduced at compile-time, and does not appear at run-time. 
   \begin{center}
   \begin{tikzpicture}
   \node (example) {$\lambda x. \, \splice[(\bind{f}{(\lambda y. \equote[{\splice[(y)] + \texttt{2}}])}{\bind{a}{\equote[\texttt{1}]}{f a}})] + \texttt{3}$};
@@ -307,7 +307,7 @@ Since \sourceLang{} has only two levels, and the type system bans nested splices
 
 Further, the typing judgements for \compilemode{} and \quotemode{} are identical in almost all cases. To avoid repetition, I introduce the following notation:
 \[\cqtypejudge{e}{T}\]
-Where, for example, the typing rule 
+For example, the typing rule 
 \[\inferrule{\cqtypejudge[\Gamma_1]{e_1}{T_1} \\ \cdots \\ \cqtypejudge[\Gamma_n]{e_n}{T_n} }{\cqtypejudge{e}{T}}\]
 stands for two typing rules, one in \compilemode{}-mode and one in \quotemode{}-mode.
 \begin{center}
@@ -676,7 +676,7 @@ Second, \coreLang{} extends \efflang{} with machinery for scope extrusion checki
 
 Notice that, while the calculus provides the \textit{machinery} for scope extrusion checking, it does not demand that one \textit{use} it, or use it \textit{properly}. Scope extrusion checking is not a language feature, but an algorithm one builds on top of the calculus. 
 \subsection{Operational Semantics}
-The semantics of \coreLang{} are made precise via an operational semantics. Many rules are identical to those of \efflang{} (\Cref{fig:efflang-opsem}): interesting rules are collated in \Cref{fig:corelang-opsem}. Rules are divided into those related to AST construction (\textsc{Ast-Rule}), and those related to \textbf{s}cope \textbf{e}xtrusion \textbf{c}hecking (\textsc{Sec-Rule}).
+The operational semantics of \coreLang{} is a mostly trivial adaptation of the \efflang{} semantics; Interesting rules are collated in \Cref{fig:corelang-opsem}, and relate either to AST construction (\textsc{Ast-Rule}), or \textbf{s}cope \textbf{e}xtrusion \textbf{c}hecking (\textsc{Sec-Rule}).
 
 \newcommand{\coreConfiguration}[5]{\langle {#1}; {#2}; {#3}; {#4}; {#5} \rangle}
   % \renewcommand{\transition}[2]{#1 & \rightarrow & #2}
@@ -752,12 +752,12 @@ $\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': $\checkfv{\texttt{Plus
 More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{R}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{R}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{R} \}\]
 
-Given a term $E[t]$, I say variable $\Var{\alpha}{R}$ in $t$ is ``declared safe'' if $\Var{\alpha}{R} \in \projfvs{E}$ (\Cref{dfn:declared-safe}):
+Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is ``declared safe'' in $E$ if $\Var{\alpha}{R} \in \projfvs{E}$ (\Cref{dfn:declared-safe}):
 \begin{definition}[Declared Safe]{coreHighlight}\label[definition]{dfn:declared-safe}
-  Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is \emph{\textbf{declared safe}} if $\Var{\alpha}{R} \in \projfvs{E}$
+  Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is \emph{\textbf{declared safe}} in $E$ if $\Var{\alpha}{R} \in \projfvs{E}$
 \end{definition}
 
-Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus succeeds if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe, $\freevars{n} \subseteq \projfvs{E}$. 
+Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, \textbf{\texttt{check}} thus succeeds if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe in $E$, $\freevars{n} \subseteq \projfvs{E}$. 
 
 It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}. Therefore, the onus is on the person defining the elaboration to justify that \textbf{\texttt{dlet}} and \textbf{\texttt{check}} are used appropriately. 
 
@@ -832,7 +832,7 @@ and \textsc{Eff-Op} behaves as it does in \efflang{} (\Cref{fig:efflang-opsem}):
 % The aforementioned malformed AST should be ill-typed. To do so, it is insufficient to require that the left sub-tree is of type $\textsf{AST($\mathbb{N}$)}$. It must specifically be a \underline{\textsf{Var}} AST node. That is the purpose of the \textsf{FParam} type. 
 
 \subsubsection{Typing Rules}
-The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a computation that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST. 
+The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a computation that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST of computation type. 
 
 Notice that this type system does not guarantee that the resulting AST is \textit{well-scoped}, for example, the following is well-typed:
 \[\cdot \vdash {\Var{\alpha}{R}}: {\textsf{AST}(R)}\]
@@ -905,7 +905,7 @@ A closed term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \end{figure}
  
 \subsection{Implementation}
-The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implementation. In the concrete \texttt{OCaml} implementation, \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} are not primitives. Rather, they are encoded as a \textit{mode of use} of effects and handlers. 
+The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implementation. In the implementation, \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} are not primitives. Rather, they are encoded as a \textit{mode of use} of effects and handlers. 
 \begin{enumerate}
   \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that are passed the free variables of $n$\\ 
   $\checkm{n}$ is similar, except there are also \texttt{Mute} and \texttt{Unmute} effects
@@ -919,7 +919,7 @@ The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implement
 \end{enumerate}
 
 \section{Elaboration from \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice} to \texorpdfstring{\coreLang{}}{Lambda-Op-AST}}\label{section:elaboration}
-This section describes an elaboration from \sourceLang{} to \coreLang{}. This elaboration is simple: it does not insert any dynamic scope extrusion checks (other elaborations in \Cref{chapter:scope-extrusion}, that do insert checks, are built by extending this elaboration).
+This section describes an elaboration from \sourceLang{} to \coreLang{}. This elaboration is simple: it does not insert any dynamic scope extrusion checks (other elaborations in \Cref{chapter:scope-extrusion}, that do insert checks, extend this elaboration).
 
 \newcommand{\elaborate}[1]{\llbracket #1 \rrbracket}
 \newcommand{\erase}[1]{\textsf{erase}(#1)}
@@ -930,7 +930,7 @@ This section describes an elaboration from \sourceLang{} to \coreLang{}. This el
 The elaboration is defined on typing judgements: \sourceLang{} judgements elaborate to \coreLang{} judgements. This decomposes into four elaborations: on effect sets, types, contexts, and terms. As the specific elaboration is clear from the context, I write $\llbracket - \rrbracket$ for all four.
 
 \subsection{Elaborating Effect Sets}
-Elaborating effect sets is just the identity, that is 
+Elaboration of effect sets is the identity, that is 
 \[\begin{array}{rcl}
   \elaborate{\Delta} &=& \Delta \\
   \elaborate{\xi}&=&{\xi}
@@ -977,7 +977,7 @@ The elaboration for terms is moderated by the \textbf{mode}: \compilemode{}, \qu
 
 At a high level, in \compilemode{} and \quotemode{}-mode, one builds ASTs. To ensure formal parameters are appropriately renamed (\Cref{listing:source-gensym}), the elaboration must use \textbf{\texttt{mkvar}}. 
 
-Take, for example, the elaboration of $\lambda x: {\mathbb{N}}^0. \; \return{x}$ in \compilemode{} or \quotemode{}, where $\textsf{erase}(\mathbb{N}^0) = \mathbb{N}$:
+For example, in \compilemode{} or \quotemode{}-mode, $\lambda x: {\mathbb{N}}^0. \; \return{x}$  ($\textsf{erase}(\mathbb{N}^0) = \mathbb{N})$ elaborates into:
 \begin{center}
   \begin{tikzpicture}
     \node[align=left](example){$\begin{array}{@{}l}\bind{x}{\gensym{\mathbb{N}}}{}\\
@@ -1016,7 +1016,7 @@ Elaboration in \compilemode{} and \quotemode{}-modes do not differ significantly
     {\footnotesize
     \[
     \begin{array}{@{}lll}
-      \elaborate{x}_{\cqmode} & = & \texttt{Var}(x)\\
+      \elaborate{x}_{\cqmode} & = & \varToAST{x}\\
       \elaborate{\lambda x: T^0. \, e}_{\cqmode} & = & \bind{x}{\gensym{\erase{T^0}}}{\bind{\texttt{body}}{\elaborate{e}_{\cqmode}}{\return{\Lam{x}{\texttt{body}}}}}\\\\
       \elaborate{\splice}_{\compilemode{}} & = & \tls{\elaborate{e}_{\splicemode{}}}\\
       \elaborate{\splice}_{\quotemode{}} & = & {\elaborate{e}_{\splicemode{}}}
@@ -1176,7 +1176,7 @@ Finally, underneath a top-level splice, quotation and splice are duals (\Cref{th
 \end{array}
 \]
 \end{theorem}
-Where $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since the mode affects the result of elaboration. It is possible to prove something stronger: they elaborate to the same \coreLang{} program (contextual equivalence follows from reflexivity). The proof of quote-splice duality is by inspection of the definition of elaboration, where:
+Where $=_{\star}$ means ``elaborates to contextually equivalent \coreLang{} programs in $\star$ mode''. Parameterising by the mode is necessary, since it affects the result of elaboration. It is possible to prove something stronger: they elaborate to the same syntactic \coreLang{} program (contextual equivalence follows from reflexivity). The proof of quote-splice duality is by inspection of the definition of elaboration, where:
 \[\begin{array}{rcl}  
   \elaborate{\splice[{\equote}]}_{\quotemode{}} = t & \iff & \elaborate{e}_{\quotemode{}} = t\\
   \elaborate{\equote[{\splice}]}_{\splicemode{}} = t & \iff & \elaborate{e}_{\splicemode{}} = t
