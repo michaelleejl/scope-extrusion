@@ -66,7 +66,7 @@ let id_ast : (int -> int) expr = Lam(Var(x), l := Var(x); Int(1)) in
 !l
 \end{ocaml} 
 
-This example illustrates how the state effect could cause scope extrusion. The choice of effect is arbitrary. Scope extrusion could be caused by many other effects, like resumable exceptions.
+This example illustrates how the state effect could cause scope extrusion. The choice of effect is arbitrary. Scope extrusion could be caused by many other effects, like exceptions.
 
 To parameterise over the specific effect, I turn to effect handlers. Effect handlers, which have recently been added to \texttt{OCaml} \citep{sivaramakrishnan-21}, are a powerful language construct that can simulate many effects (state, I/O, greenthreading) \citep{pretnar-15}. It is thus strategic, and timely, to study scope extrusion in the context of effect handlers. 
 
@@ -74,7 +74,7 @@ The problem of scope extrusion has been widely studied, resulting in multitudino
 
 First, I am not studying scope extrusion abstractly. The MacoCaml \citep{xie-2022} project aims to extend the \texttt{OCaml} programming language, which has effect handlers, with compile-time metaprogramming. However, until now, the MacoCaml project has had no clear policy on how metaprogramming and effect handlers should interact. The context adds constraints: type-based approaches require unfeasible modification of the \texttt{OCaml} type-checker, and tend to limit expressiveness, disallowing a wide range of programs that do not lead to scope extrusion. Dynamic solutions are inefficient, reporting scope extrusion long after the error occurs, or unpredictable, allowing some programs, but disallowing morally equivalent programs. Further, many of the dynamic solutions have not been proved correct.
 
-Second, and more importantly, I lacked a way to evaluate solutions fairly and holistically. My evaluation criterion is three-pronged: correctness, efficiency, and expressiveness. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its own definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
+Second, and more importantly, I lacked a way to evaluate solutions fairly and holistically. My evaluation criterion is three-pronged: correctness, expressiveness, and efficiency. Each solution is described in its own calculus, which made solutions difficult to compare. It is non-trivial to show that the definitions of scope extrusion in differing calculi agree. Hence, one solution may be correct with respect to its own definition, but wrong with respect to another. Further, expressiveness and efficiency are inherently comparative criteria.
 
 This thesis solves both these problems. In \Cref{chapter:calculus}, I design a novel, common language for encoding and evaluating different solutions. In \Cref{chapter:scope-extrusion}, I use the designed language to formally describe and evaluate various checks. This process led to a novel Best-Effort dynamic check (\Cref{section:best-effort-check}), which I argue lands in a goldilocks zone, and should be adopted by MacoCaml.
 
@@ -85,7 +85,7 @@ Concretely, the contributions of this work are:
     \item A novel two-stage calculus, \calculusName{}, that allows for effect handlers at both stages: compile-time and run-time (\Cref{chapter:calculus}). \calculusName{} is well-typed, has the expected metatheoretic properties (\Cref{section:metatheory}), and is designed to facilitate comparative evaluation of different scope extrusion checks (\Cref{chapter:scope-extrusion}).
     \item In \calculusName{}, a formal description of the MetaOCaml check described by \citet{kiselyov-14} (\Cref{subsubsection:eager-dynamic-check}), as well as an evaluation of its correctness (\Cref{subsection:eager-dynamic-correctness}), expressiveness (\Cref{subsection:eager-dynamic-expressiveness}), and efficiency (\Cref{subsection:eager-dynamic-efficiency}).
     \item In \calculusName{}, a formal description of a novel Dynamic Best-Effort check (\Cref{section:best-effort-check}), which I prove correct (\Cref{subsection:best-effort-correct}), and argue, by comparison with other checks, lands in a goldilocks zone between expressiveness (\Cref{subsection:best-effort-expressive}) and efficiency (\Cref{subsection:best-effort-efficient}). 
-    \item An encoding of refined environment classifiers \citep{kiselyov-16} into \calculusName{}, with a proof of correctness via logical relation (\Cref{subsection:rec-formal-correctness}), and an evaluation of its expressiveness compared to other checks (\Cref{subsection:rec-formal-expressiveness}).
+    \item An extension of \calculusName{} with refined environment classifiers \citep{kiselyov-16}, with a proof of correctness via logical relation (\Cref{subsection:rec-formal-correctness}), and an evaluation of its expressiveness compared to other checks (\Cref{subsection:rec-formal-expressiveness}).
     \item Implementations of the three dynamic checks in MacoCaml.
 \end{enumerate}
 

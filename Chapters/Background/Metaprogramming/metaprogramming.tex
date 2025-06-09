@@ -5,7 +5,7 @@ What is MacoCaml-style metaprogramming? \Cref{subsection:metaprogramming-motivat
 
 Metaprogramming helps programmers write fast and maintainable code. Maintainability and efficiency are in constant tension; Resolving this tension may require more than programmer skill. 
 
-To observe this tension, consider an example from the \texttt{JAX} machine learning library (adapted to \texttt{OCaml}): computing the gradient of a differentiable function. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, comprising only polynomials and composition)
+To observe this tension, consider an example from the \texttt{JAX} machine learning library (adapted to \texttt{OCaml}): computing the gradient of a differentiable function. More precisely, assume a type \mintinline{ocaml}{diff} of differentiable functions (for simplicity, comprising only polynomials and composition):
 
 \begin{ocaml}
 type diff = Poly of int list 
@@ -37,7 +37,7 @@ The challenge is to write a function \mintinline{ocaml}{grad: diff -> int -> int
 \begin{ocamllst}
 let rec grad_main (f: diff) (x: int) = 
   let grad_poly (cs: int list) (x: int) = 
-    let grad_p c (a, b) = (c * b :: a, b + 1) 
+    let grad_p c (a, b) = (c * b :: a, b + 1) in
     let (res, _) = List.fold_right grad_p cs ([], 0) in 
     app Poly(remove_last res) x (*remove_last removes the last element of a list*)
   in match f with
@@ -96,7 +96,7 @@ macro rec app_gen (f: diff) (x: int expr) =
 
 macro rec grad_gen (f: diff) (x: int expr) = 
   let grad_poly_gen (cs: int list) (x: int expr) = 
-    let grad_p c (a, b) = (c * b :: a, b + 1) 
+    let grad_p c (a, b) = (c * b :: a, b + 1) in
     let (res, _) = List.fold_right grad_p cs ([], 0) in 
     app_gen Poly(remove_last res) x
   in match f with
@@ -140,7 +140,7 @@ While not an accurate description of MacoCaml, it can be useful to think of elem
 Under a quotation, the \mintinline{ocaml}{$} annotation stops this conversion, allowing for programs that \textit{manipulate} ASTs. 
 \begin{center} \text{\mintinline{ocaml}{<< $x + 0 >>}} \text{ can be thought of as } \text{\mintinline{ocaml}{Plus(x, Int(0))}}
 \end{center}
-Interleaving quotes and splices executes code to build ASTs
+Interleaving quotes and splices executes code to build ASTs:
 \begin{center}\text{\mintinline{ocaml}{<<$(print_int 1+2; <<1+2>>) + 0>>}} \\ 
 can be thought of as \\
  \text{\mintinline{ocaml}{Plus(print_int 1+2; Plus(Int(1), Int(2)), Int(0))}} \end{center}

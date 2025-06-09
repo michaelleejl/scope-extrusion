@@ -128,18 +128,18 @@ let effectful = let l = ref 0 in (l := 1; 1) + (l := 2; 2)
 \end{ocaml}
 The result of \mintinline{ocaml}{pure}, which has no effects, is independent of the evaluation order. In contrast, the result of \mintinline{ocaml}{effectful} \textit{is} dependent on the evaluation order. If terms are evaluated left-to-right, the value of \mintinline{ocaml}{!l} is \mintinline{ocaml}{2}, otherwise, it is \mintinline{ocaml}{1}.
 
-In order to be precise about the order of evaluation, \efflang{} follows \citeauthor{pretnar-15}'s approach of stratifying terms into distinct syntactic categories, with ``inert values'' ($v$) disjoint from ``potentially effectful computations'' ($c$). However, while \citeauthor{pretnar-15} treats handlers $h$ as values, in \efflang{}, they are a third syntactic category, disjoint from both values and computations. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ acts like a let-binding, sequencing computations. This forces programmers to be explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
+In order to be precise about the order of evaluation, \efflang{} follows \citeauthor{pretnar-15}'s approach of stratifying terms into distinct syntactic categories, with ``inert values'' ($v$) disjoint from ``potentially effectful computations'' ($c$). However, while \citeauthor{pretnar-15} treats handlers $h$ as values, in \efflang{}, they are a third syntactic category, disjoint from both values and computations. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ acts like a let-binding, sequencing computations. This forces programmers to make explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
 
 For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} $c_1$ $c_2$, where $c_1$ and $c_2$ are compuations that evaluate to naturals? Are both arguments evaluated before application, or are evaluation and application interleaved? The syntax forces programmers to choose explicitly. The programmer can either fully evaluate both arguments before applying them in turn: 
 \begin{eff}
 $\bind{x}{c_1}{(\bind{y}{c_2}{(\bind{f}{\texttt{plus} \, x}{f y})})}$
 \end{eff}
-or alternatively, $c_1$, apply it, then evaluate $c_2$:
+or alternatively, evaluate $c_1$, apply it, then evaluate $c_2$:
 \begin{eff}
 $\bind{x}{c_1}{(\bind{f}{\texttt{plus} \, x}{(\bind{y}{c_2}{f y})})}$
 \end{eff}
 
-Both choices are valid, but the programmer must choose. For clarity, where the order cannot affect the result (for example, $c_1 = \return{\texttt{1}}$, $c_2 = \return{\texttt{2}}$), I abuse notation and write $c_1+c_2$. Similarly, for clarity, I implicitly cast values to computations (writing $\texttt{1}+\texttt{2}$ rather than $\return{\texttt{1}} + \return{\texttt{2}}$).
+Both choices are valid, but the programmer must choose. For clarity, where the order cannot affect the result (for example, $c_1 = \return{\texttt{1}}$, $c_2 = \return{\texttt{2}}$), I abuse notation and write $c_1+c_2$. Similarly, I implicitly cast values to computations (writing $\texttt{1}+\texttt{2}$ rather than $\return{\texttt{1}} + \return{\texttt{2}}$).
 
 \subsubsection{Performing effects: \texttt{op}, \texttt{handle}, and \texttt{continue}}
 Recall that effect handlers allow users to register custom effects with custom semantics.\ \efflang{} assumes that the effects have been registered in advanced, parameterising over them with the placeholder $\op{v}$. Assume that the user has declared the effect \texttt{\textbf{print}} in advance. They may thus write programs which refer to \texttt{\textbf{print}}:
@@ -189,9 +189,9 @@ In the definition of $c$, the programmer may refer to $x$, the argument passed t
 
   \end{tikzpicture}
 \end{center}
-\noindent where the program that adds one is suspended until the value is received. I write the suspended program as $\kappa y. \; y+\texttt{1}$, where the variable $y$ indicates the as-yet-unknown value. $\kappa y. \; y+\texttt{1}$ is the continuation bound to $k$. The syntax is evocative: continuations can be thought of as being \textit{like}  functions $\lambda y. \; y+\texttt{1}$ (in \citeauthor{pretnar-15}'s calculus, functions and continuations share a type). However, for technical reasons relating to scope extrusion (\Cref{section:best-effort-check,section:refined-environment-classifiers-formal}), in \efflang{}, continuations and functions are disambiguated both syntactically and at the type-level (mirroring the approach by \citet{isoda-24}). The expression 
+\noindent where the program that adds one is suspended until the value is received. I write the suspended program as $\kappa y. \; y+\texttt{1}$, where the variable $y$ represents the as-yet-unknown value. $\kappa y. \; y+\texttt{1}$ is the continuation bound to $k$. The syntax is evocative: continuations can be thought of as being \textit{like}  functions $\lambda y. \; y+\texttt{1}$ (in \citeauthor{pretnar-15}'s calculus, functions and continuations share a type). However, for technical reasons relating to scope extrusion (\Cref{section:best-effort-check,section:refined-environment-classifiers-formal}), in \efflang{}, continuations and functions are disambiguated both syntactically and at the type-level (mirroring the approach by \citet{isoda-24}). The expression 
 \[\continue{k}{v}\] 
-is used to resume the suspended program, substiting value $v$ for $y$. For example,  
+is used to resume the suspended program, substituting value $v$ for $y$. For example,  
 \[\handleWith{\textbf{\texttt{get\_int\_from\_user}}() + 1}{\textbf{\texttt{get\_int\_from\_user}}(x, k) \mapsto \continue{k}{\texttt{2}}}\]
 steps to $\texttt{2} + \texttt{1}$ (and thus evaluates to \texttt{3}).
 
@@ -199,7 +199,7 @@ In \efflang{}, the continuation to be bound to $k$ is calculated. In contrast, i
 \[\op{v; y.c}\]
 where $y.c$ is the continuation to be bound to $k$.\ \citeauthor{pretnar-15} acknowledges that the approach adopted by \efflang{} is an equivalent formulation.
 
-The concrete operation handler thus resumes the suspended program, supplying a unit value, since \textbf{\texttt{print}} effects do not receive values. Evaluating the (now unsuspended) program eventually returns a value $v$ and some partially accumulated \texttt{stdout} $s$. The handler then prepends the printed value, $x$, onto $s$. 
+The concrete operation handler thus resumes the suspended program, supplying a unit value, since \textbf{\texttt{print}} effects are ``write-only''. Evaluating the (now unsuspended) program eventually returns a value $v$ and some partially accumulated \texttt{stdout} $s$. The handler then prepends the printed value, $x$, onto $s$. 
 % Second, \textit{any effect can be understood in terms of send and receive operations}. Programs interact with their environment in two fundamental ways: they either \textit{receive} values from their environment (as above), or they \textit{send} values to its environment, for example via a \texttt{print}. 
 
 % $x$, $k$, 
@@ -211,7 +211,7 @@ The concrete operation handler thus resumes the suspended program, supplying a u
 % 
 Having defined the semantics for \textbf{\texttt{print}}, the user may now interpret the earlier example with their semantics, using the $\handleWith{e}{h}$ construct. Doing so results in the program in \Cref{listing:efflang-running-example}.
 
-Notice that multiple effects may be handled by the same handler, and the same effect might be handled by multiple handlers, potentially with different semantics. 
+Notice that multiple effects may be handled by the same handler, and different instances of the same effect might be handled by multiple handlers, potentially with different semantics. 
 
 \subsubsection{Operational Semantics}
 The operational semantics of \efflang{} (\Cref{fig:efflang-opsem}) is given on configurations of the form $\effconfiguration{c}{E}$, where $c$ is a term and $E$ is an evaluation context, in the style of \citet{felleisen-87}. Evaluation contexts are represented as a stack of evaluation frames $F$, à la \citet{kiselyov-2012}. The two key rules are \textsc{Eff-Op}, the mechanism for giving effects custom semantics, and \textsc{Eff-Cnt}, the mechanism for resuming programs. 
@@ -371,7 +371,7 @@ Functions are values, and are applied to other values, but produce computations 
 \]
 is a value that accepts a value of type $\mathbb{N}$ and returns a computation of type $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$. Functions thus have suspended effects, which I write $\functionType{S}{T}$. In this case, the function has type $\functionType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}{\mathbb{N}}$. Recall that continuations and functions, while similar, need to be distinguished for technical reasons relating to scope extrusion. 
 
-Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects set. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$. For example, a handler of the form  
+Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, removing them from the effects set. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$. For example, a handler of the form  
 \[ \begin{array}{ll}
   \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
     \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
@@ -387,10 +387,11 @@ type _ Effect.t += Op: A -> B
 \end{ocaml}
 \efflang{} does not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
 \[\texttt{recursive}: 1 \to (\functionType[\{ \texttt{recursive} \}]{1}{1})\]
-Thus, one may write programs which do not terminate, by ``tying the knot'', for example 
+Thus, one may write programs which do not terminate, by ``tying the knot'', for example:
 \begin{eff}
   $\handleWith{(\lambda \_ . \textbf{\texttt{recursive}} ()) ()}{\textbf{\texttt{recursive}}(\_, k) \mapsto {\continue{k}{(\lambda \_. \textbf{\texttt{recursive}} ())}}}$
 \end{eff}
+
 Note that for the program to be well-typed, the program fragment $\lambda \_. \textbf{\texttt{recursive}} ()$ must refer to \textbf{\texttt{recursive}} in its type: $\functionType[\{ \texttt{recursive} \}]{1}{1}$. Thus, the declared type of the \textbf{\texttt{recursive}} effect must be recursive. 
 
 The typing rules for terms are collated in \Cref{fig:efflang-type-system}. Since types are stratified, so are typing judgements:
@@ -643,9 +644,9 @@ The design space of effect handlers is large. Different design decisions could i
         While named handlers can be more ergonomic \citep{xie-2022}, like other works on scope extrusion \citep{isoda-24}, this thesis only considers unnamed handlers.
 
   \item \textbf{\textsf{Deep, Shallow, or Sheep Handlers}}\\
-         \textit{Are multiple instances of the same effect handled by the same handler?}
+         \textit{Can multiple instances of the same effect be handled by the same handler?}
 
-         In \efflang{}, continuations reinstate handlers $\effectRule{Op}$ and thus multiple instances of the same effect are handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. These are known as \textbf{deep} handlers.
+         In \efflang{}, continuations reinstate handlers $\effectRule{Op}$ and thus multiple instances of the same effect can be handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. These are known as \textbf{deep} handlers.
           
          \begin{minipage}[t]{\linewidth}
           \centering
@@ -669,7 +670,7 @@ The design space of effect handlers is large. Different design decisions could i
       \par\vspace{0.6\baselineskip}
         An alternative semantics would \textit{not} reinstate the handler, in an approach known as \textbf{shallow} handlers \citep{hillestrom-2018}. \Cref{listing:eff-handler-type} would be stuck, since the second \textbf{\texttt{addn}} would not be handled.
 
-        Another alternative would be to modify the interface for \textbf{\texttt{continue}} such that it accepts a handler
+        Another alternative would be to modify the interface for \textbf{\texttt{continue}} such that it accepts a handler:
         \[\textbf{\texttt{continue}} \, k \,  v \, h\]
         This would allow multiple effects to be handled by different handlers. That is, the programmer could add $\texttt{1}$ the first time \textbf{\texttt{addn}} is performed, and $\texttt{2}$ the second time (\Cref{listing:eff-handler-type} would return $\texttt{2}+\texttt{4}=\texttt{6}$). These handlers behave as a hybrid of shallow and deep handlers, and are thus termed \textbf{sheep} handlers \citep{phipps-costin-2023}. 
          
