@@ -17,7 +17,7 @@ This chapter refers to the correctness and permissiveness of dynamic scope extru
 Given a definition of scope extrusion $\Phi$ (a predicate on configurations), a dynamic check is correct if, for all well-typed \sourceLang{} expressions $e$, if elaborating $e$ with the check ($\elaborate{e}^{\textbf{Check}}$) would detect scope extrusion (transition to $\err{}$), assuming naïvely elaborating $e$ ($\elaborate{e}$) reduces to a configuration exhibiting scope extrusion ($\Phi(\langle t;E;U;M;I\rangle)$).
 
 \begin{definition}[Correctness of a Dynamic Scope Extrusion Check]{sourceHighlight}
- Given a predicate on configurations $\Phi$, a dynamic scope extrusion check $\elaborate{-}^{\textbf{Check}}$ is correct with respect to $\Phi$ if for all closed, well-type \sourceLang{} expressions $e$,
+ Given a predicate on configurations $\Phi$, a dynamic scope extrusion check $\elaborate{-}^{\textbf{Check}}$ is \textbf{\emph{correct}} with respect to $\Phi$ if for all closed, well-type \sourceLang{} expressions $e$,
  \[\begin{array}{c} \langle \elaborate{e} ; [-]; \emptyset;\emptyset; \top \rangle \to^{*} \langle t;E;U;M;I \rangle \land \Phi(\langle t;E;U;M;I \rangle)
 \\ \implies \\
 \langle \elaborate{e}^{\textbf{Check}} ; [-]; \emptyset;\emptyset; \top \rangle  \to^{*} \; \langle \textbf{\texttt{err}};E';U';M';I' \rangle
@@ -31,8 +31,8 @@ One has to consider naïve elaboration, because some checks (\Cref{section:best-
 The permissiveness of a scope extrusion check refers to the set of well-typed closed \sourceLang{} expressions that, when elaborated, do not transition to \textbf{\texttt{err}} (even if they exhibit scope extrusion).
 
 \begin{definition}[Permissiveness of a Dynamic Scope Extrusion Check]{sourceHighlight}
- Let \textsf{WellTyped} be the set of closed, well-typed, \sourceLang{} expressions.
- The permissiveness of a dynamic scope extrusion check is defined as 
+ Let \emph{\textsf{WellTyped}} be the set of closed, well-typed, \sourceLang{} expressions.
+ The \emph{\textbf{permissiveness}} of a dynamic scope extrusion check is defined as 
  \[\{ e \in \textsf{WellTyped}\, \mid \langle \elaborate{e}^{\textbf{Check}};[-];\emptyset;\emptyset;\top \rangle \not\to^{*} \langle \err ; E ; U ; M ; I \rangle \} \]
 \end{definition}
 
@@ -49,7 +49,7 @@ Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\l
 
 \begin{definition}[Lazy Scope Extrusion]{coreHighlight}\label[definition]{def:lazy-scope-extrusion} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
-exhibits lazy scope extrusion if all of the following hold:
+exhibits \textbf{\emph{lazy scope extrusion}} if all of the following hold:
   \begin{enumerate}
     \item $t = \return{n}$ for some $n$ of \textsf{AST} type
     \item $E = E'[\tls{[-]}]$ for some $E'$
@@ -104,15 +104,15 @@ Assuming $\cdot \vdash_{\compilemode{}} e: T^0 \, ! \, \emptyset;\emptyset$, and
 The lazy scope extrusion check thus acts as a baseline, characterising the set of \sourceLang{} programs that it is ``safe'' to permit. This is used to define the \textit{expressiveness} of a check, where the lazy dynamic check is \textit{maximally} expressive:
 
 \begin{definition}[Expressiveness of a Dynamic Scope Extrusion Check]{sourceHighlight}
-Let the set \textsf{Safe} be defined as 
-\[\textsf{Safe} \triangleq \{ e \in \textsf{WellTyped} \mid \langle \elaborate{e}^{\textbf{Lazy}}; [-]; \emptyset ; \emptyset ; \top \rangle \not\to^{*} \langle \err ; E ; U ; M ; I \rangle \}\]
-The permissiveness of a dynamic scope extrusion check is defined as 
- \[\{ e \in \textsf{Safe}\, \mid \langle \elaborate{e}^{\textbf{Check}};[-];\emptyset;\emptyset;\top \rangle \not\to^{*} \langle \err ; E ; U ; M ; I \rangle \} \]
+Let the set \emph{\textsf{Safe}} be defined as 
+\[\textsf{\emph{Safe}} \triangleq \{ e \in \textsf{WellTyped} \mid \langle \elaborate{e}^{\textbf{Lazy}}; [-]; \emptyset ; \emptyset ; \top \rangle \not\to^{*} \langle \err ; E ; U ; M ; I \rangle \}\]
+The \emph{\textbf{expressiveness}} of a dynamic scope extrusion check is defined as 
+ \[\{ e \in \textsf{\emph{Safe}}\, \mid \langle \elaborate{e}^{\textbf{Check}};[-];\emptyset;\emptyset;\top \rangle \not\to^{*} \langle \err ; E ; U ; M ; I \rangle \} \]
 \end{definition}
 
 Given a scope extrusion check, every rejected program that would be permitted by the lazy dynamic check is considered a false positive:
 \begin{definition}[False Positives of a Dynamic Scope Extrusion Check]{sourceHighlight}
-The false positives of a dynamic scope extrusion check are defined as 
+The \emph{\textbf{false positives}} of a dynamic scope extrusion check are defined as 
  \[\{ e \in \textsf{Safe}\, \mid \langle \elaborate{e}^{\textbf{Check}};[-];\emptyset;\emptyset;\top \rangle \to^{*} \langle \err ; E ; U ; M ; I \rangle \} \]
 \end{definition}
 
@@ -123,7 +123,7 @@ A configuration exhibits \textbf{eager scope extrusion} if it is improperly scop
 
 \begin{definition}[Eager Scope Extrusion]{coreHighlight}\label[definition]{dfn:eager-scope-extrusion} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
-exhibits eager scope extrusion if all of the following hold:
+exhibits \emph{\textbf{eager scope extrusion}} if all of the following hold:
   \begin{enumerate}
     \item $t = \return{n}$ for some $n$ of \textsf{AST} type
     % \item $E = E' :: \tls{[-]}$ for some $E'$
@@ -295,7 +295,7 @@ If the lazy dynamic check is too inefficient, and the eager dynamic check too un
 
 \begin{definition}[Best-Effort Scope Extrusion]{coreHighlight} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
-exhibits best-effort scope extrusion if 
+exhibits \textbf{\emph{best-effort scope extrusion}} if 
 \[ \langle t;E;U;M;I\rangle \to^{*} \langle t';E';U';M';I'\rangle\]
 and $\langle t';E';U';M';I'\rangle$ exhibits lazy scope extrusion.
 \end{definition}
@@ -560,7 +560,7 @@ The method of refined environment classifiers (\Cref{subsubsection:refined-envir
 
 For ease of reasoning, it is helpful to define the notion of an \textbf{extended} \recLang{} type.
 \begin{definition}[Extended \recLang{} type]{recHighlight}\label[definition]{dfn:extended-source-type}
-An \textbf{extended} source type is either:
+An \emph{\textbf{extended source type}} is either:
   \begin{enumerate}
     \item A level $-1$ type, for example, $(\textsf{Code}(\mathbb{N}^{0})^{\gamma})^{-1}$ or 
     \item A level $0$ type annotated with a classifier, for example, $\mathbb{N}^{0} (\gamma)$. 
@@ -846,7 +846,7 @@ The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a noti
 % \end{lemma}
 \vspace{-\baselineskip}
 \begin{definition}[Closed substitution]{recHighlight}\label[definition]{dfn:closed-substitution}
-  Given a context $\Gamma$, and assuming $\Theta = \pi_{\gamma}(\Gamma)$, the set of closed substitutions $\rho \vDash \Gamma$ are defined inductively as follows:
+  Given a context $\Gamma$, and assuming $\Theta = \pi_{\gamma}(\Gamma)$, the set of \emph{\textbf{closed substitutions}} $\rho \vDash \Gamma$ are defined inductively as follows:
   \begin{enumerate}
     \item $() \vDash \gamma_{\bot}$
     \item If $\rho \vDash \Gamma$, then for arbitrary $\gamma \in \Gamma$, $n \in \scoped{\underline{T^{0} (\gamma)}}$, $(\rho, n/x) \vDash \Gamma, (x:T^0)^{\gamma}$ 

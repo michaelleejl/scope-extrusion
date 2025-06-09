@@ -336,7 +336,7 @@ The latest handler $h$ for an effect \textbf{\texttt{op}} in a context $E$ is fo
 \[E_1[\handleWith{E_2}{h}]\]
 such that $\textbf{\texttt{op}} \in \textsf{dom}(h)$ ($h$ handles $\textbf{\texttt{op}}$) and $\textbf{\texttt{op}} \not\in \textsf{handled}(E_2)$ (no handlers for \textbf{\texttt{op}} in $E_2$). If such an $h$ exists, this condition identifies it uniquely. 
 \subsubsection{Type-and-Effect System}
-\Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types. Types are divided into value types (for example, $\mathbb{N}$), computation types ($\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$), and handler types ($\handlerType{\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{\mathbb{N}}}$). Since computations may have effects, computation types track unhandled effects using an effects row ($\Delta$), which in \efflang{} is simply a set. This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects:
+\Cref{fig:efflang-type-syntax} collates the syntax of \efflang{} types. Types are divided into value types (for example, $\mathbb{N}$), computation types ($\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$), and handler types ($\handlerType{\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{\mathbb{N}}}$). Since computations may have effects, computation types track unhandled effects using an effects set ($\Delta$). This type-and-effect system allows us to distinguish between values, computations that return values, and computations that return values and additionally have some unhandled side effects:
 
 
 \begin{figure}
@@ -344,7 +344,7 @@ such that $\textbf{\texttt{op}} \in \textsf{dom}(h)$ ($h$ handles $\textbf{\text
   {\large \textbf{Types}}\\
 
   $\begin{array}{@{}lllr}
-    \text{Effects row} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
+    \text{Effects set} & \Delta ::= \emptyset \mid \Delta \cup \{ \texttt{op}_i \} \\ \\
     \text{Value type} & S, T ::= \mathbb{N} & \\
                               &\quad\quad\quad\,\mid \functionType{S}{T} & \text{functions}\\
                               &\quad\quad\quad\,\mid \continuationType{S}{T} & \text{continuations}\\ \\
@@ -371,7 +371,7 @@ Functions are values, and are applied to other values, but produce computations 
 \]
 is a value that accepts a value of type $\mathbb{N}$ and returns a computation of type $\effectType[\{\textbf{\texttt{print}} \}]{\mathbb{N}}$. Functions thus have suspended effects, which I write $\functionType{S}{T}$. In this case, the function has type $\functionType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}{\mathbb{N}}$. Recall that continuations and functions, while similar, need to be distinguished for technical reasons relating to scope extrusion. 
 
-Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects row. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$. For example, a handler of the form  
+Handlers transform computations of one type to computations of another type. This happens in two ways: first, by handling effects, and thus removing them from the effects set. Second, by modifying the return type of computations. To reflect both abilities, handlers are given a type of the form $\handlerType{\effectType[\Delta_1]{S}}{\effectType[\Delta_2]{T}}$. For example, a handler of the form  
 \[ \begin{array}{ll}
   \quad \{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
     \quad \, \,\, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}
@@ -531,7 +531,7 @@ This flexibility is important, because to type $\bind{x}{c_1}{c_2}$, the \textsc
 \[\inferrule{\vdots}{\type[]{\bind{x}{\print{0}}{\return{\texttt{0}}}}{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}}\] 
 A valid alternative would be to add explicit subtyping. However, such an approach would no longer be syntax directed. 
 
-The \textsc{Op} rule forces the performed operation to be tracked by the effects row ($\texttt{op} \in \Delta$): flexibility allows the type system to over-approximate the effects in a term, but not to underapproximate them. 
+The \textsc{Op} rule forces the performed operation to be tracked by the effects set ($\texttt{op} \in \Delta$): flexibility allows the type system to over-approximate the effects in a term, but not to underapproximate them. 
 
 Following the approach by \citet{biernacki-2017}, handlers are typed clause-by-clause, using the \textsc{Ret-Handler} and \textsc{Op-Handler} rules. In contrast, \citeauthor{pretnar-15} types a handler with a single rule that checks all clauses at once. Consider typing the handler:
 \[ \begin{array}{ll}
@@ -552,11 +552,11 @@ It is sufficient to show that:
   \item[(1)] $\textbf{\texttt{print}}: \mathbb{N} \to 1 \in \Sigma$, which is true by assumption
   \item[(2)] The rest of the handler $h = \returnHandler{x}{\return{(x, \texttt{""})}}$ has type $\handlerType{\effectType[\{ \textbf{\texttt{print}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$. This follows from a trivial application of the \textsc{Ret-Handler} rule. 
   \item[(3)] The body \[{\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\] has type $\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}$, assuming $x$ has type $\mathbb{N}$ and $k$ has type $\continuationType[\emptyset]{1}{(\mathbb{N} \times \textsf{String})}$. 
-  \item[(4)] The handler removes \textit{at most} \textbf{\texttt{print}} from the effects row, and no other effects. This check passes, but would fail if we tried to type the handler with, for example, $\handlerType{\effectType[\{ \textbf{\texttt{print}}, \textbf{\texttt{get}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$.
+  \item[(4)] The handler removes \textit{at most} \textbf{\texttt{print}} from the effects set, and no other effects. This check passes, but would fail if we tried to type the handler with, for example, $\handlerType{\effectType[\{ \textbf{\texttt{print}}, \textbf{\texttt{get}} \}]{\mathbb{N}}}{\effectType[\emptyset]{(\mathbb{N} \times \textsf{String})}}$.
   \item[(5)] There are no other handlers for \textbf{\texttt{print}} in $h$.
 \end{enumerate}
 
-Finally, a closed computation is well-typed if it can be typed with an empty effects row.  
+Finally, a closed computation is well-typed if it can be typed with an empty effects set.  
 \begin{definition}[Well-typed closed computation]{effHighlight}
   $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
 \end{definition}

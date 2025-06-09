@@ -32,7 +32,7 @@
 \contentsline {subsubsection}{\nonumberline Typing Rules}{39}{subsubsection*.33}%
 \contentsline {subsection}{\numberline {3.2.3}Implementation}{40}{subsection.3.2.3}%
 \contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{40}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Elaborating Effect Rows}{41}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.1}Elaborating Effect Sets}{41}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}Elaborating Types}{41}{subsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.3.3}Elaborating Contexts}{41}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Elaborating Terms}{42}{subsection.3.3.4}%
