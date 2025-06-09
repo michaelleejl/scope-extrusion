@@ -18,15 +18,15 @@
 \contentsline {mddefinition}{{Definition}{4.2.{3}}{Expressiveness of a Dynamic Scope Extrusion Check}}{47}{mdtheorem.4.2.3}%
 \contentsline {mddefinition}{{Definition}{4.2.{4}}{False Positives of a Dynamic Scope Extrusion Check}}{47}{mdtheorem.4.2.4}%
 \contentsline {mddefinition}{{Definition}{4.3.{1}}{Eager Scope Extrusion}}{48}{mdtheorem.4.3.1}%
-\contentsline {mddefinition}{{Definition}{4.4.{1}}{Best-Effort Scope Extrusion}}{52}{mdtheorem.4.4.1}%
+\contentsline {mddefinition}{{Definition}{4.4.{1}}{Best-Effort Scope Extrusion}}{51}{mdtheorem.4.4.1}%
 \contentsline {mdtheorem}{{Theorem}{4.4.{2}}{Correctness of the Best-Effort Check}}{55}{mdtheorem.4.4.2}%
 \contentsline {mdtheorem}{{Theorem}{4.4.{3}}{Cause for Concern Property}}{56}{mdtheorem.4.4.3}%
 \contentsline {mddefinition}{{Definition}{4.5.{1}}{Extended \recLang {} type}}{57}{mdtheorem.4.5.1}%
-\contentsline {mddefinition}{{Definition}{4.5.{2}}{Well-typed closed expression}}{58}{mdtheorem.4.5.2}%
+\contentsline {mddefinition}{{Definition}{4.5.{2}}{Well-typed closed expression}}{57}{mdtheorem.4.5.2}%
 \contentsline {mddefinition}{{Definition}{4.5.{3}}{Well-Formed Level $-1$ Type}}{58}{mdtheorem.4.5.3}%
 \contentsline {mdlemma}{{Lemma}{4.5.{4}}{Weakening for Level 0 Values}}{59}{mdtheorem.4.5.4}%
 \contentsline {mdtheorem}{{Theorem}{4.5.{5}}{Correctness of Refined Environment Classifiers}}{59}{mdtheorem.4.5.5}%
-\contentsline {mddefinition}{{Definition}{4.5.{6}}{\textsf {Scoped}-Induction}}{61}{mdtheorem.4.5.6}%
-\contentsline {mdlemma}{{Lemma}{4.5.{7}}{Closure under Anti-Reduction}}{61}{mdtheorem.4.5.7}%
-\contentsline {mddefinition}{{Definition}{4.5.{8}}{Closed substitution}}{61}{mdtheorem.4.5.8}%
+\contentsline {mddefinition}{{Definition}{4.5.{6}}{\textsf {Scoped}-Induction}}{62}{mdtheorem.4.5.6}%
+\contentsline {mdlemma}{{Lemma}{4.5.{7}}{Closure under Anti-Reduction}}{62}{mdtheorem.4.5.7}%
+\contentsline {mddefinition}{{Definition}{4.5.{8}}{Closed substitution}}{62}{mdtheorem.4.5.8}%
 \contentsline {mdlemma}{{Lemma}{4.5.{9}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{63}{mdtheorem.4.5.9}%

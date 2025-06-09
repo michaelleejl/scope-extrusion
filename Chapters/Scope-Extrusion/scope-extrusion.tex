@@ -37,7 +37,7 @@ The permissiveness of a scope extrusion check refers to the set of well-typed cl
 \end{definition}
 
 \section{Lazy Dynamic Check}\label{section:lazy-dynamic-check-formal}
-Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\langle t;E;U;M;I\rangle$). Lazy scope extrusion, for example, occurs when the \textit{result} of compile-time execution ($E = E'[\tls{[-]}]$) is improperly scoped ($t = \return{n}$, $\freevars{n} \not\subseteq \projfvs{E}$). Lazy scope extrusion formalises the definition by \citet{kiselyov-14}.
+Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\langle t;E;U;M;I\rangle$). A configuration exhibits \textbf{lazy scope extrusion} when it is the \textit{result} of compile-time execution ($E = E'[\tls{[-]}]$), and is improperly scoped ($t = \return{n}$, $\freevars{n} \not\subseteq \projfvs{E}$). Lazy scope extrusion formalises the definition by \citet{kiselyov-14}.
 
 % In the words of \citet{kiselyov-14} (emphasis mine),
 
@@ -119,7 +119,7 @@ The false positives of a dynamic scope extrusion check are defined as
 However, due again to its simplicity, the lazy dynamic check is inefficient and uninformative, and therefore not suitable for practical use \citep{kiselyov-14} (\Cref{subsubsection:lazy-dynamic-check}, \Cpageref{subsubsection:lazy-dynamic-check}).
 
 \section{Eager Dynamic Check}\label{section:eager-dynamic-check-formal}
-Eager scope extrusion extends lazy scope extrusion, considering configurations representing \textit{intermediate results} of compile-time execution (\Cref{subsubsection:eager-dynamic-check}, \Cpageref{subsubsection:eager-dynamic-check}). Notice that the definition drops the requirement that $E = E'[\tls{[-]}]$, but is otherwise identical to \Cref{def:lazy-scope-extrusion}. 
+A configuration exhibits \textbf{eager scope extrusion} if it is improperly scoped (\Cref{subsubsection:eager-dynamic-check}, \Cpageref{subsubsection:eager-dynamic-check}). Notice that the definition drops the requirement that the configuration represents the result of compile-time execution, but is otherwise identical to \Cref{def:lazy-scope-extrusion}. 
 
 \begin{definition}[Eager Scope Extrusion]{coreHighlight}\label[definition]{dfn:eager-scope-extrusion} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
@@ -291,7 +291,7 @@ since the \textbf{\texttt{return}} is elaborated into a \textbf{\texttt{check}},
 Additionally, the eager dynamic check is not, in the worst case, more efficient than the lazy dynamic check, since there exist pathological examples, such as when the offending AST is not used to construct a larger AST, but returned at the top-level splice (\Cref{listing:eager-scope-extrusion-check-eg-tls}). However, I hypothesise that in the \textit{common case}, the eager dynamic check detects scope extrusion sufficiently early as to outweigh the checking overhead. This question is an empirical one, and would require further research, outside the scope of the dissertation, to resolve. 
 
 \section{Best-Effort Dynamic Check}\label{section:best-effort-check}
-If the lazy dynamic check is too inefficient, and the eager dynamic check too unpredictable, might it be possible to find a ``goldilocks'' solution? Such a check should allow the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, and be permissive in a predictable way. For example, a check that eagerly detects programs that \textit{must} cause lazy scope extrusion. I call this best-effort scope extrusion:
+If the lazy dynamic check is too inefficient, and the eager dynamic check too unpredictable, might it be possible to find a ``goldilocks'' solution? Such a check should allow the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, and be permissive in a predictable way. A configuration exhibits \textbf{best-effort scope extrusion} when it \textit{must} cause lazy scope extrusion. I call this best-effort scope extrusion:
 
 \begin{definition}[Best-Effort Scope Extrusion]{coreHighlight} A \coreLang{} configuration of the form 
 \[\langle t;E;U;M;I\rangle\]  
@@ -458,7 +458,7 @@ As an example, consider the program in \Cref{fig:core-unmute-example}, which bui
 \caption{A \coreLang{} program that generates the AST of $\lambda z. \, (\lambda x. \, x + \texttt{0}) (\texttt{1})$. It is coloured using the convention of \Cref{fig:unmute-variables-algo}.}
 \label{fig:core-unmute-example}
 \end{figure}
-Note that the body of $f$ is the simplified version of \Cref{listing:eager-scope-extrusion-looks-unsafe}. It is coloured using the convention of \Cref{fig:unmute-variables-algo}: \textbf{\textcolor{lightgrey}{light grey}} for the captured stack, \textbf{\textcolor{darkgrey}{dark grey}} for the handler, and \textbf{\textcolor{selected}{blue}} for the effect. The surrounding context (in \textbf{black}) is identified by $I$: it is never captured by the handling of any effect, and thus must have no references to the captured continuation $k$.
+Note that the body of $f$ is the simplified version of \Cref{listing:eager-scope-extrusion-looks-unsafe}. \cref{fig:core-unmute-example-result} is coloured using the convention of \Cref{fig:unmute-variables-algo}: \textbf{\textcolor{lightgrey}{light grey}} for the captured stack, \textbf{\textcolor{darkgrey}{dark grey}} for the handler, and \textbf{\textcolor{selected}{blue}} for the effect. The surrounding context (in \textbf{black}) is identified by $I$: it is never captured by the handling of any effect, and thus must have no references to the captured continuation $k$.
 
 If the stack was never captured by the handling of an effect (for example, no operations were performed), then $I$ is set to $\top$, $\forall n \in \mathbb{N}, \top \geq n$. Performing an effect can thus \textit{decrease} $I$, but never increase it. This is the side condition on \textsc{Eff-Op}.
 \[\begin{array}{ll}\coreConfiguration{\op{v}}{E_1[\handleWith{E_2}{h}]}{U}{M}{I} \to & \coreConfiguration{c[v/x, \text{cont}/ k]}{E_1}{U}{{M \cup \projfvs{E_2}}}{\textcolor{coreHighlight}{I'}} \\ &\textcolor{coreHighlight}{(I' = \textsf{min}(\textsf{len}(E_1), I)} \end{array}\]
@@ -516,7 +516,7 @@ The best-effort dynamic check is not maximally expressive. In particular, it doe
 \[\langle \dlet{\Binder{x}{\mathbb{N}}}{\return{\Lam{\Binder{x}{\mathbb{N}}}{\Var{y}{\mathbb{N}}}}}; E[\textbf{\texttt{check}}[-]]; U; \{\Var{y}{\mathbb{N}}\} ; I \rangle\]
 where $\textsf{len}(E[\checkm{[-]}]) < I$. The subsequent transition unmutes $\Var{y}{\mathbb{N}}$, and the surrounding $\textbf{\texttt{check}}_M$ fails, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe in $E$.
 
-It is possible to characterise the expressiveness of the best-effort check, via a ``Cause for Concern'' property. Informally, assume the best-effort check reports an error, and let the offending AST be $n$. Now re-wind to the point of the failing check, and consider an alternative execution where all the $\textbf{\texttt{check}}_M$s are erased (turned into $\textbf{\texttt{return}}$s). In this counter-factual execution, all ASTs $m$ that are constructed from $n$ have at least one variable that is not declared safe in its evaluation context. Consequently, in \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
+It is possible to characterise the expressiveness of the best-effort check, via a ``Cause for Concern'' property. The property is defined informally as follows: assume the best-effort check reports an error, and let the offending AST be $n$. Now re-wind to the point of the failing check, and consider an alternative execution where all the $\textbf{\texttt{check}}_M$s are erased (turned into $\textbf{\texttt{return}}$s). In this counter-factual execution, all ASTs $m$ that are constructed from $n$ have at least one variable that is not declared safe in its evaluation context. Consequently, in \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
 
 \begin{theorem}[Cause for Concern Property]{sourceHighlight}\label{thm:best-effort-cause-for-concern} Assuming a closed,well-typed \sourceLang{} expression $e$, if
   \begin{enumerate}
@@ -879,20 +879,7 @@ in $\scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}$. It is clea
 % I conjecture that this proof may be extended to support non-termination by incorporating the techniques of step-indexing and biorthogonality, as demonstrated by \citet{biernacki-2017}.
 
 \subsection{Expressiveness of Refined Environment Classifiers}\label{subsection:rec-formal-expressiveness}
-The typing rules for refined environment classifiers depend only on the effect, not on the body of effect handler.\ \Cref{listing:refined-environment-classifiers-expressiveness} is never well-typed.
-
-Consequently, \Cref{listing:eager-scope-extrusion-unsafe,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue,listing:eager-scope-extrusion-looks-unsafe} do not type check. Refined environment classifiers are less expressive than the eager dynamic check. In a well-typed \recLang{} program, the only variables that may be passed to an effect $\textbf{\texttt{op}}$ are those that are in scope when the handler for $\textbf{\texttt{op}}$ is defined, for example, the variable $z$ in \Cref{listing:refined-environment-classifiers-safe}.
-
-\begin{code}
-\begin{rec}
-$\begin{array}{l}
-  \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, \return{\splice[(\, {{\textbf{\texttt{extrude}}(\equote[x])}} \, )]}} \, ] \\
-  \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\underline{\textsf{any arbitrary program}}}\})
-\end{array}$
-\end{rec}
-\captionof{listing}{The typing rules for refined environment classifiers forbid any program which attempts to extrude some potentially unsafe variable $x$ to a handler.}%
-\label{listing:refined-environment-classifiers-expressiveness}
-\end{code}
+\recLang{} prevents scope extrusion by looking only at the argument to the effect, not the handler. In a well-typed \recLang{} program, the only variables that may be passed to an effect $\textbf{\texttt{op}}$ are those that are in scope when the handler for $\textbf{\texttt{op}}$ is defined, for example, the variable $z$ in \Cref{listing:refined-environment-classifiers-safe}.
 
 \begin{code}
 \begin{rec}
@@ -905,8 +892,22 @@ $\begin{array}{l}
 \label{listing:refined-environment-classifiers-safe}
 \end{code}
 
+Consequently, \Cref{listing:refined-environment-classifiers-expressiveness} is never well-typed. By extension, neither are \Cref{listing:eager-scope-extrusion-unsafe,listing:eager-scope-extrusion-unsafe-no-use,listing:eager-scope-extrusion-unsafe-continue,listing:eager-scope-extrusion-looks-unsafe}. Refined environment classifiers are less expressive than the eager dynamic check. 
+
+
+\begin{code}
+\begin{rec}
+$\begin{array}{l}
+  \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, \return{\splice[(\, {{\textbf{\texttt{extrude}}(\equote[x])}} \, )]}} \, ] \\
+  \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\underline{\textsf{any arbitrary program}}}\})
+\end{array}$
+\end{rec}
+\captionof{listing}{The typing rules for refined environment classifiers forbid any program which attempts to extrude some potentially unsafe variable $x$ to a handler.}%
+\label{listing:refined-environment-classifiers-expressiveness}
+\end{code}
+
 \section{Evaluation of \texorpdfstring{\sourceLang{}}{Lambda-Op-Quote-Splice}} \label{section:evaluation}
-The results in this chapter suggest that \sourceLang{} is an appropriate language in which to encode, and evaluate, scope extrusion checks. Formalising scope extrusion in \sourceLang{} aided development of a novel best-effort check, which finds a sweet spot between the eager and checks. Unifying checks under \sourceLang{} facilitated comparative evaluation with reference to a set of \sourceLang{} programs that served as litmus tests (\Cref{table:expressiveness-comparison}).
+The results in this chapter suggest that \sourceLang{} is an appropriate language in which to encode, and evaluate, scope extrusion checks. Formalising scope extrusion in \sourceLang{} aided development of a novel best-effort check, which finds a sweet spot between the eager and lazy checks. Unifying checks under \sourceLang{} facilitated comparative evaluation with reference to a set of \sourceLang{} programs (\Cref{table:expressiveness-comparison}).
 
 The cost of encoding static and dynamic checks into the same language is that reasoning about the correctness of static checks becomes more complicated (\Cref{section:refined-environment-classifiers-formal}). It is difficult to reduce the complexity of reasoning, since dynamic checks are defined via elaboration. I hypothesise that the added complexity of reasoning is a reasonable cost to pay for a comprehensive and comparative evaluation.
 
