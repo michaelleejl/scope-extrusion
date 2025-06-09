@@ -745,10 +745,10 @@ The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return
   \item All the free variables of $n$ are properly scoped, so $\checkfv{n}$ reduces to $\return{n}$ (\textsc{Sec-Chs})
   \item Some free variables of $n$ are not properly scoped, so $\checkfv{n}$ reduces to $\err$ (\textsc{Sec-Chf})
 \end{enumerate}
-What does it mean to be ``properly scoped'' (the side condition on \textsc{Sec-Chs})? The answer is slightly subtle. Consider the following program 
-\[\bind{\texttt{body}}{\checkfv{\Var{\alpha}{\mathbb{N}}}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
-$\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': it should not cause a transition to $\err$. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
-\[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{\Var{\alpha}{\mathbb{N}}}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
+What does it mean to be ``properly scoped'' (the side condition on \textsc{Sec-Chs})? The answer is slightly subtle. Consider the following program: 
+\[\bind{\texttt{body}}{\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
+$\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': $\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}$ should succeed. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword. 
+\[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
 More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{R}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{R}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{R} \}\]
 
