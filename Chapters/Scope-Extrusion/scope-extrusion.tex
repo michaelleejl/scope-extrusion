@@ -14,7 +14,7 @@ I have implemented the three dynamic checks in MacoCaml, and merged the best-eff
 \section{Properties of Dynamic Scope Extrusion Checks}\label{section:properties}
 This chapter refers to the correctness and permissiveness of dynamic scope extrusion checks. Since dynamic checks are defined as term elaborations, I use $\elaborate{-}^{\textbf{Check}}$ to indicate an arbitrary dynamic check. I refer to the term elaboration in \Cref{section:elaboration} as naïve elaboration.
 
-Given a definition of scope extrusion $\Phi$ (a predicate on configurations), a dynamic check is correct if, for all well-typed \sourceLang{} expressions $e$, assuming naïvely elaborating $e$ ($\elaborate{e}$) reduces to a configuration exhibiting scope extrusion ($\Phi(\langle t;E;U;M;I\rangle)$), elaborating $e$ with the check ($\elaborate{e}^{\textbf{Check}}$) would detect scope extrusion (transition to $\err{}$),.
+Given a definition of scope extrusion $\Phi$ (a predicate on configurations), a dynamic check is correct if, for all well-typed \sourceLang{} expressions $e$, assuming naïvely elaborating $e$ ($\elaborate{e}$) reduces to a configuration exhibiting scope extrusion ($\Phi(\langle t;E;U;M;I\rangle)$), elaborating $e$ with the check ($\elaborate{e}^{\textbf{Check}}$) would detect scope extrusion (transition to $\err{}$).
 
 \begin{definition}[Correctness of a Dynamic Scope Extrusion Check]{sourceHighlight}
  Given a predicate on configurations $\Phi$, a dynamic scope extrusion check $\elaborate{-}^{\textbf{Check}}$ is \textbf{\emph{correct}} with respect to $\Phi$ if for all closed, well-type \sourceLang{} expressions $e$,
@@ -598,7 +598,7 @@ An \emph{\textbf{extended source type}} is either:
 
 Contexts $\Gamma$ must be well-formed \citep{isoda-24}, and a well-formed context must contain the least classifier $\gamma_{\bot}$. The definition of closed, well-typed expression is adapted to reflect this:
 
-\begin{definition}[Well-typed closed expression]{recHighlight}\label[definition]{dfn:well-typed-exp-rec}
+\begin{definition}[Well-Typed Closed Expression]{recHighlight}\label[definition]{dfn:well-typed-exp-rec}
   $e$ is a closed, well-typed expression if $\gamma_{\bot} \vdash_{\compilemode}^{\gamma_{\bot}} e : T^{0} \, ! \, \emptyset; \emptyset$
 \end{definition}
 
@@ -788,7 +788,7 @@ $
 {\scriptsize{\textit{Given a compile-time computation type $\effectType{\tau}$, let $\tau$ refer to the corresponding compile-time value type.}}}\\
 {\scriptsize{\textit{For example, if $\effectType{\tau} = \effectType[\Delta; \xi]{T^{0}} (\gamma)$, then $\tau = \effectType[\xi]{T^{0}} (\gamma)$}}}\\
 
-$\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest property on terms $t$ such that 
+$\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest property on terms $t$ such that either:
 \begin{enumerate}
   \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \return{n}; [-]; U' \rangle$, such that $U'$ consistent with $n$, and $n \in \scoped{\tau}$ 
   \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \op{n}; E; U' \rangle$ where $\textbf{\texttt{op}} \not\in \textsf{handled}(E)$, $U'$ consistent with $E[\op{n}]$, and 
@@ -821,7 +821,7 @@ For a normal form $n$ to be in $\scoped{T^{0} (\gamma)}$, $n$ must be of type $\
 
 $\scoped{\effectType{\tau}}$ is defined as a least fixed point, following the definitions by \citet{plotkin-2025} and \citet{kuchta-2023}. Defining the logical relation as a fixed point gives rise to the principle of \textsf{Scoped}-Induction:
 
-\begin{definition}[\textsf{Scoped}-Induction]{recHighlight}
+\begin{inductionPrinciple}[\textsf{Scoped}-Induction]{recHighlight}
   For some property $\Phi$ on closed terms of type $\elaborate{\effectType{\tau}}$, if
   \begin{enumerate}
     \item $\langle t; [-]; U \rangle \to^{*} \langle \return{n};[-];U' \rangle$ implies $\Phi(t)$
@@ -829,7 +829,7 @@ $\scoped{\effectType{\tau}}$ is defined as a least fixed point, following the de
     % \item For every non-stuck $E[t]$, $\Phi(E[t])$ assuming for all $U$, $\langle t;E;U \rangle \to \langle t';E';U' \rangle$ implies $\Phi(E'[t'])$
   \end{enumerate}
   Then for all $t \in \scoped{\effectType{\tau}}$, $\Phi(t)$
-\end{definition}
+\end{inductionPrinciple}
 
 The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a notion of closed substitution $\rho \vDash \Gamma$. Care must be taken with substitution of level-$0$ variables, since these should be in the logical relation for \textsf{FParam}s rather than \textsf{AST}s (clause 2 in \Cref{dfn:closed-substitution}).
 
@@ -841,7 +841,7 @@ The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a noti
 %   If $\Theta'$ extends $\Theta$ and $t \in \scoped{\effectType{\tau}}$ then $t \in \scoped[\Theta']{\effectType{\tau}}$
 % \end{lemma}
 \vspace{-\baselineskip}
-\begin{definition}[Closed substitution]{recHighlight}\label[definition]{dfn:closed-substitution}
+\begin{definition}[Closed Substitution]{recHighlight}\label[definition]{dfn:closed-substitution}
   Given a context $\Gamma$, and assuming $\Theta = \pi_{\gamma}(\Gamma)$, the set of \emph{\textbf{closed substitutions}} $\rho \vDash \Gamma$ are defined inductively as follows:
   \begin{enumerate}
     \item $() \vDash \gamma_{\bot}$
@@ -863,12 +863,14 @@ Proof of \Cref{lemma:fundamental} is by induction on the \recLang{} typing rules
 \[\bind{x}{\gensym{\erase{S^0 (\gamma')}}}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho})}{\return{\Lam{x}{\texttt{body}}}}}\]
 in $\scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}$. It is clear that this reduces to
 \[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x})}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}}\]
- By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that this term is in the logical relation. By weakening, and the induction hypothesis (IH), $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' =  \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S}})$:
-\begin{enumerate}
-  \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to some $\return{n}$\\
+ By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that this term is in the logical relation. By weakening, and the induction hypothesis (IH), $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' =  \Theta, \gamma', \gamma \sqsubseteq \gamma'$. It suffices to show, $\forall t \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$,
+ \[\bind{\texttt{body}}{t}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}} \in \scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}\]  
+Applying \textsf{Scoped}-Induction,
+ \begin{enumerate}
+  \item $t \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to some $\return{n}$\\
    $\bind{\texttt{body}}{\return{n}}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}$ reduces to $\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{n}}$, where $\Var{\alpha^{\gamma'}}{S}$ is bound. By IH, $n \in \scoped[\Theta']{\effectType[\xi]{T^{0}} (\gamma')}$. Thus, all the free variables in $n$ are permitted by $\gamma'$. By the typing rules, only $\alpha$ is annotated with classifier $\gamma'$. Hence, under $\Theta$, the free variables of $\Lam{\Binder{\alpha^{\gamma'}}{S}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
-  \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to $E[\op{n}]$ \\
-  As $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from IH.
+  \item $t \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to $E[\op{n}]$, $\op{n} \text{ unhandled}$ \\
+  As $\bind{\texttt{body}}{[-]}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}$ introduces no handlers, the conclusion follows immediately from the \textsf{Scoped}-Induction hypothesis and anti-reduction.
 \end{enumerate}
 % \Cref{thm:refined-env-classifiers-correct} is an immediate corollary of \Cref{lemma:fundamental} and \Cref{dfn:well-typed-exp-rec}.
 

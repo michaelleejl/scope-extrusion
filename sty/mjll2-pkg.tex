@@ -123,6 +123,10 @@ skipabove=1.2\baselineskip,
     {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mddefinition}[#1]}
     {\end{mddefinition}\end{mdframed}\par\vspace{\baselineskip}}
 
+    \newtheorem{mdinduction}[mdtheorem]{Induction Principle}
+\newenvironment{inductionPrinciple}[2][]%
+    {\vspace{0\baselineskip}\begin{mdframed}[linecolor=#2]\begin{mdinduction}[#1]}
+    {\end{mdinduction}\end{mdframed}\par\vspace{\baselineskip}}
 
     \newtheorem{mdlemma}[mdtheorem]{Lemma}
 \newenvironment{lemma}[2][]%

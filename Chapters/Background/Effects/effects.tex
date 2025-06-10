@@ -559,12 +559,12 @@ It is sufficient to show that:
 \end{enumerate}
 
 A closed computation is well-typed if it can be typed with an empty effects set.  
-\begin{definition}[Well-typed closed computation]{effHighlight}
-  $c$ is well-typed if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
+\begin{definition}[Well-Typed Closed Computation]{effHighlight}
+  $c$ is a closed, well-typed computation if $\cdot \vdash {c}: {T \, ! \, \emptyset}$
 \end{definition}
 
 \subsubsection{Metatheory}
-Discussion around the interaction between effect handlers and metaprogramming will build on some metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}.
+Discussion around the interaction between effect handlers and metaprogramming builds on some metatheoretic properties of \efflang{}, which are proven by \citet{bauer-2014}.
 
 \renewcommand{\effconfiguration}[2]{\langle {#1}; {#2} \rangle}
 \renewcommand{\transition}[2]{#1 \rightarrow #2}
@@ -647,7 +647,7 @@ The design space of effect handlers is large. Different design decisions could i
   \item \textbf{\textsf{Deep, Shallow, or Sheep Handlers}}\\
          \textit{Can multiple instances of the same effect be handled by the same handler?}
 
-         In \efflang{}, continuations reinstate handlers $\effectRule{Op}$ and thus multiple instances of the same effect can be handled by the same handler. For example, in the following example, the effect \textbf{\texttt{addn}} is handled by the same handler, adding one each time. These are known as \textbf{deep} handlers.
+         In \efflang{}, continuations reinstate handlers $\effectRule{Op}$ and thus multiple instances of the same effect can be handled by the same handler. For example, in the following example, both instances of \textbf{\texttt{addn}} are handled by the same handler, adding one each time. These are known as \textbf{deep} handlers.
           
          \begin{minipage}[t]{\linewidth}
           \centering

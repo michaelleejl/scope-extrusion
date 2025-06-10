@@ -58,7 +58,7 @@ This chapter first introduces \sourceLang{} (\Cref{section:source-lang}), then \
 \end{figure}
 \sourceLang{} extends \efflang{} with quotes and splices. Additionally, the continuation term former $\kappa x. e$ is removed, since it cannot be written explicitly in \efflang{}, only generated during reduction -- but \sourceLang{} has no reduction semantics. Recall that \efflang{} divides terms into three syntactic categories: values ($v$), computations ($c$), and handlers ($h$).\ \sourceLang{} is similar, dividing terms into values ($v$), expressions ($e$), and handlers ($h$) (\Cref{fig:source-syntax}).
 
-Only expressions can be quoted (values cannot be): thus, quotes must generate run-time computations. For example, $\equote[\texttt{1}]$ is not valid syntax, instead, one must write $\equote[\return{\texttt{1}}]$. Similarly, $\equote[\return{\texttt{1}}]$ is an expression, not a value, so one must write: 
+Only expressions can be quoted (values and handlers cannot be): thus, quotes must generate run-time computations. For example, $\equote[\texttt{1}]$ is not valid syntax, instead, one must write $\equote[\return{\texttt{1}}]$. Similarly, $\equote[\return{\texttt{1}}]$ is an expression, not a value, so one must write: 
 \[\bind{a}{\equote[\return{\texttt{1}}]}{\op{a}}\]
 rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I will abuse notation and write $\op{\equote[\texttt{1}]}$ in place of $\bind{a}{\equote[\return{\texttt{1}}]}{\op{a}}$.
 
@@ -175,7 +175,7 @@ In \sourceLang{}, the use of level $0$ syntax \textit{always} results in compile
 \]
 Consequently, \textit{syntactic} values ($v$) do not have value \textit{type} ($T^0$). The relationship between syntax and types is more complicated than in \efflang{}. 
 
-In contrast, level $0$ compile-time values (the first row in \Cref{table:type-strat}) cannot be directly created in \sourceLang{} (but $T^0$ is used to type level $0$ \textit{formal parameters}). 
+In contrast, level $0$ compile-time value types (the first row in \Cref{table:type-strat}) have no inhabitants in \sourceLang{} (but $T^0$ is used to type level $0$ \textit{formal parameters}). 
 \[\begin{array}{ll}
    T^0 & \text{Compile-time value and run-time value (value type)} \\
    & \textit{Inhabitants: } \text{None, but used as the type of level $0$}\\
@@ -626,7 +626,7 @@ The dual to $\equote$ is $\splice$, which \textit{eliminates} compile-time ASTs 
 Note that since there are no \textsc{\quotemode-Quote} or \textsc{\splicemode-Splice} rules, the type system bans nested splices and quotations. Consequently, the only levels are $0$ and $-1$. 
 
 A closed \sourceLang{} expression is well-typed if, in \compilemode{}-mode, it can be typed with empty compile-time and run-time effects sets. 
-\begin{definition}[Well-typed closed expression]{sourceHighlight}
+\begin{definition}[Well-Typed Closed Expression]{sourceHighlight}
   A closed expression $e$ is well-typed if $\ctypejudge[\cdot]{e}{T^0 \, ! \, \emptyset;\emptyset}$
 \end{definition}
 
@@ -900,7 +900,7 @@ Notice that this type system does not guarantee that the resulting AST is \texti
 The typing rules for scope extrusion checks are even more straightforward: they are effectively invisible to the type system. The only complex case is \textbf{\texttt{err}}, which can be assigned any type in any context. \textbf{\texttt{err}} thus behaves similarly to \textbf{\texttt{absurd}} in \texttt{Haskell}, or in the $\lambda$-calculus extended with the empty type \citep{scherer-2017}.
 
 A closed \coreLang{} term is well-typed if it can be typed with an empty effects set. 
-\begin{definition}[Well-typed closed term]{coreHighlight}
+\begin{definition}[Well-Typed Closed Term]{coreHighlight}
 A closed term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \end{definition}
 \begin{figure}
