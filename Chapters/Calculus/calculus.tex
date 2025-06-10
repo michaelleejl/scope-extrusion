@@ -66,7 +66,7 @@ rather than $\op{\, \equote[\return{\texttt{1}}] \,}$. However, I will abuse not
 \begin{figure}
   \begin{source-desc}
     $\begin{array}{@{}lllr}
-    {\textbf{\large {Effects set}}}\\\\
+    {\textbf{\large {Effects sets}}}\\\\
     \textbf{Run-Time} & \xi ::= \emptyset \mid \xi \cup \{ \textsf{op}_i^{0}\} \\
     \textbf{Compile-Time} & \Delta ::= \emptyset \mid \Delta \cup \{ \textsf{op}_i^{-1}\} \\\\
     \end{array}$
@@ -180,7 +180,7 @@ In contrast, level $0$ compile-time values (the first row in \Cref{table:type-st
    T^0 & \text{Compile-time value and run-time value (value type)} \\
    & \textit{Inhabitants: } \text{None, but used as the type of level $0$}\\
     &\quad\quad\quad\quad\quad\, \text{formal parameters} \\
-  & \textit{Example: } \;\;\,\,\,\,\text{The type of $x$ in $\lambda x: \hl{$\mathbb{N}^0$}. \return{x}$}\\[2mm]
+  & \textit{Example: } \;\;\,\,\,\text{The type of $x$ in $\lambda x: \hl{$\mathbb{N}^0$}. \return{x}$}\\[2mm]
    \effectType[\xi]{T^0} & \text{Compile-time value and run-time computation} \\
    & \textit{Inhabitants: } \text{None.}\\[2mm]
     (\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0 & \text{Compile-time value and run-time handler} \\
@@ -380,7 +380,7 @@ stands for two typing rules, one in \compilemode{}-mode and one in \quotemode{}-
 \end{minipage}
 \end{center}
 
-\Cref{fig:source-cq-typing-rules} summarises the \compilemode{} and \quotemode{}-mode typing rules. \Cref{fig:source-s-typing-rules} summarises the \splicemode{}-mode typing rules. In all modes, rules are extremely similar to the \efflang{} typing rules (\Cref{fig:efflang-type-system}, \Cpageref{fig:efflang-type-system}). Further, the levels of types can, in most cases, be inferred: for readability, they are mostly omitted. The three key rules are \textsc{\splicemode{}-Quote}, \textsc{\quotemode{}-Splice}, and \textsc{\compilemode{}-Splice}. 
+\Cref{fig:source-cq-typing-rules} lists the \compilemode{} and \quotemode{}-mode typing rules. \Cref{fig:source-s-typing-rules} lists the \splicemode{}-mode typing rules. In all modes, rules are extremely similar to the \efflang{} typing rules (\Cref{fig:efflang-type-system}, \Cpageref{fig:efflang-type-system}). Further, the levels of types can, in most cases, be inferred: for readability, they are mostly omitted. The three key rules are \textsc{\splicemode{}-Quote}, \textsc{\quotemode{}-Splice}, and \textsc{\compilemode{}-Splice}. 
 
 
 \begin{figure}
@@ -650,7 +650,8 @@ Similarly to \citet{calcagno-2003}, the syntax explicitly disambiguates between 
   \end{tikzpicture}
 \end{center}
 
-This syntactic distinction is important because it keeps the typing rules syntax directed, and \textsf{FParam}s and \textsf{AST}s need to have different types. If the type system did not distinguish \textsf{FParam}s and \textsf{AST}s, the following malformed AST would be well-typed:
+\newcommand{\fparam}{$\text{formal parameters}$}
+This syntactic distinction is important because it keeps the typing rules syntax directed, and \fparam{} and \text{AST}s need to have different types. If they shared a type, the following malformed AST would be well-typed:
 \begin{center}
   \begin{tikzpicture}
     \begin{scope}[every node/.style={font=\ttfamily}]
@@ -693,7 +694,7 @@ $\begin{array}{l}
 
 \textcolor{sourceComment}{$\begin{array}{l}\return{\texttt{Lam}(\Binder{\alpha}{\mathbb{N}}, \texttt{Lam}(\Binder{\beta}{\mathbb{N}}, \texttt{Ret}(\texttt{Pair}(\Var{\alpha}{\mathbb{N}}, \Var{\beta}{\mathbb{N}}))))}\end{array}$}
 \end{sourcelst}
-\captionof{listing}{An example \sourceLang{} program which illustrates the need for \textbf{\texttt{mkvar}}}%
+\captionof{listing}{A program which illustrates the need for \textbf{\texttt{mkvar}}}%
 \label{listing:source-gensym}
 \end{minipage}
 \par\vspace{0.6\baselineskip}
@@ -806,7 +807,7 @@ The \textbf{\texttt{check}} primitive acts like a guarded \textbf{\texttt{return
 \end{enumerate}
 What does it mean to be ``properly scoped'' (the side condition on \textsc{Sec-Chs})? The answer is slightly subtle. Consider the following program: 
 \[\bind{\texttt{body}}{\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}\]
-$\Var{\alpha}{\mathbb{N}}$ should be ``properly scoped'': $\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}$ should succeed. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword: 
+$\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))$ should be ``properly scoped'': $\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}$ should succeed. However, it is hard to deduce this from the \textit{static} structure of the program. Instead, one has to reason about the \textit{dynamic} execution of the program. Rather than calculating what is properly scoped as a \textit{language feature}, \coreLang{} defers it to the programmer. Following \citet{kiselyov-2024}, the programmer must \textit{declare} that a variable is properly scoped through use of the \textbf{\texttt{dlet}} keyword: 
 \[\dlet{\Binder{\alpha}{\mathbb{N}}}{\bind{\texttt{body}}{\checkfv{\texttt{Plus}(\Var{\alpha}{\mathbb{N}}, \texttt{Nat}(\texttt{0}))}}{\checkfv{\Lam{\Binder{\alpha}{\mathbb{N}}}{\texttt{body}}}}}\]
 More precisely, \textbf{\texttt{dlet}} places a frame of the form $\dlet{\Binder{\alpha}{R}}{[-]}$ on the evaluation context $E$. The notation $\projfvs{E}$ filters out the variables declared in this manner from $E$. For example,
 \[\projfvs{\dlet{\Binder{\alpha}{R}}{\bind{x}{[-]}{t}}} = \{ \Var{\alpha}{R} \}\]
@@ -816,7 +817,7 @@ Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is ``declared safe'' in $E$ if $\V
   Given a term $E[t]$, $\Var{\alpha}{R}$ in $t$ is \emph{\textbf{declared safe}} in $E$ if $\Var{\alpha}{R} \in \projfvs{E}$
 \end{definition}
 
-Given a term of the form $\checkfv{n}$ in some evaluation context $E$, where $n$ is an AST, $\textbf{\texttt{check}} \, n$ succeeds ($n$ is ``properly scoped'' in $E$) if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe in $E$, $\freevars{n} \subseteq \projfvs{E}$. 
+Given a normal form ${n}$ in some evaluation context $E$, where $n$ is an AST, $n$ is ``properly scoped'' in $E$ ($\textbf{\texttt{check}} \, n$ succeeds) if and only if the free \texttt{Var}s of $n$, written $\freevars{n}$, have all been declared safe in $E$, $\freevars{n} \subseteq \projfvs{E}$. 
 
 It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a way that places the burden onto the user. Recall, however, that \coreLang{} is \textit{not} meant to be programmed in directly. Rather, it acts as an elaboration target for \sourceLang{}. Therefore, the onus is on the person defining the elaboration to justify that \textbf{\texttt{dlet}} and \textbf{\texttt{check}} are used appropriately. 
 
@@ -824,7 +825,7 @@ It may seem lazy to define the semantics of \textbf{\texttt{check}} in such a wa
 
 Similarly, when justifying the correctness of scope extrusion checks, it is useful to remember the position of top-level splices in the \sourceLang{} source program. The \textbf{\texttt{tls}} marker indicates the occurrence of a top-level splice in the source program. Beyond unmuting variables (\Cref{section:best-effort-check}), \textbf{\texttt{tls}} has no operational behaviour (\textsc{Sec-Tls}).
 
-The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, mute or unmute \texttt{Var}s. Muting and unmuting are explained in \Cref{section:best-effort-check}. For now, the components of transitions corresponding to muting and unmuting are \textbf{\textcolor{coreHighlight}{highlighted}}, and can be ignored. 
+The final two rules, \textsc{Sec-Dlt} and \textsc{Eff-Op}, mute or unmute variables. Muting and unmuting are explained in \Cref{section:best-effort-check}. For now, the components of transitions corresponding to muting and unmuting are \textbf{\textcolor{coreHighlight}{highlighted}}, and can be ignored. 
 
 Ignoring muting and unmuting, \textsc{Sec-Dlt} silently removes a $\dlet{\Binder{\alpha}{R}}{[-]}$ frame
 \[\langle \dlet{\Binder{\alpha}{R}}{\return{n}}; \textcolor{comment}{E};\textcolor{comment}{U};\textcolor{comment}{M};\textcolor{comment}{I}\rangle \to \langle \return{n}; \textcolor{comment}{E};\textcolor{comment}{U};\textcolor{comment}{M'};\textcolor{comment}{I'}\rangle\]
@@ -891,7 +892,7 @@ and \textsc{Eff-Op} behaves as it does in \efflang{} (\Cref{fig:efflang-opsem}):
 % The aforementioned malformed AST should be ill-typed. To do so, it is insufficient to require that the left sub-tree is of type $\textsf{AST($\mathbb{N}$)}$. It must specifically be a \underline{\textsf{Var}} AST node. That is the purpose of the \textsf{FParam} type. 
 
 \subsubsection{Typing Rules}
-The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: for example, $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a term that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST of some run-time computation type. 
+The \coreLang{} typing rules (\Cref{fig:core-typing-rules}) are extremely straightforward: a formal parameter $\Binder{\alpha}{R}$ is an \textsf{FParam} of type $R$, and $\Var{\alpha}{R}$ is an \textsf{AST} of type $R$. $\gensym{R}$ is a term that produces \textsf{FParam}s of type $R$, and $\Lam{n_1}{n_2}$ is well-typed if $n_1$ is an \textsf{FParam} and $n_2$ an AST of some run-time computation type. 
 
 Notice that this type system does not guarantee that the resulting AST is \textit{well-scoped}, for example, the following is well-typed:
 \[\cdot \vdash {\Var{\alpha}{R}}: {\textsf{AST}(R)}\]
@@ -966,7 +967,7 @@ A closed term $t$ is well-typed if $\cdot \vdash t: T \, ! \,  \emptyset$
 \subsection{Implementation}
 The core calculus \coreLang{} corresponds to a concrete \texttt{OCaml} implementation (\Cref{appendix:implementation}). In the implementation, \textbf{\texttt{check}}, \textbf{\texttt{dlet}}, and \textbf{\texttt{err}} are not primitives. Rather, they are encoded as a \textit{mode of use} of effects and handlers. 
 \begin{enumerate}
-  \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that are passed the free variables of $n$\\ 
+  \item $\checkfv{n}$ is implemented by performing a \texttt{FreeVar} effect, that is passed the free variables of $n$\\ 
   $\checkm{n}$ is similar, except there is also a \texttt{Mute} effect
   
   \item $\dlet{\Binder{\alpha}{R}}{t}$ is implemented as a \textit{handler} of the \texttt{FreeVar} effect, which subtracts $\Var{\alpha}{R}$ from the set of free variables, and either:
@@ -1005,11 +1006,11 @@ In a nutshell, level $0$ types elaborate into \textsf{AST} types, and level $-1$
   % \elaborate{\effectType[\xi]{T^0}} & = & \AST{\erase{\effectType[\xi]{T^0}}}\\
   \elaborate{\effectType[\Delta]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{T^0}}}\\
   \elaborate{\effectType[\Delta ; \xi]{T^0}} & = & \effectType[\elaborate{\Delta}]{\AST{\erase{\effectType[\xi]{T^0}}}}\\
-  \elaborate{{\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})}^0}} & = & {\effectType[\elaborate{\Delta}]{\AST{\erase{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0}}}}\\\\
+  \elaborate{{\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0}}} & = & {\effectType[\elaborate{\Delta}]{\AST{\erase{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0}}}}\\\\
   \elaborate{\mathbb{N}^{-1}} & = & \mathbb{N} \\
   \elaborate{(\functionType{S^{-1}}{T^{-1}})^{-1}} & = & \functionType[\elaborate{\Delta}]{\elaborate{S^{-1}}}{\elaborate{T^{-1}}} \\
   \elaborate{(\continuationType{S^{-1}}{T^{-1}})^{-1}} & = & \continuationType[\elaborate{\Delta}]{\elaborate{S^{-1}}}{\elaborate{T^{-1}}} \\
-  \elaborate{\textsf{Code}({\effectType[\xi]{T^{0}}})^{{-1}}} & = & {\textsf{AST}(\effectType[\elaborate{\xi}]{\erase{{{T^{0}}}}})}\\[2mm]
+  \elaborate{\textsf{Code}({\effectType[\xi]{T^{0}}})^{{-1}}} & = & {\textsf{AST}({\erase{{\effectType[\xi]{T^{0}}}}})}\\[2mm]
   \elaborate{\effectType{T^{-1}}} & = & \effectType[\elaborate{\Delta}]{\elaborate{T^{-1}}}\\[2mm]
   \elaborate{(\handlerType{\effectType[\Delta_1]{S^{-1}}}{\effectType[\Delta_2]{T^{-1}}})^{-1}} & = & \handlerType{\effectType[\elaborate{\Delta_1}]{\elaborate{S^{-1}}}}{\effectType[\elaborate{\Delta_2}]{\elaborate{T^{-1}}}}\\
   % \text{if} \, T \neq \Code{\effectType[\xi]{T^0}} \, \text{then} \, \erase{T^{-1}} \\ && \text{else}\, \AST{\erase{\effectType[\xi]{T^0}}}\\
@@ -1101,7 +1102,7 @@ which is elaborated by applying the elaboration component-wise:
 \[
 {\inferrule{\typejudge[\elaborate{\Gamma, x: S}]{\elaborate{e}_{\compilemode{}}}{\elaborate{\runtimecomptype{T}{\Delta;\xi}}}}{\typejudge[\elaborate{\Gamma}]{\elaborate{\lambda x.e}_{\compilemode{}}}{\elaborate{\runtimecomptype{(\functionType[\xi]{S}{T})}{\Delta}}}}}
 \]
-Letting $R = \erase{S}$, $Q = \erase{T}$, and $\elaborate{e}_{\compilemode{}} = t$, and applying the elaboration functions defined above, we obtain \Cref{derivation:elaborated}, which, assuming that the premise is valid typing derivation, corresponds to a valid \coreLang{} typing derivation.
+Letting $Q = \erase{S}$, $R = \erase{T}$, and $\elaborate{e}_{\compilemode{}} = t$, and applying the elaboration functions defined above, we obtain \Cref{derivation:elaborated}, which, assuming that the premise is valid typing derivation, corresponds to a valid \coreLang{} typing derivation.
 \begin{typederivation}[H]
   \small
 \[
@@ -1123,7 +1124,7 @@ First, well-typed \sourceLang{} programs elaborate into well-typed \coreLang{} p
 
 The proof is by induction on the typing rules, e.g.\ \Cref{derivation:elaborated} in \Cref{subsection:typing-judgement-elaboration}.  
 
-Additionally, the core language \coreLang{} satisfies appropriate progress and preservation properties. 
+Additionally, the core language \coreLang{} has progress and preservation properties. 
 
 \begin{theorem}[Progress]{coreHighlight} 
 If $\cdot \vdash {E[t]}: {\effectType{T}}$ then for all $U, M, I$ either 
@@ -1131,7 +1132,7 @@ If $\cdot \vdash {E[t]}: {\effectType{T}}$ then for all $U, M, I$ either
 \item $t$ is of the form $\return{n}$ and $E = [-]$,
 \item $t$ is of the form $\op{v}$ for some $\textsf{op} \in \Delta$, and $\texttt{op} \notin \textsf{handled}(E)$
 \item $t$ is of the form $\err$
-\item $\exists t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'\rangle$
+\item $\exists \, t', E', U', M', I'$ such that $\langle t; E; U; M; I \rangle \rightarrow \langle t';E';U';M';I'\rangle$
 \end{enumerate}
 \end{theorem}
 Note the third clause, which may be used by the calculus to report scope extrusion. 
@@ -1225,7 +1226,7 @@ Importantly, this notion of type safety is weak. A semantics which always report
 
 % We can now prove the equational theory of \sourceLang{}. 
 
-Finally, underneath a top-level splice, quotation and splice are duals (\Cref{thm:quote-splice-duality})
+Finally, underneath a top-level splice, quotation and splice are duals.
 
 \begin{theorem}[Quote-Splice Duality]{sourceHighlight}\label{thm:quote-splice-duality}
   Under a top-level splice, quotation and splice are duals

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  10 JUN 2025 12:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.4.10)  10 JUN 2025 14:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1470,10 +1470,10 @@ chapter 1.
 \pydata@fh@0=\write9
 \openout9 = `_FAD58DE7366495DB4650CFEFAC2FCD61.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250610120138 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted config  --timestamp 20250610144838 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
 (./_FAD58DE7366495DB4650CFEFAC2FCD61.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250610120138 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
+runsystem(latexminted cleanconfig  --timestamp 20250610144838 FAD58DE7366495DB4650CFEFAC2FCD61)...executed safely (allowed).
 
  (./_minted/default.style.minted) (./_minted/E5FFBDD06E801C34D8594F1B6FF7F570.highlight.minted
 LaTeX Font Info:    Font shape `OT1/zi4/m/n' will be
@@ -1836,55 +1836,50 @@ LaTeX Font Info:    Font shape `OT1/lmss/bx/it' in size <12> not available
 
 
 [35]
-Underfull \hbox (badness 10000) in paragraph at lines 718--719
+Underfull \hbox (badness 10000) in paragraph at lines 719--720
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 749--751
+Underfull \hbox (badness 10000) in paragraph at lines 750--752
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 755--756
+Underfull \hbox (badness 10000) in paragraph at lines 756--757
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 756--758
+Underfull \hbox (badness 10000) in paragraph at lines 757--759
 
  []
 
 
 
 [36]
-Overfull \hbox (7.69482pt too wide) in paragraph at lines 808--810
-$[]\OT1/lmr/m/n/12 (\OML/lmm/m/it/12 []\OT1/lmr/m/n/12 )$ \OT1/qpl/m/n/12 should be ``prop-erly scoped'': $[] []$ should suc-ceed. How-
- []
-
-
 
 [37]
-Package mdframed Info: mdframed works in twoside mode on input line 815.
+Package mdframed Info: mdframed works in twoside mode on input line 816.
 
 
 [38]
-Underfull \hbox (badness 10000) in paragraph at lines 845--847
+Underfull \hbox (badness 10000) in paragraph at lines 846--848
 
  []
 
-Package mdframed Info: mdframed works in twoside mode on input line 902.
+Package mdframed Info: mdframed works in twoside mode on input line 903.
 
 
 [39]
-Package mdframed Info: Not enough space on this page on input line 904.
+Package mdframed Info: Not enough space on this page on input line 905.
 
-Overfull \hbox (11.76501pt too wide) in paragraph at lines 967--969
+Overfull \hbox (11.76501pt too wide) in paragraph at lines 968--970
 \OT1/qpl/m/n/12 The core cal-cu-lus $\OML/lmm/m/it/12 ^^U[]$ \OT1/qpl/m/n/12 cor-re-sponds to a con-crete \OT1/zi4/m/sl/12 OCaml \OT1/qpl/m/n/12 im-ple-men-ta-tion ([][]Ap-pendix C.1[][]).
  []
 
 
-Overfull \hbox (11.24367pt too wide) in paragraph at lines 972--974
+Overfull \hbox (11.24367pt too wide) in paragraph at lines 973--975
 []$[]\OT1/lmr/m/n/12 ([]\OML/lmm/m/it/12 ; t\OT1/lmr/m/n/12 )$ \OT1/qpl/m/n/12 is im-ple-mented as a \OT1/qpl/m/it/12 han-dler \OT1/qpl/m/n/12 of the \OT1/zi4/m/sl/12 FreeVar \OT1/qpl/m/n/12 ef-fect, which sub-tracts $[]\OT1/lmr/m/n/12 (\OML/lmm/m/it/12 []\OT1/lmr/m/n/12 )$
  []
 
@@ -1895,24 +1890,31 @@ Overfull \hbox (11.24367pt too wide) in paragraph at lines 972--974
 [41]
 
 [42]
-Package hyperref Info: bookmark level for unknown typederivation defaults to 0 on input line 1110.
-Package mdframed Info: mdframed works in twoside mode on input line 1120.
+Package hyperref Info: bookmark level for unknown typederivation defaults to 0 on input line 1111.
+Package mdframed Info: mdframed works in twoside mode on input line 1121.
 
 
 [43]
-Package mdframed Info: Not enough space on this page on input line 1122.
-Package mdframed Info: mdframed works in twoside mode on input line 1128.
-Package mdframed Info: mdframed works in twoside mode on input line 1141.
-Package mdframed Info: mdframed works in twoside mode on input line 1149.
+Package mdframed Info: Not enough space on this page on input line 1123.
+Package mdframed Info: mdframed works in twoside mode on input line 1129.
+Package mdframed Info: mdframed works in twoside mode on input line 1142.
+Package mdframed Info: mdframed works in twoside mode on input line 1150.
 
 
 [44]
-Package mdframed Info: mdframed works in twoside mode on input line 1230.
+Package mdframed Info: mdframed works in twoside mode on input line 1231.
 ) (./Chapters/Scope-Extrusion/scope-extrusion.tex
 
 [45]
 chapter 4.
 Package mdframed Info: mdframed works in twoside mode on input line 19.
+
+Package mdframed Warning: You got a bad break
+(mdframed)                because the last box will be empty
+(mdframed)                you have to change it manually
+(mdframed)                by changing the text, the space
+(mdframed)                or something else on input line 27.
+
 
 
 [46
@@ -1924,9 +1926,6 @@ Package mdframed Info: mdframed works in twoside mode on input line 50.
 Overfull \hbox (5.15947pt too wide) in paragraph at lines 59--63
 \OT1/qpl/m/n/12 mode) are de-clared safe in the con-text sur-round-ing the top-level splice ([][]Def-i-ni-tion 3.2.1[][]).
  []
-
-
-Underfull \vbox (badness 2635) has occurred while \output is active []
 
 
 
@@ -2005,6 +2004,11 @@ Package hyperref Info: bookmark level for unknown mdlemma defaults to 0 on input
 
 
 [59]
+Overfull \hbox (11.05746pt too wide) in paragraph at lines 668--669
+[]\OT1/qpl/m/n/12 Elaboration of types erases clas-si-fiers. For ex-am-ple, $\U/stmry/b/n/12 J\OT1/lmr/m/n/12 ([](\U/msb/m/n/12 N[] \OT1/lmr/m/n/12 ! \OMS/lmsy/m/n/12 ;\OT1/lmr/m/n/12 )[])[]\U/stmry/b/n/12 K \OT1/lmr/m/n/12 = []$\OT1/qpl/m/n/12 . 
+ []
+
+
 Overfull \hbox (7.37823pt too wide) in paragraph at lines 670--672
 []\OT1/qpl/m/n/12 Elaboration of terms as-sumes binders have been an-no-tated with an ex-tended source
  []
@@ -2021,7 +2025,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 766--768
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 786--789
+Underfull \hbox (badness 10000) in paragraph at lines 786--790
 
  []
 
@@ -2032,19 +2036,14 @@ Underfull \hbox (badness 10000) in paragraph at lines 786--789
 [61]
 
 [62]
-Package mdframed Info: mdframed works in twoside mode on input line 823.
-Package mdframed Info: mdframed works in twoside mode on input line 835.
-Package mdframed Info: mdframed works in twoside mode on input line 843.
-Package mdframed Info: mdframed works in twoside mode on input line 856.
-
-Underfull \vbox (badness 7451) has occurred while \output is active []
-
+Package mdframed Info: mdframed works in twoside mode on input line 824.
+Package mdframed Info: mdframed works in twoside mode on input line 836.
+Package mdframed Info: mdframed works in twoside mode on input line 844.
+Package mdframed Info: mdframed works in twoside mode on input line 857.
 
 
 [63]
-Package mdframed Info: Not enough space on this page on input line 859.
-
-Overfull \hbox (11.13084pt too wide) in paragraph at lines 864--867
+Overfull \hbox (11.13084pt too wide) in paragraph at lines 865--868
 \OT1/qpl/m/n/12 tion. By weak-en-ing, and the in-duc-tion hy-poth-e-sis (IH), $\U/stmry/b/n/12 J\OML/lmm/m/it/12 e\U/stmry/b/n/12 K[]\OT1/lmr/m/n/12 ([]) \OMS/lmsy/m/n/12 2 [][]$\OT1/qpl/m/n/12 ,
  []
 
@@ -2152,18 +2151,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 48328 strings out of 469626
- 1048365 string characters out of 5471004
+ 48330 strings out of 469626
+ 1048391 string characters out of 5471004
  1686434 words of memory out of 5000000
- 73548 multiletter control sequences out of 15000+600000
+ 73550 multiletter control sequences out of 15000+600000
  903294 words of font info for 228 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  122i,28n,134p,10944b,1528s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4b.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/inconsolata/Inconsolata-zi4r.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/latxfont/lasy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr5.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmss8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbo10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso12.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsso8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplb.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplbi.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplr.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/tex-gyre/qplri.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary10.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/public/stmaryrd/stmary6.pfb>
-Output written on main.pdf (80 pages, 1437627 bytes).
+Output written on main.pdf (80 pages, 1437139 bytes).
 PDF statistics:
- 1602 PDF objects out of 1728 (max. 8388607)
- 1397 compressed objects within 14 object streams
+ 1601 PDF objects out of 1728 (max. 8388607)
+ 1396 compressed objects within 14 object streams
  391 named destinations out of 1000 (max. 500000)
  410 words of extra memory for PDF output out of 10000 (max. 10000000)
 

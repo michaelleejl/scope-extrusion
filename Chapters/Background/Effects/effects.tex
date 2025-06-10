@@ -37,7 +37,7 @@ Effects are a mechanism by which a program interacts with its environment. Examp
 % The aforementioned problem motivates the need for resumable exceptions. 
 % To illustrate how effect handlers may be useful, consider the problem of adding resumable exceptions to an existing language . One approach might be to fork the implementation of exception handlers. This solution does not scale well. First, the solution may not be \textbf{composable}. The intended informal semantics for resumable exceptions is ``effectively equivalent to exceptions, with the additional power to resume programs''. Resumable exceptions should thus interact with other exceptions in a predictable way, but this is difficult to guarantee, and \textit{continually} guarantee. Second, the solution is not \textbf{customisable}. Adding resumable exceptions requires a compiler engineer to modify the compiler. With the exception of raising an issue, there is nothing the programmer may do, in the moment, to meet their need.
 
-Much like how exception handlers allow the programmer to define custom exceptions that can be handled differently, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects as effect handlers ensures composability by design. 
+Much like how exception handlers allow the programmer to define custom exceptions that can be handled differently, effect handlers provide a general framework for creating custom effects with custom semantics. The interaction between effect handlers is described abstractly, parameterising over the exact semantics of the effect. Hence, implementing effects as effect handlers ensures compositionality by design. 
 
 % With effect handlers, we can re-write the previous example to obtain the behaviour of resumable exceptions, even if the \texttt{OCaml} compiler does not support it, with the guarantee that \mintinline{ocaml}{NotFound} will interact predictably with other defined effects.
 % \begin{ocaml}
@@ -61,10 +61,10 @@ Since effect handlers may be instantiated into a range of different effects, con
 \newcommand{\readInt}[1]{\texttt{\textbf{read\_int}(#1)}}
 
 
-This section presents a calculus, \efflang{}, for reasoning about the operational behaviour of effect handlers.\ \efflang{} is broadly similar to the calculus described by \citet{pretnar-15} \footnote{Differences will be clarified as they arise}, and will be used in later sections to study the interaction between effect handlers and metaprogramming. 
+This section presents a calculus, \efflang{}, for reasoning about the operational behaviour of effect handlers.\ \efflang{} is broadly similar to the calculus described by \citet{pretnar-15}\footnote{Differences will be clarified as they arise}, and will be used in later sections to study the interaction between effect handlers and metaprogramming. 
 
 
-\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang. In this section, I additionally assume \efflang{} supports a unit value (), pairs with pattern matching, strings with concatenation and \texttt{Python}-style format strings. 
+\Cref{fig:eff-lang-syntax} collates the base syntax of \efflang{}. In this section, I additionally assume \efflang{} supports a unit value (), pairs with pattern matching, strings with concatenation and \texttt{Python}-style format strings. 
 
 For example, treating $\bind{x}{c_1}{c_2}$ as a let-binding (and ignoring \textbf{\texttt{return}}, which is explained shortly), the following code evaluates to \texttt{"Revolution 9"}:
 
@@ -116,7 +116,7 @@ This section explains key language constructs in turn, with reference to a runni
   \end{array}$
   
   \end{eff-desc}
-  \caption{The syntax of \efflang. Terms are syntactically divided into values $v$, computations $c$, and handlers $h$ }
+  \caption{The syntax of \efflang{}. Terms are syntactically divided into values $v$, computations $c$, and handlers $h$ }
   \label{fig:eff-lang-syntax}
 \end{figure}
 
@@ -130,7 +130,7 @@ The result of \mintinline{ocaml}{pure}, which has no effects, is independent of 
 
 In order to be precise about the order of evaluation, \efflang{} follows \citeauthor{pretnar-15}'s approach of stratifying terms into distinct syntactic categories, with ``inert values'' ($v$) disjoint from ``potentially effectful computations'' ($c$). However, while \citeauthor{pretnar-15} treats handlers $h$ as values, in \efflang{}, they are a third syntactic category, disjoint from both values and computations. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ acts like a let-binding, sequencing computations. This forces programmers to make explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
 
-For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} $c_1$ $c_2$, where $c_1$ and $c_2$ are compuations that evaluate to naturals? Are both arguments evaluated before application, or are evaluation and application interleaved? The syntax forces programmers to choose explicitly. The programmer can either fully evaluate both arguments before applying them in turn: 
+For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} $c_1$ $c_2$, where $c_1$ and $c_2$ are computations that evaluate to naturals? Are both arguments evaluated before application, or are evaluation and application interleaved? The syntax forces programmers to choose explicitly. The programmer can either fully evaluate both arguments before applying them in turn: 
 \begin{eff}
 $\bind{x}{c_1}{(\bind{y}{c_2}{(\bind{f}{\texttt{plus} \, x}{f y})})}$
 \end{eff}
@@ -150,7 +150,7 @@ $\bind{x}{\print{1};\return{\texttt{1}}}{{\bind{y}{\print{2};\return{\texttt{2}}
 In the program fragment above, \textbf{\texttt{print}} is an effect, but with as-yet-unknown semantics. Effect handlers, which comprise a \textbf{return handler} and zero or more \textbf{operation handlers}, specify how effects interact with their environment, and thus may be used to give effects meaning. Consider defining an effect handler that accumulates print statements in a string (some ``\texttt{stdout}'').  For example, the aforementioned program should return $(\texttt{3}, \texttt{"1; 2"})$.
 
 % I begin by considering how to handle the case where there are no calls to \textbf{\texttt{print}}. For example, in the program $\return{\texttt{3}}$. I wish to return both the value and an empty string: in this case, $(\texttt{3}, \texttt{""})$. I achieve this by specifying a \textit{return handler}, of the form:
-First, an effect handler must handle programs that have no calls to \textbf{\texttt{print}}. For such a program, the accummulating handler should return both the value and the empty string: $(\texttt{3}, \texttt{""})$. The return handler is written as follows:
+First, an effect handler must handle programs that have no calls to \textbf{\texttt{print}}. For such a program, the accumulating handler should return both the value and the empty string: $(\texttt{3}, \texttt{""})$. The return handler is written as follows:
 \[\textbf{\texttt{return}}(x) \mapsto {c}\]
 where $c$ is set to $\return{(x, \texttt{""})}$. All effect handlers must specify a return handler. In many cases, the return handler is simply the identity. 
 
@@ -261,12 +261,12 @@ The operational semantics of \efflang{} (\Cref{fig:efflang-opsem}) is given on c
 \]
   }
 \end{eff-desc}
-\caption{The operational semantics of \efflang. The semantics is given on configurations of the form $\langle c; E \rangle$. Rules are divided into three classes: reduction rules $\textsc{Red-}X$, which perform computation, congruence rules $\textsc{Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc{Eff-}Z$ that are special to \efflang{}.}
+\caption{The operational semantics of \efflang{}. The semantics is given on configurations of the form $\langle c; E \rangle$. Rules are divided into three classes: reduction rules $\textsc{Red-}X$, which perform computation, congruence rules $\textsc{Cng-}Y$ which manipulate the evaluation context, and effect rules $\textsc{Eff-}Z$ that are special to \efflang{}.}
 \label{fig:efflang-opsem}
 \end{figure}
 
 % For clarity, I will compress multiple stack frames using nesting. For example, instead of $\bind{x}{-\,}{c_2} :: \bind{y}{-\,}{c_1}$, I will write $\bind{x}{(\bind{y}{-\,}{c_1})}{c_2}$. 
-The evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context, illustrates the operaton of  \textsc{Eff-Op} and \textsc{Eff-Cnt}. Let $h$ be the handler body 
+The evaluation of \Cref{listing:efflang-running-example}, beginning with an empty context, illustrates the operation of  \textsc{Eff-Op} and \textsc{Eff-Cnt}. Let $h$ be the handler body 
 \[\begin{array}{l}\{ \textbf{\texttt{return}}(x) \mapsto {\return{(x, \texttt{""})}}; \\
 \; \, \textbf{\texttt{print}}(x, k) \mapsto {\bind{(v, s)}{\continue{k}{()}}{\return{(v, \texttt{f"\{$x$\};"} \text{ \^\ } s)}}}\}\end{array}\]
 Several applications of \textsc{Cng-Psh} produces the configuration:
@@ -574,7 +574,7 @@ If $\cdot \vdash {E[c]}: {\effectType{T}}$ then either
 \begin{enumerate}
 \item $c$ is of the form $\return{v}$ and $E = [-]$,
 \item $c$ is of the form $\op{v}$ for some $\textsf{op} \in \Delta$, and $\texttt{op} \notin \textsf{handled}({E})$
-\item $\exists. \, c', E'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$
+\item $\exists \, c', E'$ such that $\transition{\effconfiguration{c}{E}}{\effconfiguration{c'}{E'}}$
 \end{enumerate}
 \end{theorem}
 \vspace{-\baselineskip}

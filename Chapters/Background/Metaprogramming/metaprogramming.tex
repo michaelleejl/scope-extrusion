@@ -55,7 +55,7 @@ let rec grad_main (f: diff) (x: int) =
 % \end{ocaml}
 % may not be the most efficient implementation. Performing a \mintinline{ocaml}{match} on every recursive call might result in expensive branches. If \mintinline{ocaml}{x} is a vector, and the weights of a Poly are vectors, then \mintinline{ocaml}{grad_main} could hide opportunities for cache prefetching.
 
-If the function to be differentiated (\mintinline{ocaml}{f}) is known in advance \footnote{e.g.\ \texttt{f} is the computation graph of a neural network}, for example, \mintinline{ocaml}{f} $= 2(x^2 + 2x) + 4$, then this approach is inefficient. Instead, \mintinline{ocaml}{grad} could be specialised to a more efficient \mintinline{ocaml}{grad_spec} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
+If the function to be differentiated (\mintinline{ocaml}{f}) is known in advance\footnote{e.g.\ \texttt{f} is the computation graph of a neural network}, for example, \mintinline{ocaml}{f} $= 2(x^2 + 2x) + 4$, then this approach is inefficient. Instead, \mintinline{ocaml}{grad} could be specialised to a more efficient \mintinline{ocaml}{grad_spec} function (\Cref{listing:ocaml-grad-fast}), whose body is simply a hardcoded equation:
 
 \begin{code}
 \begin{ocamllst}
@@ -69,7 +69,7 @@ What if there were multiple such \mintinline{ocaml}{f}s? We could use \mintinlin
 
 The tension between maintainability (abstraction) and efficiency (specialisation) has been observed in other works on metaprogramming, in domains such as regex matching \citep{tratt-2008}, parsing \citep{yallop-2023}, linking \citep{servetto-2013}, statistical modelling \citep{wickham-2019}, and hardware design \citep{vandebon-2021}.
 
-A better approach might therefore be to write maintainable code, delegating the responsibility of optimisation to the compiler. While this suffices for many cases, relying solely on compiler optimisation can be insufficient. The compiler may not implement the desired optimisations. While compiler engineers might have an economic incentive to write optimisations for machine learning, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations. Further, even if the compiler does implement the optimisation, the programmer has little control over the optimisation process: the compiler may not optimise as frequently as desired, or optimise in ways that do not meet all of the programmer's desiderata (for example, by inflating binary sizes). Moreover, the optimisation process may be sensitive to small changes in the source code.
+A better approach might therefore be to write maintainable code, delegating the responsibility of optimisation to the compiler. While this suffices for many cases, relying solely on compiler optimisation can be insufficient. The compiler may not implement the desired optimisations. While compiler engineers might have an economic incentive to write optimisations for machine learning, this may not be true for less lucrative domains \citep{robinson-01}. Even in machine learning, many libraries are built on top of existing languages, like \texttt{Python}, which might not perform the desired optimisations. Further, even if the compiler does implement the optimisation, the programmer has little control over the optimisation process: the compiler may not optimise as frequently as desired, or optimise in ways that do not meet all the programmer's desiderata (for example, by inflating binary sizes). Moreover, the optimisation process may be sensitive to small changes in the source code.
 
 How does one write maintainable and efficient code, \textbf{when one is not certain that the compiler will optimise one's code exactly as desired}?
 
@@ -199,7 +199,7 @@ let grad_spec' y = $(grad_gen (Compose(Poly([4; 3 ; 1 ; 7]), Poly([1 ; 8]))) <<y
 Different metalanguages provide slightly different variants of metaprogramming to the user. Different variants could interact differently with effect handlers. This thesis focuses on homogenous, compile-time, two-stage metaprogramming: 
 
 \begin{enumerate}
-  \item \textbf{\textsf{Homogenous or Heterogenous}}\\
+  \item \textbf{\textsf{Homogenous or Heterogeneous}}\\
          \textit{Do the generated and generating languages agree or differ?}
   
         If the generated and generating languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogenous} \citep{kiselyov-2024}.

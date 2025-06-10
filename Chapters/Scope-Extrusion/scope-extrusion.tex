@@ -8,7 +8,7 @@ This chapter uses \calculusName{} to formulate precise definitions of scope extr
   \item A novel best-effort dynamic check, which I argue occupies a goldilocks zone between expressiveness and efficiency (\Cref{section:best-effort-check}).
   \item Refined environment classifiers, a static approach first described by \citet{kiselyov-16}, and considered in the context of effect handlers by \citet{isoda-24} (\Cref{section:refined-environment-classifiers-formal}).
 \end{enumerate}
-I have implemented the three dynamic checks in MacoCaml, with the best-effort check merged into MacoCaml. The implementations closely mirror the descriptions in this chapter, and were useful for building an understanding of the properties of the checks. 
+I have implemented the three dynamic checks in MacoCaml, and merged the best-effort check into MacoCaml. The implementations closely mirror the descriptions in this chapter, and were useful for building an understanding of the properties of the checks. 
 
 \Cref{section:evaluation} evaluates \calculusName{}'s ability to facilitate comparative evaluation of different scope extrusion checks. 
 \section{Properties of Dynamic Scope Extrusion Checks}\label{section:properties}
@@ -57,7 +57,7 @@ Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\l
 
 The lazy dynamic check, ${\elaborate{-}}^{\textbf{Lazy}}$, augments the naïve elaboration in two ways. First, \textbf{\texttt{check}}s are performed after top-level splices:
 \[\elaborate{\splice[e]}_{\compilemode{}}^{\textbf{Lazy}} \triangleq {\checkfv{(\tls{\elaborate{e}_{\splicemode{}}^{\textbf{Lazy}}})}}\]
-Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside top-level splices (in \compilemode{}-mode) are declared safe in the context surrounding the top-level splice (\Cref{dfn:declared-safe}). Variables bound outside top-level splices thus do not cause the \textbf{\texttt{check}} to fail. For example, in $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$, at the point of the check, $x$ is declared safe, and thus allowed to be free, but $y$ is not. Elaboration of formal parameters in \compilemode{}-mode (but not \quotemode{}-mode) should insert \textbf{\texttt{dlet}}s:
+Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside top-level splices (in \compilemode{}-mode) are declared safe in the context surrounding the top-level splice (\Cref{dfn:declared-safe}). Variables bound outside top-level splices thus do not cause the \textbf{\texttt{check}} to fail. For example, in $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$, in the context surrounding the check, $x$ is declared safe, and thus allowed to be free, but $y$ is not. Elaboration of formal parameters in \compilemode{}-mode (but not \quotemode{}-mode) should insert \textbf{\texttt{dlet}}s:
 {
   \footnotesize
 \[\elaborate{\lambda x: T^0. \, e}_{\compilemode{}}^{\textbf{Lazy}} = \bind{x}{\gensym{\erase{T^0}}}{ \dlet{x}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode{}}^\textbf{Lazy}}{\return{\Lam{x}{\texttt{body}}}}}}\]
@@ -88,9 +88,9 @@ For example, $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. 
 Due to the simplicity of the algorithm, verifying the correctness (with respect to lazy scope extrusion) and permissiveness of the check is trivial: the lazy dynamic check detects scope extrusion if, and only if, naïve elaboration would exhibit lazy scope extrusion after reduction.
 
 \begin{theorem}[Correctness and Permissiveness of the Lazy Dynamic Check]{sourceHighlight}
-Assuming $\cdot \vdash_{\compilemode{}} e: T^0 \, ! \, \emptyset;\emptyset$, and $\elaborate{e}_{\compilemode{}}^{\textbf{Lazy}} = t$, 
+For all closed, well-typed \sourceLang{} programs $e$,
 \[\begin{array}{c}
-\langle t; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \err; E; U; M; I \rangle \\
+\langle \elaborate{e}^{\textbf{Lazy}}; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \err; E; U; M; I \rangle \\
 \iff \\
 \text{For some $E', U', M', I'$, }\\
 \langle \elaborate{e}; [-]; \emptyset; \emptyset; \top \rangle \to^{*} \langle \return{n}; E'; U'; M'; I' \rangle\text{, and}\\
@@ -117,7 +117,7 @@ The \emph{\textbf{false positives}} of a dynamic scope extrusion check are defin
 However, due again to its simplicity, the lazy dynamic check is inefficient and uninformative, and therefore not suitable for practical use \citep{kiselyov-14} (\Cref{subsubsection:lazy-dynamic-check}, \Cpageref{subsubsection:lazy-dynamic-check}).
 
 \section{Eager Dynamic Check}\label{section:eager-dynamic-check-formal}
-A configuration exhibits \textbf{eager scope extrusion} if it is improperly scoped (\Cref{subsubsection:eager-dynamic-check}, \Cpageref{subsubsection:eager-dynamic-check}) at any point in the execution. \Cref{dfn:eager-scope-extrusion} thus generalises \Cref{def:lazy-scope-extrusion}. 
+A configuration exhibits \textbf{eager scope extrusion} if it is improperly scoped at any point in the execution (\Cref{subsubsection:eager-dynamic-check}, \Cpageref{subsubsection:eager-dynamic-check}). \Cref{dfn:eager-scope-extrusion} thus generalises \Cref{def:lazy-scope-extrusion}. 
 
 \begin{definition}[Eager Scope Extrusion]{coreHighlight}\label[definition]{dfn:eager-scope-extrusion} A \coreLang{} configuration of the form  $\langle t;E;U;M;I\rangle$
 exhibits \emph{\textbf{eager scope extrusion}} if all of the following hold:
@@ -135,9 +135,9 @@ exhibits \emph{\textbf{eager scope extrusion}} if all of the following hold:
 \end{quote}
 The condition $\freevars{n} \not\subseteq \projfvs{E}$ formally describes free variables whose ``[names are] not dynamically bound''.
 
-It is possible to define an eager dynamic check by extending the lazy dynamic check. In addition to the top-level splice $\textbf{\texttt{check}}$, and the \compilemode{}-mode \textbf{\texttt{dlet}}s, the eager dynamic check adds \textbf{\texttt{check}}s for ASTs constructed in \quotemode{}-mode, for example 
+It is possible to define an eager dynamic check by extending the lazy dynamic check. In addition to the top-level splice $\textbf{\texttt{check}}$, and the \compilemode{}-mode \textbf{\texttt{dlet}}s, the eager dynamic check adds \textbf{\texttt{check}}s for ASTs constructed in \quotemode{}-mode, for example: 
 \[\elaborate{v_1 v_2}_{\quotemode{}}^{\textbf{Eager}} = \bind{f}{\elaborate{v_1}_{\quotemode{}}^{\textbf{Eager}}}{\bind{a}{\elaborate{v_2}_{\quotemode{}}^{\textbf{Eager}}}{\checkfv{\App{f}{a}}}}\]
-notice how $\return{\App{f}{a}}$ is replaced by $\checkfv{\App{f}{a}}$. 
+Notice how $\return{\App{f}{a}}$ is replaced by $\checkfv{\App{f}{a}}$. 
 
 Consequently, to prevent false positives, variables bound in \quotemode{}-mode must generate \textbf{\texttt{dlet}}s:
 {
@@ -172,7 +172,7 @@ The elaboration of $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathb
 \end{array}\]
 }
 
-If \textbf{\texttt{dlet}}s were not inserted for binders in \quotemode{}-mode (e.g. $y$), then $\textbf{\texttt{check}}\; \texttt{Plus}(a, b)$ would fail, as $y$ would not be declared safe at the point of the check. 
+If \textbf{\texttt{dlet}}s were not inserted for binders in \quotemode{}-mode (e.g. $y$), then $\textbf{\texttt{check}}\; \texttt{Plus}(a, b)$ would fail, as $y$ would not be declared safe in the context surrounding the check. 
 
 Intuitively, the eager dynamic check performs a check whenever an AST is built. Hence, assume that evaluation reduces to a configuration that exhibits eager scope extrusion. Let the offending AST be $n$. The error is detected and reported when, in some evaluation context $E$, $n$ is used to build a bigger AST $n'$, and not all free variables in $n'$ are declared safe in $E$. 
 
@@ -243,7 +243,7 @@ Finally, the program may recover from scope extrusion by \textit{resuming} a con
  \begin{source}
   $\begin{array}{l}
       \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \,\return{\splice[( \, {{\textbf{\texttt{extrude}}(\equote[x])}} \,)]}} \,] \\
-      \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {{\continue{k}{y}}}\})
+      \;\;\,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{u}{\return{y}}{\continue{k}{u}}}\})
     \end{array}$
  \end{source}
  \captionof{listing}{The eager dynamic check additionally does not report cases where the offending AST is used, but only in safe ways. In this case, the continuation restores the context that permits $\Var{x}{\mathbb{N}}$ to be used.}%
@@ -261,7 +261,7 @@ The eager dynamic check, however, is not maximally expressive. It reports false 
  \begin{source}
   $\begin{array}{l}
       \$ (\textbf{\texttt{handle}} \; \equote[\, {\lambda x. \, {\splice[(\, {{\textbf{\texttt{extrude}}(\equote[x])}} \, )]}}\,] \\
-      \;\;\,\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {{\continue{k}{\equote[{\splice[y]} + \texttt{0}]}}}\})
+      \;\;\,\,\textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\bind{u}{\equote[{\splice[y]} + \texttt{0}]}{\continue{k}{u}}}\})
     \end{array}$
  \end{source}
  \captionof{listing}{A program which fails the eager dynamic check. The offending AST ($\Var{x}{\mathbb{N}}$) is used to construct a larger AST in a way that appears to be unsafe $\equote[{\splice[y]+\texttt{0}}]$, but the unsafe AST is then only used in a safe way.}%
@@ -285,7 +285,7 @@ While this restores some equations (e.g.\ \Cref{listing:eager-scope-extrusion-un
 since the \textbf{\texttt{return}} is elaborated into a \textbf{\texttt{check}}, which $v$ may fail.
 
 \subsection{Efficiency of the Eager Dynamic Check}\label{subsection:eager-dynamic-efficiency}
-The eager dynamic check is not, in the worst case, more efficient than the lazy dynamic check, since there exist pathological examples, such as when the offending AST is not used to construct a larger AST, but returned at the top-level splice (\Cref{listing:eager-scope-extrusion-check-eg-tls}). However, I hypothesise that in the \textit{common case}, the eager dynamic check detects more efficiently. This question is an empirical one, and would require further research, outside the scope of the dissertation, to resolve. 
+The eager dynamic check is not, in the worst case, more efficient than the lazy dynamic check, since there exist pathological examples, such as when the offending AST is not used to construct a larger AST, but returned at the top-level splice (\Cref{listing:eager-scope-extrusion-check-eg-tls}). However, I hypothesise that in the \textit{common case}, the eager dynamic check is more efficient. This question is an empirical one, and would require further research, outside the scope of the dissertation, to resolve. 
 
 \section{Best-Effort Dynamic Check}\label{section:best-effort-check}
 If the lazy dynamic check is too inefficient, and the eager dynamic check too unpredictable, might it be possible to find a ``goldilocks'' solution? Such a check should allow the program in \Cref{listing:eager-scope-extrusion-looks-unsafe}, and be permissive in a predictable way. A configuration exhibits \textbf{best-effort scope extrusion} when it \textit{must} cause lazy scope extrusion.
@@ -350,7 +350,7 @@ To understand the best-effort dynamic check, consider \Cref{fig:core-eager-looks
     ($(example.south) + (-1, 0)$) -- ($(example.south) + (2.2, 0)$);
 
   \begin{scope}[every node/.style={font=\scriptsize}]
-    \node[anchor = north, text=quote, align = left] (check-fail) at ($(example.south) + (1, -0.2)$) {\textbf{\texttt{check}} fails, transitioning to $\err$, since \\ $\Var{x}{\mathbb{N}}$ is bound to $y$, and $\Var{x}{\mathbb{N}}$ is\\ not declared safe via \textbf{\texttt{dlet}}};
+    \node[anchor = north, text=quote, align = left] (check-fail) at ($(example.south) + (1, -0.2)$) {\textbf{\texttt{check}} fails, transitioning to $\err$, since \\ $y$ is bound to $\Var{x}{\mathbb{N}}$, and $\Var{x}{\mathbb{N}}$ is\\ not declared safe in the surrounding context};
 
     \node[anchor = west, align = left, text=comment] at ($(example.east) + (-0.5cm, -0.45cm)$) {However, $w$ is only \\ used in a context \\
     where $\Var{x}{\mathbb{N}}$ is \\declared safe};
@@ -369,7 +369,7 @@ To understand the best-effort dynamic check, consider \Cref{fig:core-eager-looks
 \label{fig:core-eager-looks-unsafe}
 \end{figure}
 
-The check fails because when $\textbf{\texttt{extrude}}$ performed, the variable $\Var{x}{\mathbb{N}}$ is no longer declared safe in the new evaluation context. Since $\Var{x} {\mathbb{N}}$ is bound to $y$, checking $\texttt{Plus}(y, \texttt{Nat}(\texttt{0}))$ reports an error. The problem is that the continuation $k$ can be used to bind $\Var{x}{\mathbb{N}}$. It is not clear, when the \texttt{Plus} AST is constructed and checked, that eager scope extrusion \textit{must} lead to lazy scope extrusion. 
+The check fails because when $\textbf{\texttt{extrude}}$ performed, the variable $\Var{x}{\mathbb{N}}$ is no longer declared safe in the new evaluation context. Since $y$ is bound to $\Var{x} {\mathbb{N}}$, checking $\texttt{Plus}(y, \texttt{Nat}(\texttt{0}))$ reports an error. The problem is that the continuation $k$ can be used to bind $\Var{x}{\mathbb{N}}$. It is not clear, when the \texttt{Plus} AST is constructed and checked, that eager scope extrusion \textit{must} lead to lazy scope extrusion. 
 
 To make the check more expressive, therefore, it may be useful to temporarily allow $\Var{x}{\mathbb{N}}$ to extrude its scope, delaying error detection until one \textit{must} have lazy scope extrusion. 
 
@@ -478,7 +478,7 @@ However, altering the semantics in such a manner means that any transition could
 \end{array}\] 
 In \Cref{fig:core-unmute-example-result}, the transition from $\dlet{\Binder{z}{\mathbb{N}}}{\return{n}}$ unmutes variables. Hence, $\Var{x}{\mathbb{N}}$ is still muted when the \texttt{App} constructor is checked, but unmuted when the outer \texttt{Lam} constructor is checked. 
 
-Additionally, transitions from \textbf{\texttt{tls}} \textit{unconditionally} unmute variables, since the evaluation context beyond \textbf{\texttt{tls}} must be inert, and thus can never be captured by a handler (\textsc{Sec-Tls}):
+Additionally, a transition from \textbf{\texttt{tls}} \textit{unconditionally} unmutes variables, since the evaluation context beyond \textbf{\texttt{tls}} must be inert, and thus can never be captured by a handler (\textsc{Sec-Tls}):
 \[\langle \tls{\return{n}}; E; U; M; I \rangle \to \langle {\return{n}}; E; U; \textcolor{coreHighlight}{\emptyset}; \textcolor{coreHighlight}{\top} \rangle\]
 
 Since $\textbf{\texttt{check}}_M$s are at least as permissive as \textbf{\texttt{check}}s, the best-effort dynamic check is at least as permissive as the eager dynamic check.
@@ -509,13 +509,13 @@ The best-effort dynamic check is not maximally expressive. In particular, it doe
 
 \Cref{listing:best-effort-imperfect} attempts to build the AST $\lambda x.\return{y}$, where $y$ has extruded its scope, but then throws it away, returning the AST of \texttt{1}. Critically, the constructor of the outer lambda, $\lambda x. [-]$, is never captured by any effect. Hence, \Cref{listing:best-effort-imperfect} eventually reduces to a configuration: 
 \[\langle \dlet{\Binder{x}{\mathbb{N}}}{\return{\Lam{\Binder{x}{\mathbb{N}}}{\Var{y}{\mathbb{N}}}}}; E[\textbf{\texttt{check}}[-]]; U; \{\Var{y}{\mathbb{N}}\} ; I \rangle\]
-where $\textsf{len}(E[\checkm{[-]}]) < I$. The subsequent transition unmutes $\Var{y}{\mathbb{N}}$, and the surrounding $\textbf{\texttt{check}}_M$ fails, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe in $E$.
+where $\textsf{len}(E[\checkm{[-]}]) \leq I$. The subsequent transition unmutes $\Var{y}{\mathbb{N}}$, and the surrounding $\textbf{\texttt{check}}_M$ fails, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe in $E$.
 
 It is possible to characterise the expressiveness of the best-effort check, via a ``Cause for Concern'' property. The property is defined informally as follows: assume the best-effort check reports an error, and let the offending AST be $n$. Now re-wind to the point of the failing check, and consider an alternative execution where all the $\textbf{\texttt{check}}_M$s are erased (turned into $\textbf{\texttt{return}}$s). In this counter-factual execution, all ASTs $m$ that are constructed from $n$ have at least one variable that is not declared safe in its evaluation context. Consequently, in \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
 
-\begin{theorem}[Cause for Concern Property]{sourceHighlight}\label{thm:best-effort-cause-for-concern} Assuming a closed,well-typed \sourceLang{} expression $e$, if
+\begin{theorem}[Cause for Concern Property]{sourceHighlight}\label{thm:best-effort-cause-for-concern} Assuming a closed, well-typed \sourceLang{} expression $e$, if
   \begin{enumerate}
-    \item $\exists.$ $E$, $U$, $M$, $I$ such that $\langle \elaborate{e}^{\textbf{BE}}; [-];\emptyset; \emptyset; \top \rangle \to^{*}\langle \checkm{n}; E; U; M; I \rangle$,
+    \item $\exists$ $E$, $U$, $M$, $I$ such that $\langle \elaborate{e}^{\textbf{BE}}; [-];\emptyset; \emptyset; \top \rangle \to^{*}\langle \checkm{n}; E; U; M; I \rangle$,
     and \\$\langle \checkm{n}; E; U; M; I \rangle \to \langle \err{}; E; U; M; I \rangle$
   \end{enumerate}
 Then for all $i \in \mathbb{N}$, if 
@@ -549,7 +549,7 @@ The method of refined environment classifiers (\Cref{subsubsection:refined-envir
 \newcommand{\recCoreLang}{\coreLang{}$^\gamma$}
 \recLang{} elaborates into \recCoreLang{}, which is a simple extension of \coreLang{}. Classifiers show up only in the formal parameters, and are invisible to the types:
 \begin{enumerate}
-  \item \recCoreLang{} formal parameters are annotated with classifiers (e.g.\ $\alpha_R^{\gamma}$ )
+  \item \recCoreLang{} formal parameters are annotated with classifiers (e.g.\ $\alpha_R^{\gamma}$)
   \item Since elaboration does not require any dynamic scope extrusion checking machinery, \recCoreLang{} does not have \textbf{\texttt{check}} (and $\textbf{\texttt{check}}_M$), \textbf{\texttt{dlet}}, \textbf{\texttt{tls}}, and \textbf{\texttt{err}}.\ Consequently, \recCoreLang{} configurations are of the form $\langle t;E;U\rangle$.
 \end{enumerate}
 
@@ -557,7 +557,7 @@ For ease of reasoning, it is helpful to define the notion of an \textbf{extended
 \begin{definition}[Extended \recLang{} type]{recHighlight}\label[definition]{dfn:extended-source-type}
 An \emph{\textbf{extended source type}} is either:
   \begin{enumerate}
-    \item A level $-1$ type, for example, $(\textsf{Code}(\mathbb{N}^{0})^{\gamma})^{-1}$ or 
+    \item A level $-1$ type, for example, $(\textsf{Code}(\mathbb{N}^{0} \, ! \,  \emptyset)^{\gamma})^{-1}$ or 
     \item A level $0$ type annotated with a classifier, for example, $\mathbb{N}^{0} (\gamma)$. 
     \item A level $0$ formal parameter type, which is a level $0$ value type (like $\mathbb{N}^{0}$) annotated with a classifier $\gamma$, and an \underline{underline}, to indicate that it is elaborated into an \textsf{FParam} type, (\underline{$\mathbb{N}^{0} (\gamma)$})
   \end{enumerate}
@@ -596,10 +596,10 @@ An \emph{\textbf{extended source type}} is either:
   \label{fig:rec-source-types}
 \end{figure}
 
-Contexts $\Gamma$ must be well-formed \citep{isoda-24}, and a well-formed context must contain the least classifier $\gamma_{\bot}$. The definition of closed well-typed expression is adapted to reflect this:
+Contexts $\Gamma$ must be well-formed \citep{isoda-24}, and a well-formed context must contain the least classifier $\gamma_{\bot}$. The definition of closed, well-typed expression is adapted to reflect this:
 
 \begin{definition}[Well-typed closed expression]{recHighlight}\label[definition]{dfn:well-typed-exp-rec}
-  $e$ is a well-typed expression if $\gamma_{\bot} \vdash_{\compilemode}^{\gamma_{\bot}} e : T^{0} \, ! \, \emptyset; \emptyset$
+  $e$ is a closed, well-typed expression if $\gamma_{\bot} \vdash_{\compilemode}^{\gamma_{\bot}} e : T^{0} \, ! \, \emptyset; \emptyset$
 \end{definition}
 
 Since level $-1$ types can refer to classifiers $\gamma$, level $-1$ types should be well-formed under a context $\Gamma$ (only refer to classifiers in $\Gamma$): 
@@ -665,7 +665,7 @@ The proof of the weakening lemma is by induction on the typing derivation.
 
 \recLang{} elaborates into \recCoreLang{}. Elaboration is similar to \Cref{section:elaboration}, with the following changes:
 \begin{enumerate}
-  \item Elaboration of types erases classifiers. For example,  $\elaborate{(\textsf{Code}(\mathbb{N}^{0})^{\gamma})^{-1}} = \mathbb{\textsf{AST}(\mathbb{N})}$.
+  \item Elaboration of types erases classifiers. For example,  $\elaborate{(\textsf{Code}(\mathbb{N}^{0} \, ! \, \emptyset)^{\gamma})^{-1}} = \mathbb{\textsf{AST}(\mathbb{N \, ! \, \emptyset})}$.
   \item Elaboration of context entries erases proof-theoretic terms e.g. $\gamma$ and $\gamma \sqsubseteq \gamma'$.
   \item Elaboration of terms assumes binders have been annotated with an extended source type, and does \textit{not} erase classifiers. \\
   For example, $\elaborate{\lambda x: {\mathbb{N}^0({\gamma})}. \; e}_{\compilemode{}} = \bind{x}{\gensym{\mathbb{N}^{\gamma}}}{(\bind{\texttt{b}}{\elaborate{e}}{\return{\texttt{Lam}(x, \texttt{b})}})}$
@@ -715,7 +715,7 @@ $\inferrule[(\compilemode{}$\mid$\quotemode{}-Lambda)]{\rcqtypejudge[\Gamma, \ga
 \begin{minipage}[t]{\textwidth}
     \centering
   $\inferrule[(\splicemode{}-Handle)]
-    {\stypejudge{e}{\effectType{\compiletimetype{\textsf{Code}(\effectType[\xi]{S})^{\gamma}}}} \\ \stypejudge{h}{\compiletimetype{\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{S})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T})^{\gamma})}}}}} \\ \forall \textsf{op} \in \Delta_1 \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
+    {\stypejudge{e}{\effectType{\compiletimetype{\textsf{Code}(\effectType[\xi_1]{S})^{\gamma}}}} \\ \stypejudge{h}{\compiletimetype{\handlerType{\effectType[\Delta_1]{\compiletimetype{(\textsf{Code}(\effectType[\xi_1]{S})^{\gamma})}}}{\effectType[\Delta_2]{\compiletimetype{(\textsf{Code}(\effectType[\xi_2]{T})^{\gamma})}}}}} \\ \forall \textsf{op} \in \Delta_1 \setminus \Delta_2. \, \textsf{op} \in \textsf{dom}(h)}
     {\stypejudge{\handleWith{e}{h}}{\effectType[\Delta_2]{\compiletimetype{\textsf{Code}(\effectType[\xi_2]{T})^{\gamma}}}}}$
   \end{minipage}
 
@@ -785,12 +785,13 @@ $
 
 \textbf{Terms}\\
 {\scriptsize{\textit{In the following, let $\effectType{\tau}$ be shorthand for any of $\effectType{T^{0}} (\gamma)$, $\effectType[\Delta; \xi]{T^{0}} (\gamma)$, $\effectType{(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^{0}} (\gamma)$, or $\effectType{T^{-1}}$}}}\\
-{\scriptsize{\textit{Given $\effectType{\tau}$, $\tau$ refers to the corresponding compile-time value type. For example, if $\effectType{\tau} = \effectType[\Delta; \xi]{T^{0}} (\gamma)$, then $\tau = \effectType[\xi]{T^{0}} (\gamma)$}}}\\
+{\scriptsize{\textit{Given a compile-time computation type $\effectType{\tau}$, let $\tau$ refer to the corresponding compile-time value type.}}}\\
+{\scriptsize{\textit{For example, if $\effectType{\tau} = \effectType[\Delta; \xi]{T^{0}} (\gamma)$, then $\tau = \effectType[\xi]{T^{0}} (\gamma)$}}}\\
 
 $\scoped{\effectType{\tau}} \hspace{2mm} \triangleq \hspace{2mm}$ The smallest property on terms $t$ such that 
 \begin{enumerate}
   \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \return{n}; [-]; U' \rangle$, such that $U'$ consistent with $n$, and $n \in \scoped{\tau}$ 
-  \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \op{n}; E; U' \rangle \not\to$, $U'$ consistent with $E[\op{n}]$, and 
+  \item For arbitrary $U$ consistent with $t$, exists $U'$ such that $\langle t;[-];U \rangle \to^{*} \langle \op{n}; E; U' \rangle$ where $\textbf{\texttt{op}} \not\in \textsf{handled}(E)$, $U'$ consistent with $E[\op{n}]$, and 
   \begin{enumerate}
     \item $\textsf{op}: A^{-1} \to B^{-1}$,
     \item $n \in \scoped{A^{-1}}$, and 
@@ -824,13 +825,13 @@ $\scoped{\effectType{\tau}}$ is defined as a least fixed point, following the de
   For some property $\Phi$ on closed terms of type $\elaborate{\effectType{\tau}}$, if
   \begin{enumerate}
     \item $\langle t; [-]; U \rangle \to^{*} \langle \return{n};[-];U' \rangle$ implies $\Phi(t)$
-    \item $\langle t; [-]; U \rangle \to^{*} \langle \op{n};E;U' \rangle \not\to$, with $\textsf{op}: A^{-1} \to B^{-1}$, $n \in \scoped{A^{-1}}$, and for arbitrary $n' \in \scoped{B^{-1}}$, $\Phi(E[n'])$ implies $\Phi(t)$
+    \item $\langle t; [-]; U \rangle \to^{*} \langle \op{n};E;U' \rangle$ where $\textbf{\texttt{op}} \not\in \textsf{handled}(E)$, $\textsf{op}: A^{-1} \to B^{-1}$, $n \in \scoped{A^{-1}}$, and for arbitrary $n' \in \scoped{B^{-1}}$, $\Phi(E[n'])$ implies $\Phi(t)$
     % \item For every non-stuck $E[t]$, $\Phi(E[t])$ assuming for all $U$, $\langle t;E;U \rangle \to \langle t';E';U' \rangle$ implies $\Phi(E'[t'])$
   \end{enumerate}
   Then for all $t \in \scoped{\effectType{\tau}}$, $\Phi(t)$
 \end{definition}
 
-The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a notion of closed substitution $\rho \vDash \Gamma$. Care must be taken with substitution of level-$0$ variables, since these should be in the logical relation for \textsf{FParam}s rather than \textsf{AST}s (note the second clause in \Cref{dfn:closed-substitution}).
+The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a notion of closed substitution $\rho \vDash \Gamma$. Care must be taken with substitution of level-$0$ variables, since these should be in the logical relation for \textsf{FParam}s rather than \textsf{AST}s (clause 2 in \Cref{dfn:closed-substitution}).
 
 \begin{lemma}[Closure under Anti-Reduction]{recHighlight}\label[lemma]{lemma:closure-reduction}
   If $\langle t;E;U \rangle \to^{*} \langle t';E';U' \rangle$ and $E'[t'] \in \scoped{\effectType{\tau}}$ then $E[t] \in \scoped{\effectType{\tau}}$
@@ -862,7 +863,7 @@ Proof of \Cref{lemma:fundamental} is by induction on the \recLang{} typing rules
 \[\bind{x}{\gensym{\erase{S^0 (\gamma')}}}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho})}{\return{\Lam{x}{\texttt{body}}}}}\]
 in $\scoped{\effectType{(\functionType[\xi]{S^0}{T^0})^0} (\gamma)}$. It is clear that this reduces to
 \[{\bind{\texttt{body}}{\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x})}{\return{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}}}\]
- By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that this term is in the logical relation. By weakening, and the induction hypothesis (IH), $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' = , \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S}})$:
+ By anti-reduction (\Cref{lemma:closure-reduction}) it suffices to show that this term is in the logical relation. By weakening, and the induction hypothesis (IH), $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$, where $\Theta' =  \Theta, \gamma', \gamma \sqsubseteq \gamma'$. Applying \textsf{Scoped}-Induction on $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S}})$:
 \begin{enumerate}
   \item $\elaborate{e}_{\compilemode}({\rho, \Binder{\alpha^{\gamma'}}{S} / x}) \in \scoped[\Theta']{\effectType[\Delta; \xi]{T^{0}} (\gamma')}$ reduces to some $\return{n}$\\
    $\bind{\texttt{body}}{\return{n}}{\Lam{\Binder{\alpha^{\gamma'}}{S}}{\texttt{body}}}$ reduces to $\Lam{\Binder{\alpha^{\gamma'}}{S}}{n}$, where $\Var{\alpha^{\gamma'}}{S}$ is bound. By IH, all the free variables in $n$ are permitted by $\gamma'$. By the typing rules, only $\alpha$ is annotated with classifier $\gamma'$. Hence, under $\Theta$, the free variables of $\Lam{\Binder{\alpha^{\gamma'}}{S}}{n}$ are permitted by $\gamma$. The conclusion thus follows from anti-reduction.
@@ -883,7 +884,7 @@ $\begin{array}{l}
   \quad \quad \,\, \textbf{\texttt{with}} \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{u}}; \textbf{\texttt{extrude}}(y, k) \mapsto {\continue{k}{()}}\})
 \end{array}$
 \end{rec}
-\captionof{listing}{Refined environment classifiers allow variables to be passed to an effects, so long as the variable can never cause a scope extrusion error (e.g. $z$).}%
+\captionof{listing}{Refined environment classifiers allow variables to be passed to an effect, so long as the variable can never cause a scope extrusion error (e.g. $z$).}%
 \label{listing:refined-environment-classifiers-safe}
 \end{code}
 
