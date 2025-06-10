@@ -1,0 +1,64 @@
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contributions}{3}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Background}{4}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Metaprogramming}{4}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Metaprogramming: Fast and Maintainable Code}{4}{subsection.2.1.1}%
+\contentsline {subsubsection}{\nonumberline The Mechanics of Metaprogramming}{6}{subsubsection*.7}%
+\contentsline {subsection}{\numberline {2.1.2}The Design Space of Metalanguages}{8}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Effect Handlers}{9}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Effect Handlers: Composable and Customisable Effects}{9}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}$\lambda _{\texttt {op}}${}: A Calculus for Effect Handlers}{9}{subsection.2.2.2}%
+\contentsline {subsubsection}{\nonumberline Sequencing computations: \texttt {do} and \texttt {return}}{10}{subsubsection*.9}%
+\contentsline {subsubsection}{\nonumberline Performing effects: \texttt {op}, \texttt {handle}, and \texttt {continue}}{11}{subsubsection*.11}%
+\contentsline {subsubsection}{\nonumberline Operational Semantics}{12}{subsubsection*.13}%
+\contentsline {subsubsection}{\nonumberline Type-and-Effect System}{14}{subsubsection*.15}%
+\contentsline {subsubsection}{\nonumberline Metatheory}{18}{subsubsection*.17}%
+\contentsline {subsection}{\numberline {2.2.3}The Design Space of Effect Handlers}{19}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Scope Extrusion}{20}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Existing Solutions to the Scope Extrusion Problem}{21}{subsection.2.3.1}%
+\contentsline {subsubsection}{\nonumberline Lazy Dynamic Check}{21}{subsubsection*.19}%
+\contentsline {subsubsection}{\nonumberline Eager Dynamic Check}{22}{subsubsection*.21}%
+\contentsline {subsubsection}{\nonumberline Refined Environment Classifiers}{22}{subsubsection*.23}%
+\contentsline {chapter}{\numberline {3}Calculus}{26}{chapter.3}%
+\contentsline {section}{\numberline {3.1}The Source Language: $\lambda _{\equote [\texttt {op}]}${}}{26}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Type System}{27}{subsection.3.1.1}%
+\contentsline {subsubsection}{\nonumberline Typing Judgements}{30}{subsubsection*.25}%
+\contentsline {section}{\numberline {3.2}The Core Language: $\lambda _{\texttt {AST}(\texttt {op})}${}}{35}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Operational Semantics}{36}{subsection.3.2.1}%
+\contentsline {subsubsection}{\nonumberline Configurations}{37}{subsubsection*.27}%
+\contentsline {subsubsection}{\nonumberline AST Rule}{37}{subsubsection*.29}%
+\contentsline {subsubsection}{\nonumberline Scope Extrusion Checking Rules}{37}{subsubsection*.31}%
+\contentsline {subsection}{\numberline {3.2.2}Type System}{39}{subsection.3.2.2}%
+\contentsline {subsubsection}{\nonumberline Typing Rules}{39}{subsubsection*.33}%
+\contentsline {subsection}{\numberline {3.2.3}Implementation}{40}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Elaboration from $\lambda _{\equote [\texttt {op}]}${} to $\lambda _{\texttt {AST}(\texttt {op})}${}}{41}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Elaborating Effect Sets}{41}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Elaborating Types}{41}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Elaborating Contexts}{42}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Elaborating Terms}{42}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Elaborating Typing Judgements}{43}{subsection.3.3.5}%
+\contentsline {section}{\numberline {3.4}Metatheory}{43}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Scope Extrusion}{46}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Properties of Dynamic Scope Extrusion Checks}{46}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Lazy Dynamic Check}{47}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Eager Dynamic Check}{49}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Correctness of the Eager Dynamic Check}{50}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Expressiveness of the Eager Dynamic Check}{51}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Efficiency of the Eager Dynamic Check}{52}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Best-Effort Dynamic Check}{52}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Correctness of the Best-Effort Dynamic Check}{56}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Expressiveness of the Best-Effort Dynamic Check}{56}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}Efficiency of the Best-Effort Dynamic Check}{57}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Refined Environment Classifiers}{57}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Correctness of Refined Environment Classifiers}{60}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Expressiveness of Refined Environment Classifiers}{64}{subsection.4.5.2}%
+\contentsline {section}{\numberline {4.6}Evaluation of $\lambda _{\equote [\texttt {op}]}${}}{65}{section.4.6}%
+\contentsline {chapter}{\numberline {5}Conclusion}{66}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Limitations and Future Work}{66}{section.5.1}%
+\contentsline {chapter}{\numberline {A}Auxiliary Definitions}{71}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Erase}{71}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Litmus Tests}{72}{appendix.B}%
+\contentsline {section}{\numberline {B.1}MetaOCaml}{72}{section.B.1}%
+\contentsline {chapter}{\numberline {C}Implementation}{74}{appendix.C}%
+\contentsline {section}{\numberline {C.1}Implementation of the $\lambda _{\texttt {AST}(\texttt {op})}${} Primitives}{74}{section.C.1}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -1,1 +1,28 @@
-type _ Effect.t += Op: A -> B
+(*Implementation of the scope extrusion machinery in
+the core language*)
+
+let check vars = if not (IdentSet.is_empty vars) then perform (FreeVar vars) (*check_M*)
+
+let exec_in_current_scope scope f =
+  let muted_vars = ref IdentSet.empty in
+  match f () with
+    effect FreeVar fvs, k-> (*check variable declared safe*)
+      let free = IdentSet.diff fvs (IdentSet.union (!muted_vars) scope) in
+      check free;
+      continue k ()
+  | effect Mute (fvs), k -> (*mute variables*)
+      muted_vars := IdentSet.union (!muted_vars) (fvs);
+      continue k ()
+  | effect op, k  ->  (*stack captured, ask outer handler to mute variables*)
+      perform (Mute (IdentSet.union scope (!muted_vars)));
+      muted_vars := IdentSet.empty ;
+      (match perform op with v -> continue k v)
+  | c, fvs ->  (*dlet removed from the set, unmute variables*)
+      let free = IdentSet.diff fvs scope in
+      check free;
+      (c, free)
+
+let new_scope alphas f = (* dlet, but declaring multiple variables to be safe *)
+  let scope = IdentSet.of_list alphas in
+  let c, fvs = exec_in_current_scope scope f in
+  (c, fvs)
