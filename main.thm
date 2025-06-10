@@ -3,30 +3,30 @@
 \contentsline {mdtheorem}{{Theorem}{2.2.{3}}{Preservation}}{18}{mdtheorem.2.2.3}%
 \contentsline {mdcorollary}{{Corollary}{2.2.{4}}{Type Safety}}{18}{mdtheorem.2.2.4}%
 \contentsline {mddefinition}{{Definition}{3.1.{1}}{Level}}{27}{mdtheorem.3.1.1}%
-\contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed closed expression}}{32}{mdtheorem.3.1.2}%
-\contentsline {mddefinition}{{Definition}{3.2.{1}}{Declared Safe}}{38}{mdtheorem.3.2.1}%
-\contentsline {mddefinition}{{Definition}{3.2.{2}}{Well-typed closed term}}{39}{mdtheorem.3.2.2}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{43}{mdtheorem.3.4.1}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{43}{mdtheorem.3.4.2}%
+\contentsline {mddefinition}{{Definition}{3.1.{2}}{Well-typed closed expression}}{35}{mdtheorem.3.1.2}%
+\contentsline {mddefinition}{{Definition}{3.2.{1}}{Declared Safe}}{39}{mdtheorem.3.2.1}%
+\contentsline {mddefinition}{{Definition}{3.2.{2}}{Well-typed closed term}}{40}{mdtheorem.3.2.2}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{1}}{Elaboration Preservation}}{44}{mdtheorem.3.4.1}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{2}}{Progress}}{44}{mdtheorem.3.4.2}%
 \contentsline {mdtheorem}{{Theorem}{3.4.{3}}{Reduction Preservation}}{44}{mdtheorem.3.4.3}%
 \contentsline {mdcorollary}{{Corollary}{3.4.{4}}{Type Safety}}{44}{mdtheorem.3.4.4}%
-\contentsline {mdtheorem}{{Theorem}{3.4.{5}}{Quote-Splice Duality}}{44}{mdtheorem.3.4.5}%
-\contentsline {mddefinition}{{Definition}{4.1.{1}}{Correctness of a Dynamic Scope Extrusion Check}}{45}{mdtheorem.4.1.1}%
-\contentsline {mddefinition}{{Definition}{4.1.{2}}{Permissiveness of a Dynamic Scope Extrusion Check}}{46}{mdtheorem.4.1.2}%
-\contentsline {mddefinition}{{Definition}{4.2.{1}}{Lazy Scope Extrusion}}{46}{mdtheorem.4.2.1}%
-\contentsline {mdtheorem}{{Theorem}{4.2.{2}}{Correctness and Permissiveness of the Lazy Dynamic Check}}{47}{mdtheorem.4.2.2}%
-\contentsline {mddefinition}{{Definition}{4.2.{3}}{Expressiveness of a Dynamic Scope Extrusion Check}}{47}{mdtheorem.4.2.3}%
-\contentsline {mddefinition}{{Definition}{4.2.{4}}{False Positives of a Dynamic Scope Extrusion Check}}{47}{mdtheorem.4.2.4}%
-\contentsline {mddefinition}{{Definition}{4.3.{1}}{Eager Scope Extrusion}}{48}{mdtheorem.4.3.1}%
-\contentsline {mddefinition}{{Definition}{4.4.{1}}{Best-Effort Scope Extrusion}}{51}{mdtheorem.4.4.1}%
-\contentsline {mdtheorem}{{Theorem}{4.4.{2}}{Correctness of the Best-Effort Check}}{55}{mdtheorem.4.4.2}%
-\contentsline {mdtheorem}{{Theorem}{4.4.{3}}{Cause for Concern Property}}{55}{mdtheorem.4.4.3}%
-\contentsline {mddefinition}{{Definition}{4.5.{1}}{Extended \recLang {} type}}{57}{mdtheorem.4.5.1}%
-\contentsline {mddefinition}{{Definition}{4.5.{2}}{Well-typed closed expression}}{57}{mdtheorem.4.5.2}%
-\contentsline {mddefinition}{{Definition}{4.5.{3}}{Well-Formed Level $-1$ Type}}{57}{mdtheorem.4.5.3}%
-\contentsline {mdlemma}{{Lemma}{4.5.{4}}{Weakening for Level 0 Values}}{59}{mdtheorem.4.5.4}%
-\contentsline {mdtheorem}{{Theorem}{4.5.{5}}{Correctness of Refined Environment Classifiers}}{59}{mdtheorem.4.5.5}%
-\contentsline {mddefinition}{{Definition}{4.5.{6}}{\textsf {Scoped}-Induction}}{62}{mdtheorem.4.5.6}%
-\contentsline {mdlemma}{{Lemma}{4.5.{7}}{Closure under Anti-Reduction}}{62}{mdtheorem.4.5.7}%
-\contentsline {mddefinition}{{Definition}{4.5.{8}}{Closed substitution}}{62}{mdtheorem.4.5.8}%
-\contentsline {mdlemma}{{Lemma}{4.5.{9}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{63}{mdtheorem.4.5.9}%
+\contentsline {mdtheorem}{{Theorem}{3.4.{5}}{Quote-Splice Duality}}{45}{mdtheorem.3.4.5}%
+\contentsline {mddefinition}{{Definition}{4.1.{1}}{Correctness of a Dynamic Scope Extrusion Check}}{46}{mdtheorem.4.1.1}%
+\contentsline {mddefinition}{{Definition}{4.1.{2}}{Permissiveness of a Dynamic Scope Extrusion Check}}{47}{mdtheorem.4.1.2}%
+\contentsline {mddefinition}{{Definition}{4.2.{1}}{Lazy Scope Extrusion}}{47}{mdtheorem.4.2.1}%
+\contentsline {mdtheorem}{{Theorem}{4.2.{2}}{Correctness and Permissiveness of the Lazy Dynamic Check}}{48}{mdtheorem.4.2.2}%
+\contentsline {mddefinition}{{Definition}{4.2.{3}}{Expressiveness of a Dynamic Scope Extrusion Check}}{48}{mdtheorem.4.2.3}%
+\contentsline {mddefinition}{{Definition}{4.2.{4}}{False Positives of a Dynamic Scope Extrusion Check}}{48}{mdtheorem.4.2.4}%
+\contentsline {mddefinition}{{Definition}{4.3.{1}}{Eager Scope Extrusion}}{49}{mdtheorem.4.3.1}%
+\contentsline {mddefinition}{{Definition}{4.4.{1}}{Best-Effort Scope Extrusion}}{52}{mdtheorem.4.4.1}%
+\contentsline {mdtheorem}{{Theorem}{4.4.{2}}{Correctness of the Best-Effort Check}}{56}{mdtheorem.4.4.2}%
+\contentsline {mdtheorem}{{Theorem}{4.4.{3}}{Cause for Concern Property}}{56}{mdtheorem.4.4.3}%
+\contentsline {mddefinition}{{Definition}{4.5.{1}}{Extended \recLang {} type}}{58}{mdtheorem.4.5.1}%
+\contentsline {mddefinition}{{Definition}{4.5.{2}}{Well-typed closed expression}}{58}{mdtheorem.4.5.2}%
+\contentsline {mddefinition}{{Definition}{4.5.{3}}{Well-Formed Level $-1$ Type}}{58}{mdtheorem.4.5.3}%
+\contentsline {mdlemma}{{Lemma}{4.5.{4}}{Weakening for Level 0 Values}}{60}{mdtheorem.4.5.4}%
+\contentsline {mdtheorem}{{Theorem}{4.5.{5}}{Correctness of Refined Environment Classifiers}}{60}{mdtheorem.4.5.5}%
+\contentsline {mddefinition}{{Definition}{4.5.{6}}{\textsf {Scoped}-Induction}}{63}{mdtheorem.4.5.6}%
+\contentsline {mdlemma}{{Lemma}{4.5.{7}}{Closure under Anti-Reduction}}{63}{mdtheorem.4.5.7}%
+\contentsline {mddefinition}{{Definition}{4.5.{8}}{Closed substitution}}{63}{mdtheorem.4.5.8}%
+\contentsline {mdlemma}{{Lemma}{4.5.{9}}{Fundamental Lemma {[\compilemode {}, {$\effectType [\Delta ; \xi ]{T^0}$}]} of the \textsf {Scoped} Logical Relation}}{64}{mdtheorem.4.5.9}%

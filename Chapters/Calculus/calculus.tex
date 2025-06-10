@@ -121,33 +121,83 @@ First, \textbf{types are stratified into two levels, $T^0$ (run-time), and $T^{-
   Second, \textbf{effect sets are stratified into $\xi$ (run-time) and $\Delta$ (compile-time)}.\\
   The following example prints \texttt{1} at compile-time, and \texttt{2} at run-time. Further, it reads an integer at run-time.
 \[\splice[{(\textbf{\texttt{print}}(\texttt{1}); \equote[\textbf{\texttt{print}}(\texttt{2}); \textbf{\texttt{readInt}}()])}]\]
-Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. Disambiguating run-time and compile-time effects stratifies types. Unlike in \efflang{}, where a term is either of value or computation type, in \sourceLang{}, the stratification of types is more complex:
+Hence, $\Delta = \{ \textbf{\texttt{print}} \}$ and $\xi = \{ \textbf{\texttt{print}}, \textbf{\texttt{readInt}} \}$. Disambiguating run-time and compile-time effects stratifies types. Unlike in \efflang{}, where a term is either of value or computation type, in \sourceLang{}, the stratification of types is more complex (\Cref{table:type-strat}).
+
+\begin{center}
+  \newcommand\T{\rule{0pt}{2.6ex}}       % Top strut
+\newcommand\B{\rule[-1.2ex]{0pt}{0pt}}
+  \begin{tikzpicture}
+    \node (table) {
+      \begin{tabular}{ll|l|l|l}
+        && \multicolumn{3}{c}{\textbf{Run-Time}} \T\B\\ 
+        && \textbf{Value} & \textbf{Computation} & \textbf{Handler} \T\B \\ \hline
+        \multirow{2}{*}{\textbf{Compile-Time}} & \textbf{Value} & $T^0$ & $\effectType[\xi]{T^0}$ & $(\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0$ \T\B\\ \cline{2-5}
+        & \textbf{Computation} & $\effectType{T^0}$ & $\effectType[\Delta; \xi]{T^0}$ & $\effectType{(\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0}$ \T\B\\ \hline
+      \end{tabular}
+    };
+    \begin{scope}[every node/.style={font=\bfseries\footnotesize , text=comment}]
+      \node[anchor = north, align = right] (value-syntax) at ($(table.south) + (-2.3cm, -0.3cm)$) {Type of syntactic \\ level $0$ values $v$};
+
+      \node[anchor = north, align = center] (expr-syntax) at ($(table.south) + (1.4cm, -0.3cm)$) {Type of syntactic \\ level $0$ expressions $e$};
+
+      \node[anchor = north, align = left] (hdlr-syntax) at ($(table.south) + (6.3cm, -0.3cm)$) {Type of syntactic \\ level $0$ handlers $h$};
+
+      \node[anchor = north, align = right] (cmnt) at ($(table.north west) + (2cm, -0.5cm)$) {Cannot be \\ directly created};
+    \end{scope}
+
+    \begin{scope}[->,>=stealth']
+      \draw[comment, dashed] (value-syntax.east) -| ($(value-syntax.east) + (0.14cm, 0.8cm)$);
+      \draw[comment, dashed] (expr-syntax.north) -- ($(expr-syntax.north) + (0cm, 0.3cm)$);
+      \draw[comment, dashed] (hdlr-syntax.west) -| ($(hdlr-syntax.west) + (-0.14cm, 0.8cm)$);
+      \draw[comment, dashed] (cmnt.east) -| ($(cmnt.east) + (1cm, -0.8cm)$);
+    \end{scope}
+  \end{tikzpicture}
+  \captionof{table}{Stratification of level $0$ types}%
+  \label{table:type-strat}
+\end{center}
+
+In \sourceLang{}, the use of level $0$ syntax \textit{always} results in compile-time computation (the second row of \Cref{table:type-strat}). For example, level $0$ values are elaborated into compile-time computations ($\effectType{T^0}$) that evaluate to ASTs of run-time values (\Cref{section:elaboration}):
 \[\begin{array}{ll}
-  T^0 & \text{Compile-time and run-time value (value type)} \\
-  & \textit{Example: } \text{The type of $x$ in $\lambda x. \return{x}$}\\[2mm]
+  % T^0 & \text{Compile-time and run-time value (value type)} \\
+  % & \textit{Example: } \text{The type of $x$ in $\lambda x. \return{x}$}\\[2mm]
   % \item[$T^0 \, ! \, \xi \quad\;$] Compile-time value, run-time computation  \\
   % \textit{Example}: No inhabitants type of $x$ in $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$
   T^0 \, ! \, \Delta  & \text{Compile-time computation, run-time value} \\
-  &\textit{Example: } \lambda x. \return{x} \\[2mm]
-  T^0 \, ! \, \Delta; \xi & \text{Compile and run-time computation} \\
-  &\textit{Example: } \splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})] \\[2mm]
+  & \textit{Inhabitants: }\text{Syntactic values $v$} \\
+  &\textit{Example: } \quad \lambda x. \return{x} \\[2mm]
+  T^0 \, ! \, \Delta; \xi & \text{Compile-time computation, run-time computation} \\
+   & \textit{Inhabitants: } \text{Syntactic expressions $e$} \\
+  &\textit{Example: } \quad \, \return{\texttt{1}} \\[2mm]
   (\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0\, !\, \Delta & \text{Compile-time computation, run-time handler} \\
-  &\textit{Example: } \{ \returnHandler{x}{\return{x}} \}
+   & \textit{Inhabitants: }\text{Syntactic handlers $h$} \\
+  &\textit{Example: } \quad \{ \returnHandler{x}{\return{x}} \}
 \end{array}
 \]
-Compile-time values that are run-time computations cannot be created at level $0$ ($T^0 \, ! \, \xi$ has no inhabitants in \sourceLang{}). They can only be created at level $-1$, with type $\textsf{Code}(\effectType[\xi]{T^0})^{-1}$, e.g.\ $x$ in $\splice[(\bind{x}{\equote[\return{\texttt{1}}]}{\return{x}})]$. Intuitively, constructing a run-time computation \textit{requires} compile-time computation. Additionally, compile-time values that are run-time handlers cannot be created in \sourceLang{} ($(\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0$ has no inhabitants). 
+Consequently, \textit{syntactic} values ($v$) do not have value \textit{type} ($T^0$). The relationship between syntax and types is more complicated than in \efflang{}. 
 
-The relationship between syntax and types is more complicated than in \efflang{}. For example, level $0$ values ($v$) do not have value type ($T^0$). Rather, since level $0$ values are elaborated into compile-time computations  that produce ASTs of run-time values, they have computation type $\effectType{T^{0}}$ (\Cref{table:typing-judgements}). 
-
+In contrast, level $0$ compile-time values (the first row in \Cref{table:type-strat}) cannot be directly created in \sourceLang{} (but $T^0$ is used to type level $0$ \textit{formal parameters}). 
+\[\begin{array}{ll}
+   T^0 & \text{Compile-time value and run-time value (value type)} \\
+   & \textit{Inhabitants: } \text{None, but used as the type of level $0$}\\
+    &\quad\quad\quad\quad\quad\, \text{formal parameters} \\
+  & \textit{Example: } \;\;\,\,\,\,\text{The type of $x$ in $\lambda x: \hl{$\mathbb{N}^0$}. \return{x}$}\\[2mm]
+   \effectType[\xi]{T^0} & \text{Compile-time value and run-time computation} \\
+   & \textit{Inhabitants: } \text{None.}\\[2mm]
+    (\handlerType{\effectType[\xi_1]{S^0}}{\effectType[\xi_2]{T^0}})^0 & \text{Compile-time value and run-time handler} \\
+   & \textit{Inhabitants: } \text{None.}\\
+\end{array}
+\]
 As the stratification is subtle, it is best revisited after covering the typing rules (\Cref{subsection:sourcelang-type-system}), core language (\Cref{section:core-lang}), and elaboration (\Cref{section:elaboration}).
 % As a result of the type system, we never encounter $T^0 \, ! \, \Delta$ (compile-time computations that are run-time values).
 
 Third, \textbf{there is a level $-1$ \textsf{Code} type, representing run-time ASTs}.
 
-  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable metaprogramming, run-time terms should be available at compile-time as ASTs. This is the role of the \textsf{Code} type, which makes ASTs of level $0$ terms available to level $-1$ programs.
+  Stratifying types ensures that run-time (resp.\ compile-time) terms only interact with run-time (compile-time) terms. However, to enable metaprogramming, run-time terms should be available at compile-time as ASTs. This is the role of the $\textsf{Code}(\effectType[\xi]{T^0})^{-1}$ type, which makes ASTs of level $0$ computations available at level $-1$.
+
+  However, only \textit{computations} can be turned into ASTs; There are no $\textsf{Code}({T^0})^{-1}$ or $\textsf{Code}((\handlerType{S^0 \, ! \, \xi_1}{T^0 \, ! \, \xi_2})^0)^{-1}$ types.
 % Note that if we had a multi-level system, then there would be a \texttt{Code} type at level $0$, representing the ASTs of level $1$ terms. The asymmetry arises from the restriction to two levels. 
 
-Putting it all together, we can now interpret complex \sourceLang{} types, like the following:
+Putting it all together, we can now interpret complex \sourceLang{} types:
 \begin{center}
 \begin{tikzpicture}
 
@@ -573,7 +623,7 @@ The dual to $\equote$ is $\splice$, which \textit{eliminates} compile-time ASTs 
 
 % Further, while the rules are syntactically identical, morally, they ought to be kept separate: \textsc{\compilemode{}-Splice} is the typing rule for top-level splices: the mechanism that turns compile-time ASTs into run-time programs, and then additionally \textit{inserts} them into an \textit{ambient} and \textit{inert} expression. \textsc{\quotemode{}-Splice} is the typing rule for non-top-level splices. While these splices similarly turn compile-time ASTs into run-time programs, the resulting run-time program could be used in a myriad of ways -- used to build larger programs, or discarded entirely. 
 
-Note that since there are no \textsc{\quotemode-Quote} or \textsc{\splicemode-Splice} rules, the type system bans nested splices and quotations, and thus we can focus purely on levels $0$ and $-1$. 
+Note that since there are no \textsc{\quotemode-Quote} or \textsc{\splicemode-Splice} rules, the type system bans nested splices and quotations. Consequently, the only levels are $0$ and $-1$. 
 
 A closed \sourceLang{} expression is well-typed if, in \compilemode{}-mode, it can be typed with empty compile-time and run-time effects sets. 
 \begin{definition}[Well-typed closed expression]{sourceHighlight}
