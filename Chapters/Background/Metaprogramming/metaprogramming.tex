@@ -1,7 +1,7 @@
 \section{Metaprogramming}\label{section:metaprogramming-technical}
 What is MacoCaml-style metaprogramming? \Cref{subsection:metaprogramming-motivation} first motivates metaprogramming, by illustrating the challenge of writing code that is both fast and maintainable. Following this, \Cref{subsection:metaprogramming-design} considers the design space of metaprogramming, highlighting decisions made by the MacoCaml designers.
 
-\subsection{Metaprogramming for Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
+\subsection{Metaprogramming: Fast and Maintainable Code}\label{subsection:metaprogramming-motivation}
 
 Metaprogramming helps programmers write fast and maintainable code. Maintainability and efficiency are in constant tension; Resolving this tension may require more than programmer skill. 
 
@@ -202,7 +202,7 @@ Different metalanguages provide slightly different variants of metaprogramming t
   \item \textbf{\textsf{Homogenous or Heterogeneous}}\\
          \textit{Do the generated and generating languages agree or differ?}
   
-        If the generated and generating languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogenous} \citep{kiselyov-2024}.
+        If the generated and generating languages are the same, this is known as {homogenous} metaprogramming. Otherwise, it is {heterogeneous} \citep{kiselyov-2024}.
 
         The metaprogramming supported by MacoCaml is homogenous, where \texttt{OCaml} code generates \texttt{OCaml} code. I focus on homogenous metaprogramming.
         %  In contrast, \texttt{MetaHaskell} \citep{mainland-2012} programs generate \texttt{C} code, allowing for heterogenous metaprogramming. 

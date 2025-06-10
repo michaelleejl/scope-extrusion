@@ -2,7 +2,7 @@
 \contentsline {section}{\numberline {1.1}Contributions}{3}{section.1.1}%
 \contentsline {chapter}{\numberline {2}Background}{4}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Metaprogramming}{4}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Metaprogramming for Fast and Maintainable Code}{4}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.1}Metaprogramming: Fast and Maintainable Code}{4}{subsection.2.1.1}%
 \contentsline {subsubsection}{\nonumberline The Mechanics of Metaprogramming}{6}{subsubsection*.7}%
 \contentsline {subsection}{\numberline {2.1.2}The Design Space of Metalanguages}{8}{subsection.2.1.2}%
 \contentsline {section}{\numberline {2.2}Effect Handlers}{9}{section.2.2}%
