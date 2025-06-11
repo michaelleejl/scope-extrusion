@@ -1,4 +1,4 @@
-\begin{thebibliography}{40}
+\begin{thebibliography}{41}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -139,6 +139,12 @@ W.~Kuchta.
 \newblock A proof of normalization for effect handlers, Sept. 2023.
 \newblock URL \url{https://icfp23.sigplan.org/details/hope-2023/4/A-proof-of-normalization-for-effect-handlers}.
 \newblock Seattle, Washington, United States.
+
+\bibitem[Landin(1964)]{landin-64}
+P.~J. Landin.
+\newblock The mechanical evaluation of expressions.
+\newblock \emph{The Computer Journal}, 6\penalty0 (4):\penalty0 308--320, 1964.
+\newblock \doi{10.1093/comjnl/6.4.308}.
 
 \bibitem[Lawall and Danvy(1994)]{lawall-94}
 J.~L. Lawall and O.~Danvy.

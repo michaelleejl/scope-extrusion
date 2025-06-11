@@ -128,7 +128,7 @@ let effectful = let l = ref 0 in (l := 1; 1) + (l := 2; 2)
 \end{ocaml}
 The result of \mintinline{ocaml}{pure}, which has no effects, is independent of the evaluation order. In contrast, the result of \mintinline{ocaml}{effectful} \textit{is} dependent on the evaluation order. If terms are evaluated left-to-right, the value of \mintinline{ocaml}{!l} is \mintinline{ocaml}{2}, otherwise, it is \mintinline{ocaml}{1}.
 
-In order to be precise about the order of evaluation, \efflang{} follows \citeauthor{pretnar-15}'s approach of stratifying terms into distinct syntactic categories, with ``inert values'' ($v$) disjoint from ``potentially effectful computations'' ($c$). However, while \citeauthor{pretnar-15} treats handlers $h$ as values, in \efflang{}, they are a third syntactic category, disjoint from both values and computations. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ acts like a let-binding, sequencing computations. This forces programmers to make explicit the order of evaluation.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
+In order to be precise about the order of evaluation, \efflang{} follows \citeauthor{pretnar-15}'s approach of stratifying terms into distinct syntactic categories, with ``inert values'' ($v$) disjoint from ``potentially effectful computations'' ($c$). However, while \citeauthor{pretnar-15} treats handlers $h$ as values, in \efflang{}, they are a third syntactic category, disjoint from both values and computations. $\return{v}$ lifts values into computations, and is also the result of fully evaluating a computation. $\bind{x}{c_1}{c_2}$ acts like a let-binding, sequencing computations. This forces programmers to make the order of evaluation explicit.  First, $c_1$ is fully evaluated to obtain some $\return{v}$. The value $v$ is then bound to $x$, and finally $c_2$ is evaluated. 
 
 For example, extending \efflang{} with a \texttt{plus} function, what is the order of evaluation of \texttt{plus} $c_1$ $c_2$, where $c_1$ and $c_2$ are computations that evaluate to naturals? Are both arguments evaluated before application, or are evaluation and application interleaved? The syntax forces programmers to choose explicitly. The programmer can either fully evaluate both arguments before applying them in turn: 
 \begin{eff}
@@ -388,7 +388,7 @@ type _ Effect.t += Op: A -> B
 \end{ocaml}
 \efflang{} does not impose any restrictions on $A$ and $B$. In particular, they may be recursive, and refer to \texttt{op}. For example:
 \[\texttt{recursive}: 1 \to (\functionType[\{ \texttt{recursive} \}]{1}{1})\]
-Thus, one may write programs which do not terminate, by ``tying the knot'', for example:
+Thus, one may write programs which do not terminate, by ``tying the knot'' \citep{landin-64}, for example:
 \begin{eff}
   $\handleWith{(\lambda \_ . \textbf{\texttt{recursive}} ()) ()}{\textbf{\texttt{recursive}}(\_, k) \mapsto {\continue{k}{(\lambda \_. \textbf{\texttt{recursive}} ())}}}$
 \end{eff}

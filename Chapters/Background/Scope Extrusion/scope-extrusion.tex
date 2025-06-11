@@ -65,11 +65,11 @@ Scope extrusion of the kind in \Cref{listing:efflang-scope-extrusion} may seem t
 \begin{code}
   \begin{efflst}
     $\begin{array}{l}
-      \textbf{\texttt{do}} \,  x \leftarrow \textbf{\texttt{handle}} \\
+      \textbf{\texttt{do}} \,  z \leftarrow \textbf{\texttt{handle}} \\
       \quad \quad \quad \quad \,\, \equote[\, {\lambda x:\mathbb{N}.\; \splice[\, {(\textbf{\texttt{extrude}}(\, \equote[x] \, ))}\, ]} \, ] \\
       \quad \quad \quad \,\, \textbf{\texttt{with}} \\
       \quad \quad \quad \quad \, \, \{ \textbf{\texttt{return}}(u) \mapsto {\return{\equote[\texttt{0}]}}; \, \textbf{\texttt{extrude}}(y, k) \mapsto {\return{y}}\}\\
-      \textbf{\texttt{in}} \text{ some very long program}; \return{x}
+      \textbf{\texttt{in}} \text{ some very long program}; \return{z}
     \end{array}$
 
     \vspace{2mm} 

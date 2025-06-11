@@ -37,7 +37,7 @@ The permissiveness of a scope extrusion check refers to the set of well-typed cl
 \end{definition}
 
 \section{Lazy Dynamic Check}\label{section:lazy-dynamic-check-formal}
-Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\langle t;E;U;M;I\rangle$). A configuration exhibits \textbf{lazy scope extrusion} when it is the \textit{result} of compile-time execution ($E = E'[\tls{[-]}]$), and is improperly scoped ($t = \return{n}$, $\freevars{n} \not\subseteq \projfvs{E}$). Lazy scope extrusion formalises the definition by \citet{kiselyov-14}.
+Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\langle t;E;U;M;I\rangle$). A configuration exhibits \textbf{lazy scope extrusion} if it is the \textit{result} of compile-time execution ($E = E'[\tls{[-]}]$), and is improperly scoped ($t = \return{n}$, $\freevars{n} \not\subseteq \projfvs{E}$). Lazy scope extrusion formalises the definition by \citet{kiselyov-14}.
 
 % In the words of \citet{kiselyov-14} (emphasis mine),
 
@@ -57,7 +57,7 @@ Scope extrusion can be defined as a predicate on \coreLang{} configurations ($\l
 
 The lazy dynamic check, ${\elaborate{-}}^{\textbf{Lazy}}$, augments the naïve elaboration in two ways. First, \textbf{\texttt{check}}s are performed after top-level splices:
 \[\elaborate{\splice[e]}_{\compilemode{}}^{\textbf{Lazy}} \triangleq {\checkfv{(\tls{\elaborate{e}_{\splicemode{}}^{\textbf{Lazy}}})}}\]
-Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside top-level splices (in \compilemode{}-mode) are declared safe in the context surrounding the top-level splice (\Cref{dfn:declared-safe}). Variables bound outside top-level splices thus do not cause the \textbf{\texttt{check}} to fail. For example, in $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$, in the context surrounding the check, $x$ is declared safe, and thus allowed to be free, but $y$ is not. Elaboration of formal parameters in \compilemode{}-mode (but not \quotemode{}-mode) should insert \textbf{\texttt{dlet}}s:
+Second, \textbf{\texttt{dlet}}s are inserted to ensure variables bound outside top-level splices (in \compilemode{}-mode) are declared safe (\Cref{dfn:declared-safe}) in the context surrounding the top-level splice. Variables bound outside top-level splices thus do not cause the \textbf{\texttt{check}} to fail. For example, in $\lambda x:\mathbb{N}. \; \splice[{\equote[\lambda{y}: \mathbb{N}. \; x+y]}]$, in the context surrounding the check, $x$ is declared safe, and thus allowed to be free, but $y$ is not. Elaboration of formal parameters in \compilemode{}-mode (but not \quotemode{}-mode) should insert \textbf{\texttt{dlet}}s:
 {
   \footnotesize
 \[\elaborate{\lambda x: T^0. \, e}_{\compilemode{}}^{\textbf{Lazy}} = \bind{x}{\gensym{\erase{T^0}}}{ \dlet{x}{\bind{\texttt{body}}{\elaborate{e}_{\compilemode{}}^\textbf{Lazy}}{\return{\Lam{x}{\texttt{body}}}}}}\]
@@ -117,7 +117,7 @@ The \emph{\textbf{false positives}} of a dynamic scope extrusion check are defin
 However, due again to its simplicity, the lazy dynamic check is inefficient and uninformative, and therefore not suitable for practical use \citep{kiselyov-14} (\Cref{subsubsection:lazy-dynamic-check}, \Cpageref{subsubsection:lazy-dynamic-check}).
 
 \section{Eager Dynamic Check}\label{section:eager-dynamic-check-formal}
-A configuration exhibits \textbf{eager scope extrusion} if it is improperly scoped at any point in the execution (\Cref{subsubsection:eager-dynamic-check}, \Cpageref{subsubsection:eager-dynamic-check}). \Cref{dfn:eager-scope-extrusion} thus generalises \Cref{def:lazy-scope-extrusion}. 
+A configuration exhibits \textbf{eager scope extrusion} if it $\textbf{\texttt{return}}$s an improperly scoped AST at any point in the execution (\Cref{subsubsection:eager-dynamic-check}, \Cpageref{subsubsection:eager-dynamic-check}). \Cref{dfn:eager-scope-extrusion} thus generalises \Cref{def:lazy-scope-extrusion}. 
 
 \begin{definition}[Eager Scope Extrusion]{coreHighlight}\label[definition]{dfn:eager-scope-extrusion} A \coreLang{} configuration of the form  $\langle t;E;U;M;I\rangle$
 exhibits \emph{\textbf{eager scope extrusion}} if all of the following hold:
@@ -268,7 +268,7 @@ The eager dynamic check, however, is not maximally expressive. It reports false 
  \label{listing:eager-scope-extrusion-looks-unsafe}
 \end{code}
 
-In \Cref{listing:eager-scope-extrusion-looks-unsafe}, the offending AST ($\Var{x}{\mathbb{N}}$, bound to $y$) is used in a context where $\Var{x}{\mathbb{N}}$ is not declared safe ($\equote[{\splice[y]} + \texttt{0}]$), and thus the eager dynamic check reports an error. However, if evaluation had been allowed to proceed, the evaluation context binding $\Var{x}{\mathbb{N}}$ (and additionally declaring it safe) would have been restored ($\continue{k}{w}$), and all variables would have been properly scoped. The program \textit{recovers} from a state of eager scope extrusion, and does not exhibit lazy scope extrusion. The eager dynamic check is thus not as expressive as the lazy dynamic check.
+In \Cref{listing:eager-scope-extrusion-looks-unsafe}, the offending AST ($\Var{x}{\mathbb{N}}$) is used in a context where $\Var{x}{\mathbb{N}}$ is not declared safe ($\equote[{\splice[y]} + \texttt{0}]$), and thus the eager dynamic check reports an error. However, if evaluation had been allowed to proceed, the evaluation context binding $\Var{x}{\mathbb{N}}$ (and additionally declaring it safe) would have been restored ($\continue{k}{w}$), and all variables would have been properly scoped. The program \textit{recovers} from a state of eager scope extrusion, and does not exhibit lazy scope extrusion. The eager dynamic check is thus not as expressive as the lazy dynamic check.
 
 More concerningly, the eager dynamic check is unpredictable: it is difficult to characterise its expressiveness without referring to the operational semantics. Compare the program in \Cref{listing:eager-scope-extrusion-unsafe-continue}, which passes the check, and \Cref{listing:eager-scope-extrusion-looks-unsafe}, which \textit{fails} the check. Unfortunately, the following inequation holds:
 \[\equote[\splice[e]] \neq_{\splicemode{}} \equote[{\splice[e] + \texttt{0}}]\]
@@ -511,7 +511,7 @@ The best-effort dynamic check is not maximally expressive. In particular, it doe
 \[\langle \dlet{\Binder{x}{\mathbb{N}}}{\return{\Lam{\Binder{x}{\mathbb{N}}}{\Var{y}{\mathbb{N}}}}}; E[\textbf{\texttt{check}}[-]]; U; \{\Var{y}{\mathbb{N}}\} ; I \rangle\]
 where $\textsf{len}(E[\checkm{[-]}]) \leq I$. The subsequent transition unmutes $\Var{y}{\mathbb{N}}$, and the surrounding $\textbf{\texttt{check}}_M$ fails, as $\Var{y}{\mathbb{N}}$ is free, unmuted, and not declared safe in $E$.
 
-It is possible to characterise the expressiveness of the best-effort check, via a ``Cause for Concern'' property. The property is defined informally as follows: assume the best-effort check reports an error, and let the offending AST be $n$. Now re-wind to the point of the failing check, and consider an alternative execution where all the $\textbf{\texttt{check}}_M$s are erased (turned into $\textbf{\texttt{return}}$s). In this counter-factual execution, all ASTs $m$ that are constructed from $n$ have at least one variable that is not declared safe in its evaluation context. Consequently, in \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
+It is possible to characterise the expressiveness of the best-effort check, via a ``Cause for Concern'' property. The property is defined informally as follows: assume the best-effort check reports an error, and let the offending AST be $n$. Now re-wind to the point of the failing check, and consider an alternative execution where all the $\textbf{\texttt{check}}_M$s are erased (turned into $\textbf{\texttt{return}}$s). In this counter-factual execution, all ASTs $n'$ that are constructed from $n$ have at least one variable that is not declared safe in its evaluation context. Consequently, in \Cref{listing:best-effort-imperfect}, the only way to safely use $\lambda x.\return{y}$ is to throw it away. 
 
 \begin{theorem}[Cause for Concern Property]{sourceHighlight}\label{thm:best-effort-cause-for-concern} Assuming a closed, well-typed \sourceLang{} expression $e$, if
   \begin{enumerate}
@@ -520,13 +520,13 @@ It is possible to characterise the expressiveness of the best-effort check, via 
   \end{enumerate}
 Then for all $i \in \mathbb{N}$, if 
 \begin{enumerate}
-  \item[2.] $\langle \return{n}; \textsf{erase-checks}(E); U; M; I \rangle \to^{i} \langle \return{m}; E'; U'; M'; I' \rangle$
-  \item[3.] and $n$ a subtree of $m$,  
+  \item[2.] $\langle \return{n}; \textsf{erase-checks}(E); U; M; I \rangle \to^{i} \langle \return{n'}; E'; U'; M'; I' \rangle$
+  \item[3.] and $n$ a subtree of $n'$,  
 \end{enumerate}
-then $\freevars{m} \not\subseteq \projfvs{E'}$  
+then $\freevars{n'} \not\subseteq \projfvs{E'}$  
 \end{theorem}
 
-The proof of \Cref{thm:best-effort-cause-for-concern} is by contradiction. By assumption (1) there must be at least one variable, call it $\Var{x}{R}$, that is free in $n$ and not declared safe in $E$. Assume for the sake of contradiction that $\freevars{m} \subseteq \projfvs{E'}$. Then, by assumption (3), the frame $\dlet{\Binder{x}{R}}{[-]}$ must be in $E'$. Note that we only have to consider terms reachable via elaboration. By definition of elaboration, the only way to push the frame $\dlet{\Binder{x}{R}}{[-]}$ on $E'$ is by resuming a continuation containing $\dlet{\Binder{x}{R}}{[-]}$. But then we must have had access to the resumed continuation in $E$. In turn, this implies $I < \textsf{len}(E)$, and thus $\Var{x}{R}$ would not have been unmuted. Consequently, $\checkm{n}$ would not have failed because of $\Var{x}{R}$. This contradicts assumption (1). 
+The proof of \Cref{thm:best-effort-cause-for-concern} is by contradiction. By assumption (1) there must be at least one variable, call it $\Var{x}{R}$, that is free in $n$ and not declared safe in $E$. Assume for the sake of contradiction that $\freevars{n'} \subseteq \projfvs{E'}$. Then, by assumption (3), the frame $\dlet{\Binder{x}{R}}{[-]}$ must be in $E'$. Note that we only have to consider terms reachable via elaboration. By definition of elaboration, the only way to push the frame $\dlet{\Binder{x}{R}}{[-]}$ on $E'$ is by resuming a continuation containing $\dlet{\Binder{x}{R}}{[-]}$. But then we must have had access to the resumed continuation in $E$. In turn, this implies $I < \textsf{len}(E)$, and thus $\Var{x}{R}$ would not have been unmuted. Consequently, $\checkm{n}$ would not have failed because of $\Var{x}{R}$. This contradicts assumption (1). 
 
 The expressiveness of the eager dynamic check cannot be characterised by the Cause for Concern property, with \Cref{listing:eager-scope-extrusion-looks-unsafe} being a counter-example. Hence, the best-effort dynamic check is \textbf{more} expressive, and more \textbf{predictably} expressive, than the eager dynamic check. 
 
@@ -831,7 +831,7 @@ $\scoped{\effectType{\tau}}$ is defined as a least fixed point, following the de
   Then for all $t \in \scoped{\effectType{\tau}}$, $\Phi(t)$
 \end{inductionPrinciple}
 
-The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a notion of closed substitution $\rho \vDash \Gamma$. Care must be taken with substitution of level-$0$ variables, since these should be in the logical relation for \textsf{FParam}s rather than \textsf{AST}s (clause 2 in \Cref{dfn:closed-substitution}).
+The proof additionally relies on a closure lemma \citep{kuchta-2023}, and a notion of closed substitution $\rho \vDash \Gamma$. Care must be taken with substitution of level $0$ variables, since these should be in the logical relation for \textsf{FParam}s rather than \textsf{AST}s (clause 2 in \Cref{dfn:closed-substitution}).
 
 \begin{lemma}[Closure under Anti-Reduction]{recHighlight}\label[lemma]{lemma:closure-reduction}
   If $\langle t;E;U \rangle \to^{*} \langle t';E';U' \rangle$ and $E'[t'] \in \scoped{\effectType{\tau}}$ then $E[t] \in \scoped{\effectType{\tau}}$
